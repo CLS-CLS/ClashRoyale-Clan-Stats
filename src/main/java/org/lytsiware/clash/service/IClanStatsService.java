@@ -8,8 +8,6 @@ import java.util.List;
 public interface IClanStatsService {
     List<PlayerOverallStats> retrieveClanStats(int week);
 
-    Object getNewStats();
-
     List<Player> calculateAvgs();
 
     void updateDatabaseWithLatest();

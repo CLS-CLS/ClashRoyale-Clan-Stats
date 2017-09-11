@@ -10,5 +10,5 @@ public interface PlayerWeeklyStatsRepository {
 
     List<PlayerWeeklyStats> findByWeek(int week);
 
-    void saveOrUpdateAll(List<PlayerWeeklyStats> playerWeeklyStats);
+    List<PlayerWeeklyStats> saveOrUpdateAll(List<PlayerWeeklyStats> playerWeeklyStats);
 }

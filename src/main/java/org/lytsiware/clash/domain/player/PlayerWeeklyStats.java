@@ -9,11 +9,23 @@ import javax.persistence.*;
 
 @Entity
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {"playerFK", "week"})})
-@NamedQueries(@NamedQuery(name="findByWeek", query="select s from PlayerWeeklyStats s join fetch s.player p where s.week = :week"))
+@NamedQueries(@NamedQuery(name="findByWeek", query="select s from PlayerWeeklyStats s join fetch s.player where s.week = :week"))
 //@IdClass(PlayerWeeklyStatsPK.class)
 public class PlayerWeeklyStats {
+	
+	public PlayerWeeklyStats() {
+	
+	}
 
-    @Id
+    public PlayerWeeklyStats(Player player, int week, int chestContribution, int cardDonation) {
+		super();
+		this.player = player;
+		this.week = week;
+		this.chestContribution = chestContribution;
+		this.cardDonation = cardDonation;
+	}
+
+	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 

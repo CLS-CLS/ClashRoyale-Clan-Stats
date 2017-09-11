@@ -121,39 +121,7 @@ app.controller("weeksDropdownController", function($scope, $http) {
 
 
 app.directive("orderDirective", function() {
-    var state = "unselected";
-
-    function changeState(){
-        if (state == "unselected"){
-            state = "up"
-        } else if (state == "up"){
-            state = "down"
-        } else if (state == "down"){
-            state = "up"
-        }
-    }
-
-    function resetState(){
-        state = "unselected"
-    }
-
-    function applyClass(elem) {
-         elem.removeClass("fa-sort-up fa-sort-down fa-sort")
-         elem.addClass(getClass())
-    }
-
-
-    function getClass(){
-        if (state == "unselected") {
-            return "fa-sort"
-        }
-        if (state == "up") {
-            return "fa-sort-up"
-        }
-        if (state == "down") {
-            return "fa-sort-down"
-        }
-    }
+   
 
     return {
         template : "<i class='fa fa-fw fa-sort'></i>",
@@ -163,9 +131,44 @@ app.directive("orderDirective", function() {
             orderingBy: '='
         },
         link: function(scope, elem ,attrs) {
+        	var state = "unselected";
+
+    	    function changeState(){
+    	        if (state == "unselected"){
+    	            state = "down"
+    	        } else if (state == "up"){
+    	            state = "down"
+    	        } else if (state == "down"){
+    	            state = "up"
+    	        }
+    	    }
+
+    	    function resetState(){
+    	        state = "unselected"
+    	    }
+
+    	    function applyClass(elem) {
+    	         elem.removeClass("fa-sort-up fa-sort-down fa-sort")
+    	         elem.addClass(getClass())
+    	    }
+
+
+    	    function getClass(){
+    	        if (state == "unselected") {
+    	            return "fa-sort"
+    	        }
+    	        if (state == "up") {
+    	            return "fa-sort-up"
+    	        }
+    	        if (state == "down") {
+    	            return "fa-sort-down"
+    	        }
+    	    }
+    	    
             elem.bind('mouseover', function(){
                 elem.css('cursor', 'pointer')
             })
+            
             elem.bind('click', function(){
                 changeState()
                 applyClass(elem)

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.Map;
 
 
 @Repository
-@Transactional
+@Transactional(value=TxType.REQUIRED)
 public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsRepository {
 
     @PersistenceContext
@@ -51,7 +53,6 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
     @Override
     @Cacheable("playerStats")
     public List<PlayerWeeklyStats> findByWeek(int week) {
-        TypedQuery<PlayerWeeklyStats> query = em.createQuery("select s from PlayerWeeklyStats s join fetch s.player p where s.week = :week", PlayerWeeklyStats.class);
         Query nquery = em.createNamedQuery("findByWeek");
         nquery.setParameter("week", week);
         List<PlayerWeeklyStats> list = nquery.getResultList();
@@ -60,7 +61,10 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 
 
     @Override
-    public void saveOrUpdateAll(List<PlayerWeeklyStats> playerWeeklyStats) {
-
+    public List<PlayerWeeklyStats> saveOrUpdateAll(List<PlayerWeeklyStats> playerWeeklyStats) {
+    	List<PlayerWeeklyStats> mergedStats = new ArrayList<>();
+    	playerWeeklyStats.stream().forEach(s -> mergedStats.add(em.merge(s)));
+    	return mergedStats;
+    	
     }
 }
