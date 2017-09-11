@@ -1,0 +1,106 @@
+package org.lytsiware.clash.dto;
+
+import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
+import org.lytsiware.clash.utils.DateWeekConverter;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class PlayerOverallStats implements Serializable {
+
+    private String tag;
+    private String name;
+    private int week;
+    private double avgChestContribution;
+    private double avgCardDonation;
+    private int chestContribution;
+    private int cardDonation;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public PlayerOverallStats(PlayerWeeklyStats playerWeeklyStats) {
+        this.tag = playerWeeklyStats.getPlayer().getTag();
+        this.name = playerWeeklyStats.getPlayer().getName();
+        this.week = playerWeeklyStats.getWeek();
+        this.avgCardDonation = playerWeeklyStats.getPlayer().getAvgCardDonation();
+        this.avgChestContribution = playerWeeklyStats.getPlayer().getAvgChestContribution();
+        this.chestContribution = playerWeeklyStats.getChestContribution();
+        this.cardDonation = playerWeeklyStats.getCardDonation();
+        this.startDate = DateWeekConverter.toDate(playerWeeklyStats.getWeek());
+        this.endDate = startDate.plusDays(6);
+
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getWeek() {
+        return week;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
+    }
+
+    public double getAvgChestContribution() {
+        return avgChestContribution;
+    }
+
+    public void setAvgChestContribution(double avgChestContribution) {
+        this.avgChestContribution = avgChestContribution;
+    }
+
+    public double getAvgCardDonation() {
+        return avgCardDonation;
+    }
+
+    public void setAvgCardDonation(double avgCardDonation) {
+        this.avgCardDonation = avgCardDonation;
+    }
+
+    public int getChestContribution() {
+        return chestContribution;
+    }
+
+    public void setChestContribution(int chestContribution) {
+        this.chestContribution = chestContribution;
+    }
+
+    public int getCardDonation() {
+        return cardDonation;
+    }
+
+    public void setCardDonation(int cardDonation) {
+        this.cardDonation = cardDonation;
+    }
+}

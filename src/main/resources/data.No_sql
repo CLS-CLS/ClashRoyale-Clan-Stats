@@ -1,0 +1,14 @@
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000001', 'Chris1', 210.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000002', 'Chris2', 225.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000003', 'Chris3', 230.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000004', 'Chris4', 245.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000005', 'Chris5', 255.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000006', 'Chris6', 265.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000007', 'Chris7', 275.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000008', 'Chris8', 285.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000009', 'Chris9', 295.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000010', 'Chris10', 215.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000011', 'Chris12', 225.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000012', 'Chris13', 235.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000013', 'Chris14', 245.12, 180.30);
+insert into player(tag, name, avg_card_donation, avg_chest_contribution) values ('#0000014', 'Chris15', 255.12, 180.30);

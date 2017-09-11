@@ -1,0 +1,57 @@
+/*
+  Allow angular.js to be loaded in body, hiding cloaked elements until
+  templates compile.  The !important is important given that there may be
+  other selectors that are more specific or come later and might alter display.
+ */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+td, th {
+   vertical-align:middle !important;
+   margin-left: 50% !important;
+   margin-right: auto !important;
+   text-align: center;
+}
+
+#clan-header {
+    text-align:center;
+    color: #eeeeee;
+    background: rgb(0,0,0);
+    font-family: cursive;
+    box-shadow:6px 10px 32px 6px rgba(41,78,89,0.55);
+    text-shadow: 2px 2px 32px #00b0ff;
+}
+
+table  {
+    margin-top: 10px;
+}
+
+body {
+    background: #eeeeee
+}
+.jumbotron {
+    color: white
+}
+
+body {
+ min-width: 500px;
+}
+
+.inner-container {
+    min-height: 500px;
+    border: 1px solid #dddddd;
+    background: white;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow: 6px 10px 32px 6px  rgba(41,78,89,0.55);
+}
+
+.red {
+    color: red;
+}
+.green {
+    color: green;
+}
+
+
