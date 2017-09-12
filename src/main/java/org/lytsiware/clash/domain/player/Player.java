@@ -3,7 +3,6 @@ package org.lytsiware.clash.domain.player;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 @Entity
 public class Player {

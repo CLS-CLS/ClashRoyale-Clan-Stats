@@ -1,6 +1,9 @@
 package org.lytsiware.clash.service;
 
-import org.lytsiware.clash.domain.player.*;
+import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.player.PlayerRepository;
+import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
+import org.lytsiware.clash.domain.player.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.utils.DateWeekConverter;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,7 @@
 package org.lytsiware.clash.utils;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
 public class DateWeekConverter {
 

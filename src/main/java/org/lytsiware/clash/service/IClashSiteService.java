@@ -1,8 +1,8 @@
 package org.lytsiware.clash.service;
 
-import java.util.List;
-
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
+
+import java.util.List;
 
 public interface IClashSiteService {
 

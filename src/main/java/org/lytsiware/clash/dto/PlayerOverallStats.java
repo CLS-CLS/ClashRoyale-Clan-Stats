@@ -1,6 +1,5 @@
 package org.lytsiware.clash.dto;
 
-import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 import org.lytsiware.clash.utils.DateWeekConverter;
 

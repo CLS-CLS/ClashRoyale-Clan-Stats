@@ -1,9 +1,6 @@
 package org.lytsiware.clash.domain.player;
 
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 
 

@@ -1,11 +1,5 @@
 package org.lytsiware.clash.service;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,11 +11,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ClashStatsSiteService  implements IClashSiteService {
 	
 	@Value("classpath:testFile.html")
-	Resource testDataResource;
+	Resource dataResource;
 	
 		
 	@Override
@@ -30,7 +29,7 @@ public class ClashStatsSiteService  implements IClashSiteService {
 		
 		Document result;
 		try {
-			result = Jsoup.parse(testDataResource.getFile(), "utf-8");
+			result = Jsoup.parse(dataResource.getFile(), "utf-8");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
