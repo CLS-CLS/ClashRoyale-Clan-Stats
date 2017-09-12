@@ -55,7 +55,7 @@ app.controller("weeksDropdownController", function($scope, $http) {
 
     function getData(week) {
 
-        $http.get("http://localhost:8080/clan/" + week).then(function(response){
+        $http.get("http://localhost:8080/royalestats/clan/" + week).then(function(response){
             if ($scope.stats == null) {
                 $scope.stats = [];
             }
