@@ -10,7 +10,6 @@ import org.lytsiware.clash.domain.player.PlayerWeeklyStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 //@RunWith(SpringJUnit4ClassRunner.class)
@@ -28,7 +27,7 @@ public class CustomTest {
         PlayerWeeklyStats playerWeeklyStats = new PlayerWeeklyStats();
         playerWeeklyStats.setCardDonation(40);
         playerWeeklyStats.setChestContribution(20);
-        playerWeeklyStats.setWeek(new Week().previousWeek(1).getWeek());
+        playerWeeklyStats.setWeek(new Week().minusWeeks(1).getWeek());
         Player player = new Player("Tag#1", "Vins", 50.4, 60.8);
         playerWeeklyStats.setPlayer(player);
         playerWeeklyStatsRepository.saveOrUpdate(playerWeeklyStats);

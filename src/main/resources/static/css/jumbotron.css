@@ -14,7 +14,7 @@ td, th {
    text-align: center;
 }
 
-#clan-header {
+.clan-header {
     text-align:center;
     color: #eeeeee;
     background: rgb(0,0,0);
@@ -35,11 +35,11 @@ body {
 }
 
 body {
- min-width: 500px;
+    min-width: 700px;
 }
 
 .inner-container {
-    min-height: 500px;
+    min-height: 700px;
     border: 1px solid #dddddd;
     background: white;
     padding:30px;

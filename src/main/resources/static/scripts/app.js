@@ -16,52 +16,44 @@ app.controller("weeksDropdownController", function($scope, $http) {
     })
 
     $scope.avgContrColor = function(number, type) {
-        var boundary = 0;
+        var boundaryChest = 32;
+        var boundaryCard = 50;
+        var wowChest = 100;
+        var wowCard = 600;
 
-        if (type == "card") {
-            boundary = 100;
-        }else if (type == "chest") {
-            boundary = 50;
+        var boundary = 0;
+        var wow = 100000;
+
+        var style = {};
+
+        if (type=="chest") {
+            boundary = boundaryChest;
+            wow = wowChest;
+        }
+        if (type=="card") {
+            boundary = boundaryCard;
+            wow = wowCard;
         }
 
         if (boundary == 0) {
-            return "black"
+            style.color = "black"
+            return style;
         }
+
         if (number >= boundary) {
-            return "green"
+            style.color = 'green'
         }else {
-            return "red";
+             style.color  = 'red'
         }
-    }
 
-    $scope.today = function() {
-        $scope.dt = new Date();
-    };
+        if (number >= wow){
+             style["font-weight"] = 'bold'
+        }
 
-    $scope.today();
-
-    $scope.clear = function() {
-        $scope.dt = null;
-    };
-
-    $scope.dateOptions = {
-         dateDisabled: disabled,
-         formatYear: 'yy',
-         maxDate: new Date(),
-         minDate: new Date().setDate(new Date() - 70),
-         startingDay: 1,
-         showWeeks: false,
-    };
-
-    function disabled(data) {
-        var date = data.date
-        var mode = data.mode
-        return (date.getDay() != 1 )
+        return style;
     }
 
     function getData(week) {
-
-//       $scope.stats = data
 
         $http.get("http://localhost:8080/clan/" + week).then(function(response){
             if ($scope.stats == null) {
@@ -84,39 +76,6 @@ app.controller("weeksDropdownController", function($scope, $http) {
 
     }
 
-
-    $scope.open = function() {
-        $scope.popup.opened = true;
-    }
-
-    $scope.setDate = function(year, month, day) {
-        $scope.dt = new Date(year, month, day);
-    };
-
-    $scope.popup = {
-         opened: false
-    };
-
-    function getDayClass(data) {
-        var date = data.date,
-        mode = data.mode;
-        if (mode === 'day') {
-            var dayToCheck = new Date(date).setHours(0,0,0,0);
-            for (var i = 0; i < $scope.events.length; i++) {
-               var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
-               if (dayToCheck === currentDay) {
-                   return $scope.events[i].status;
-               }
-            }
-        }
-
-        return '';
-     }
-
-     $scope.sortStyle = function(elem){
-        console.log(elem)
-        return "fa fa-fw fa-sort"
-     }
 })
 
 

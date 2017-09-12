@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,7 +33,7 @@ public class ClanStatsService implements IClanStatsService {
 
 	@Override
 	public List<PlayerOverallStats> retrieveClanStats(Week week) {
-	    logger.info("retriveClanStats  week: {}", week);
+	    logger.info("retrieveClanStats  week: {}", week);
 		List<PlayerWeeklyStats> weeklyStats = playerWeeklyStatsRepository.findByWeek(week);
 		List<PlayerOverallStats> stats = new ArrayList<>();
 		weeklyStats.stream().forEach(p -> stats.add(new PlayerOverallStats(p)));
@@ -47,8 +46,8 @@ public class ClanStatsService implements IClanStatsService {
 
 		List<Player> result = new ArrayList<>();
 
-		Week startingWeek = new Week().previousWeek(13);
-		Week latestWeek = new Week().previousWeek(1);
+		Week startingWeek = new Week().minusWeeks(13);
+		Week latestWeek = new Week().minusWeeks(1);
 
 		// finds all player stats between the provided weeks
 		Map<Player, List<PlayerWeeklyStats>> allPlayerStats = playerWeeklyStatsRepository.findByWeek(startingWeek,
@@ -90,7 +89,7 @@ public class ClanStatsService implements IClanStatsService {
 
 	}
 
-	@PostConstruct
+//	@PostConstruct
 	@Transactional
 	public void initDb() {
 	    logger.info("init DB");
@@ -100,7 +99,7 @@ public class ClanStatsService implements IClanStatsService {
 			for (int w = 1; w < 11; w++) {
 				PlayerWeeklyStats stats = new PlayerWeeklyStats();
 				stats.setPlayer(player);
-				stats.setWeek(new Week().previousWeek(w+1).getWeek());
+				stats.setWeek(new Week().minusWeeks(w+1).getWeek());
 				stats.setChestContribution(pl + w * 5);
 				stats.setCardDonation(pl + w * 10);
 				playerWeeklyStatsRepository.saveOrUpdate(stats);

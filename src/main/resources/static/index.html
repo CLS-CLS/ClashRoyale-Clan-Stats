@@ -32,8 +32,8 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron" style="background: #333333; border:1px red">
     <div class="container">
-        <h1 id="clan-header">The Greek Noobs</h1>
-        <p style="text-align:center">Stats of players donations and clan chest contributions </p>
+        <h1 class="clan-header">The Greek Noobs</h1>
+        <p style="text-align:center">Donations and Clan Chest Contributions Statistics </p>
 
     </div>
 </div>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 -->
-                <table class="table table-bordered col-xs-8">
+                <table class="table table-striped">
                     <thead>
                     <tr>
                         <th rowspan="2">Player
@@ -89,7 +89,7 @@
                         <th rowspan="2">Donations
                             <order-directive bind-to="cardDonation" ordering-by="orderingBy"/>
                         </th>
-                        <th colspan="2">Average</th>
+                        <th colspan="2">Average Stats (of the last 12 weeks)</th>
                     </tr>
                     <tr>
                         <th>Chest Contribution
@@ -106,8 +106,8 @@
                         <td style="font-family: cursive">{{s.name}}</td>
                         <td>{{s.chestContribution}}</td>
                         <td>{{s.cardDonation}}</td>
-                        <td ng-class="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution}}</td>
-                        <td ng-class="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation}}</td>
+                        <td ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution}}</td>
+                        <td ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation}}</td>
                     </tr>
                     <tr ng-if="stats.length == 0"><td colspan="5"> <h2>No data for this period</h2></td></tr>
                     </tbody>
@@ -120,9 +120,12 @@
 <footer>
     <div class="jumbotron" style="background: #333333; border:1px red">
         <div class="container">
-            <div class="col-xs-6"><h3>Powered by lytsiware productions</h3></div>
-            <div class="col-xs-6"><h4>This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell
-            and Supercell is not responsible for it.</h4></div>
+            <div class="clan-header col-xs-8"><h2>Powered by lytsiware productions</h2></div>
+            <div class="col-xs-4"><h4>The stats have been provided by
+                     <a style="color:yellow" href="http://www.clashstat.com" target="_black">www.clanstat.com</a></h4>
+                </div>
+                <div class="col-xs-3"><h4>This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell
+                    and Supercell is not responsible for it.</h4></div>
         </div>
     </div>
 </footer>

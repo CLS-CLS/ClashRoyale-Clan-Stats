@@ -54,7 +54,7 @@ public class ClanStatsController {
         PlayerWeeklyStats playerWeeklyStats = new PlayerWeeklyStats();
         playerWeeklyStats.setCardDonation(40);
         playerWeeklyStats.setChestContribution(20);
-        playerWeeklyStats.setWeek(new Week().previousWeek(1).getWeek());
+        playerWeeklyStats.setWeek(new Week().minusWeeks(1).getWeek());
         Player player = new Player("Tag#1", "Vins", 50.4, 60.8);
         playerWeeklyStats.setPlayer(player);
         playerWeeklyStatsRepository.saveOrUpdate(playerWeeklyStats);

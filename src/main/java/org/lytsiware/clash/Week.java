@@ -12,34 +12,34 @@ public class Week {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public Week(){
+    public Week() {
         this(LocalDate.now());
     }
-    public Week(int week){
+
+    public Week(int week) {
         this.week = week;
-        startDate = toDate(week);
-        endDate = startDate.plusDays(6);
     }
 
     public Week(LocalDate date) {
         this(toWeek(date));
     }
 
-    public Week nextWeek(int weeks){
-        return new Week(week+ weeks);
+    public Week plusWeeks(int weeks) {
+        return new Week(week + weeks);
     }
-    public Week previousWeek(int weeks){
+
+    public Week minusWeeks(int weeks) {
         return new Week(week - weeks);
     }
 
 
     private static int toWeek(LocalDate date) {
         long days = ZERO_WEEK.until(date, ChronoUnit.DAYS);
-        return (int)days / 7;
+        return (int) days / 7;
     }
 
 
-    private static LocalDate toDate(int week){
+    private static LocalDate toDate(int week) {
         LocalDate finalDate = ZERO_WEEK.plus(week * 7, ChronoUnit.DAYS);
         return finalDate;
     }
@@ -50,15 +50,25 @@ public class Week {
     }
 
     public LocalDate getStartDate() {
+        if (startDate == null) {
+            startDate = toDate(week);
+        }
         return startDate;
     }
 
     public LocalDate getEndDate() {
+        if (endDate == null) {
+            endDate = getStartDate().plusDays(6);
+        }
         return endDate;
     }
 
     @Override
     public String toString() {
+        return "" + week;
+    }
+
+    public String toStringWithDates() {
         final StringBuilder sb = new StringBuilder();
         sb.append(week);
         sb.append(" (").append(startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));

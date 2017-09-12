@@ -12,7 +12,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class ClashStatsSiteService  implements IClashSiteService {
 			int cardDonation = Integer.parseInt(el.select(".lineD").text().split(",")[1]);
 
 			Player player = new Player(memberTag, memberName, 0, 0);
-			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, new Week().previousWeek(1).getWeek(),chestContribution, cardDonation);
+			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, new Week().minusWeeks(1).getWeek(),chestContribution, cardDonation);
 			playerWeeklyStats.add(stats);
 		}
 		

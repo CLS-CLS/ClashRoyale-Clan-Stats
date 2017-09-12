@@ -41,7 +41,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     @Override
     public Map<String, Player> loadAll() {
         logger.info("loadAll");
-        TypedQuery query =  em.createQuery("select p from Player p", Player.class);
+        TypedQuery<Player> query =  em.createQuery("select p from Player p", Player.class);
         List<Player> result = query.getResultList();
         return result.stream().collect(Collectors.toMap(Player::getTag,  s -> s));
 
