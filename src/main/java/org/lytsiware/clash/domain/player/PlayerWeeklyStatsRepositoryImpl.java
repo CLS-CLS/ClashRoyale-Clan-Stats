@@ -1,5 +1,8 @@
 package org.lytsiware.clash.domain.player;
 
+import org.lytsiware.clash.Week;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -19,21 +22,26 @@ import java.util.Map;
 @Transactional(value=TxType.REQUIRED)
 public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsRepository {
 
+    Logger logger = LoggerFactory.getLogger(PlayerWeeklyStatsRepositoryImpl.class);
+
     @PersistenceContext
     EntityManager em;
 
 
     @Override
     public PlayerWeeklyStats saveOrUpdate(PlayerWeeklyStats playerWeeklyStats) {
+        logger.info("saveOrUpdate playerWeeklyStats");
         return em.merge(playerWeeklyStats);
 
     }
 
     @Override
-    public Map<Player, List<PlayerWeeklyStats>> findByWeek(int startWeek, int endWeek) {
-        TypedQuery<PlayerWeeklyStats> query = em.createQuery("select s from PlayerWeeklyStats s where week between :startWeek AND :endWeek", PlayerWeeklyStats.class);
-        query.setParameter("startWeek", startWeek).setParameter("endWeek", endWeek);
-        List<PlayerWeeklyStats> list = query.getResultList();
+    public Map<Player, List<PlayerWeeklyStats>> findByWeek(Week startWeek, Week endWeek) {
+        logger.info("findByWeek {} - {}", startWeek, endWeek);
+
+        Query nquery = em.createNamedQuery("findBetweenWeeks");
+        nquery.setParameter("startWeek", startWeek.getWeek()).setParameter("endWeek", endWeek.getWeek());
+        List<PlayerWeeklyStats> list = nquery.getResultList();
         Map<Player, List<PlayerWeeklyStats>> result = new HashMap<>();
         for (PlayerWeeklyStats stat : list) {
             if (result.containsKey(stat.getPlayer())) {
@@ -49,9 +57,11 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 
     @Override
     @Cacheable("playerStats")
-    public List<PlayerWeeklyStats> findByWeek(int week) {
+    public List<PlayerWeeklyStats> findByWeek(Week week) {
+        logger.info("findByWeek {}", week);
+
         Query nquery = em.createNamedQuery("findByWeek");
-        nquery.setParameter("week", week);
+        nquery.setParameter("week", week.getWeek());
         List<PlayerWeeklyStats> list = nquery.getResultList();
         return list;
     }

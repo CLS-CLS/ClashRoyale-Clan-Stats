@@ -1,7 +1,7 @@
 package org.lytsiware.clash.dto;
 
+import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
-import org.lytsiware.clash.utils.DateWeekConverter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -42,8 +42,9 @@ public class PlayerOverallStats implements Serializable {
         this.avgChestContribution = playerWeeklyStats.getPlayer().getAvgChestContribution();
         this.chestContribution = playerWeeklyStats.getChestContribution();
         this.cardDonation = playerWeeklyStats.getCardDonation();
-        this.startDate = DateWeekConverter.toDate(playerWeeklyStats.getWeek());
-        this.endDate = startDate.plusDays(6);
+        Week week = new Week(playerWeeklyStats.getWeek());
+        this.startDate = week.getStartDate();
+        this.endDate = week.getEndDate();
 
     }
 

@@ -1,11 +1,13 @@
 package org.lytsiware.clash.service;
 
+import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.PlayerOverallStats;
-import org.lytsiware.clash.utils.DateWeekConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class ClanStatsService implements IClanStatsService {
 
+    Logger logger = LoggerFactory.getLogger(ClanStatsService.class);
+
 	@Autowired
 	PlayerRepository playerRepository;
 
@@ -29,7 +33,8 @@ public class ClanStatsService implements IClanStatsService {
 	IClashSiteService siteService;
 
 	@Override
-	public List<PlayerOverallStats> retrieveClanStats(int week) {
+	public List<PlayerOverallStats> retrieveClanStats(Week week) {
+	    logger.info("retriveClanStats  week: {}", week);
 		List<PlayerWeeklyStats> weeklyStats = playerWeeklyStatsRepository.findByWeek(week);
 		List<PlayerOverallStats> stats = new ArrayList<>();
 		weeklyStats.stream().forEach(p -> stats.add(new PlayerOverallStats(p)));
@@ -38,10 +43,12 @@ public class ClanStatsService implements IClanStatsService {
 
 	@Override
 	public List<Player> calculateAvgs() {
+	    logger.info("calculateAvgs");
+
 		List<Player> result = new ArrayList<>();
 
-		int startingWeek = DateWeekConverter.toWeek(LocalDate.now().minusWeeks(13));
-		int latestWeek = DateWeekConverter.toWeek(LocalDate.now().minusWeeks(1));
+		Week startingWeek = new Week().previousWeek(13);
+		Week latestWeek = new Week().previousWeek(1);
 
 		// finds all player stats between the provided weeks
 		Map<Player, List<PlayerWeeklyStats>> allPlayerStats = playerWeeklyStatsRepository.findByWeek(startingWeek,
@@ -71,6 +78,8 @@ public class ClanStatsService implements IClanStatsService {
 	@Override
 	@CacheEvict(value = "playerStats", allEntries = true)
 	public void updateDatabaseWithLatest() {
+		logger.info("updateDatabaseWithLatest");
+
 		List<PlayerWeeklyStats> newStats = siteService.retrieveData();
 
 		newStats = playerWeeklyStatsRepository.saveOrUpdateAll(newStats);
@@ -84,13 +93,14 @@ public class ClanStatsService implements IClanStatsService {
 	@PostConstruct
 	@Transactional
 	public void initDb() {
+	    logger.info("init DB");
 		Random rnd = new Random();
 		for (int pl = 0; pl < 10; pl++) {
 			Player player = new Player("tag#" + pl, "Name_" + pl, rnd.nextInt(100), rnd.nextInt(100));
 			for (int w = 1; w < 11; w++) {
 				PlayerWeeklyStats stats = new PlayerWeeklyStats();
 				stats.setPlayer(player);
-				stats.setWeek(DateWeekConverter.toWeek(LocalDate.now().minusWeeks(w+1)));
+				stats.setWeek(new Week().previousWeek(w+1).getWeek());
 				stats.setChestContribution(pl + w * 5);
 				stats.setCardDonation(pl + w * 10);
 				playerWeeklyStatsRepository.saveOrUpdate(stats);

@@ -1,12 +1,12 @@
 package org.lytsiware.clash.controller;
 
+import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.service.ClanStatsService;
-import org.lytsiware.clash.utils.DateWeekConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class ClanStatsController {
         if (deltaWeek < 1 || deltaWeek > 12) {
            deltaWeek = 1;
         }
-        int week = DateWeekConverter.toWeek(LocalDate.now().minusWeeks(deltaWeek));
+        Week week = new Week((LocalDate.now().minusWeeks(deltaWeek)));
         return clanStatsService.retrieveClanStats(week);
 
     }
@@ -54,7 +54,7 @@ public class ClanStatsController {
         PlayerWeeklyStats playerWeeklyStats = new PlayerWeeklyStats();
         playerWeeklyStats.setCardDonation(40);
         playerWeeklyStats.setChestContribution(20);
-        playerWeeklyStats.setWeek(DateWeekConverter.toWeek(LocalDate.now().minusWeeks(1)));
+        playerWeeklyStats.setWeek(new Week().previousWeek(1).getWeek());
         Player player = new Player("Tag#1", "Vins", 50.4, 60.8);
         playerWeeklyStats.setPlayer(player);
         playerWeeklyStatsRepository.saveOrUpdate(playerWeeklyStats);

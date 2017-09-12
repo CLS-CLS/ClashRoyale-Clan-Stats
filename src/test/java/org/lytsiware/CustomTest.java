@@ -2,11 +2,11 @@ package org.lytsiware;
 
 
 import org.lytsiware.clash.Application;
+import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStatsRepository;
-import org.lytsiware.clash.utils.DateWeekConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -28,7 +28,7 @@ public class CustomTest {
         PlayerWeeklyStats playerWeeklyStats = new PlayerWeeklyStats();
         playerWeeklyStats.setCardDonation(40);
         playerWeeklyStats.setChestContribution(20);
-        playerWeeklyStats.setWeek(DateWeekConverter.toWeek(LocalDate.now().minusWeeks(1)));
+        playerWeeklyStats.setWeek(new Week().previousWeek(1).getWeek());
         Player player = new Player("Tag#1", "Vins", 50.4, 60.8);
         playerWeeklyStats.setPlayer(player);
         playerWeeklyStatsRepository.saveOrUpdate(playerWeeklyStats);

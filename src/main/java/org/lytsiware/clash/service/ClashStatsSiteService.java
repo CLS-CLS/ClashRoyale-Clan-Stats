@@ -4,9 +4,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
-import org.lytsiware.clash.utils.DateWeekConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class ClashStatsSiteService  implements IClashSiteService {
 	
-	@Value("classpath:testFile.html")
+	@Value("${clientDataUrl}")
 	Resource dataResource;
 	
 		
@@ -45,7 +45,7 @@ public class ClashStatsSiteService  implements IClashSiteService {
 			int cardDonation = Integer.parseInt(el.select(".lineD").text().split(",")[1]);
 
 			Player player = new Player(memberTag, memberName, 0, 0);
-			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, DateWeekConverter.toWeek(LocalDate.now().minusWeeks(1)),chestContribution, cardDonation);
+			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, new Week().previousWeek(1).getWeek(),chestContribution, cardDonation);
 			playerWeeklyStats.add(stats);
 		}
 		
