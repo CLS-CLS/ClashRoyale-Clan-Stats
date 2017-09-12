@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {"playerFK", "week"})})
 @NamedQueries({@NamedQuery(name="findByWeek", query="select s from PlayerWeeklyStats s join fetch s.player where s.week = :week"),
-              @NamedQuery(name="findBetweenWeeks", query = "select s from PlayerWeeklyStats s join fetch s.player where week between :startWeek AND :endWeek")})
+              @NamedQuery(name="findBetweenWeeks", query = "select s from PlayerWeeklyStats s join fetch s.player where s.week between :startWeek AND :endWeek")})
 //@IdClass(PlayerWeeklyStatsPK.class)
 public class PlayerWeeklyStats {
 	

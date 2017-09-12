@@ -28,7 +28,7 @@ public class CustomTest {
         playerWeeklyStats.setCardDonation(40);
         playerWeeklyStats.setChestContribution(20);
         playerWeeklyStats.setWeek(new Week().minusWeeks(1).getWeek());
-        Player player = new Player("Tag#1", "Vins", 50.4, 60.8);
+        Player player = new Player("Tag#1", "Vins", "Leader", 50.4, 60.8);
         playerWeeklyStats.setPlayer(player);
         playerWeeklyStatsRepository.saveOrUpdate(playerWeeklyStats);
     }

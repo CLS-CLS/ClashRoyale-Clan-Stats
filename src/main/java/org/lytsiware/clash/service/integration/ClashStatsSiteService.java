@@ -1,10 +1,10 @@
-package org.lytsiware.clash.service;
+package org.lytsiware.clash.service.integration;
 
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 
 import java.util.List;
 
-public interface IClashSiteService {
+public interface ClashStatsSiteService {
 
 	List<PlayerWeeklyStats> retrieveData();
 

@@ -15,20 +15,24 @@ public class Player {
     double avgChestContribution;
 
     double avgCardDonation;
+    
+    String role;
 
     public Player() {
     }
 
-    public Player(String tag, String name, double avgChestContribution, double avgCardDonation) {
+    public Player(String tag, String name, String role, double avgChestContribution, double avgCardDonation) {
         this.tag = tag;
         this.name = name;
         this.avgChestContribution = avgChestContribution;
         this.avgCardDonation = avgCardDonation;
+        this.role = role;
     }
 
-    public Player(String tag, String name) {
+    public Player(String tag, String name, String role) {
         this.tag = tag;
         this.name = name;
+        this.role = role;
     }
 
     public String getTag() {
@@ -73,4 +77,14 @@ public class Player {
     public int hashCode() {
         return tag.hashCode();
     }
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+    
+    
 }

@@ -6,6 +6,10 @@
 [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
 }
+.fa {
+	font-size: 12px;
+}
+
 
 td, th {
    vertical-align:middle !important;

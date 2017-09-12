@@ -32,8 +32,10 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron" style="background: #333333; border:1px red">
     <div class="container">
-        <h1 class="clan-header">The Greek Noobs</h1>
-        <p style="text-align:center">Donations and Clan Chest Contributions Statistics </p>
+    	
+        <h1 class="clan-header"><img src="images/clanlogo.png">
+        The Greek Noobs</h1>
+        <p style="text-align:center">Donations and Clan Chest Contribution Statistics </p>
 
     </div>
 </div>
@@ -44,9 +46,9 @@
             <div ng-controller="weeksDropdownController">
                 <div class="filter">
 
-                    <div class="col-xs-6 col-md-3" >
+                    <div class="col-xs-4 col-md-3" >
                         <table>
-                            <tr><td><label>Stats for Past Week : </label></td></tr>
+                            <tr><td><label>Shift to previous week No#:</label></td></tr>
                             <tr><td><span>{{stats[0].startDate[2]}}/{{stats[0].startDate[1]}}/{{stats[0].startDate[0]}}
                         - {{stats[0].endDate[2]}}/{{stats[0].endDate[1]}}/{{stats[0].endDate[0]}}</span></td></tr>
                         </table></div>
@@ -81,31 +83,35 @@
                     <thead>
                     <tr>
                         <th rowspan="2">Player
-                            <order-directive bind-to="name" ordering-by="orderingBy"/>
+                            <order-directive bind-to="name" filter-by="filter"/>
+                        </th>
+                        <th rowspan="2">Role
+                            <order-directive bind-to="role" filter-by="filter" comparator="roleOrder"/>
                         </th>
                         <th rowspan="2">Chest contribution
-                            <order-directive bind-to="chestContribution" ordering-by="orderingBy"/>
+                            <order-directive bind-to="chestContribution" filter-by="filter"/>
                         </th>
                         <th rowspan="2">Donations
-                            <order-directive bind-to="cardDonation" ordering-by="orderingBy"/>
+                            <order-directive bind-to="cardDonation" filter-by="filter"/>
                         </th>
                         <th colspan="2">Average Stats (of the last 12 weeks)</th>
                     </tr>
                     <tr>
                         <th>Chest Contribution
-                            <order-directive bind-to="avgChestContribution" ordering-by="orderingBy"/>
+                            <order-directive bind-to="avgChestContribution" filter-by="filter"/>
                         </th>
                         <th>Donations
-                            <order-directive bind-to="avgCardDonation" ordering-by="orderingBy"/>
+                            <order-directive bind-to="avgCardDonation" filter-by="filter"/>
                         </th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: orderingBy">
+                    <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: filter.orderBy: false : filter.comparator">
                         <td style="font-family: cursive">{{s.name}}</td>
+                        <td>{{s.role}}</td>
                         <td>{{s.chestContribution}}</td>
-                        <td>{{s.cardDonation}}</td>
+                        <td style="border-right: 1.5px solid #ddd; ">{{s.cardDonation}}</td>
                         <td ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution}}</td>
                         <td ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation}}</td>
                     </tr>
@@ -120,12 +126,14 @@
 <footer>
     <div class="jumbotron" style="background: #333333; border:1px red">
         <div class="container">
-            <div class="clan-header col-xs-8"><h2>Powered by lytsiware productions</h2></div>
-            <div class="col-xs-4"><h4>The stats have been provided by
+        	<div class="col-xs-6"><h4>The stats have been provided by
                      <a style="color:yellow" href="http://www.clashstat.com" target="_black">www.clanstat.com</a></h4>
-                </div>
-                <div class="col-xs-3"><h4>This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell
-                    and Supercell is not responsible for it.</h4></div>
+            </div>
+            <div class="col-xs-6"><h4>This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell
+                    and Supercell is not responsible for it.</h4>
+            </div>
+            <div class="clan-header col-xs-12"><h2>Powered by lytsiware productions</h2></div>
+            
         </div>
     </div>
 </footer>

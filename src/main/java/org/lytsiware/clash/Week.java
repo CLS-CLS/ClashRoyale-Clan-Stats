@@ -77,8 +77,30 @@ public class Week {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.print(new Week(50));
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + week;
+		return result;
+	}
 
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Week other = (Week) obj;
+		if (week != other.week)
+			return false;
+		return true;
+	}
+    
+    
+
+    
+    
 }

@@ -6,6 +6,7 @@ import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.PlayerOverallStats;
+import org.lytsiware.clash.service.integration.ClashStatsSiteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class ClanStatsService implements IClanStatsService {
 
-    Logger logger = LoggerFactory.getLogger(ClanStatsService.class);
+	Logger logger = LoggerFactory.getLogger(ClanStatsService.class);
 
 	@Autowired
 	PlayerRepository playerRepository;
@@ -29,11 +30,11 @@ public class ClanStatsService implements IClanStatsService {
 	PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
 
 	@Autowired
-	IClashSiteService siteService;
+    ClashStatsSiteService siteService;
 
 	@Override
 	public List<PlayerOverallStats> retrieveClanStats(Week week) {
-	    logger.info("retrieveClanStats  week: {}", week);
+		logger.info("retrieveClanStats  week: {}", week);
 		List<PlayerWeeklyStats> weeklyStats = playerWeeklyStatsRepository.findByWeek(week);
 		List<PlayerOverallStats> stats = new ArrayList<>();
 		weeklyStats.stream().forEach(p -> stats.add(new PlayerOverallStats(p)));
@@ -42,9 +43,7 @@ public class ClanStatsService implements IClanStatsService {
 
 	@Override
 	public List<Player> calculateAvgs() {
-	    logger.info("calculateAvgs");
-
-		List<Player> result = new ArrayList<>();
+		logger.info("calculateAvgs");
 
 		Week startingWeek = new Week().minusWeeks(13);
 		Week latestWeek = new Week().minusWeeks(1);
@@ -82,29 +81,30 @@ public class ClanStatsService implements IClanStatsService {
 		List<PlayerWeeklyStats> newStats = siteService.retrieveData();
 
 		newStats = playerWeeklyStatsRepository.saveOrUpdateAll(newStats);
-		
+
 		List<Player> updatedPlayers = calculateAvgs();
 
 		playerRepository.saveOrUpdate(updatedPlayers);
 
 	}
 
-//	@PostConstruct
+	@PostConstruct
 	@Transactional
 	public void initDb() {
-	    logger.info("init DB");
+		logger.info("init DB");
 		Random rnd = new Random();
 		for (int pl = 0; pl < 10; pl++) {
-			Player player = new Player("tag#" + pl, "Name_" + pl, rnd.nextInt(100), rnd.nextInt(100));
+			Player player = new Player("tag#" + pl, "Name_" + pl, "superman", rnd.nextInt(100), rnd.nextInt(100));
 			for (int w = 1; w < 11; w++) {
 				PlayerWeeklyStats stats = new PlayerWeeklyStats();
 				stats.setPlayer(player);
-				stats.setWeek(new Week().minusWeeks(w+1).getWeek());
+				stats.setWeek(new Week().minusWeeks(w + 1).getWeek());
 				stats.setChestContribution(pl + w * 5);
 				stats.setCardDonation(pl + w * 10);
 				playerWeeklyStatsRepository.saveOrUpdate(stats);
 			}
 		}
+		updateDatabaseWithLatest();
 	}
 
 }

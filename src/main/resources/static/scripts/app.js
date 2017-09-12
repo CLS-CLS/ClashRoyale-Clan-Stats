@@ -1,8 +1,8 @@
-var data = [{"tag":"tag#0","name":"Name_0","week":31,"avgChestContribution":0.0,"avgCardDonation":35.0,"chestContribution":51,"cardDonation":7},{"tag":"tag#5","name":"Name_5","week":31,"avgChestContribution":55.0,"avgCardDonation":1.0,"chestContribution":46,"cardDonation":65},{"tag":"tag#9","name":"Name_9","week":31,"avgChestContribution":99.0,"avgCardDonation":78.0,"chestContribution":32,"cardDonation":37},{"tag":"tag#4","name":"Name_4","week":31,"avgChestContribution":0.0,"avgCardDonation":43.0,"chestContribution":5,"cardDonation":29},{"tag":"tag#6","name":"Name_6","week":31,"avgChestContribution":53.0,"avgCardDonation":67.0,"chestContribution":32,"cardDonation":93},{"tag":"tag#8","name":"Name_8","week":31,"avgChestContribution":25.0,"avgCardDonation":65.0,"chestContribution":34,"cardDonation":53},{"tag":"tag#3","name":"Name_3","week":31,"avgChestContribution":42.0,"avgCardDonation":73.0,"chestContribution":27,"cardDonation":38},{"tag":"tag#7","name":"Name_7","week":31,"avgChestContribution":51.0,"avgCardDonation":17.0,"chestContribution":32,"cardDonation":54},{"tag":"tag#2","name":"Name_2","week":31,"avgChestContribution":64.0,"avgCardDonation":14.0,"chestContribution":23,"cardDonation":69},{"tag":"tag#1","name":"Name_1","week":31,"avgChestContribution":28.0,"avgCardDonation":94.0,"chestContribution":52,"cardDonation":8}]
+var baseUrl = location.href
+
 var app = angular.module("App", ['ui.bootstrap']);
 app.controller("weeksDropdownController", function($scope, $http) {
 
-    $scope.orderingBy = "name"
     $scope.selectedItem = 1
 
     $scope.stats = []
@@ -14,6 +14,37 @@ app.controller("weeksDropdownController", function($scope, $http) {
     $scope.$watch('selectedItem', function(newValue) {
         getData(newValue);
     })
+
+
+
+    $scope.roleOrder = function (item1, item2) {
+        var item1Order;
+        var item2Order;
+
+        var findOrder = function(item){
+            var value = item.value;
+            switch (value) {
+                case 'Leader':
+                    return 1;
+
+                case 'Co-Leader':
+                    return 2;
+
+                case 'Elder':
+                    return 3;
+                default:
+                    return 4;
+            }
+         }
+        item1Order = findOrder(item1);
+        item2Order = findOrder(item2);
+        return item1Order > item2Order ? 1 : -1
+    };
+
+     $scope.filter = {
+        orderBy : "-chestContribution",
+        comparator: ""
+    }
 
     $scope.avgContrColor = function(number, type) {
         var boundaryChest = 32;
@@ -55,13 +86,13 @@ app.controller("weeksDropdownController", function($scope, $http) {
 
     function getData(week) {
 
-        $http.get("http://localhost:8080/royalestats/clan/" + week).then(function(response){
+        $http.get(baseUrl + "/clan/" + week).then(function(response){
             if ($scope.stats == null) {
                 $scope.stats = [];
             }
             if ($scope.stats.length < response.data.length) {
                 $scope.stats.forEach(function(stat, index) {
-                    stat = response.data[index];
+                	$scope.stats[index] = response.data[index];
                 });
                 for (i = $scope.stats.length; i < response.data.length; i++){
                     $scope.stats.push(response.data[i])
@@ -87,7 +118,8 @@ app.directive("orderDirective", function() {
         replace:true,
         scope: {
             bindTo: '@',
-            orderingBy: '='
+            filterBy: '=',
+            comparator: '=?'
         },
         link: function(scope, elem ,attrs) {
         	var state = "unselected";
@@ -132,11 +164,12 @@ app.directive("orderDirective", function() {
                 changeState()
                 applyClass(elem)
                 scope.$apply(function(){
-                    scope.orderingBy = (state == "up" ? scope.bindTo : "-" + scope.bindTo)
+                    scope.filterBy.orderBy = (state == "up" ? scope.bindTo : "-" + scope.bindTo)
+                    scope.filterBy.comparator = scope.comparator
                 })
 
             })
-            scope.$watch('orderingBy', function(newValue){
+            scope.$watch('filterBy.orderBy', function(newValue){
                 if (newValue != scope.bindTo && newValue != "-" + scope.bindTo){
                         resetState();
                         applyClass(elem);

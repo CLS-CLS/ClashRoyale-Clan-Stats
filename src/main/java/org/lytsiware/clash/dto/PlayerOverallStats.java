@@ -8,7 +8,10 @@ import java.time.LocalDate;
 
 public class PlayerOverallStats implements Serializable {
 
-    private String tag;
+	private static final long serialVersionUID = 1L;
+	
+	
+	private String tag;
     private String name;
     private int week;
     private double avgChestContribution;
@@ -17,6 +20,7 @@ public class PlayerOverallStats implements Serializable {
     private int cardDonation;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String role;
 
     public LocalDate getStartDate() {
         return startDate;
@@ -45,6 +49,7 @@ public class PlayerOverallStats implements Serializable {
         Week week = new Week(playerWeeklyStats.getWeek());
         this.startDate = week.getStartDate();
         this.endDate = week.getEndDate();
+        this.role = playerWeeklyStats.getPlayer().getRole();
 
     }
 
@@ -103,4 +108,14 @@ public class PlayerOverallStats implements Serializable {
     public void setCardDonation(int cardDonation) {
         this.cardDonation = cardDonation;
     }
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+    
+    
 }

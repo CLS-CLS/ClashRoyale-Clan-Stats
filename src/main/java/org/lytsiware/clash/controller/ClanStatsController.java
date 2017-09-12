@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +38,6 @@ public class ClanStatsController {
     public List<PlayerOverallStats> retrieveClanStats(@PathVariable(required = false) Integer deltaWeek) {
         logger.info("START retrieveClanStats - week {}", deltaWeek);
 
-        ArrayList<PlayerOverallStats> playerOverallStats = new ArrayList<>();
-
         if (deltaWeek < 1 || deltaWeek > 12) {
            deltaWeek = 1;
         }
@@ -55,7 +52,7 @@ public class ClanStatsController {
         playerWeeklyStats.setCardDonation(40);
         playerWeeklyStats.setChestContribution(20);
         playerWeeklyStats.setWeek(new Week().minusWeeks(1).getWeek());
-        Player player = new Player("Tag#1", "Vins", 50.4, 60.8);
+        Player player = new Player("Tag#1", "Vins", "Leader", 50.4, 60.8);
         playerWeeklyStats.setPlayer(player);
         playerWeeklyStatsRepository.saveOrUpdate(playerWeeklyStats);
 
