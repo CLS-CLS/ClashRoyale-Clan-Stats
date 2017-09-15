@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 
 @Entity
+@SequenceGenerator(name="PWS_SEQUENCE", sequenceName="PWS_SEQUENCE", initialValue=100, allocationSize=10)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {"playerFK", "week"})})
 @NamedQueries({@NamedQuery(name="findByWeek", query="select s from PlayerWeeklyStats s join fetch s.player where s.week = :week"),
               @NamedQuery(name="findBetweenWeeks", query = "select s from PlayerWeeklyStats s join fetch s.player where s.week between :startWeek AND :endWeek")})
@@ -24,7 +25,7 @@ public class PlayerWeeklyStats {
 	}
 
 	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PWS_SEQUENCE")
     private Long id;
 
     public Long getId() {

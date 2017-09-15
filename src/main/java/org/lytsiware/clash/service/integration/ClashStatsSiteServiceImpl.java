@@ -33,6 +33,7 @@ public class ClashStatsSiteServiceImpl implements ClashStatsSiteService {
         try {
             URL url = dataResource.getURL();
             URLConnection connection = url.openConnection();
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
             StringBuilder sb = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 

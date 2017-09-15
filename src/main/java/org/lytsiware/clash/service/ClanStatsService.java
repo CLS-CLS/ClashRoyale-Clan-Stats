@@ -88,10 +88,11 @@ public class ClanStatsService implements IClanStatsService {
 
 	}
 
-	@PostConstruct
+	//@PostConstruct
 	@Transactional
 	public void initDb() {
 		logger.info("init DB");
+		/*
 		Random rnd = new Random();
 		for (int pl = 0; pl < 10; pl++) {
 			Player player = new Player("tag#" + pl, "Name_" + pl, "superman", rnd.nextInt(100), rnd.nextInt(100));
@@ -104,6 +105,7 @@ public class ClanStatsService implements IClanStatsService {
 				playerWeeklyStatsRepository.saveOrUpdate(stats);
 			}
 		}
+		*/
 		updateDatabaseWithLatest();
 	}
 
