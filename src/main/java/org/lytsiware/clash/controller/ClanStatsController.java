@@ -46,7 +46,7 @@ public class ClanStatsController {
 
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
+   // @RequestMapping(value = "/test", method = RequestMethod.GET)
     public void test() {
         PlayerWeeklyStats playerWeeklyStats = new PlayerWeeklyStats();
         playerWeeklyStats.setCardDonation(40);
@@ -61,13 +61,13 @@ public class ClanStatsController {
 
 
 
-    @RequestMapping(value = "/test2", method = RequestMethod.GET)
+   // @RequestMapping(value = "/test2", method = RequestMethod.GET)
     public void test2(){
         Map<String, Player> results = playerRepository.loadAll();
         System.out.println(results);
     }
 
-    @RequestMapping(value = "/test3", method = RequestMethod.GET)
+   // @RequestMapping(value = "/test3", method = RequestMethod.GET)
     public void test3(){
         clanStatsService.updateDatabaseWithLatest();
     }
