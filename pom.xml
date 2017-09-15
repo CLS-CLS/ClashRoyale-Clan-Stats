@@ -49,6 +49,24 @@
 				</dependency>
 			</dependencies>
 		</profile>
+		<profile>
+			<id>heroku</id>
+			<activation>
+				<property>
+					<name>env.DYNO</name>
+				</property>
+			</activation>
+			<properties>
+				<spring.profile>prod</spring.profile>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<version>9.4-1206-jdbc42</version>
+				</dependency>
+			</dependencies>
+		</profile>
 	</profiles>
 	
 
@@ -123,6 +141,26 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!--  plugin to print the evn variables to the console
+			<plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property environment="env" />
+                                <echoproperties />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			-->
 		</plugins>
 
 	</build>
