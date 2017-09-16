@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=700"/>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -52,12 +52,12 @@
                             <tr><td><span>{{stats[0].startDate[2]}}/{{stats[0].startDate[1]}}/{{stats[0].startDate[0]}}
                         - {{stats[0].endDate[2]}}/{{stats[0].endDate[1]}}/{{stats[0].endDate[0]}}</span></td></tr>
                         </table></div>
-                    <div class="col-xs-2 dropdown">
+                    <div class="col-xs-3 dropdown">
                         <div style="margin-top:13px">
-                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                            <button class="btn btn-default btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                                 <span class="selected">{{selectedItem}}</span>
                                 <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="width:100%">
 
                                 <li ng-repeat="i in [1,2 ,3,4,5,6,7,8,9,10,11,12 ]">
                                     <a ng-click="dropboxitemselected(i)">{{i}}</a>
@@ -82,33 +82,35 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th rowspan="2">Player
-                            <order-directive bind-to="name" filter-by="filter"/>
+                        <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
+                        	Player <order-directive bind-to="name" filter-by="filter"/>
+                            </span>
                         </th>
-                        <th rowspan="2">Role
-                            <order-directive bind-to="role" filter-by="filter" comparator="roleOrder"/>
+                        <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
+                        	Role <order-directive bind-to="role" filter-by="filter" comparator="roleOrder"/>
+                        	</span>
                         </th>
-                        <th rowspan="2">Chest contribution
-                            <order-directive bind-to="chestContribution" filter-by="filter"/>
+                        <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Chest contribution
+                            <order-directive bind-to="chestContribution" filter-by="filter"/></span>
                         </th>
-                        <th rowspan="2">Donations
-                            <order-directive bind-to="cardDonation" filter-by="filter"/>
+                        <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Donations
+                            <order-directive bind-to="cardDonation" filter-by="filter"/></span>
                         </th>
                         <th colspan="2">Average Stats (of the last 12 weeks)</th>
                     </tr>
                     <tr>
-                        <th>Chest Contribution
-                            <order-directive bind-to="avgChestContribution" filter-by="filter"/>
+                        <th><span ng-click=triggerOrderDirective($event)>Chest Contribution
+                            <order-directive bind-to="avgChestContribution" filter-by="filter"/></span>
                         </th>
-                        <th>Donations
-                            <order-directive bind-to="avgCardDonation" filter-by="filter"/>
+                        <th><span ng-click=triggerOrderDirective($event)>Donations
+                            <order-directive bind-to="avgCardDonation" filter-by="filter"/></span>
                         </th>
                     </tr>
                     </thead>
                     <tbody>
 
                     <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: filter.orderBy: false : filter.comparator">
-                        <td style="font-family: cursive">{{s.name}}</td>
+                        <td style="font-family: 'Comic Sans MS', cursive, sans-serif">{{s.name}}</td>
                         <td>{{s.role}}</td>
                         <td>{{s.chestContribution}}</td>
                         <td style="border-right: 1.5px solid #ddd; ">{{s.cardDonation}}</td>

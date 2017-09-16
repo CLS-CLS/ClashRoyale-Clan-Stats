@@ -1,7 +1,7 @@
 var baseUrl = location.href
 
 var app = angular.module("App", ['ui.bootstrap']);
-app.controller("weeksDropdownController", function($scope, $http) {
+app.controller("weeksDropdownController", function($scope, $http ,$timeout) {
 
     $scope.selectedItem = 1
 
@@ -14,6 +14,13 @@ app.controller("weeksDropdownController", function($scope, $http) {
     $scope.$watch('selectedItem', function(newValue) {
         getData(newValue);
     })
+
+    $scope.triggerOrderDirective = function(elem) {
+    	$timeout(function(){
+    		$(elem.target).find("i").trigger('click');
+    	},0, false)
+        
+    }
 
 
 
