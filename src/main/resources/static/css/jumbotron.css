@@ -42,11 +42,11 @@ body {
 }
 
 body {
-    min-width: 700px;
+    min-width: 768px;
 }
 
 .inner-container {
-    min-height: 700px;
+    min-height: 768px;
     border: 1px solid #dddddd;
     background: white;
     padding:30px;
