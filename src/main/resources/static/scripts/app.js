@@ -1,15 +1,27 @@
 var baseUrl = location.href
 
 var app = angular.module("App", ['ui.bootstrap']);
+var minWeek = 1;
+var maxWeek = 12;
 app.controller("weeksDropdownController", function($scope, $http ,$timeout) {
 
-    $scope.selectedItem = 1
+
+    $scope.selectedItem = minWeek
 
     $scope.stats = []
 
     $scope.dropboxitemselected = function(item) {
         $scope.selectedItem = item;
     }
+
+    $scope.previousWeek = function(){
+        if ($scope.selectedItem == minWeek) return;
+        $scope.selectedItem = $scope.selectedItem - 1
+    }
+     $scope.nextWeek = function(){
+           if ($scope.selectedItem == maxWeek) return;
+            $scope.selectedItem = $scope.selectedItem + 1
+        }
 
     $scope.$watch('selectedItem', function(newValue) {
         getData(newValue);
@@ -117,11 +129,10 @@ app.controller("weeksDropdownController", function($scope, $http ,$timeout) {
 })
 
 
-app.directive("orderDirective", function() {
-   
 
+app.directive("orderDirective", function() {
     return {
-        template : "<i class='fa fa-fw fa-sort'></i>",
+        template : "<i class='order fa fa-fw fa-sort'></i>",
         replace:true,
         scope: {
             bindTo: '@',

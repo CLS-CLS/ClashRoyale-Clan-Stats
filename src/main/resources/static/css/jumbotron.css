@@ -6,9 +6,11 @@
 [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
 }
-.fa {
+.order {
 	font-size: 12px;
 }
+
+
 
 
 td, th {

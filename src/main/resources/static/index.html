@@ -44,28 +44,35 @@
     <div ng-cloak>
         <div class="inner-container col-xs-12">
             <div ng-controller="weeksDropdownController">
-                <div class="filter">
+
+                <div class="filter row">
 
                     <div class="col-xs-4 col-md-3" >
                         <table>
                             <tr><td><label>Shift to previous week No#:</label></td></tr>
                             <tr><td><span>{{stats[0].startDate[2]}}/{{stats[0].startDate[1]}}/{{stats[0].startDate[0]}}
                         - {{stats[0].endDate[2]}}/{{stats[0].endDate[1]}}/{{stats[0].endDate[0]}}</span></td></tr>
-                        </table></div>
-                    <div class="col-xs-3 dropdown">
-                        <div style="margin-top:13px">
-                            <button class="btn btn-default btn-block dropdown-toggle" type="button" data-toggle="dropdown">
-                                <span class="selected">{{selectedItem}}</span>
-                                <span class="caret"></span></button>
-                            <ul class="dropdown-menu" style="width:100%">
-
-                                <li ng-repeat="i in [1,2 ,3,4,5,6,7,8,9,10,11,12 ]">
-                                    <a ng-click="dropboxitemselected(i)">{{i}}</a>
-                                </li>
-                            </ul>
-                        </div>
+                        </table>
                     </div>
 
+                    <div class="btn-group" role="group">
+                        <div style="margin-top:13px">
+                            <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="previousWeek()"><i class='fa fa-fw fa-chevron-left'></i></button>
+                            <div class="btn-group"  role="group">
+                                <button class="btn btn-default btn-block dropdown-toggle btn-lg" type="button" data-toggle="dropdown">
+                                    <span class="selected">{{selectedItem}}</span>
+                                    <span class="caret"></span></button>
+                                <ul class="dropdown-menu" style="width:100%">
+
+                                    <li ng-repeat="i in [1,2 ,3,4,5,6,7,8,9,10,11,12 ]">
+                                        <a ng-click="dropboxitemselected(i)">{{i}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <button type="button"  class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i class='fa fa-fw fa-chevron-right'></i></button>
+                        </div>
+                    </div>
                 </div>
                 <!--
                 <div class="col-xs-4">
