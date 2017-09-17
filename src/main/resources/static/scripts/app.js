@@ -3,7 +3,7 @@ var baseUrl = location.href
 var app = angular.module("App", ['ui.bootstrap']);
 var minWeek = 1;
 var maxWeek = 12;
-app.controller("weeksDropdownController", function($scope, $http ,$timeout) {
+app.controller("weeksDropdownController", function($scope, $http ,$timeout, $filter) {
 
 
     $scope.selectedItem = minWeek
@@ -28,12 +28,24 @@ app.controller("weeksDropdownController", function($scope, $http ,$timeout) {
     })
 
     $scope.triggerOrderDirective = function(elem) {
-    	$timeout(function(){
+    	$timeout(function() {
     		$(elem.target).find("i").trigger('click');
     	},0, false)
         
     }
 
+    $scope.percentageButtonLbl = "View Percentages (%)"
+
+    $scope.showPercentage = false;
+
+    $scope.togglePercentage = function(){
+        $scope.showPercentage = !$scope.showPercentage
+        if ($scope.showPercentage) {
+            $scope.percentageButtonLbl = "View Absolute Values"
+        }else {
+            $scope.percentageButtonLbl = "View Percentage (%)"
+        }
+    }
 
 
     $scope.roleOrder = function (item1, item2) {
@@ -66,7 +78,7 @@ app.controller("weeksDropdownController", function($scope, $http ,$timeout) {
     }
 
     $scope.avgContrColor = function(number, type) {
-        var boundaryChest = 32;
+        var boundaryChest = 20;
         var boundaryCard = 50;
         var wowChest = 100;
         var wowCard = 600;
@@ -122,8 +134,22 @@ app.controller("weeksDropdownController", function($scope, $http ,$timeout) {
                 })
                 $scope.stats.splice(response.data.length)
             }
+            calculatePercentageAndUpdateData(response.data);
         })
 
+    }
+
+    function calculatePercentageAndUpdateData(data){
+        var sumChest = 0;
+        var sumDonation = 0;
+        data.forEach(function(item){
+            sumChest += item.chestContribution;
+            sumDonation += item.cardDonation;
+        })
+        data.forEach(function (item){
+            item.chestContributionPerc = item.chestContribution / sumChest;
+            item.cardDonationPerc = item.cardDonation / sumDonation;
+        })
     }
 
 })
@@ -196,3 +222,12 @@ app.directive("orderDirective", function() {
         }
     }
 })
+
+app.filter('percentage', ['$filter', function ($filter) {
+  return function (input, decimals) {
+	  if (input == 0) {
+		  decimals = 0;
+	  }
+	  return $filter('number')(input * 100, decimals) + '%';
+  };
+}]);

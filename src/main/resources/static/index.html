@@ -73,6 +73,10 @@
                             <button type="button"  class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i class='fa fa-fw fa-chevron-right'></i></button>
                         </div>
                     </div>
+
+                    <button type="button" style="margin-top:13px" class="btn btn-default btn-lg col-xs-offset-1" ng-click="togglePercentage()">
+                        {{percentageButtonLbl}}
+                    </button>
                 </div>
                 <!--
                 <div class="col-xs-4">
@@ -117,10 +121,13 @@
                     <tbody>
 
                     <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: filter.orderBy: false : filter.comparator">
-                        <td style="font-family: 'Comic Sans MS', cursive, sans-serif">{{s.name}}</td>
+                        <td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{s.name}}</td>
                         <td>{{s.role}}</td>
-                        <td>{{s.chestContribution}}</td>
-                        <td style="border-right: 1.5px solid #ddd; ">{{s.cardDonation}}</td>
+
+                        <td ng-show="!showPercentage">{{s.chestContribution }}</td>
+                        <td ng-show="showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
+                        <td style="border-right: 1.5px solid #ddd; " ng-show="!showPercentage">{{s.cardDonation}}</td>
+                        <td style="border-right: 1.5px solid #ddd; " ng-show="showPercentage">{{s.cardDonationPerc | percentage:1}}</td>
                         <td ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution}}</td>
                         <td ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation}}</td>
                     </tr>
