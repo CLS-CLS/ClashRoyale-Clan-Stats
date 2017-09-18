@@ -14,11 +14,13 @@ import java.time.LocalDate;
 public class ClanStatsJob {
 
     private Logger logger = LoggerFactory.getLogger(ClanStatsJob.class);
+	
+
 
     @Autowired
     IClanStatsService clanStatsService;
 
-    @Scheduled(cron ="0 00 18 ? * MON ")
+    @Scheduled(cron ="0 00 16 ? * MON ")
     @Retryable(maxAttempts = 3, backoff = @Backoff(5000))
     public void run() {
         logger.info("Job Triggered at {}", LocalDate.now());
