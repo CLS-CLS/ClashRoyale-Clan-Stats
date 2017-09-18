@@ -1,5 +1,14 @@
 package org.lytsiware.clash.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerRepository;
@@ -12,11 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ClanStatsService implements IClanStatsService {

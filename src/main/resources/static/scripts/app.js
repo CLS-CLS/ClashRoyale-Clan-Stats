@@ -1,4 +1,4 @@
-var baseUrl = location.href
+var baseUrl = location.protocol +"//" + location.host + location.pathname
 
 var app = angular.module("App", ['ui.bootstrap']);
 var minWeek = 1;

@@ -5,7 +5,9 @@ import java.io.Serializable;
 
 public class PlayerWeeklyStatsPK implements Serializable {
 
-    private Player player;
+  	private static final long serialVersionUID = 1L;
+	
+  	private Player player;
     private int week;
 
     public PlayerWeeklyStatsPK(Player player, int week) {
