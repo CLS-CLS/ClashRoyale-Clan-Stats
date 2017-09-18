@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.lytsiware.clash.Week;
+import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
@@ -35,6 +36,9 @@ public class ClanStatsService implements IClanStatsService {
 
 	@Autowired
     ClashStatsSiteService siteService;
+	
+	@Autowired
+	WeekJobRepository WeekJobRepository;
 
 	@Override
 	public List<PlayerOverallStats> retrieveClanStats(Week week) {
@@ -89,8 +93,11 @@ public class ClanStatsService implements IClanStatsService {
 		List<Player> updatedPlayers = calculateAvgs();
 
 		playerRepository.saveOrUpdate(updatedPlayers);
+		
 
 	}
+	
+	
 
 	//@PostConstruct
 	@Transactional
@@ -112,5 +119,6 @@ public class ClanStatsService implements IClanStatsService {
 		*/
 		updateDatabaseWithLatest();
 	}
+
 
 }

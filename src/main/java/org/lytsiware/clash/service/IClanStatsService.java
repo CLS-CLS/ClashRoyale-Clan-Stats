@@ -12,4 +12,5 @@ public interface IClanStatsService {
     List<Player> calculateAvgs();
 
     void updateDatabaseWithLatest();
+
 }

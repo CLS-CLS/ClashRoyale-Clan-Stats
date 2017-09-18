@@ -1,43 +1,62 @@
 package org.lytsiware;
 
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.lytsiware.clash.Application;
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.player.PlayerRepository;
-import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
-import org.lytsiware.clash.domain.player.PlayerWeeklyStatsRepository;
+import org.lytsiware.clash.domain.job.WeekJobRepository;
+import org.lytsiware.clash.domain.job.WeeklyJob;
+import org.lytsiware.clash.service.job.ClanStatsJob;
+import org.lytsiware.clash.service.job.ScheduleCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Map;
-
-//@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @ContextConfiguration(classes = Application.class)
+@TestPropertySource(locations="classpath:test.properties")
 public class CustomTest {
-
+    
     @Autowired
-    private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
-
+    private WeekJobRepository weeklyJobRepo;
+    
     @Autowired
-    private PlayerRepository playerRepository;
-
-    //@Test
-    public void sampleTestCase(){
-        PlayerWeeklyStats playerWeeklyStats = new PlayerWeeklyStats();
-        playerWeeklyStats.setCardDonation(40);
-        playerWeeklyStats.setChestContribution(20);
-        playerWeeklyStats.setWeek(new Week().minusWeeks(1).getWeek());
-        Player player = new Player("Tag#1", "Vins", "Leader", 50.4, 60.8);
-        playerWeeklyStats.setPlayer(player);
-        playerWeeklyStatsRepository.saveOrUpdate(playerWeeklyStats);
+    private ClanStatsJob clanStatJob;
+    
+    @MockBean
+    private ScheduleCheckService scheduleCheckService;
+    
+    @MockBean
+    private org.springframework.scheduling.TaskScheduler scheduler;
+    
+    @Test
+    public void testWeeklyJob(){
+    	WeeklyJob wj0 = new WeeklyJob(0);
+    	weeklyJobRepo.save(wj0);
+    	WeeklyJob wj10 = new WeeklyJob(10);
+    	weeklyJobRepo.save(wj10);
+    	WeeklyJob wj11 = new WeeklyJob(11);
+    	weeklyJobRepo.save(wj11);
+    	
+    	WeeklyJob latest = weeklyJobRepo.loadLatest();
+    	Assert.assertEquals(11, latest.getLatestWeek());
     }
-
-
-    //@Test
-    public void test2(){
-        Map<String, Player> results = playerRepository.loadAll();
-        System.out.println(results);
+    
+    @Test
+    public void schedulePostConstruct() {
+    	weeklyJobRepo.save(new WeeklyJob(new Week().minusWeeks(2).getWeek()));
+    	boolean shouldRun  = clanStatJob.shouldRun();
+    	Assert.assertTrue(shouldRun);
+    	clanStatJob.run();
+    	shouldRun  = clanStatJob.shouldRun();
+    	Assert.assertFalse(shouldRun);
+    	
+    	
+    	
     }
 
 

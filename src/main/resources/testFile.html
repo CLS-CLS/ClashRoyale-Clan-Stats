@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<!-- Dates  Mon 4/09/2017 to SUN 10/09/2017-->
 <head>
     
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -15,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta property="fb:app_id" content="681127888678621"/>
         <meta name="Description" content="Clan statistics (Trophies, Donations, Crowns - over time!) for Clash Royale clan The greek noobs"/>
-    <title>ClashStat.com - Clan - The greek noobs</title>
+    <title>ClashStat.com - Clan Stats - The greek noobs</title>
 
     
         <script>
@@ -49,8 +48,9 @@
         </script>
     
 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css" />
     <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/site.css?v=Abgjnb3k3DBF3CnasQQcImuvMPS0btr5dIM85dM8gaY" />
+    <link rel="stylesheet" href="/css/site.css?v=AhmAn5nNlncT6umJ0gIK2CmNEhlrIggf6FaNH5hG5do" />
     <link rel="stylesheet" href="/css/alertify/alertify.min.css?v=HhsyZTYsiKX64NyihyPzQKzQPW7bLnW9Y8z1lwS07AQ" />
 </head>
 
@@ -68,9 +68,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav supercell">
-                    <li id="btnNews"><a href="/">News</a></li>
-                    <li id="btnTop"><a href="/Home/Top">Top Clans</a></li>
-                    <li id="btnSearch"><a href="/Home/Search">Search</a></li>
+                    <li id="btnTopPlayers"><a href="/Home/TopPlayers">Top Players</a></li>
+                    <li id="btnFindPlayer"><a href="/Home/FindPlayer">Player Search</a></li>
+                    <li id="btnTopClans"><a href="/Home/TopClans">Top Clans</a></li>
+                    <li id="btnFindClan"><a href="/Home/FindClan">Clan Search</a></li>
                     <li id="btnAbout"><a href="/Home/About">About</a></li>
                     <li id="btnContact"><a href="/Home/Contact">Contact</a></li>
                     <li id="btnHelp"><a href="/Home/Help">Help</a></li>
@@ -120,7 +121,7 @@
 
                     <div class="col-md-3 supercell" style="padding-top: 10px;">
                         <div class="row" style="text-align: center;">Trophies</div>
-                        <div class="row scSmaller" style="text-align: center;">31,754</div>
+                        <div class="row scSmaller" style="text-align: center;">31,834</div>
                     </div>
 
                     <div class="col-md-3 supercell" style="padding-top: 10px;">
@@ -145,18 +146,17 @@
 
                     <div class="col-md-3 supercell" style="padding-top: 10px;">
                         <div class="row" style="text-align: center;">Donations Per Week</div>
-                        <div class="row scSmaller" style="text-align: center;">11,808</div>
+                        <div class="row scSmaller" style="text-align: center;">12,242</div>
                     </div>
 
                     <div class="col-md-3 supercell" style="padding-top: 10px;">
                         <div class="row" style="text-align: center;">Last Updated</div>
-                        <div class="row scSmaller" style="text-align: center;">Moments ago</div>
+                        <div class="row scSmaller" style="text-align: center;">1 day, 2 hours ago</div>
                     </div>
 
                     <div class="col-md-12">
                         <h2 class="supercell" style="text-align: center;">Trophies Over Time</h2>
-                            <div style="min-height: 300px; max-height: 300px;">
-                                <canvas id="TrophiesOverTime"></canvas>
+                            <div class="ct-chart">
                             </div>
                     </div>
 
@@ -174,405 +174,405 @@
                     <div class="col-xs-4 col-md-2 sort-header" onclick="sort(5)" id="sort5">Crowns</div>
 
                     <div id="tbl">
-                        <div class="memberRow" id="m0">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=222LLPCL9">thanosGr</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 11</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">4027,4027</span>&nbsp;4,027</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">576,636</span>&nbsp;636</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">45,45</span>&nbsp;45</div>
-                        </div>
                         <div class="memberRow" id="m1">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=LUCQPYY">Mike Kampa 2</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/222LLPCL9">thanosGr</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 11</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3921,3921</span>&nbsp;3,921</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">34,34</span>&nbsp;34</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">7,7</span>&nbsp;7</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">4027,4027,4027,4027,4027,4027,4027,4027,3856,4014,4014,4014,4014,4014,4014,4014</span>&nbsp;4,014</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">576,636,733,70,141,203,349,434,468,538,608,688,778,794,864,944</span>&nbsp;944</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">45,45,45,45,45,45,45,45,45,45,45,0,26,28,40,52</span>&nbsp;52</div>
                         </div>
                         <div class="memberRow" id="m2">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=QQV9L00Y">kots13</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Leader</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3909,3909</span>&nbsp;3,909</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">394,394</span>&nbsp;394</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">54,54</span>&nbsp;54</div>
-                        </div>
-                        <div class="memberRow" id="m3">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2PC2PLCRG">paris z</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/LUCQPYY">Mike Kampa 2</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 11</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3736,3736</span>&nbsp;3,736</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">138,138</span>&nbsp;138</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">65,65</span>&nbsp;65</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3921,3921,3921</span>&nbsp;3,921</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">34,0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">7,7,0</span>&nbsp;0</div>
+                        </div>
+                        <div class="memberRow" id="m3">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/QQV9L00Y">kots13</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Leader</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3909,3909,3909,3909,3909,3909,3909,3915,3915,3915,3915,3915,3915</span>&nbsp;3,915</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">394,410,64,98,116,200,227,375,413,457,493,503,503</span>&nbsp;503</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">54,54,54,54,54,54,54,54,54,0,3,4,5</span>&nbsp;5</div>
                         </div>
                         <div class="memberRow" id="m4">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2P82UUYGG">Kiriakos Vins</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Co-Leader</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3560,3561</span>&nbsp;3,561</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">783,833</span>&nbsp;833</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">78,78</span>&nbsp;78</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2PC2PLCRG">paris z</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 11</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3736,3736,3736,3736,3736,3736,3736,3736,3736,3736,3736,3736,3708</span>&nbsp;3,708</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">138,218,8,11,21,57,65,93,93,129,157,175,195</span>&nbsp;195</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">65,65,65,65,65,65,65,65,0,5,9,9,9</span>&nbsp;9</div>
                         </div>
                         <div class="memberRow" id="m5">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2L9QC022">Siou10</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2P82UUYGG">Kiriakos Vins</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Co-Leader</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3512,3512</span>&nbsp;3,512</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,0</span>&nbsp;0</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3560,3561,3466,3466,3466,3413,3444,3444,3444</span>&nbsp;3,444</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">783,833,877,0,60,80,80,80,96</span>&nbsp;96</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">78,78,78,78,78,78,78,0,3</span>&nbsp;3</div>
                         </div>
                         <div class="memberRow" id="m6">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=YLCL0V8G">thanos</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2L9QC022">Siou10</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3215,3215</span>&nbsp;3,215</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">22,22</span>&nbsp;22</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3512,3486,3515,3486</span>&nbsp;3,486</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,2,2,2</span>&nbsp;2</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0,0</span>&nbsp;0</div>
                         </div>
                         <div class="memberRow" id="m7">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=UY9UR2Y2">barbarian king</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/YLCL0V8G">thanos</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3198,3198</span>&nbsp;3,198</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">96,116</span>&nbsp;116</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">24,24</span>&nbsp;24</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3215,3215,3244,3243,3243,3243</span>&nbsp;3,243</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">22,0,8,36,52,62</span>&nbsp;62</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0,0,3,3</span>&nbsp;3</div>
                         </div>
                         <div class="memberRow" id="m8">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=Y2VYVRR0">Siou_10</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/UY9UR2Y2">barbarian king</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3166,3166</span>&nbsp;3,166</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">177,197</span>&nbsp;197</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">5,5</span>&nbsp;5</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3198,3198,3227,3227,3227,3227,3227,3283</span>&nbsp;3,283</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">96,116,178,0,9,9,49,109</span>&nbsp;109</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">24,24,24,24,24,0,6,12</span>&nbsp;12</div>
                         </div>
                         <div class="memberRow" id="m9">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=8LUCLJ298">yatagarasu</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/Y2VYVRR0">Siou_10</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3128,3128</span>&nbsp;3,128</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">264,312</span>&nbsp;312</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">16,16</span>&nbsp;16</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3166,3166,3166,3166,3134,3197,3197,3197</span>&nbsp;3,197</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">177,197,217,0,28,44,52,52</span>&nbsp;52</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">5,5,5,5,5,5,5,0</span>&nbsp;0</div>
                         </div>
                         <div class="memberRow" id="m10">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=8CG02J0J">PsHyCo G21</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8LUCLJ298">yatagarasu</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3093,3093</span>&nbsp;3,093</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,0</span>&nbsp;0</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3128,3128,3222,3189,3072,3102,3105,3071,3097,3097,3097,3155,3131,3219</span>&nbsp;3,219</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">264,312,320,59,85,129,183,237,281,285,336,378,442,516</span>&nbsp;516</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">16,16,16,16,16,16,16,16,16,16,0,6,12,14</span>&nbsp;14</div>
                         </div>
                         <div class="memberRow" id="m11">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=QULVR02C">theodore</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8CG02J0J">PsHyCo G21</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3070,3070</span>&nbsp;3,070</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">546,607</span>&nbsp;607</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">56,56</span>&nbsp;56</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3093</span>&nbsp;3,093</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0</span>&nbsp;0</div>
                         </div>
                         <div class="memberRow" id="m12">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=VVQLYP2C">Omega</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3067,3067</span>&nbsp;3,067</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">254,302</span>&nbsp;302</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">2,2</span>&nbsp;2</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/QULVR02C">theodore</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3070,3070,3101,3101,3101,3043,3073,3073,3073,3104,3104,3104,3104</span>&nbsp;3,104</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">546,607,653,0,42,93,145,203,203,239,260,296,344</span>&nbsp;344</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">56,56,56,56,56,56,56,56,0,25,32,70,70</span>&nbsp;70</div>
                         </div>
                         <div class="memberRow" id="m13">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=8UVR0CV0">&#x26A1;&#xFE0F;Panayiotis&#x26A1;&#xFE0F;</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/VVQLYP2C">Omega</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3067,3067,3067,3067,3067,3067,3067,3067,3067,3067,3067,3067,3067,3067,3067,3067</span>&nbsp;3,067</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">254,302,342,14,83,113,165,197,242,302,344,352,401,429,461,509</span>&nbsp;509</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">2,2,2,2,2,2,2,2,2,2,2,0,0,1,10,10</span>&nbsp;10</div>
+                        </div>
+                        <div class="memberRow" id="m14">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8UVR0CV0">&#x26A1;&#xFE0F;Panayiotis&#x26A1;&#xFE0F;</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
                             <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3065,3065</span>&nbsp;3,065</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,0</span>&nbsp;0</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
-                        </div>
-                        <div class="memberRow" id="m14">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=YCRPPCRQ">Chris Master</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3040,3040</span>&nbsp;3,040</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">531,539</span>&nbsp;539</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">33,33</span>&nbsp;33</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,8</span>&nbsp;8</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,1</span>&nbsp;1</div>
                         </div>
                         <div class="memberRow" id="m15">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=JPRJ92CJ">skeleton party</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/YCRPPCRQ">Chris Master</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3030,3030</span>&nbsp;3,030</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">334,334</span>&nbsp;334</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">45,45</span>&nbsp;45</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3040,3040,3040,3040,3040,3040,3040,3040,3040,3040,3040,3040,3040,3040</span>&nbsp;3,040</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">531,539,559,28,81,105,143,170,200,216,224,291,382,392</span>&nbsp;392</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">33,33,33,33,33,33,33,33,33,33,0,9,38,41</span>&nbsp;41</div>
                         </div>
                         <div class="memberRow" id="m16">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2YY8RGLC9">Vins</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/JPRJ92CJ">skeleton party</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3020,3050</span>&nbsp;3,050</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">216,226</span>&nbsp;226</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">26,26</span>&nbsp;26</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3030,3030,3030,3030,3060,3060,3060,3060,3060,3060,3089,3120</span>&nbsp;3,120</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">334,418,0,10,28,44,86,130,130,166,176,194</span>&nbsp;194</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">45,45,45,45,45,45,45,45,0,5,10,16</span>&nbsp;16</div>
                         </div>
                         <div class="memberRow" id="m17">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=20VQP2Y0Y">panayiotis</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2YY8RGLC9">Vins</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3016,3016</span>&nbsp;3,016</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">120,150</span>&nbsp;150</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">12,12</span>&nbsp;12</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3020,3050,3050,3050,3023,3023,3023,3026,2997,2997</span>&nbsp;2,997</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">216,226,0,8,8,25,63,75,109,109</span>&nbsp;109</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">26,26,26,26,26,26,26,26,26,0</span>&nbsp;0</div>
                         </div>
                         <div class="memberRow" id="m18">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=JU0GY2Y0">Skull Crasher</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3014,3014</span>&nbsp;3,014</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">460,476</span>&nbsp;476</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">13,13</span>&nbsp;13</div>
-                        </div>
-                        <div class="memberRow" id="m19">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2GVCRLP9R">George master</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/20VQP2Y0Y">panayiotis</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3013,3013</span>&nbsp;3,013</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">229,249</span>&nbsp;249</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">31,31</span>&nbsp;31</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3016,3016,3016,3016,3016,3016,3016,3016,3016,3016,3016,3016</span>&nbsp;3,016</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">120,150,188,0,12,27,51,83,83,97,131,213</span>&nbsp;213</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">12,12,12,12,12,12,12,12,0,2,17,17</span>&nbsp;17</div>
+                        </div>
+                        <div class="memberRow" id="m19">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/JU0GY2Y0">Skull Crasher</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3014,3014,3014,3014,3014,3014,3014,3014,3014,3014,3014,3014,3014,3014,3014</span>&nbsp;3,014</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">460,476,524,0,8,16,34,86,102,128,128,194,218,242,296</span>&nbsp;296</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">13,13,13,13,13,13,13,13,13,13,0,13,13,19,19</span>&nbsp;19</div>
                         </div>
                         <div class="memberRow" id="m20">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=GPCGPP0G">gtac.r.1</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2GVCRLP9R">George master</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3001,3001</span>&nbsp;3,001</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">100,100</span>&nbsp;100</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">5,5</span>&nbsp;5</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3013,3013,3013,3013,3013,3013,3013</span>&nbsp;3,013</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">229,249,375,0,26,26,75</span>&nbsp;75</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">31,31,31,31,31,0,2</span>&nbsp;2</div>
                         </div>
                         <div class="memberRow" id="m21">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=V2R8U89U">Dark Skeleton</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/GPCGPP0G">gtac.r.1</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3001,3001</span>&nbsp;3,001</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">593,633</span>&nbsp;633</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">110,110</span>&nbsp;110</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3001,3001,3001,3001,3001,3001</span>&nbsp;3,001</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">100,0,10,68,68,117</span>&nbsp;117</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">5,5,5,5,0,10</span>&nbsp;10</div>
                         </div>
                         <div class="memberRow" id="m22">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=YP0VPJP8">tasos21</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/V2R8U89U">Dark Skeleton</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2955,2955</span>&nbsp;2,955</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">1066,1138</span>&nbsp;1,138</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">88,88</span>&nbsp;88</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">3001,3001,3001,3001,3001,3001,3001,3001,3001,3001,3001,3001,3001,3001</span>&nbsp;3,001</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">593,633,663,16,84,112,156,190,215,249,281,365,430,476</span>&nbsp;476</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">110,110,110,110,110,110,110,110,110,0,1,24,30,30</span>&nbsp;30</div>
                         </div>
                         <div class="memberRow" id="m23">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=G99VPYPQ">IceWiZ TiTaN JR</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/YP0VPJP8">tasos21</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2955,2955,2955,2955,2955,2955,2955,2955,2955,2955,2955,2955,2955,2955,2985,2985</span>&nbsp;2,985</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">1066,1138,1256,34,78,116,142,162,248,282,458,504,640,760,862,954</span>&nbsp;954</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">88,88,88,88,88,88,88,88,88,88,88,0,20,30,62,62</span>&nbsp;62</div>
+                        </div>
+                        <div class="memberRow" id="m24">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/G99VPYPQ">IceWiZ TiTaN JR</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
                             <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2901,2901</span>&nbsp;2,901</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">42,42</span>&nbsp;42</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">42,0</span>&nbsp;0</div>
                             <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
-                        </div>
-                        <div class="memberRow" id="m24">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=JVU90RPY">Lazaros</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2821,2821</span>&nbsp;2,821</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">105,105</span>&nbsp;105</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">6,6</span>&nbsp;6</div>
                         </div>
                         <div class="memberRow" id="m25">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2LCL0LQC">Panos</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/JVU90RPY">Lazaros</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2773,2773</span>&nbsp;2,773</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">72,72</span>&nbsp;72</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2821,2821,2821,2821,2792</span>&nbsp;2,792</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">105,121,0,0,4</span>&nbsp;4</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">6,6,6,0,1</span>&nbsp;1</div>
                         </div>
                         <div class="memberRow" id="m26">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=9QRRUGJY">$tratos</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2LCL0LQC">Panos</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2765,2765</span>&nbsp;2,765</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">6,6</span>&nbsp;6</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2773,2773,2773,2773,2773,2773,2773</span>&nbsp;2,773</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">72,0,16,52,58,97,101</span>&nbsp;101</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0,0,0,0,0</span>&nbsp;0</div>
                         </div>
                         <div class="memberRow" id="m27">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=Y089RV8R">AggelosZ</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/9QRRUGJY">$tratos</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2736,2736</span>&nbsp;2,736</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">24,24</span>&nbsp;24</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2765,2765,2795,2795</span>&nbsp;2,795</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">6,0,19,19</span>&nbsp;19</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0,3</span>&nbsp;3</div>
                         </div>
                         <div class="memberRow" id="m28">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=RG99QUCV">TheGreek</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/Y089RV8R">AggelosZ</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2707,2767</span>&nbsp;2,767</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">287,307</span>&nbsp;307</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">45,45</span>&nbsp;45</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2736,2736,2736,2736,2736,2736</span>&nbsp;2,736</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">24,56,0,36,58,74</span>&nbsp;74</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0,0,1,1</span>&nbsp;1</div>
                         </div>
                         <div class="memberRow" id="m29">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=PJ9VYC9G">manoskiller</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/RG99QUCV">TheGreek</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2680,2709</span>&nbsp;2,709</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">920,946</span>&nbsp;946</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">33,33</span>&nbsp;33</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2707,2767,2712,2685,2713,2713,2801,2831,2731,2748,2811,2811,2796,2842,2805</span>&nbsp;2,805</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">287,307,357,0,128,156,226,312,358,398,512,540,627,669,726</span>&nbsp;726</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">45,45,45,45,45,45,45,45,45,45,45,0,27,38,69</span>&nbsp;69</div>
                         </div>
                         <div class="memberRow" id="m30">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=80J2Q2UQC">#JIM#</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2659,2659</span>&nbsp;2,659</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">181,187</span>&nbsp;187</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">15,15</span>&nbsp;15</div>
-                        </div>
-                        <div class="memberRow" id="m31">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=228RJJVQ0">panos_the_greek</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2630,2630</span>&nbsp;2,630</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">311,321</span>&nbsp;321</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">23,23</span>&nbsp;23</div>
-                        </div>
-                        <div class="memberRow" id="m32">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2QP09PJ">aggelos</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2625,2625</span>&nbsp;2,625</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">272,340</span>&nbsp;340</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">18,18</span>&nbsp;18</div>
-                        </div>
-                        <div class="memberRow" id="m33">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=82VLY2V9R">LastSaram</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2609,2609</span>&nbsp;2,609</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">678,690</span>&nbsp;690</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">330,330</span>&nbsp;330</div>
-                        </div>
-                        <div class="memberRow" id="m34">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2JGGY989R">Hellspawn</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2573,2590</span>&nbsp;2,590</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">450,480</span>&nbsp;480</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">183,183</span>&nbsp;183</div>
-                        </div>
-                        <div class="memberRow" id="m35">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2J29LCGVL">paris.z.2</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2505,2505</span>&nbsp;2,505</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,0</span>&nbsp;0</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
-                        </div>
-                        <div class="memberRow" id="m36">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=PRVRLVCY">&#x392;&#x3B1;&#x3B3;&#x3B3;&#x3B5;&#x3BB;&#x3B7;&#x3C2; &#x3A0;.</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/PJ9VYC9G">manoskiller</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2325,2325</span>&nbsp;2,325</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">6,6</span>&nbsp;6</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">8,8</span>&nbsp;8</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2680,2709,2709,2709,2709,2682,2682,2682,2682,2682,2682</span>&nbsp;2,682</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">920,946,1114,44,109,125,157,173,173,185,201</span>&nbsp;201</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">33,33,33,33,33,33,33,33,0,8,8</span>&nbsp;8</div>
+                        </div>
+                        <div class="memberRow" id="m31">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/80J2Q2UQC">#JIM#</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2659,2659,2659,2635,2614,2614,2614,2614,2614,2614</span>&nbsp;2,614</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">181,187,0,10,22,36,36,68,68,68</span>&nbsp;68</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">15,15,15,15,15,15,0,0,2,6</span>&nbsp;6</div>
+                        </div>
+                        <div class="memberRow" id="m32">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/228RJJVQ0">panos_the_greek</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2630,2630,2630,2630,2630,2630,2630,2630,2630,2630,2630,2630,2630,2630,2630,2630</span>&nbsp;2,630</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">311,321,343,0,74,118,192,252,342,376,460,494,642,738,846,905</span>&nbsp;905</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">23,23,23,23,23,23,23,23,23,23,23,0,35,76,166,198</span>&nbsp;198</div>
+                        </div>
+                        <div class="memberRow" id="m33">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2QP09PJ">aggelos</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2625,2625,2625,2625,2625,2625,2625,2625,2625,2625</span>&nbsp;2,625</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">272,340,376,0,22,34,34,50,106,168</span>&nbsp;168</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">18,18,18,18,18,18,0,6,25,25</span>&nbsp;25</div>
+                        </div>
+                        <div class="memberRow" id="m34">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/82VLY2V9R">LastSaram</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Elder</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2609,2609,2611,2587,2587,2587,2587,2587,2587,2562,2562,2562,2562,2562,2562,2562</span>&nbsp;2,562</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">678,690,798,34,172,232,364,430,528,604,780,792,874,916,1012,1082</span>&nbsp;1,082</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">330,330,330,330,330,330,330,330,330,330,330,7,106,133,241,277</span>&nbsp;277</div>
+                        </div>
+                        <div class="memberRow" id="m35">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2JGGY989R">Hellspawn</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2573,2590,2496,2546,2670,2677,2612,2621,2439,2548,2212,2371,2496,2572,2487,2472</span>&nbsp;2,472</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">450,480,576,10,60,106,134,180,272,332,439,449,519,599,656,692</span>&nbsp;692</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">183,183,183,183,183,183,183,183,183,183,183,0,47,111,171,208</span>&nbsp;208</div>
+                        </div>
+                        <div class="memberRow" id="m36">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2J29LCGVL">paris.z.2</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2505,2505,2505,2505,2505</span>&nbsp;2,505</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,16,0,6,24</span>&nbsp;24</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0,0,2</span>&nbsp;2</div>
                         </div>
                         <div class="memberRow" id="m37">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2CGR8JUP0">&#x3A6;&#x3BF;&#x3BD;&#x3B9;&#x3BA;&#x3CC;&#x3A1;&#x3B1;&#x3C0;&#x3B1;&#x3BD;&#x3AC;&#x3BA;&#x3B9;&#x263A;</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/PRVRLVCY">&#x392;&#x3B1;&#x3B3;&#x3B3;&#x3B5;&#x3BB;&#x3B7;&#x3C2; &#x3A0;.</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 6</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2308,2308</span>&nbsp;2,308</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,0</span>&nbsp;0</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 10</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2325,2325,2325,2325,2325</span>&nbsp;2,325</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">6,0,26,26,44</span>&nbsp;44</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">8,8,8,0,1</span>&nbsp;1</div>
                         </div>
                         <div class="memberRow" id="m38">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2CPLV9JUG">George master 3</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2CGR8JUP0">&#x3A6;&#x3BF;&#x3BD;&#x3B9;&#x3BA;&#x3CC;&#x3A1;&#x3B1;&#x3C0;&#x3B1;&#x3BD;&#x3AC;&#x3BA;&#x3B9;&#x263A;</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 6</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2308</span>&nbsp;2,308</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0</span>&nbsp;0</div>
+                        </div>
+                        <div class="memberRow" id="m39">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2CPLV9JUG">George master 3</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 7</div>
                             <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2225,2225</span>&nbsp;2,225</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,0</span>&nbsp;0</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
-                        </div>
-                        <div class="memberRow" id="m39">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=8YGJU98QP">gkl</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 6</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2221,2221</span>&nbsp;2,221</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,0</span>&nbsp;0</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,16</span>&nbsp;16</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,7</span>&nbsp;7</div>
                         </div>
                         <div class="memberRow" id="m40">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=U8Y0GPGY">apo#14</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8YGJU98QP">gkl</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2190,2190</span>&nbsp;2,190</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">96,146</span>&nbsp;146</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 6</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2221</span>&nbsp;2,221</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0</span>&nbsp;0</div>
                         </div>
                         <div class="memberRow" id="m41">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=29JYRL8LR">chris 13</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 6</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2170,2170</span>&nbsp;2,170</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">109,119</span>&nbsp;119</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">11,11</span>&nbsp;11</div>
-                        </div>
-                        <div class="memberRow" id="m42">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2VQJPJCLL">Mpak_Aliar</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 7</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2101,2049</span>&nbsp;2,049</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">224,247</span>&nbsp;247</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">95,95</span>&nbsp;95</div>
-                        </div>
-                        <div class="memberRow" id="m43">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=RGQUR2JU">Supercell</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2097,2097</span>&nbsp;2,097</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">56,56</span>&nbsp;56</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">8,8</span>&nbsp;8</div>
-                        </div>
-                        <div class="memberRow" id="m44">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2Y8LYVLUQ">PANOS GREEK FTW</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2024,2024</span>&nbsp;2,024</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">4,4</span>&nbsp;4</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">16,16</span>&nbsp;16</div>
-                        </div>
-                        <div class="memberRow" id="m45">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=2RCL000UV">ronaldo</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2004,2004</span>&nbsp;2,004</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">16,16</span>&nbsp;16</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
-                        </div>
-                        <div class="memberRow" id="m46">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=8Y29YPPQC">_t_a_s_o_s_</a></div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 6</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">1984,1984</span>&nbsp;1,984</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">60,60</span>&nbsp;60</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0</span>&nbsp;0</div>
-                        </div>
-                        <div class="memberRow" id="m47">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=8P0J88CQP">ntiana</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/U8Y0GPGY">apo#14</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">1944,1944</span>&nbsp;1,944</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">12,12</span>&nbsp;12</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">16,16</span>&nbsp;16</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2190,2190,2190,2190</span>&nbsp;2,190</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">96,146,0,26</span>&nbsp;26</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0,0</span>&nbsp;0</div>
                         </div>
-                        <div class="memberRow" id="m48">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=8PY0RJR8G">dambo</a></div>
+                        <div class="memberRow" id="m42">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/29JYRL8LR">chris 13</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 7</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">1647,1647</span>&nbsp;1,647</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">48,48</span>&nbsp;48</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">39,39</span>&nbsp;39</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2170,2170,2170,2170,2039,2012,2012,1984,1984,1984,1984,1984,1984,1984,2014</span>&nbsp;2,014</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">109,119,22,60,66,120,142,168,194,223,233,233,255,255,261</span>&nbsp;261</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">11,11,11,11,11,11,11,11,11,11,0,11,14,20,20</span>&nbsp;20</div>
                         </div>
-                        <div class="memberRow" id="m49">
-                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/ClanMember?Clan=802LU8UY&amp;Member=8YP8CLY2C">Yannis</a></div>
+                        <div class="memberRow" id="m43">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2VQJPJCLL">Mpak_Aliar</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2101,2049,2027,1980,1944,2021,2178,2111,2103,2082,2102,2192,2251,2252,2249,2343</span>&nbsp;2,343</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">224,247,277,35,56,118,144,190,205,208,248,263,295,339,371,381</span>&nbsp;381</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">95,95,95,95,95,95,95,95,95,95,95,0,14,76,88,88</span>&nbsp;88</div>
+                        </div>
+                        <div class="memberRow" id="m44">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/RGQUR2JU">Supercell</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2097,2097,2097,2097,2097,2097,2097,2097,2097,2097,2097</span>&nbsp;2,097</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">56,86,0,30,46,56,66,66,86,125,149</span>&nbsp;149</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">8,8,8,8,8,8,8,0,11,23,26</span>&nbsp;26</div>
+                        </div>
+                        <div class="memberRow" id="m45">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/2Y8LYVLUQ">PANOS GREEK FTW</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 8</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2024,2024,1990,2000,2062,2038,2068,2040,2013,2016,2087,2035,1967</span>&nbsp;1,967</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">4,0,6,6,6,6,6,6,6,6,6,6,6</span>&nbsp;6</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">16,16,16,16,16,16,16,16,16,0,27,42,52</span>&nbsp;52</div>
+                        </div>
+                        <div class="memberRow" id="m46">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8Y29YPPQC">_t_a_s_o_s_</a></div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
                             <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 6</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">1594,1594</span>&nbsp;1,594</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">76,80</span>&nbsp;80</div>
-                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">40,40</span>&nbsp;40</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">1984,1984,1984</span>&nbsp;1,984</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">60,70,0</span>&nbsp;0</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0</span>&nbsp;0</div>
+                        </div>
+                        <div class="memberRow" id="m47">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8P0J88CQP">ntiana</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 9</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">1944,1905,1905,1976,1913,1921,1957,2073,2018,1942,1977</span>&nbsp;1,977</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">12,12,0,10,34,34,34,50,62,68,68</span>&nbsp;68</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">16,16,16,16,16,16,16,16,0,3,5</span>&nbsp;5</div>
+                        </div>
+                        <div class="memberRow" id="m48">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8PY0RJR8G">dambo</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 7</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">1647,1538,1538,1643,1480,1403,1432,1512,1545,1701,1593,1593</span>&nbsp;1,593</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">48,62,0,2,34,39,39,54,66,86,90,114</span>&nbsp;114</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">39,39,39,39,39,39,39,39,3,37,66,66</span>&nbsp;66</div>
+                        </div>
+                        <div class="memberRow" id="m49">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8YP8CLY2C">Yannis</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 6</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">1594,1594,1594,1600,1610,1689,1723,1759,1743,1796,1844,1844</span>&nbsp;1,844</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">76,80,94,0,4,30,34,42,68,100,148,165</span>&nbsp;165</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">40,40,40,40,40,40,40,0,4,13,25,25</span>&nbsp;25</div>
+                        </div>
+                        <div class="memberRow" id="m50">
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;"><a href="/Home/Player/8Q9PYCYYY">One-Eyed Jax</a></div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Member</div>
+                            <div class="col-xs-4 col-md-2 mt-sm" style="white-space: nowrap;">Level 7</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineT" style="display: none;">2195,2262,2357,2328,2330,2431,2455,2333,2350,2480,2461,2463</span>&nbsp;2,463</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineD" style="display: none;">0,68,216,318,409,463,581,632,688,717,732,782</span>&nbsp;782</div>
+                            <div class="col-xs-4 col-md-2" style="white-space: nowrap; text-align: center;"><span class="lineC" style="display: none;">0,0,0,0,0,0,0,0,68,91,136,136</span>&nbsp;136</div>
                         </div>
                     </div>
                 </div>
@@ -632,9 +632,10 @@
 <script src="/js/wurfl.js?v=x-o83OENyiVL8AbgwwvbaT_KtBQXiz3FBr9pUCNO330"></script>
 
 
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.0/Chart.bundle.min.js"></script>
         <script type="text/javascript" src="//twemoji.maxcdn.com/2/twemoji.min.js?2.2.3"></script>
         <script type="text/javascript" src="/js/peity.js?v=etoO4iCVLCoosl-N_ZlXZOBPWVlCnWpfYLlg9qXqwfQ"></script>
+        <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+        <script src="//momentjs.com/downloads/moment.min.js"></script>
         <script type="text/javascript">
             function sort(key) {
                 var values = [];
@@ -722,28 +723,27 @@
             }
 
             $(document).ready(function() {
-
                 // Sparklines
                 $(".lineT").peity("line",
-                {
-                    width: 70,
-                    fill: "#66ccff",
-                    stroke: "#0000ff"
-                });
+                    {
+                        width: 70,
+                        fill: "#66ccff",
+                        stroke: "#0000ff"
+                    });
 
                 $(".lineD").peity("line",
-                {
-                    width: 70,
-                    fill: "#ffcc66",
-                    stroke: "#cc6600"
-                });
+                    {
+                        width: 70,
+                        fill: "#ffcc66",
+                        stroke: "#cc6600"
+                    });
 
                 $(".lineC").peity("line",
-                {
-                    width: 70,
-                    fill: "#cc99ff",
-                    stroke: "#cc00ff"
-                });
+                    {
+                        width: 70,
+                        fill: "#cc99ff",
+                        stroke: "#cc00ff"
+                    });
 
                 // Parse emoji
                 try {
@@ -756,53 +756,25 @@
                 } finally {
                 }
 
-                // Build clan charts
-                Chart.defaults.global.legend.display = false;
-                var chart;
-                var data;
-                var cht;
-                // Trophies over Time
+                // Build clan chart - Trophies over Time
 
-                        chart = document.getElementById("TrophiesOverTime");
-                        data = {
-                            labels: [
-                                "Sep/09","Sep/10"
-                            ],
-                            datasets: [
+                        var chart = new Chartist.Line('.ct-chart', {
+                            series: [
                                 {
-                                    fill: false,
-                                    lineTension: 0.1,
-                                    backgroundColor: "#008941",
-                                    borderColor: "#008941",
-                                    borderCapStyle: "butt",
-                                    borderDash: [],
-                                    borderDashOffset: 0.0,
-                                    borderJoinStyle: 'miter',
-                                    pointBorderColor: "#008941",
-                                    pointBackgroundColor: "#008941",
-                                    pointBorderWidth: 5,
-                                    pointHoverRadius: 5,
-                                    pointHoverBackgroundColor: "#008941",
-                                    pointHoverBorderColor: "#008941",
-                                    pointHoverBorderWidth: 2,
-                                    pointRadius: 1,
-                                    pointHitRadius: 10,
-                                    spanGaps: false,
+                                    name: 'trophies',
                                     data: [
-                                        31735,31754
-                                    ]
+{x: new Date('YYYY-09-09 18:40:06'), y: 31735},{x: new Date('YYYY-09-10 06:50:07'), y: 31754},{x: new Date('YYYY-09-10 19:00:07'), y: 31755},{x: new Date('YYYY-09-11 07:10:07'), y: 31737},{x: new Date('YYYY-09-11 19:20:07'), y: 31707},{x: new Date('YYYY-09-12 07:30:07'), y: 31715},{x: new Date('YYYY-09-12 19:40:06'), y: 31686},{x: new Date('YYYY-09-13 07:50:07'), y: 31714},{x: new Date('YYYY-09-13 20:00:09'), y: 31604},{x: new Date('YYYY-09-14 08:10:08'), y: 31714},{x: new Date('YYYY-09-14 20:20:06'), y: 31692},{x: new Date('YYYY-09-15 08:30:07'), y: 31697},{x: new Date('YYYY-09-15 20:40:06'), y: 31755},{x: new Date('YYYY-09-16 08:50:07'), y: 31777},{x: new Date('YYYY-09-16 21:00:08'), y: 31766},{x: new Date('YYYY-09-17 09:10:07'), y: 31834},                                    ]
                                 }
                             ]
-                        };
-
-                        cht = new Chart(chart,
-                        {
-                            type: "line",
-                            data: data,
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false
-                            }
+                        }, {
+                            axisX: {
+                                type: Chartist.FixedScaleAxis,
+                                divisor: 5,
+                                labelInterpolationFnc: function(value) {
+                                    return moment(value).format('MMM D');
+                                }
+                            },
+                            height: 300
                         });
                     
                 // Sort table

@@ -15,18 +15,23 @@ import org.jsoup.select.Elements;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClashStatsSiteServiceImpl implements ClashStatsSiteService {
-
+	
+	Logger logger = LoggerFactory.getLogger(ClashStatsSiteServiceImpl.class);
+	
 	@Value("${clientDataUrl}")
 	Resource dataResource;
 
 	@Override
 	public List<PlayerWeeklyStats> retrieveData() {
+		logger.info("Rertrieving data from {}", dataResource);
 		// Document result = Jsoup.parse(new
 		// URL("https://clashstat.com/Home/Clan/802LU8UY"), 10000);
 		
