@@ -37,9 +37,9 @@
 			</dependencies>
 		</profile>
 		<profile>
-			<id>prod</id>
+			<id>postgres</id>
 			<properties>
-				<spring.profile>prod</spring.profile>
+				<spring.profile>postgres</spring.profile>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -57,7 +57,7 @@
 				</property>
 			</activation>
 			<properties>
-				<spring.profile>prod</spring.profile>
+				<spring.profile>postgres</spring.profile>
 			</properties>
 			<dependencies>
 				<dependency>
