@@ -40,7 +40,7 @@
 <body>
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron" style="background: #333333; border:1px red">
+<div class="jumbotron">
     <div class="container">
     	
         <h1 class="clan-header"><img src="images/clanlogo.png">
@@ -141,7 +141,7 @@
                         <td ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution}}</td>
                         <td ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation}}</td>
                     </tr>
-                    <tr ng-if="stats.length == 0"><td colspan="5"> <h2>No data for this period</h2></td></tr>
+                    <tr ng-if="stats.length == 0"><td colspan="12"> <h2>No data for this period</h2></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -150,7 +150,7 @@
 </div> <!-- /container -->
 
 <footer>
-    <div class="jumbotron" style="background: #333333; border:1px red">
+    <div class="jumbotron" style="margin-bottom:0px">
         <div class="container">
         	<div class="col-xs-6"><h4>The stats have been provided by
                      <a style="color:yellow" href="http://www.clashstat.com" target="_black">www.clanstat.com</a></h4>
@@ -158,6 +158,7 @@
             <div class="col-xs-6"><h4>This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell
                     and Supercell is not responsible for it.</h4>
             </div>
+            <div class="col-xs-6">Backgrounds by <a href="https://www.toptal.com/designers/subtlepatterns">toptal.com </a></div>
             <div class="clan-header col-xs-12"><h2>Powered by lytsiware productions</h2></div>
             
         </div>

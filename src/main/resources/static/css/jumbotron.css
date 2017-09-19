@@ -10,8 +10,9 @@
 	font-size: 12px;
 }
 
-
-
+.clan-header img {
+	
+}
 
 td, th {
    vertical-align:middle !important;
@@ -24,21 +25,23 @@ td, th {
 .clan-header {
     text-align:center;
     color: #eeeeee;
-    background: rgb(0,0,0);
     font-family: cursive;
-    box-shadow:6px 10px 32px 6px rgba(41,78,89,0.55);
+/*     box-shadow:6px 10px 32px 6px rgba(41,78,89,0.55); */
     text-shadow: 2px 2px 32px #00b0ff;
 }
 
 table  {
+	background: transparent;
     margin-top: 10px;
 }
 
 body {
-    background: #eeeeee
+    background: rgba(0, 0, 0, 0) url("../images/bright_squares.png")  repeat scroll 0% 0%;
 }
 .jumbotron {
-    color: white
+    color: white;
+    background:rgba(0, 0, 0, 0) url("../images/random_grey_variations2.png") repeat scroll 0% 0%;
+    border-bottom: solid #2d4451 2px;
 }
 
 body {
