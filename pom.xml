@@ -17,7 +17,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		
+
 	</properties>
 	<profiles>
 		<profile>
@@ -32,7 +32,7 @@
 				<dependency>
 					<groupId>com.h2database</groupId>
 					<artifactId>h2</artifactId>
-					<scope>runtime</scope> 
+					<scope>runtime</scope>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -68,16 +68,16 @@
 			</dependencies>
 		</profile>
 	</profiles>
-	
+
 
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 			<version>4.2.0</version>
-		</dependency> 
-		
+		</dependency>
+
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
@@ -87,12 +87,12 @@
 			<groupId>org.springframework.retry</groupId>
 			<artifactId>spring-retry</artifactId>
 			<version>1.2.1.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring-code</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-            </exclusions>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-code</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -117,18 +117,29 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Configuration for JSP START -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+		<!-- Configuration for JSP END -->
+		
+		
 	</dependencies>
 
 	<build>
 		<plugins>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -141,25 +152,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!--  plugin to print the evn variables to the console
-			<plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <property environment="env" />
-                                <echoproperties />
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin> -->
+			<!-- plugin to print the evn variables to the console <plugin> <artifactId>maven-antrun-plugin</artifactId> 
+				<version>1.6</version> <executions> <execution> <phase>package</phase> <goals> 
+				<goal>run</goal> </goals> <configuration> <target> <property environment="env" 
+				/> <echoproperties /> </target> </configuration> </execution> </executions> 
+				</plugin> -->
 			<plugin>
 				<artifactId>maven-help-plugin</artifactId>
 				<executions>
@@ -171,8 +168,8 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-			
+
+
 		</plugins>
 
 	</build>

@@ -1,5 +1,3 @@
-var baseUrl = location.protocol +"//" + location.host + location.pathname
-
 var app = angular.module("App", ['ui.bootstrap']);
 var minWeek = 1;
 var maxWeek = 12;
