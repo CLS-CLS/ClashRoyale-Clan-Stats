@@ -1,6 +1,5 @@
 package org.lytsiware.clash.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.lytsiware.clash.Week;
@@ -31,7 +30,7 @@ public class ClanStatsRestController {
         if (deltaWeek < 1 || deltaWeek > 12) {
            deltaWeek = 1;
         }
-        Week week = new Week((LocalDate.now().minusWeeks(deltaWeek)));
+        Week week = new Week().minusWeeks(deltaWeek);
         return clanStatsService.retrieveClanStats(week);
 
     }
