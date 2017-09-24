@@ -9,6 +9,8 @@ public interface PlayerWeeklyStatsRepository {
     PlayerWeeklyStats saveOrUpdate(PlayerWeeklyStats playerWeeklyStats);
 
     Map<Player, List<PlayerWeeklyStats>> findByWeek(Week startWeek, Week endWeek);
+    
+    List<PlayerWeeklyStats> findByWeekAndTag(String tag, Week startWeek, Week endWeek);
 
     List<PlayerWeeklyStats> findByWeek(Week week);
 

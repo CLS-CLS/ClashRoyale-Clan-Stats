@@ -15,5 +15,13 @@ public class ClanStatsController {
 		model.addAttribute("baseUrl", baseUrl);
 		return "/index";
 	}
+	
+	
+	@GetMapping("/player/**")
+	public String memberPage(Model model) {
+		model.addAttribute("baseUrl", baseUrl);
+		return "/index";
+	}
+	
 
 }

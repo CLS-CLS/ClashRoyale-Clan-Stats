@@ -1,231 +1,265 @@
-var app = angular.module("App", ['ui.bootstrap']);
 var minWeek = 1;
 var maxWeek = 12;
-app.controller("weeksDropdownController", function($scope, $http ,$timeout, $filter) {
 
+var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute' ]);
 
-    $scope.selectedItem = minWeek
+app.config([ "$locationProvider", "$routeProvider",
+	function config($locationProvider, $routeProvider) {
 
-    $scope.stats = []
+		$routeProvider.when("/", {
+			templateUrl : "views/clanStats.htm"
+		}).when("/player/:playerTag", {
+			templateUrl : "views/playerStats.htm",
+		}).otherwise("/")
 
-    $scope.dropboxitemselected = function(item) {
-        $scope.selectedItem = item;
-    }
+		$locationProvider.html5Mode(true);
 
-    $scope.previousWeek = function(){
-        if ($scope.selectedItem == minWeek) return;
-        $scope.selectedItem = $scope.selectedItem - 1
-    }
-     $scope.nextWeek = function(){
-           if ($scope.selectedItem == maxWeek) return;
-            $scope.selectedItem = $scope.selectedItem + 1
-        }
+	} 
+]);
 
-    $scope.$watch('selectedItem', function(newValue) {
-        getData(newValue);
-    })
+app.service("colorfy", function() {
+	this.colorfy = function(number, type) {
+		var boundaryChest = 20;
+		var boundaryCard = 50;
+		var wowChest = 100;
+		var wowCard = 600;
 
-    $scope.triggerOrderDirective = function(elem) {
-    	$timeout(function() {
-    		$(elem.target).find("i").trigger('click');
-    	},0, false)
-        
-    }
+		var boundary = 0;
+		var wow = 100000;
 
-    $scope.percentageButtonLbl = "View Percentages (%)"
+		var style = {};
 
-    $scope.showPercentage = false;
+		if (type == "chest") {
+			boundary = boundaryChest;
+			wow = wowChest;
+		}
+		if (type == "card") {
+			boundary = boundaryCard;
+			wow = wowCard;
+		}
 
-    $scope.togglePercentage = function(){
-        $scope.showPercentage = !$scope.showPercentage
-        if ($scope.showPercentage) {
-            $scope.percentageButtonLbl = "View Absolute Values"
-        }else {
-            $scope.percentageButtonLbl = "View Percentage (%)"
-        }
-    }
+		if (boundary == 0) {
+			style.color = "black"
+			return style;
+		}
 
+		if (number >= boundary) {
+			style.color = 'green'
+		} else {
+			style.color = 'red'
+		}
 
-    $scope.roleOrder = function (item1, item2) {
-        var item1Order;
-        var item2Order;
+		if (number >= wow) {
+			style["font-weight"] = 'bold'
+		}
 
-        var findOrder = function(item){
-            var value = item.value;
-            switch (value) {
-                case 'Leader':
-                    return 1;
+		return style;
+	}
+})
 
-                case 'Co-Leader':
-                    return 2;
+app.controller("playerStatsController", function($scope, $http, $routeParams, colorfy) {
 
-                case 'Elder':
-                    return 3;
-                default:
-                    return 4;
-            }
-         }
-        item1Order = findOrder(item1);
-        item2Order = findOrder(item2);
-        return item1Order > item2Order ? 1 : -1
-    };
-
-     $scope.filter = {
-        orderBy : "-chestContribution",
-        comparator: ""
-    }
-
-    $scope.avgContrColor = function(number, type) {
-        var boundaryChest = 20;
-        var boundaryCard = 50;
-        var wowChest = 100;
-        var wowCard = 600;
-
-        var boundary = 0;
-        var wow = 100000;
-
-        var style = {};
-
-        if (type=="chest") {
-            boundary = boundaryChest;
-            wow = wowChest;
-        }
-        if (type=="card") {
-            boundary = boundaryCard;
-            wow = wowCard;
-        }
-
-        if (boundary == 0) {
-            style.color = "black"
-            return style;
-        }
-
-        if (number >= boundary) {
-            style.color = 'green'
-        }else {
-             style.color  = 'red'
-        }
-
-        if (number >= wow){
-             style["font-weight"] = 'bold'
-        }
-
-        return style;
-    }
-
-    function getData(week) {
-
-        $http.get(baseUrl + "/clan/" + week).then(function(response){
-            if ($scope.stats == null) {
-                $scope.stats = [];
-            }
-            if ($scope.stats.length < response.data.length) {
-                $scope.stats.forEach(function(stat, index) {
-                	$scope.stats[index] = response.data[index];
-                });
-                for (i = $scope.stats.length; i < response.data.length; i++){
-                    $scope.stats.push(response.data[i])
-                }
-            }else {
-                response.data.forEach(function(stat, index){
-                    $scope.stats[index] = stat
-                })
-                $scope.stats.splice(response.data.length)
-            }
-            calculatePercentageAndUpdateData(response.data);
-        })
-
-    }
-
-    function calculatePercentageAndUpdateData(data){
-        var sumChest = 0;
-        var sumDonation = 0;
-        data.forEach(function(item){
-            sumChest += item.chestContribution;
-            sumDonation += item.cardDonation;
-        })
-        data.forEach(function (item){
-            item.chestContributionPerc = item.chestContribution / sumChest;
-            item.cardDonationPerc = item.cardDonation / sumDonation;
-        })
-    }
+	$scope.player;
+	
+	$scope.colorfy = colorfy.colorfy
+	
+	$http.get(baseUrl + "/clan/player/" + $routeParams.playerTag).then(
+		function(response) {
+			$scope.player = response.data
+		}
+	)
 
 })
 
+app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, colorfy) {
 
+	$scope.selectedItem = minWeek
+
+	$scope.stats = []
+
+	$scope.showPercentage = false;
+
+	$scope.filter = {
+		orderBy : "-chestContribution",
+		comparator : ""
+	}
+
+	$scope.percentageButtonLbl = "View Percentages (%)"
+
+	$scope.dropboxitemselected = function(item) {
+		$scope.selectedItem = item;
+	}
+
+	$scope.previousWeek = function() {
+		if ($scope.selectedItem == minWeek)
+			return;
+		$scope.selectedItem = $scope.selectedItem - 1
+	}
+
+	$scope.nextWeek = function() {
+		if ($scope.selectedItem == maxWeek)
+			return;
+		$scope.selectedItem = $scope.selectedItem + 1
+	}
+
+	$scope.$watch('selectedItem', function(newValue) {
+		getData(newValue);
+	})
+
+	$scope.triggerOrderDirective = function(elem) {
+		$timeout(function() {
+			$(elem.target).find("i").trigger('click');
+		}, 0, false)
+
+	}
+
+	$scope.togglePercentage = function() {
+		$scope.showPercentage = !$scope.showPercentage
+		if ($scope.showPercentage) {
+			$scope.percentageButtonLbl = "View Absolute Values"
+		} else {
+			$scope.percentageButtonLbl = "View Percentage (%)"
+		}
+	}
+
+	$scope.roleOrder = function(item1, item2) {
+		var item1Order;
+		var item2Order;
+
+		var findOrder = function(item) {
+			var value = item.value;
+			switch (value) {
+			case 'Leader':
+				return 1;
+
+			case 'Co-Leader':
+				return 2;
+
+			case 'Elder':
+				return 3;
+			default:
+				return 4;
+			}
+		}
+		item1Order = findOrder(item1);
+		item2Order = findOrder(item2);
+		return item1Order > item2Order ? 1 : -1
+	};
+
+	$scope.avgContrColor = colorfy.colorfy
+	function getData(week) {
+
+		$http.get(baseUrl + "/clan/" + week).then(function(response) {
+			if ($scope.stats == null) {
+				$scope.stats = [];
+			}
+			if ($scope.stats.length < response.data.length) {
+				$scope.stats.forEach(function(stat, index) {
+					$scope.stats[index] = response.data[index];
+				});
+				for (i = $scope.stats.length; i < response.data.length; i++) {
+					$scope.stats.push(response.data[i])
+				}
+			} else {
+				response.data.forEach(function(stat, index) {
+					$scope.stats[index] = stat
+				})
+				$scope.stats.splice(response.data.length)
+			}
+			calculatePercentageAndUpdateData(response.data);
+		})
+
+	}
+
+	function calculatePercentageAndUpdateData(data) {
+		var sumChest = 0;
+		var sumDonation = 0;
+		data.forEach(function(item) {
+			sumChest += item.chestContribution;
+			sumDonation += item.cardDonation;
+		})
+		data.forEach(function(item) {
+			item.chestContributionPerc = item.chestContribution / sumChest;
+			item.cardDonationPerc = item.cardDonation / sumDonation;
+		})
+	}
+
+})
 
 app.directive("orderDirective", function() {
-    return {
-        template : "<i class='order fa fa-fw fa-sort'></i>",
-        replace:true,
-        scope: {
-            bindTo: '@',
-            filterBy: '=',
-            comparator: '=?'
-        },
-        link: function(scope, elem ,attrs) {
-        	var state = "unselected";
+	return {
+		template : "<i class='order fa fa-fw fa-sort'></i>",
+		replace : true,
+		scope : {
+			bindTo : '@',
+			filterBy : '=',
+			comparator : '=?'
+		},
+		link : function(scope, elem, attrs) {
+			var state = "unselected";
 
-    	    function changeState(){
-    	        if (state == "unselected"){
-    	            state = "down"
-    	        } else if (state == "up"){
-    	            state = "down"
-    	        } else if (state == "down"){
-    	            state = "up"
-    	        }
-    	    }
+			function changeState() {
+				if (state == "unselected") {
+					state = "down"
+				} else if (state == "up") {
+					state = "down"
+				} else if (state == "down") {
+					state = "up"
+				}
+			}
 
-    	    function resetState(){
-    	        state = "unselected"
-    	    }
+			function resetState() {
+				state = "unselected"
+			}
 
-    	    function applyClass(elem) {
-    	         elem.removeClass("fa-sort-up fa-sort-down fa-sort")
-    	         elem.addClass(getClass())
-    	    }
+			function applyClass(elem) {
+				elem.removeClass("fa-sort-up fa-sort-down fa-sort")
+				elem.addClass(getClass())
+			}
 
+			function getClass() {
+				if (state == "unselected") {
+					return "fa-sort"
+				}
+				if (state == "up") {
+					return "fa-sort-up"
+				}
+				if (state == "down") {
+					return "fa-sort-down"
+				}
+			}
 
-    	    function getClass(){
-    	        if (state == "unselected") {
-    	            return "fa-sort"
-    	        }
-    	        if (state == "up") {
-    	            return "fa-sort-up"
-    	        }
-    	        if (state == "down") {
-    	            return "fa-sort-down"
-    	        }
-    	    }
-    	    
-            elem.bind('mouseover', function(){
-                elem.css('cursor', 'pointer')
-            })
-            
-            elem.bind('click', function(){
-                changeState()
-                applyClass(elem)
-                scope.$apply(function(){
-                    scope.filterBy.orderBy = (state == "up" ? scope.bindTo : "-" + scope.bindTo)
-                    scope.filterBy.comparator = scope.comparator
-                })
+			elem.bind('mouseover', function() {
+				elem.css('cursor', 'pointer')
+			})
 
-            })
-            scope.$watch('filterBy.orderBy', function(newValue){
-                if (newValue != scope.bindTo && newValue != "-" + scope.bindTo){
-                        resetState();
-                        applyClass(elem);
-                }
-            })
-        }
-    }
+			elem.bind('click', function() {
+				changeState()
+				applyClass(elem)
+				scope.$apply(function() {
+					scope.filterBy.orderBy = (state == "up" ? scope.bindTo
+							: "-" + scope.bindTo)
+					scope.filterBy.comparator = scope.comparator
+				})
+
+			})
+			scope.$watch('filterBy.orderBy',
+					function(newValue) {
+						if (newValue != scope.bindTo
+								&& newValue != "-" + scope.bindTo) {
+							resetState();
+							applyClass(elem);
+						}
+					})
+		}
+	}
 })
 
-app.filter('percentage', ['$filter', function ($filter) {
-  return function (input, decimals) {
-	  if (input == 0) {
-		  decimals = 0;
-	  }
-	  return $filter('number')(input * 100, decimals) + '%';
-  };
-}]);
+app.filter('percentage', [ '$filter', function($filter) {
+	return function(input, decimals) {
+		if (input == 0) {
+			decimals = 0;
+		}
+		return $filter('number')(input * 100, decimals) + '%';
+	};
+} ]);

@@ -1,0 +1,58 @@
+<div class="inner-container col-xs-12">
+	<div ng-controller="playerStatsController">
+		<div class="text-center">
+			<h1 style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{player.name}}
+			</h1>
+		</div>
+		<hr />
+
+
+
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label class="col-sm-3 control-label align-left">Max Chest Contribution</label>
+				<label class="col-sm-3 control-label" style="text-align:left"><h3 style="display:inline">20</h3></label>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Max Card Donations</label>
+				<label class="col-sm-3 control-label" style="text-align:left"><h3 style="display:inline">20</h3></label>
+			</div>
+		</form>
+
+		<!-- 
+		<div class="row">
+			<h4 style="font-weight:bold"> Facts </h4>
+		</div>
+		<div class="row">
+			<div class="col-sm-offset-1"><h4 style="display:inline"> Best of Chest Contribution: </h4> 
+										 <h3 style="display:inline"> 10</h3></div> 
+		</div>
+		<div class="row">
+			<div class="col-sm-offset-1"><h4 style="display:inline"> Best Card Donation:</h4>
+			<h3 style="display:inline">100</h3></div>
+		</div>
+		-->
+		<hr />
+		
+		<div class="row">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th><span>Week #</span></th>
+						<th><span>Chest Contribution</span></th>
+						<th><span>Card Donation</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="s in player.statsDto">
+						<td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{$index
+							+ 1}}</td>
+						<td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution
+							}}</td>
+						<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

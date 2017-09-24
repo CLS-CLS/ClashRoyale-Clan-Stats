@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.dto.PlayerOverallStats;
+import org.lytsiware.clash.dto.PlayerStatsDto;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,13 @@ public class ClanStatsRestController {
         Week week = new Week().minusWeeks(deltaWeek);
         return clanStatsService.retrieveClanStats(week);
 
+    }
+    
+    @RequestMapping(value="/player/{tag}", method= RequestMethod.GET)
+    public PlayerStatsDto retrievePlayerStats(@PathVariable(required = true) String tag) {
+    	logger.info("START retrievePlayerStats - tag {}", tag);
+    	
+    	return clanStatsService.retrievePlayerStats(tag);
     }
 
 }

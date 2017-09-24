@@ -16,6 +16,7 @@ import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.PlayerOverallStats;
+import org.lytsiware.clash.dto.PlayerStatsDto;
 import org.lytsiware.clash.service.integration.ClashStatsSiteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,6 +119,14 @@ public class ClanStatsService implements IClanStatsService {
 		}
 		*/
 		updateDatabaseWithLatest();
+	}
+
+	@Override
+	public PlayerStatsDto retrievePlayerStats(String tag) {
+		Player player = playerRepository.findByTag(tag);
+		Week now = new Week();
+		List<PlayerWeeklyStats> stats = playerWeeklyStatsRepository.findByWeekAndTag(tag, now.minusWeeks(12), now.minusWeeks(1));
+		return PlayerStatsDto.toPlayerStatsDto(player, stats);
 	}
 
 

@@ -1,5 +1,6 @@
 <html lang="en">
 <head>
+	<base href="/">
 	<!-- Global Site Tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106574321-1"></script>
 	<script>
@@ -35,6 +36,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="lib/bootstrap/js/bootstrap.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
     <script src="lib/ui-bootstrap-tpls-2.5.0.min.js"></script>
     <script src="scripts/app.js"></script>
 
@@ -54,103 +56,10 @@
     </div>
 </div>
 
+
+
 <div ng-app="App" class="container">
-    <div ng-cloak>
-        <div class="inner-container col-xs-12">
-            <div ng-controller="weeksDropdownController">
-
-                <div class="filter row">
-
-                    <div class="col-xs-4 col-md-3" >
-                        <table>
-                            <tr><td><label>Shift to previous week No#:</label></td></tr>
-                            <tr><td><span>{{stats[0].startDate[2]}}/{{stats[0].startDate[1]}}/{{stats[0].startDate[0]}}
-                        - {{stats[0].endDate[2]}}/{{stats[0].endDate[1]}}/{{stats[0].endDate[0]}}</span></td></tr>
-                        </table>
-                    </div>
-
-                    <div class="btn-group" role="group">
-                        <div style="margin-top:13px">
-                            <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="previousWeek()"><i class='fa fa-fw fa-chevron-left'></i></button>
-                            <div class="btn-group"  role="group">
-                                <button class="btn btn-default btn-block dropdown-toggle btn-lg" type="button" data-toggle="dropdown">
-                                    <span class="selected">{{selectedItem}}</span>
-                                    <span class="caret"></span></button>
-                                <ul class="dropdown-menu" style="width:100%">
-
-                                    <li ng-repeat="i in [1,2 ,3,4,5,6,7,8,9,10,11,12 ]">
-                                        <a ng-click="dropboxitemselected(i)">{{i}}</a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <button type="button"  class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i class='fa fa-fw fa-chevron-right'></i></button>
-                        </div>
-                    </div>
-
-                    <button type="button" style="margin-top:13px" class="btn btn-default btn-lg col-xs-offset-1" ng-click="togglePercentage()">
-                        {{percentageButtonLbl}}
-                    </button>
-                </div>
-                <!--
-                <div class="col-xs-4">
-                    <div class="col-md-6">
-                        <p class="input-group">
-                            <input type="text" class="form-control" uib-datepicker-popup ng-model="dt" is-open="popup.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"  show-button-bar="false" />
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open()"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-                -->
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
-                        	Player <order-directive bind-to="name" filter-by="filter"/>
-                            </span>
-                        </th>
-                        <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
-                        	Role <order-directive bind-to="role" filter-by="filter" comparator="roleOrder"/>
-                        	</span>
-                        </th>
-                        <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Chest contribution
-                            <order-directive bind-to="chestContribution" filter-by="filter"/></span>
-                        </th>
-                        <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Donations
-                            <order-directive bind-to="cardDonation" filter-by="filter"/></span>
-                        </th>
-                        <th colspan="2">Average Stats (of the last 12 weeks)</th>
-                    </tr>
-                    <tr>
-                        <th><span ng-click=triggerOrderDirective($event)>Chest Contribution
-                            <order-directive bind-to="avgChestContribution" filter-by="filter"/></span>
-                        </th>
-                        <th><span ng-click=triggerOrderDirective($event)>Donations
-                            <order-directive bind-to="avgCardDonation" filter-by="filter"/></span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: filter.orderBy: false : filter.comparator">
-                        <td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{s.name}}</td>
-                        <td>{{s.role}}</td>
-
-                        <td ng-show="!showPercentage">{{s.chestContribution }}</td>
-                        <td ng-show="showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
-                        <td style="border-right: 1.5px solid #ddd; " ng-show="!showPercentage">{{s.cardDonation}}</td>
-                        <td style="border-right: 1.5px solid #ddd; " ng-show="showPercentage">{{s.cardDonationPerc | percentage:1}}</td>
-                        <td ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution}}</td>
-                        <td ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation}}</td>
-                    </tr>
-                    <tr ng-if="stats.length == 0"><td colspan="12"> <h2>No data for this period</h2></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+	<div ng-view autoscroll="true"></div>
 </div> <!-- /container -->
 
 <footer>

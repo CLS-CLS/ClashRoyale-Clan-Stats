@@ -74,4 +74,12 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
     	return mergedStats;
     	
     }
+
+	@Override
+	public List<PlayerWeeklyStats> findByWeekAndTag(String tag, Week startWeek, Week endWeek) {
+		Query nQuery = em.createNamedQuery("findByWeekAndTag").setParameter("tag", tag).setParameter("startWeek", startWeek.getWeek()).setParameter("endWeek", endWeek.getWeek());
+		@SuppressWarnings("unchecked")
+		List<PlayerWeeklyStats> results = nQuery.getResultList();
+		return results;
+	}
 }
