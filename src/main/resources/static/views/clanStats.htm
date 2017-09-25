@@ -47,50 +47,53 @@
                 </div>
             </div>
             -->
-            <table class="table table-striped">
-                <thead>
-	                <tr>
-	                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
-	                    	Player <order-directive bind-to="name" filter-by="filter"/>
-	                        </span>
-	                    </th>
-	                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
-	                    	Role <order-directive bind-to="role" filter-by="filter" comparator="roleOrder"/>
-	                    	</span>
-	                    </th>
-	                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Chest contribution
-	                        <order-directive bind-to="chestContribution" filter-by="filter"/></span>
-	                    </th>
-	                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Donations
-	                        <order-directive bind-to="cardDonation" filter-by="filter"/></span>
-	                    </th>
-	                    <th colspan="2">Average Stats (of the last 12 weeks)</th>
+            <div style="position:relative">
+            	<div class="loading" ng-show="dataLoading"><i class="fa fa-spinner fa-5x"></i></div>
+	            <table class="table table-striped">
+	                <thead>
+		                <tr>
+		                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
+		                    	Player <order-directive bind-to="name" filter-by="filter"/>
+		                        </span>
+		                    </th>
+		                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
+		                    	Role <order-directive bind-to="role" filter-by="filter" comparator="roleOrder"/>
+		                    	</span>
+		                    </th>
+		                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Chest contribution
+		                        <order-directive bind-to="chestContribution" filter-by="filter"/></span>
+		                    </th>
+		                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Donations
+		                        <order-directive bind-to="cardDonation" filter-by="filter"/></span>
+		                    </th>
+		                    <th colspan="2">Average Stats (of the last 12 weeks)</th>
+		                </tr>
+		                <tr>
+		                    <th><span ng-click=triggerOrderDirective($event)>Chest Contribution
+		                        <order-directive bind-to="avgChestContribution" filter-by="filter"/></span>
+		                    </th>
+		                    <th><span ng-click=triggerOrderDirective($event)>Donations
+		                        <order-directive bind-to="avgCardDonation" filter-by="filter"/></span>
+		                    </th>
+		                </tr>
+	                </thead>
+	                <tbody>
+	
+	                <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: filter.orderBy: false : filter.comparator">
+	                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a href="player/{{s.tag}}">{{s.name}}</a></td>
+	                    <td>{{s.role}}</td>
+	
+	                    <td ng-show="!showPercentage">{{s.chestContribution }}</td>
+	                    <td ng-show="showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
+	                    <td style="border-right: 1.5px solid #ddd; " ng-show="!showPercentage">{{s.cardDonation}}</td>
+	                    <td style="border-right: 1.5px solid #ddd; " ng-show="showPercentage">{{s.cardDonationPerc | percentage:1}}</td>
+	                    <td ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution | number:2 }}</td>
+	                    <td ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation | number: 2}}</td>
 	                </tr>
-	                <tr>
-	                    <th><span ng-click=triggerOrderDirective($event)>Chest Contribution
-	                        <order-directive bind-to="avgChestContribution" filter-by="filter"/></span>
-	                    </th>
-	                    <th><span ng-click=triggerOrderDirective($event)>Donations
-	                        <order-directive bind-to="avgCardDonation" filter-by="filter"/></span>
-	                    </th>
-	                </tr>
-                </thead>
-                <tbody>
-
-                <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: filter.orderBy: false : filter.comparator">
-                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a href="player/{{s.tag}}">{{s.name}}</a></td>
-                    <td>{{s.role}}</td>
-
-                    <td ng-show="!showPercentage">{{s.chestContribution }}</td>
-                    <td ng-show="showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
-                    <td style="border-right: 1.5px solid #ddd; " ng-show="!showPercentage">{{s.cardDonation}}</td>
-                    <td style="border-right: 1.5px solid #ddd; " ng-show="showPercentage">{{s.cardDonationPerc | percentage:1}}</td>
-                    <td ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution | number:2 }}</td>
-                    <td ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation | number: 2}}</td>
-                </tr>
-                <tr ng-if="stats.length == 0"><td colspan="12"> <h2>No data for this period</h2></td></tr>
-                </tbody>
-            </table>
+	                <tr ng-if="stats.length == 0"><td colspan="12"> <h2>No data for this period</h2></td></tr>
+	                </tbody>
+	            </table>
+            </div>
         </div>
     </div>
 </div>

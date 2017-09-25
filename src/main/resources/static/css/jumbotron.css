@@ -16,6 +16,19 @@
   margin-right: auto;
 }
 
+.loading {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background:rgba(150,150,150,0.5);
+}
+
+.loading > i {
+	position:fixed;
+	left: 50%;
+	top: 50%
+}
+
 td, th {
    vertical-align:middle !important;
    margin-left: 50% !important;

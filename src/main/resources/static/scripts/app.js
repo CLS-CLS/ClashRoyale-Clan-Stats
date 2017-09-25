@@ -113,7 +113,9 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	}
 
 	$scope.percentageButtonLbl = "View Percentages (%)"
-
+		
+	$scope.dataLoading = true;
+		
 	$scope.dropboxitemselected = function(item) {
 		$scope.selectedItem = item;
 	}
@@ -155,8 +157,10 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 
 	$scope.avgContrColor = colorfy.colorfy
 	function getData(week) {
-
+		$scope.dataLoading = true;
+		
 		$http.get(baseUrl + "/rest/" + week).then(function(response) {
+			$scope.dataLoading = false;
 			if ($scope.stats == null) {
 				$scope.stats = [];
 			}
@@ -174,6 +178,8 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 				$scope.stats.splice(response.data.length)
 			}
 			calculatePercentageAndUpdateData(response.data);
+		}, function(response) {
+			$scope.dataLoading = false;
 		})
 
 	}
