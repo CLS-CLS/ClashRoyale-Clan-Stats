@@ -99,7 +99,7 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 
 })
 
-app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, colorfy) {
+app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, colorfy, roleComparator) {
 
 	$scope.selectedItem = minWeek
 
@@ -108,8 +108,8 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	$scope.showPercentage = false;
 
 	$scope.filter = {
-		orderBy : "-chestContribution",
-		comparator : ""
+		orderBy : "-role",
+		comparator : roleComparator
 	}
 
 	$scope.percentageButtonLbl = "View Percentages (%)"
@@ -150,29 +150,8 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		}
 	}
 
-	$scope.roleOrder = function(item1, item2) {
-		var item1Order;
-		var item2Order;
-
-		var findOrder = function(item) {
-			var value = item.value;
-			switch (value) {
-			case 'Leader':
-				return 1;
-
-			case 'Co-Leader':
-				return 2;
-
-			case 'Elder':
-				return 3;
-			default:
-				return 4;
-			}
-		}
-		item1Order = findOrder(item1);
-		item2Order = findOrder(item2);
-		return item1Order > item2Order ? 1 : -1
-	};
+	$scope.roleOrder = roleComparator
+	
 
 	$scope.avgContrColor = colorfy.colorfy
 	function getData(week) {
@@ -282,6 +261,32 @@ app.directive("orderDirective", function() {
 		}
 	}
 })
+
+app.factory("roleComparator", [function() {
+	return function(item1, item2) {
+		var item1Order;
+		var item2Order;
+
+		var findOrder = function(item) {
+			var value = item.value;
+			switch (value) {
+			case 'Leader':
+				return 4;
+
+			case 'Co-Leader':
+				return 3;
+
+			case 'Elder':
+				return 2;
+			default:
+				return 1;
+			}
+		}
+		item1Order = findOrder(item1);
+		item2Order = findOrder(item2);
+		return item1Order > item2Order ? 1 : -1
+	};
+}]);
 
 app.filter('percentage', [ '$filter', function($filter) {
 	return function(input, decimals) {
