@@ -16,12 +16,17 @@ public class ClanStatsController {
 		return "/index";
 	}
 	
+	@GetMapping("/{symbolicName:\\d*}")
+	public String initialPageWithDigit(Model model) {
+		model.addAttribute("baseUrl", baseUrl);
+		return "/index";
+	}
+	
 	
 	@GetMapping("/player/**")
 	public String memberPage(Model model) {
 		model.addAttribute("baseUrl", baseUrl);
 		return "/index";
 	}
-	
 
 }

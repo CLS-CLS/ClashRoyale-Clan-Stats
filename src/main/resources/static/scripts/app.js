@@ -6,11 +6,11 @@ var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute' ]);
 app.config([ "$locationProvider", "$routeProvider",
 	function config($locationProvider, $routeProvider) {
 
-		$routeProvider.when("/", {
+		$routeProvider.when("/:week", {
 			templateUrl : "views/clanStats.htm"
 		}).when("/player/:playerTag", {
 			templateUrl : "views/playerStats.htm",
-		}).otherwise("/")
+		}).otherwise("/1")
 
 		$locationProvider.html5Mode(true);
 
@@ -71,37 +71,48 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 	
 	$scope.maxCardDontationWeek
 	
-	$http.get(baseUrl + "/rest/player/" + $routeParams.playerTag).then(
-		function(response) {
-			var maxChestContribution = 0;
-			
-			
-			var maxCardDonation = 0;
-			var maxCardDonationWeek = 0;
-			
-			$scope.player = response.data
-			
-			response.data.statsDto.forEach(function(value, index) {
-				if (value.cardDonation > maxCardDonation){
-					maxCardDonation = value.cardDonation;
-					$scope.maxCardDonationWeek = index + 1;
-				}
-				if (value.chestContribution > maxChestContribution) {
-					maxChestContribution = value.chestContribution;
-					$scope.maxChestContributionWeek = index + 1;
-				}
+	$scope.dataLoading = true;
+	
+	
+	function loadData() {
+		$scope.dataLoading = true;
+		
+		$http.get(baseUrl + "/rest/player/" + $routeParams.playerTag).then(
+			function(response) {
+				$scope.dataLoading = false;
+				var maxChestContribution = 0;
+				var maxCardDonation = 0;
+				var maxCardDonationWeek = 0;
 				
-				$scope.maxChestContribution = maxChestContribution;
-				$scope.maxCardDonation = maxCardDonation;
-			})
-		}
-	)
+				$scope.player = response.data
+				
+				response.data.statsDto.forEach(function(value, index) {
+					if (value.cardDonation > maxCardDonation){
+						maxCardDonation = value.cardDonation;
+						$scope.maxCardDonationWeek = index + 1;
+					}
+					if (value.chestContribution > maxChestContribution) {
+						maxChestContribution = value.chestContribution;
+						$scope.maxChestContributionWeek = index + 1;
+					}
+					
+					$scope.maxChestContribution = maxChestContribution;
+					$scope.maxCardDonation = maxCardDonation;
+				})
+			}, 
+			function(response) {
+				$scope.dataLoading = false;
+			}
+		)
+	}
+	
+	loadData();
 
 })
 
-app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, colorfy, roleComparator) {
-
-	$scope.selectedItem = minWeek
+app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, $routeParams, colorfy, roleComparator) {
+	
+	$scope.selectedItem = $routeParams.week || minWeek
 
 	$scope.stats = []
 
@@ -156,11 +167,14 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	
 
 	$scope.avgContrColor = colorfy.colorfy
+	
+	
 	function getData(week) {
 		$scope.dataLoading = true;
 		
 		$http.get(baseUrl + "/rest/" + week).then(function(response) {
 			$scope.dataLoading = false;
+			
 			if ($scope.stats == null) {
 				$scope.stats = [];
 			}

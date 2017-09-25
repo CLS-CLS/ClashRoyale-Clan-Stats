@@ -1,8 +1,9 @@
 <div class="inner-container col-xs-12">
-	<div ng-controller="playerStatsController">
+	<div style="position:relative" ng-controller="playerStatsController">
 		<div class="row">
 			<a href="/" class="btn btnl-lg btn-primary"><span><i class="fa fa-fw fa-2x fa-arrow-left"></i> </span></a>
 		</div>
+		<div class="loading" ng-show="dataLoading"><i class="fa fa-spinner fa-spin fa-5x"></i></div>
 		<div class="text-center">
 			<div>
 			<h1 style="font-family: 'Comic Sans MS', cursive, sans-serif;color:rgb(35, 82, 124)">{{player.name}}</h1>
