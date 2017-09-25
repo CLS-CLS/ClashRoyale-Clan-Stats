@@ -112,7 +112,16 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 
 app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, $routeParams, colorfy, roleComparator) {
 	
-	$scope.selectedItem = $routeParams.week || minWeek
+	$scope.selectedItem = (function() {
+		var week =  $routeParams.week;
+		if (week >= maxWeek) {
+			return  maxWeek;
+		}else if (week <= minWeek) {
+			return  minWeek;
+		}else  {
+			return week;
+		}
+	})();
 
 	$scope.stats = []
 
@@ -132,15 +141,21 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	}
 
 	$scope.previousWeek = function() {
-		if ($scope.selectedItem == minWeek)
+		if ($scope.selectedItem <= minWeek) {
+			$scope.selectedItem = 1;
 			return;
+		}
 		$scope.selectedItem = $scope.selectedItem - 1
 	}
 
 	$scope.nextWeek = function() {
-		if ($scope.selectedItem == maxWeek)
+		if ($scope.selectedItem >= maxWeek) {
+			$scope.selectedItem = maxWeek;
 			return;
-		$scope.selectedItem = $scope.selectedItem + 1
+		}
+		//sometings 1 is considered a string and "+" is considered as string concatenator
+		//subtracting 1 first makes the selectedItem a number
+		$scope.selectedItem = ($scope.selectedItem  -1) + 2;
 	}
 
 	$scope.$watch('selectedItem', function(newValue) {
