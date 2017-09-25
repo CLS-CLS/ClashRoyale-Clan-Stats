@@ -1,21 +1,37 @@
 <div class="inner-container col-xs-12">
 	<div ng-controller="playerStatsController">
-		<div class="text-center">
-			<h1 style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{player.name}}
-			</h1>
+		<div class="row">
+			<a href="/" class="btn btnl-lg btn-primary"><span><i class="fa fa-fw fa-2x fa-arrow-left"></i> </span></a>
 		</div>
-		<hr />
-
-
-
+		<div class="text-center">
+			<div>
+			<h1 style="font-family: 'Comic Sans MS', cursive, sans-serif;color:rgb(35, 82, 124)">{{player.name}}</h1>
+			</div>
+			<div class="row"><h1></h1></div>
+			<h4>Overall statistics for the last 12 weeks</h4>
+		</div>
+		<hr/>
+		
 		<form class="form-horizontal">
 			<div class="form-group">
 				<label class="col-sm-3 control-label align-left">Max Chest Contribution</label>
-				<label class="col-sm-3 control-label" style="text-align:left"><h3 style="display:inline">20</h3></label>
+				<label class="col-sm-3 control-label" style="text-align:left">
+					<h3 style="display:inline">{{maxChestContribution}},</h3>
+				</label>
+				<label class="col-sm-3 control-label" style="text-align:left">
+					<h4 ng-if="maxChestContributionWeek !=1" style="display:inline">{{maxChestContributionWeek}} weeks ago</h3>
+					<h4 ng-if="maxChestContributionWeek ==1" style="display:inline">{{maxChestContributionWeek}} week ago</h3>
+				</label>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Max Card Donations</label>
-				<label class="col-sm-3 control-label" style="text-align:left"><h3 style="display:inline">20</h3></label>
+				<label class="col-sm-3 control-label" style="text-align:left">
+					<h3 style="display:inline">{{maxCardDonation}},</h3>
+				</label>
+				<label class="col-sm-3 control-label" style="text-align:left">
+					<h4 ng-if="maxCardDonationWeek !=1" style="display:inline">{{maxCardDonationWeek}} weeks ago</h3>
+					<h4 ng-if="maxCardDonationWeek ==1" style="display:inline">{{maxCardDonationWeek}} week ago</h3>
+				</label>
 			</div>
 		</form>
 

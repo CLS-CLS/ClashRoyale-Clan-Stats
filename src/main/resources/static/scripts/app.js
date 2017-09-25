@@ -63,9 +63,37 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 	
 	$scope.colorfy = colorfy.colorfy
 	
-	$http.get(baseUrl + "/clan/player/" + $routeParams.playerTag).then(
+	$scope.maxChestContribution
+	
+	$scope.maxCardDonation
+	
+	$scope.maxChestContributionWeek
+	
+	$scope.maxCardDontationWeek
+	
+	$http.get(baseUrl + "/rest/player/" + $routeParams.playerTag).then(
 		function(response) {
+			var maxChestContribution = 0;
+			
+			
+			var maxCardDonation = 0;
+			var maxCardDonationWeek = 0;
+			
 			$scope.player = response.data
+			
+			response.data.statsDto.forEach(function(value, index) {
+				if (value.cardDonation > maxCardDonation){
+					maxCardDonation = value.cardDonation;
+					$scope.maxCardDonationWeek = index + 1;
+				}
+				if (value.chestContribution > maxChestContribution) {
+					maxChestContribution = value.chestContribution;
+					$scope.maxChestContributionWeek = index + 1;
+				}
+				
+				$scope.maxChestContribution = maxChestContribution;
+				$scope.maxCardDonation = maxCardDonation;
+			})
 		}
 	)
 
@@ -149,7 +177,7 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	$scope.avgContrColor = colorfy.colorfy
 	function getData(week) {
 
-		$http.get(baseUrl + "/clan/" + week).then(function(response) {
+		$http.get(baseUrl + "/rest/" + week).then(function(response) {
 			if ($scope.stats == null) {
 				$scope.stats = [];
 			}

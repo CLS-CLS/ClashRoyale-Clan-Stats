@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/clan")
+@RequestMapping("/rest")
 public class ClanStatsRestController {
 
     Logger logger = LoggerFactory.getLogger(ClanStatsRestController.class);

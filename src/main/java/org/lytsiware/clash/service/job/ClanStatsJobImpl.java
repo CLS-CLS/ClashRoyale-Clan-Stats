@@ -29,7 +29,7 @@ public class ClanStatsJobImpl implements ClanStatsJob {
 	WeekJobRepository weeklyJobRepository;
 
 	@Override
-	@Scheduled(cron = "0 23 11 ? * MON ")
+	@Scheduled(cron = "0 5 10 ? * MON ")
 	@Retryable(maxAttempts = 3, backoff = @Backoff(600000))
 	public void run() {
 		try {
