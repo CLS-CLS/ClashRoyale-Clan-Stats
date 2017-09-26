@@ -122,6 +122,10 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 			return week;
 		}
 	})();
+	
+	$scope.totalDonations;
+	
+	$scope.chestLevel;
 
 	$scope.stats = []
 
@@ -212,6 +216,15 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		})
 
 	}
+	
+	function calculateChestLvl(sumChest) {
+		var lvls = [70, 160, 270, 400, 550, 720, 910, 1120, 1350, 1600];
+		var lvl = 0;
+		while (sumChest > lvls[lvl] - 1) {
+			lvl++;
+		}
+		return lvl;
+	}
 
 	function calculatePercentageAndUpdateData(data) {
 		var sumChest = 0;
@@ -224,7 +237,11 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 			item.chestContributionPerc = item.chestContribution / sumChest;
 			item.cardDonationPerc = item.cardDonation / sumDonation;
 		})
+		$scope.totalDonations = sumDonation;
+		$scope.chectLevel = calculateChestLvl(sumChest);
 	}
+	
+	
 
 })
 

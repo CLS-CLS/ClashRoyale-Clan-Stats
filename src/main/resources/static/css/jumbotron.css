@@ -64,6 +64,12 @@ body {
     min-width: 768px;
 }
 
+.bubble {
+	border: 1px solid #e1e1e1;
+	border-radius: 10px;
+	box-shadow: 0px 0px 10px 0.5px rgba(41, 78, 89, 0.12);
+}
+
 .inner-container {
     min-height: 768px;
     border: 1px solid #dddddd;
