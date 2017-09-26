@@ -56,7 +56,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
     }
 
     @Override
-    @Cacheable("playerStats")
+    @Cacheable("weeklyStats")
     public List<PlayerWeeklyStats> findByWeek(Week week) {
         logger.info("findByWeek {}", week);
 
@@ -76,6 +76,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
     }
 
 	@Override
+	@Cacheable("playerStats")
 	public List<PlayerWeeklyStats> findByWeekAndTag(String tag, Week startWeek, Week endWeek) {
 		Query nQuery = em.createNamedQuery("findByWeekAndTag").setParameter("tag", tag).setParameter("startWeek", startWeek.getWeek()).setParameter("endWeek", endWeek.getWeek());
 		@SuppressWarnings("unchecked")
