@@ -124,6 +124,7 @@ public class ClanStatsService implements IClanStatsService {
 	@Override
 	public PlayerStatsDto retrievePlayerStats(String tag) {
 		Player player = playerRepository.findByTag(tag);
+		logger.info("tag {} -> {}", tag, player.getName());
 		Week now = new Week();
 		List<PlayerWeeklyStats> stats = playerWeeklyStatsRepository.findByWeekAndTag(tag, now.minusWeeks(12), now.minusWeeks(1));
 		return PlayerStatsDto.toPlayerStatsDto(player, stats);
