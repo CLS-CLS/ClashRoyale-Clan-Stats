@@ -86,6 +86,29 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 				
 				$scope.player = response.data
 				
+				// if there are weeks missing due to player not be part of the clan, 
+				// fill them with N/A data in order to show thes missing weeks
+				var week = -1;
+				
+				var emptyStats = {
+						chestContribution: "N/A",
+						cardDonation: "N/A"
+				};
+				
+				var completeStats = [];
+				
+				response.data.statsDto.forEach(function(value, index) {
+									
+					for (var i = 0; i < week - value.week - 1; i++) {
+						completeStats.push(emptyStats)
+					}
+					completeStats.push(value)
+					week = value.week
+					
+				})
+				
+				response.data.statsDto = completeStats;
+				
 				response.data.statsDto.forEach(function(value, index) {
 					if (value.cardDonation > maxCardDonation){
 						maxCardDonation = value.cardDonation;
