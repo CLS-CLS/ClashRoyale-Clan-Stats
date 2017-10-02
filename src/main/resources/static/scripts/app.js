@@ -45,7 +45,7 @@ app.service("colorfy", function() {
 
 		if (number >= boundary) {
 			style.color = 'green'
-		} else {
+		} else if (number < boundary) {
 			style.color = 'red'
 		}
 
@@ -119,16 +119,16 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 				var maxChestContribution = 0;
 				var maxCardDonation = 0;
 				var maxCardDonationWeek = 0;
-				
-				$scope.player = response.data
-				
+
 				// if there are weeks missing due to player not be part of the clan, 
 				// fill them with N/A data in order to show thes missing weeks
 				var week = -1;
 				
-				var emptyStats = {
-						chestContribution: "N/A",
-						cardDonation: "N/A"
+				function emptyStats() {
+				    return {
+                        chestContribution: "N/A",
+                        cardDonation: "N/A"
+                    }
 				};
 				
 				var completeStats = [];
@@ -136,7 +136,7 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 				response.data.statsDto.forEach(function(value, index) {
 									
 					for (var i = 0; i < week - value.week - 1; i++) {
-						completeStats.push(emptyStats)
+						completeStats.push(new emptyStats())
 					}
 					completeStats.push(value)
 					week = value.week
@@ -158,6 +158,8 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 					$scope.maxChestContribution = maxChestContribution;
 					$scope.maxCardDonation = maxCardDonation;
 				})
+
+				$scope.player = response.data
 			}, 
 			function(response) {
 				$scope.dataLoading = false;
