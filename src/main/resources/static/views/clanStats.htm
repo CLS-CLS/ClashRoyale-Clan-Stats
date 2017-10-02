@@ -110,10 +110,15 @@
 	
 	                    <td ng-show="!showPercentage">{{s.chestContribution }}</td>
 	                    <td ng-show="showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
+	                    
 	                    <td style="border-right: 1.5px solid #ddd; " ng-show="!showPercentage">{{s.cardDonation}}</td>
 	                    <td style="border-right: 1.5px solid #ddd; " ng-show="showPercentage">{{s.cardDonationPerc | percentage:1}}</td>
-	                    <td ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution | number:2 }}</td>
-	                    <td ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation | number: 2}}</td>
+	                    
+	                    <td ng-show="!showPercentage" ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution | number:2 }}</td>
+	                    <td ng-show="showPercentage" ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContributionPerc | percentage:1 }}</td>
+	                    
+	                    <td ng-show="!showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation | number: 2}}</td>
+	                    <td ng-show="showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonationPerc | percentage:1 }}</td>
 	                </tr>
 	                <tr ng-if="stats.length == 0"><td colspan="12"> <h2>No data for this period</h2></td></tr>
 	                </tbody>

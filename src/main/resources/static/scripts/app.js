@@ -286,15 +286,21 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	}
 
 	function calculatePercentageAndUpdateData(data) {
+		var avgSumChest  = 0;
+		var avgSumDonation = 0;
 		var sumChest = 0;
 		var sumDonation = 0;
 		data.forEach(function(item) {
 			sumChest += item.chestContribution;
 			sumDonation += item.cardDonation;
+			avgSumChest += item.avgChestContribution;
+			avgSumDonation += item.avgCardDonation;
 		})
 		data.forEach(function(item) {
 			item.chestContributionPerc = item.chestContribution / sumChest;
 			item.cardDonationPerc = item.cardDonation / sumDonation;
+			item.avgChestContributionPerc = item.avgChestContribution / avgSumChest;
+			item.avgCardDonationPerc = item.avgCardDonation / avgSumDonation;
 		})
 		$scope.totalDonations = sumDonation;
 		$scope.chectLevel = calculateChestLvl(sumChest);
