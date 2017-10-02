@@ -2,6 +2,7 @@ package org.lytsiware.clash.controller;
 
 import java.util.List;
 
+import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.integration.ClashStatsSiteService;
@@ -44,10 +45,17 @@ public class AdminController {
 		return "/check";
 	}
 
-	@RequestMapping("/enforce-run")
+	//@RequestMapping("/enforce-run")
 	public String enfornceRun() {
 		//	TODO disabled until there is security implemented
-		// job.run();
+		job.run();
+		return "/index";
+	}
+	
+	//@RequestMapping("/recalculate-avg")
+	public String recalculateAvgs()	{
+		//	TODO disabled until there is security implemented
+		clanStatService.recalculateAvgs();
 		return "/index";
 	}
 

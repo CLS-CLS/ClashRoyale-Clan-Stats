@@ -16,4 +16,6 @@ public interface IClanStatsService {
 
 	PlayerStatsDto retrievePlayerStats(String tag);
 
+	void recalculateAvgs();
+
 }

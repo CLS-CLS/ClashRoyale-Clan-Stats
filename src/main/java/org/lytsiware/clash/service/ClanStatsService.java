@@ -99,8 +99,18 @@ public class ClanStatsService implements IClanStatsService {
 		List<Player> updatedPlayers = calculateAvgs();
 
 		playerRepository.saveOrUpdate(updatedPlayers);
-		
+	}
+	
+	@Override
+	@Caching(evict = {	
+			@CacheEvict(value = "playerStats", allEntries = true),
+			@CacheEvict(value = "weeklyStats", allEntries = true),
+			
+	})
+	public void recalculateAvgs () {
+		List<Player> updatedPlayers = calculateAvgs();
 
+		playerRepository.saveOrUpdate(updatedPlayers);
 	}
 	
 	
