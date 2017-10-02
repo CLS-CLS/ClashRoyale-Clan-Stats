@@ -51,6 +51,13 @@ public class ClanStatsJobImpl implements ClanStatsJob {
 
 		Week previousWeek = new Week(LocalDate.now()).minusWeeks(1);
 
+		WeeklyJob latestRun = weeklyJobRepository.loadLatest();
+
+		if (latestRun.getLatestWeek() == previousWeek.getWeek()) {
+			logger.info("scheduler has already been fired");
+			return false;
+		}
+
 		// FIX the "dayTheSchedulerShouldHaveRun" should not be hardcoded but
 		// calculated from the cron expression:
 
@@ -61,15 +68,8 @@ public class ClanStatsJobImpl implements ClanStatsJob {
 		LocalDateTime dayTheSchedulerShouldHaveRun = previousWeek.getEndDate().atTime(LocalTime.of(9, 10)).plusDays(1); 
 
 		if (LocalDateTime.now().isAfter(dayTheSchedulerShouldHaveRun)) {
-
-			WeeklyJob latestRun = weeklyJobRepository.loadLatest();
-
-			if (latestRun.getLatestWeek() == previousWeek.getWeek()) {
-				logger.info("scheduler has already been fired");
-			} else {
-				logger.info("Scheduler was not fired");
-				result = true;
-			}
+			logger.info("Scheduler was not fired");
+			result = true;
 		} else {
 			logger.info("date is in between the gap");
 		}
