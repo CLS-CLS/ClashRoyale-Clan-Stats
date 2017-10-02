@@ -52,13 +52,13 @@ public class ClanStatsService implements IClanStatsService {
 	}
 
 	@Override
-	public List<PlayerWeeklyStats> calculateAvgs() {
+	public List<PlayerWeeklyStats> calculateAvgs(Week week) {
 		logger.info("calculateAvgs");
 
 		List<PlayerWeeklyStats> updatedWeeklyStats = new ArrayList<>();
 
-		Week startingWeek = new Week().minusWeeks(13);
-		Week latestWeek = new Week().minusWeeks(1);
+		Week startingWeek = week.minusWeeks(12);
+		Week latestWeek = week;
 
 		// finds all player stats between the provided weeks
 		Map<Player, List<PlayerWeeklyStats>> allPlayerStats = playerWeeklyStatsRepository.findByWeek(startingWeek,
@@ -88,10 +88,8 @@ public class ClanStatsService implements IClanStatsService {
 	}
 
 	@Override
-	@Caching(evict = {	
-			@CacheEvict(value = "playerStats", allEntries = true),
-			@CacheEvict(value = "weeklyStats", allEntries = true),
-			
+	@Caching(evict = { @CacheEvict(value = "playerStats", allEntries = true),
+		@CacheEvict(value = "weeklyStats", allEntries = true),
 	})
 	public void updateDatabaseWithLatest() {
 		logger.info("updateDatabaseWithLatest");
@@ -100,20 +98,17 @@ public class ClanStatsService implements IClanStatsService {
 
 		newStats = playerWeeklyStatsRepository.saveOrUpdateAll(newStats);
 
-		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs();
+		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(new Week().minusWeeks(1));
 
 		playerWeeklyStatsRepository.saveOrUpdateAll(playerWeeklyStats);
 	}
 	
 	@Override
-	@Caching(evict = {	
-			@CacheEvict(value = "playerStats", allEntries = true),
-			@CacheEvict(value = "weeklyStats", allEntries = true),
-			
+	@Caching(evict = {@CacheEvict(value = "playerStats", allEntries = true),
+		@CacheEvict(value = "weeklyStats", allEntries = true),
 	})
-	public void recalculateAvgs () {
-		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs();
-
+	public void recalculateAvgs(Week week) {
+		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(week);
 		playerWeeklyStatsRepository.saveOrUpdateAll(playerWeeklyStats);
 	}
 	

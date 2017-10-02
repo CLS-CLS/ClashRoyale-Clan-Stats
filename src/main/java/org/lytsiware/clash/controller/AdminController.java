@@ -2,6 +2,7 @@ package org.lytsiware.clash.controller;
 
 import java.util.List;
 
+import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -52,11 +54,14 @@ public class AdminController {
 		return "/index";
 	}
 	
-	//@RequestMapping("/recalculate-avg")
-	public String recalculateAvgs()	{
+	//@RequestMapping("/recalculate-avg/{week}")
+	public String recalculateAvgs(@PathVariable(value = "week") Integer week)	{
 		//	TODO disabled until there is security implemented
-		clanStatService.recalculateAvgs();
-		return "/index";
+		if (week < 1 ){
+			return "/index/";
+		}
+		clanStatService.recalculateAvgs(new Week().minusWeeks(week));
+		return "redirect:/" + week ;
 	}
 
 }
