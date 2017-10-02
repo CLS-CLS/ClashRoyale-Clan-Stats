@@ -70,9 +70,9 @@ public class ClashStatsSiteServiceImpl implements ClashStatsSiteService {
 			String[] cardDonationArray = el.select(".lineD").text().split(",");
 			int cardDonation = Integer.parseInt(cardDonationArray[cardDonationArray.length - 1]);
 			String role = el.select("div").get(2).text();
-			Player player = new Player(memberTag, memberName, role, 0, 0);
+			Player player = new Player(memberTag, memberName, role);
 			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, new Week().minusWeeks(1).getWeek(),
-					chestContribution, cardDonation);
+					chestContribution, cardDonation, 0 , 0);
 			playerWeeklyStats.add(stats);
 		}
 

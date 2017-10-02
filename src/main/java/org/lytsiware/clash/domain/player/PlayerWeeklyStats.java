@@ -8,7 +8,7 @@ import javax.persistence.*;
 @NamedQueries({
 		@NamedQuery(name = "findByWeek", query = "select s from PlayerWeeklyStats s join fetch s.player where s.week = :week"),
 
-		@NamedQuery(name = "findBetweenWeeks", query = "select s from PlayerWeeklyStats s join fetch s.player where s.week between :startWeek AND :endWeek"),
+		@NamedQuery(name = "findBetweenWeeks", query = "select s from PlayerWeeklyStats s join fetch s.player where s.week between :startWeek AND :endWeek order by s.week desc"),
 
 		@NamedQuery(name = "findByWeekAndTag", query = "select s from PlayerWeeklyStats s join fetch s.player where s.week between :startWeek and :endWeek and s.player.tag = :tag order by s.week desc")
 
@@ -20,12 +20,30 @@ public class PlayerWeeklyStats {
 
 	}
 
-	public PlayerWeeklyStats(Player player, int week, int chestContribution, int cardDonation) {
+	public double getAvgChestContribution() {
+		return avgChestContribution;
+	}
+
+	public void setAvgChestContribution(double avgChestContribution) {
+		this.avgChestContribution = avgChestContribution;
+	}
+
+	public double getAvgCardDonation() {
+		return avgCardDonation;
+	}
+
+	public void setAvgCardDonation(double avgCardDonation) {
+		this.avgCardDonation = avgCardDonation;
+	}
+
+	public PlayerWeeklyStats(Player player, int week, int chestContribution, int cardDonation, double avgChestContribution, double avgCardDonation) {
 		super();
 		this.player = player;
 		this.week = week;
 		this.chestContribution = chestContribution;
 		this.cardDonation = cardDonation;
+		this.avgChestContribution = avgChestContribution;
+		this.avgCardDonation = avgCardDonation;
 	}
 
 	@Id
@@ -49,6 +67,8 @@ public class PlayerWeeklyStats {
 	private int chestContribution;
 
 	private int cardDonation;
+	private double avgChestContribution;
+	private double avgCardDonation;
 
 	public Player getPlayer() {
 		return player;

@@ -12,21 +12,9 @@ public class Player {
 
     String name;
 
-    double avgChestContribution;
-
-    double avgCardDonation;
-    
     String role;
 
     public Player() {
-    }
-
-    public Player(String tag, String name, String role, double avgChestContribution, double avgCardDonation) {
-        this.tag = tag;
-        this.name = name;
-        this.avgChestContribution = avgChestContribution;
-        this.avgCardDonation = avgCardDonation;
-        this.role = role;
     }
 
     public Player(String tag, String name, String role) {
@@ -43,24 +31,9 @@ public class Player {
         return name;
     }
 
-    public double getAvgChestContribution() {
-        return avgChestContribution;
-    }
-
-    public double getAvgCardDonation() {
-        return avgCardDonation;
-    }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setAvgChestContribution(double avgChestContribution) {
-        this.avgChestContribution = avgChestContribution;
-    }
-
-    public void setAvgCardDonation(double avgCardDonation) {
-        this.avgCardDonation = avgCardDonation;
     }
 
     @Override

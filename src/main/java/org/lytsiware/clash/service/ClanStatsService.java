@@ -52,8 +52,10 @@ public class ClanStatsService implements IClanStatsService {
 	}
 
 	@Override
-	public List<Player> calculateAvgs() {
+	public List<PlayerWeeklyStats> calculateAvgs() {
 		logger.info("calculateAvgs");
+
+		List<PlayerWeeklyStats> updatedWeeklyStats = new ArrayList<>();
 
 		Week startingWeek = new Week().minusWeeks(13);
 		Week latestWeek = new Week().minusWeeks(1);
@@ -77,10 +79,12 @@ public class ClanStatsService implements IClanStatsService {
 			double avgChestContribution = playerStats.get(player).stream()
 					.collect(Collectors.summingInt(PlayerWeeklyStats::getChestContribution))
 					/ (double) playerStats.get(player).size();
-			player.setAvgCardDonation(avgCardDonation);
-			player.setAvgChestContribution(avgChestContribution);
+			PlayerWeeklyStats toUpdate = allPlayerStats.get(player).get(0);
+			toUpdate.setAvgCardDonation(avgCardDonation);
+			toUpdate.setAvgChestContribution(avgChestContribution);
+			updatedWeeklyStats.add(toUpdate);
 		}
-		return new ArrayList<>(playerStats.keySet());
+		return updatedWeeklyStats;
 	}
 
 	@Override
@@ -96,9 +100,9 @@ public class ClanStatsService implements IClanStatsService {
 
 		newStats = playerWeeklyStatsRepository.saveOrUpdateAll(newStats);
 
-		List<Player> updatedPlayers = calculateAvgs();
+		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs();
 
-		playerRepository.saveOrUpdate(updatedPlayers);
+		playerWeeklyStatsRepository.saveOrUpdateAll(playerWeeklyStats);
 	}
 	
 	@Override
@@ -108,9 +112,9 @@ public class ClanStatsService implements IClanStatsService {
 			
 	})
 	public void recalculateAvgs () {
-		List<Player> updatedPlayers = calculateAvgs();
+		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs();
 
-		playerRepository.saveOrUpdate(updatedPlayers);
+		playerWeeklyStatsRepository.saveOrUpdateAll(playerWeeklyStats);
 	}
 	
 	

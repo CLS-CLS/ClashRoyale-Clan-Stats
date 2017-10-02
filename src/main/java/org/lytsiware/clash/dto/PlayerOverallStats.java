@@ -42,8 +42,8 @@ public class PlayerOverallStats implements Serializable {
         this.tag = playerWeeklyStats.getPlayer().getTag();
         this.name = playerWeeklyStats.getPlayer().getName();
         this.week = playerWeeklyStats.getWeek();
-        this.avgCardDonation = playerWeeklyStats.getPlayer().getAvgCardDonation();
-        this.avgChestContribution = playerWeeklyStats.getPlayer().getAvgChestContribution();
+        this.avgCardDonation = playerWeeklyStats.getAvgCardDonation();
+        this.avgChestContribution = playerWeeklyStats.getAvgChestContribution();
         this.chestContribution = playerWeeklyStats.getChestContribution();
         this.cardDonation = playerWeeklyStats.getCardDonation();
         Week week = new Week(playerWeeklyStats.getWeek());
