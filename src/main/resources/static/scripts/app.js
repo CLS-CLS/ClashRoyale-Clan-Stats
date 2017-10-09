@@ -191,6 +191,8 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	$scope.stats = []
 
 	$scope.showPercentage = false;
+	
+	$scope.showRanking = false;
 
 	$scope.filter = {
 		orderBy : "-role",
@@ -235,10 +237,23 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	}
 
 	$scope.togglePercentage = function() {
-		$scope.showPercentage = !$scope.showPercentage
-		if ($scope.showPercentage) {
-			$scope.percentageButtonLbl = "View Absolute Values"
+		if ($scope.showRanking) {
+			$scope.showRanking = false;
+			$scope.showPercentage = false;
+		} else if ($scope.showPercentage) {
+			$scope.showPercentage = false;
+			$scope.showRanking = true;
+			
 		} else {
+			$scope.showPercentage = true;
+			$scope.showRanking = false;
+		}
+		
+		if ($scope.showRanking) {
+			$scope.percentageButtonLbl = "View Absolute Values"
+		} else if ($scope.showPercentage) {
+			$scope.percentageButtonLbl = "View Ranking"
+		}else {
 			$scope.percentageButtonLbl = "View Percentage (%)"
 		}
 	}
@@ -272,6 +287,7 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 				$scope.stats.splice(response.data.length)
 			}
 			calculatePercentageAndUpdateData(response.data);
+			calculateRankingsAndUpdateData(response.data);
 		}, function(response) {
 			$scope.dataLoading = false;
 		})
@@ -285,6 +301,50 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 			lvl++;
 		}
 		return lvl;
+	}
+	
+	function calculateRankingsAndUpdateData(data) {
+		//chest contribution ranking
+		data.sort(function(a,b) {
+			return b.chestContribution - a.chestContribution;
+		})
+		var currentRanking = 1;
+		data.forEach(function (value, index){
+			if (index -1 >=0 && value.chestContribution == data[index-1].chestContribution) {
+				value.chestContributionRanking = data[index-1].chestContributionRanking
+			}else {
+				value.chestContributionRanking = currentRanking;
+			}
+			currentRanking++;
+		})
+		
+		//card donation ranking
+		data.sort(function(a,b) {
+			return b.cardDonation - a.cardDonation;
+		})
+		currentRanking = 1;
+		data.forEach(function (value, index){
+			if (index -1 >=0 && value.cardDonation == data[index-1].cardDonation) {
+				value.cardDonationRanking = data[index-1].cardDonationRanking
+			}else {
+				value.cardDonationRanking = currentRanking;
+			}
+			currentRanking++;
+		})
+		
+		//overall ranking
+		data.sort(function(a,b) {
+			return a.cardDonationRanking + a.chestContributionRanking - b.cardDonationRanking - b.chestContributionRanking
+		})
+		currentRanking = 1;
+		data.forEach(function (value, index){
+			if (index -1 >=0 && value.overallRanking == data[index-1].overallRanking) {
+				value.overallRanking = data[index-1].overallRanking
+			}else {
+				value.overallRanking = currentRanking;
+			}
+			currentRanking++;
+		})
 	}
 
 	function calculatePercentageAndUpdateData(data) {
