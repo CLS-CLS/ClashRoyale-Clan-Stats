@@ -20,7 +20,7 @@ app.config([ "$locationProvider", "$routeProvider",
 app.service("colorfy", function() {
 	this.colorfy = function(number, type) {
 		var boundaryChest = 20;
-		var boundaryCard = 50;
+		var boundaryCard = 150;
 		var wowChest = 100;
 		var wowCard = 600;
 
