@@ -59,10 +59,10 @@ public class ClanStatsControllerTest {
 		Statement statement = datasource.getConnection().createStatement();
 		statement.execute(
 				"INSERT INTO PLAYER_WEEKLY_STATS(ID, CARD_DONATION, CHEST_CONTRIBUTION, WEEK, PLAYERFK) VALUES " +
-						" (-1 ,481, 184, 33, '2JGGY989R'),"	+
-						" (-2 , 482, 185, 34, '2JGGY989R'), " + 
-						" (-3, 483, 186, 36, '2JGGY989R'), " +
-						" (-4, 484, 187, 32, '2JGGY989R'); "
+						" (-10 ,481, 184, 33, '2JGGY989R'),"	+
+						" (-20 , 482, 185, 34, '2JGGY989R'), " + 
+						" (-30, 483, 186, 36, '2JGGY989R'), " +
+						" (-40, 484, 187, 32, '2JGGY989R'); "
 		);
 		
 		 List<PlayerWeeklyStats> resultsFromRepo = pwsRepo.findByWeekAndTag("2JGGY989R", new Week(33), new Week(36));

@@ -1,0 +1,5 @@
+-- adding loukas mafiosos because he joined friday and left before end of cc.
+
+INSERT INTO PLAYER(TAG, NAME, ROLE) VALUES ('Q9PL9L8G', 'Lukas Mafiozos', 'Member');
+INSERT INTO PLAYER_WEEKLY_STATS(ID, CARD_DONATION, CHEST_CONTRIBUTION, WEEK, PLAYERFK, AVG_CARD_DONATION, AVG_CHEST_CONTRIBUTION ) VALUES
+(-1, 387, 121, 39, 'Q9PL9L8G', 387, 121);
