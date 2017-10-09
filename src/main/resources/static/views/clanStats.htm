@@ -91,6 +91,9 @@
 		                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>Donations
 		                        <order-directive bind-to="cardDonation" filter-by="filter"/></span>
 		                    </th>
+		                    <th ng-show="showRanking" rowspan="2"><span ng-click=triggerOrderDirective($event)>Overall Ranking
+		                        <order-directive bind-to="overallRanking" filter-by="filter"/></span>
+		                    </th>
 		                    <th colspan="2">Average Stats (of the last 12 weeks)</th>
 		                </tr>
 		                <tr>
@@ -108,11 +111,17 @@
 	                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a href="player/{{s.tag}}">{{s.name}}</a></td>
 	                    <td>{{s.role}}</td>
 	
-	                    <td ng-show="!showPercentage">{{s.chestContribution }}</td>
+	                    <td ng-show="!showPercentage && !showRanking">{{s.chestContribution }}</td>
 	                    <td ng-show="showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
+	                    <td ng-show="showRanking">{{s.chestContributionRanking}}</td>
 	                    
-	                    <td style="border-right: 1.5px solid #ddd; " ng-show="!showPercentage">{{s.cardDonation}}</td>
+	                    <td style="border-right: 1.5px solid #ddd; " ng-show="!showPercentage && !showRanking">{{s.cardDonation}}</td>
 	                    <td style="border-right: 1.5px solid #ddd; " ng-show="showPercentage">{{s.cardDonationPerc | percentage:1}}</td>
+	                    <td ng-show="showRanking">{{s.cardDonationRanking}}</td>
+	                    <td style="border-right: 1.5px solid #ddd; " ng-show="showRanking">{{s.overallRanking}}</td>
+	                    
+	                    
+	                    
 	                    
 	                    <td ng-show="!showPercentage" ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution | number:2 }}</td>
 	                    <td ng-show="showPercentage" ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContributionPerc | percentage:1 }}</td>
