@@ -23,6 +23,19 @@
 	background:rgba(200,200,200,0.5);
 }
 
+.no-border {
+	border:none !important;
+}
+
+.div-border-1 {
+	border: 1px solid #ddd; 
+}
+
+.halfscreen {
+	height: 50vh;
+	overflow-y:auto;
+}
+
 .loading > i {
 	position:fixed;
 	left: 50%;

@@ -196,8 +196,27 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	 	"avgDonation": {name: "Average Card Donations", show: true},
 	 	"avgDonationRank": {name: "Average Donation Donations Rank", show: false},
 	 	"avgOverallRank": {name: "Average Final Rank", show: false}
-	 }
+	}
 	
+	$scope.bulkSelects = {
+		"rakings": false,
+		"values" : true,
+		"avgs": true
+	}
+	
+	$scope.bulkSelect = function() {
+		$scope.selectableColumns.ccRank.show = $scope.bulkSelects.rankings;
+		$scope.selectableColumns.cardDonationRank.show = $scope.bulkSelects.rankings;
+		$scope.selectableColumns.overallRank.show = $scope.bulkSelects.rankings;
+		$scope.selectableColumns.avgCcRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
+		$scope.selectableColumns.avgDonationRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
+		$scope.selectableColumns.avgOverallRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
+		$scope.selectableColumns.cc.show = $scope.bulkSelects.values;
+		$scope.selectableColumns.cardDonation.show = $scope.bulkSelects.values;
+		$scope.selectableColumns.avgCc.show = $scope.bulkSelects.values && $scope.bulkSelects.avgs;
+		$scope.selectableColumns.avgDonation.show = $scope.bulkSelects.values &&  $scope.bulkSelects.avgs;
+		$scope.averageColSpan = colSpan()
+	}
 	
 	$scope.averageColSpan = colSpan();
 
@@ -221,10 +240,10 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	$scope.dataLoading = true;
 
 	$scope.setItemSelected = function(event) {
-		event.stopPropagation();
+		if (event) {
+			event.stopPropagation();
+		}
 		$scope.averageColSpan = colSpan()
-		console.log("do nothing")
-	
 	}
 		
 	$scope.dropboxitemselected = function(item) {
@@ -347,48 +366,54 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		return lvl;
 	}
 	
-	function calculateRankingsAndUpdateData(data) {
-		//chest contribution ranking
-		data.sort(function(a,b) {
-			return b.chestContribution - a.chestContribution;
-		})
+	function calculateRankingAndUpdateData (data, valueColumn, rankColumn, sortCallback ) {
+		
+		if (sortCallback == null || sortCallback == undefined) {
+			sortCallback = function(a, b) {
+				return b[valueColumn] - a[valueColumn];
+			}
+		}
+		
+		data.sort(sortCallback);
+		
 		var currentRanking = 1;
 		data.forEach(function (value, index){
-			if (index -1 >=0 && value.chestContribution == data[index-1].chestContribution) {
-				value.ccRank = data[index-1].ccRank
+			if (index -1 >=0 && value[valueColumn] == data[index-1][valueColumn]) {
+				value[rankColumn] = data[index-1][rankColumn]
 			}else {
-				value.ccRank = currentRanking;
+				value[rankColumn] = currentRanking;
 			}
 			currentRanking++;
 		})
+	}
+	
+	
+	
+	function calculateRankingsAndUpdateData(data) {
 		
-		//card donation ranking
-		data.sort(function(a,b) {
-			return b.cardDonation - a.cardDonation;
-		})
-		currentRanking = 1;
-		data.forEach(function (value, index){
-			if (index -1 >=0 && value.cardDonation == data[index-1].cardDonation) {
-				value.donationRank = data[index-1].donationRank
-			}else {
-				value.donationRank = currentRanking;
-			}
-			currentRanking++;
-		})
+		calculateRankingAndUpdateData(data, "chestContribution", "ccRank");
 		
-		//overall ranking
-		data.sort(function(a,b) {
+		calculateRankingAndUpdateData(data, "cardDonation", "donationRank");
+		
+		var sortCallback = function(a,b) {
 			return a.donationRank + a.ccRank - b.donationRank - b.ccRank
-		})
-		currentRanking = 1;
-		data.forEach(function (value, index){
-			if (index -1 >=0 && value.overallRanking == data[index-1].overallRanking) {
-				value.overallRanking = data[index-1].overallRanking
-			}else {
-				value.overallRanking = currentRanking;
-			}
-			currentRanking++;
-		})
+		}
+		
+		calculateRankingAndUpdateData(data, "overallRank", "overallRank", sortCallback);
+		
+		calculateRankingAndUpdateData(data, "avgChestContribution", "avgCcRank");
+		
+		calculateRankingAndUpdateData(data, "avgChestContribution", "avgCcRank");
+		calculateRankingAndUpdateData(data, "avgCardDonation", "avgDonationRank");
+		
+		sortCallback = function(a,b) {
+			return a.avgDonationRank + a.avgCcRank - b.avgDonationRank - b.avgCcRank
+		}
+		
+		calculateRankingAndUpdateData(data, "avgOverallRank", "avgOverallRank", sortCallback);
+		
+		
+	
 	}
 
 	function calculatePercentageAndUpdateData(data) {
