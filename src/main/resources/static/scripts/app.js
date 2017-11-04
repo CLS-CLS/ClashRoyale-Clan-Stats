@@ -183,7 +183,43 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 			return week;
 		}
 	})();
+
+	$scope.selectableColumns = {
+		"role": {name: "role", show: true},
+	 	"cc": {name: "Chest Contribution", show: true },
+	 	"ccRank": {name: "Chest Contribution Rank", show: false},
+	 	"cardDonation": {name: "Card Donations", show: true},
+	 	"cardDonationRank": {name: "Card Donation Rank", show: false},
+	 	"overallRank": {name: "Overall Rank", show: false},
+	 	"avgCc": {name: "Average Chest Contribution", show: true},
+	 	"avgCcRank": {name: "Average Chest Contribution Rank", show: false},
+	 	"avgDonation": {name: "Average Card Donations", show: true},
+	 	"avgDonationRank": {name: "Average Donation Donations Rank", show: false},
+	 	"avgOverallRank": {name: "Average Final Rank", show: false}
+	}
 	
+	$scope.bulkSelects = {
+		"rakings": false,
+		"values" : true,
+		"avgs": true
+	}
+	
+	$scope.bulkSelect = function() {
+		$scope.selectableColumns.ccRank.show = $scope.bulkSelects.rankings;
+		$scope.selectableColumns.cardDonationRank.show = $scope.bulkSelects.rankings;
+		$scope.selectableColumns.overallRank.show = $scope.bulkSelects.rankings;
+		$scope.selectableColumns.avgCcRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
+		$scope.selectableColumns.avgDonationRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
+		$scope.selectableColumns.avgOverallRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
+		$scope.selectableColumns.cc.show = $scope.bulkSelects.values;
+		$scope.selectableColumns.cardDonation.show = $scope.bulkSelects.values;
+		$scope.selectableColumns.avgCc.show = $scope.bulkSelects.values && $scope.bulkSelects.avgs;
+		$scope.selectableColumns.avgDonation.show = $scope.bulkSelects.values &&  $scope.bulkSelects.avgs;
+		$scope.averageColSpan = colSpan()
+	}
+	
+	$scope.averageColSpan = colSpan();
+
 	$scope.totalDonations;
 	
 	$scope.chestLevel;
@@ -191,6 +227,8 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	$scope.stats = []
 
 	$scope.showPercentage = false;
+	
+	$scope.showRanking = false;
 
 	$scope.filter = {
 		orderBy : "-role",
@@ -200,6 +238,13 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	$scope.percentageButtonLbl = "View Percentages (%)"
 		
 	$scope.dataLoading = true;
+
+	$scope.setItemSelected = function(event) {
+		if (event) {
+			event.stopPropagation();
+		}
+		$scope.averageColSpan = colSpan()
+	}
 		
 	$scope.dropboxitemselected = function(item) {
 		$scope.selectedItem = item;
@@ -227,18 +272,31 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		getData(newValue);
 	})
 
-	$scope.triggerOrderDirective = function(elem) {
+	$scope.triggerOrderDirective = function(event) {
 		$timeout(function() {
-			$(elem.target).find("i").trigger('click');
+					$(event.target).find("i").trigger('click');
 		}, 0, false)
 
 	}
 
 	$scope.togglePercentage = function() {
-		$scope.showPercentage = !$scope.showPercentage
-		if ($scope.showPercentage) {
-			$scope.percentageButtonLbl = "View Absolute Values"
+		if ($scope.showRanking) {
+			$scope.showRanking = false;
+			$scope.showPercentage = false;
+		} else if ($scope.showPercentage) {
+			$scope.showPercentage = false;
+			$scope.showRanking = true;
+			
 		} else {
+			$scope.showPercentage = true;
+			$scope.showRanking = false;
+		}
+		
+		if ($scope.showRanking) {
+			$scope.percentageButtonLbl = "View Absolute Values"
+		} else if ($scope.showPercentage) {
+			$scope.percentageButtonLbl = "View Ranking"
+		}else {
 			$scope.percentageButtonLbl = "View Percentage (%)"
 		}
 	}
@@ -248,6 +306,26 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 
 	$scope.avgContrColor = colorfy.colorfy
 	
+	
+	function colSpan() {
+		var result = 0;
+		if ($scope.selectableColumns.avgCc.show == true) {
+			result++;
+		}
+		if ($scope.selectableColumns.avgCcRank.show == true) {
+			result++;
+		}
+		if ($scope.selectableColumns.avgDonation.show == true) {
+			result++;
+		}
+		if ($scope.selectableColumns.avgDonationRank.show == true) {
+			result++;
+		}
+		if ($scope.selectableColumns.avgOverallRank.show == true) {
+			result++;
+		}
+		return result;
+	}
 	
 	function getData(week) {
 		$scope.dataLoading = true;
@@ -272,6 +350,7 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 				$scope.stats.splice(response.data.length)
 			}
 			calculatePercentageAndUpdateData(response.data);
+			calculateRankingsAndUpdateData(response.data);
 		}, function(response) {
 			$scope.dataLoading = false;
 		})
@@ -285,6 +364,56 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 			lvl++;
 		}
 		return lvl;
+	}
+	
+	function calculateRankingAndUpdateData (data, valueColumn, rankColumn, sortCallback ) {
+		
+		if (sortCallback == null || sortCallback == undefined) {
+			sortCallback = function(a, b) {
+				return b[valueColumn] - a[valueColumn];
+			}
+		}
+		
+		data.sort(sortCallback);
+		
+		var currentRanking = 1;
+		data.forEach(function (value, index){
+			if (index -1 >=0 && value[valueColumn] == data[index-1][valueColumn]) {
+				value[rankColumn] = data[index-1][rankColumn]
+			}else {
+				value[rankColumn] = currentRanking;
+			}
+			currentRanking++;
+		})
+	}
+	
+	
+	
+	function calculateRankingsAndUpdateData(data) {
+		
+		calculateRankingAndUpdateData(data, "chestContribution", "ccRank");
+		
+		calculateRankingAndUpdateData(data, "cardDonation", "donationRank");
+		
+		var sortCallback = function(a,b) {
+			return a.donationRank + a.ccRank - b.donationRank - b.ccRank
+		}
+		
+		calculateRankingAndUpdateData(data, "overallRank", "overallRank", sortCallback);
+		
+		calculateRankingAndUpdateData(data, "avgChestContribution", "avgCcRank");
+		
+		calculateRankingAndUpdateData(data, "avgChestContribution", "avgCcRank");
+		calculateRankingAndUpdateData(data, "avgCardDonation", "avgDonationRank");
+		
+		sortCallback = function(a,b) {
+			return a.avgDonationRank + a.avgCcRank - b.avgDonationRank - b.avgCcRank
+		}
+		
+		calculateRankingAndUpdateData(data, "avgOverallRank", "avgOverallRank", sortCallback);
+		
+		
+	
 	}
 
 	function calculatePercentageAndUpdateData(data) {
