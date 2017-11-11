@@ -6,7 +6,10 @@ var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute' ]);
 app.config([ "$locationProvider", "$routeProvider",
 	function config($locationProvider, $routeProvider) {
 
-		$routeProvider.when("/:week", {
+		$routeProvider.when("/upload" , {
+			templateUrl: "views/upload.htm", 
+			controller: "uploadController"
+		}).when("/:week", {
 			templateUrl : "views/clanStats.htm"
 		}).when("/player/:playerTag", {
 			templateUrl : "views/playerStats.htm",
@@ -54,6 +57,12 @@ app.service("colorfy", function() {
 		}
 
 		return style;
+	}
+})
+
+app.controller("uploadController", function($scope, $http){
+	$scope.downloadTemplate = function() {
+		$http.get(baseUrl + "/rest/generateTemplate")
 	}
 })
 

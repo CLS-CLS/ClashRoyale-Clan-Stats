@@ -1,5 +1,7 @@
 package org.lytsiware.clash.service.job;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
@@ -20,7 +22,7 @@ public class ScheduleCheckService {
 	boolean checkMissingScheduler;
 	
 	@Autowired
-	ClanStatsJob job;
+	List<Job> jobs;
 	
 	/**
      * 
@@ -35,12 +37,14 @@ public class ScheduleCheckService {
     	}
     	
     	logger.info("Check for missing schedulers");
-    	
-    	if (job.shouldRun()) {
-    		logger.info("Scheduler has not ran: Starting job now");
-    		job.run();
-    	}else {
-    		logger.info("Status OK");
+    	for (Job job : jobs) {
+    		if (job instanceof RunAtStartup)
+	    	if (((RunAtStartup)job).shouldRun()) {
+	    		logger.info("Scheduler has not ran: Starting job now");
+	    		job.run();
+	    	}else {
+	    		logger.info("Status OK");
+	    	}
     	}
     	
     }

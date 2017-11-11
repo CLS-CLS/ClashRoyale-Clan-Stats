@@ -1,6 +1,8 @@
-package org.lytsiware.clash.domain.player;
+package org.lytsiware.clash.domain.playerweeklystats;
 
 import java.io.Serializable;
+
+import org.lytsiware.clash.domain.player.Player;
 
 
 public class PlayerWeeklyStatsPK implements Serializable {

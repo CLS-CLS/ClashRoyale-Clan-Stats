@@ -1,7 +1,7 @@
 package org.lytsiware.clash.dto;
 
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
+import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -16,8 +16,8 @@ public class PlayerOverallStats implements Serializable {
     private int week;
     private double avgChestContribution;
     private double avgCardDonation;
-    private int chestContribution;
-    private int cardDonation;
+    private Integer chestContribution;
+    private Integer cardDonation;
     private LocalDate startDate;
     private LocalDate endDate;
     private String role;
@@ -53,61 +53,61 @@ public class PlayerOverallStats implements Serializable {
 
     }
 
-    public String getTag() {
-        return tag;
-    }
+	public String getTag() {
+		return tag;
+	}
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public int getWeek() {
-        return week;
-    }
+	public int getWeek() {
+		return week;
+	}
 
-    public void setWeek(int week) {
-        this.week = week;
-    }
+	public void setWeek(int week) {
+		this.week = week;
+	}
 
-    public double getAvgChestContribution() {
-        return avgChestContribution;
-    }
+	public double getAvgChestContribution() {
+		return avgChestContribution;
+	}
 
-    public void setAvgChestContribution(double avgChestContribution) {
-        this.avgChestContribution = avgChestContribution;
-    }
+	public void setAvgChestContribution(double avgChestContribution) {
+		this.avgChestContribution = avgChestContribution;
+	}
 
-    public double getAvgCardDonation() {
-        return avgCardDonation;
-    }
+	public double getAvgCardDonation() {
+		return avgCardDonation;
+	}
 
-    public void setAvgCardDonation(double avgCardDonation) {
-        this.avgCardDonation = avgCardDonation;
-    }
+	public void setAvgCardDonation(double avgCardDonation) {
+		this.avgCardDonation = avgCardDonation;
+	}
 
-    public int getChestContribution() {
-        return chestContribution;
-    }
+	public Integer getChestContribution() {
+		return chestContribution;
+	}
 
-    public void setChestContribution(int chestContribution) {
-        this.chestContribution = chestContribution;
-    }
+	public void setChestContribution(Integer chestContribution) {
+		this.chestContribution = chestContribution;
+	}
 
-    public int getCardDonation() {
-        return cardDonation;
-    }
+	public Integer getCardDonation() {
+		return cardDonation;
+	}
 
-    public void setCardDonation(int cardDonation) {
-        this.cardDonation = cardDonation;
-    }
+	public void setCardDonation(Integer cardDonation) {
+		this.cardDonation = cardDonation;
+	}
 
 	public String getRole() {
 		return role;
@@ -116,6 +116,7 @@ public class PlayerOverallStats implements Serializable {
 	public void setRole(String role) {
 		this.role = role;
 	}
-    
+
+   
     
 }

@@ -1,9 +1,7 @@
 package org.lytsiware.clash.service.job;
 
-public interface ClanStatsJob {
+public interface Job {
 
 	void run();
-
-	boolean shouldRun();
 
 }

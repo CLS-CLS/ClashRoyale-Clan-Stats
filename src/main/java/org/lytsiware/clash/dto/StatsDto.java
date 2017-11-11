@@ -12,8 +12,8 @@ public class StatsDto implements Serializable{
 	private LocalDate startDate;
 	private LocalDate endDate;
 	
-	private int chestContribution;
-	private int cardDonation;
+	private Integer chestContribution;
+	private Integer cardDonation;
 	
 	
 	
@@ -25,41 +25,66 @@ public class StatsDto implements Serializable{
 		this.chestContribution = chestContribution;
 		this.cardDonation = cardDonation;
 	}
-	
+
+
+
 	public int getWeek() {
 		return week;
 	}
+
+
+
 	public void setWeek(int week) {
 		this.week = week;
 	}
+
+
+
 	public LocalDate getStartDate() {
 		return startDate;
 	}
+
+
+
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
+
+
+
 	public LocalDate getEndDate() {
 		return endDate;
 	}
+
+
+
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
-	public int getChestContribution() {
+
+
+
+	public Integer getChestContribution() {
 		return chestContribution;
 	}
-	public void setChestContribution(int chestContribution) {
+
+
+
+	public void setChestContribution(Integer chestContribution) {
 		this.chestContribution = chestContribution;
 	}
-	public int getCardDonation() {
+
+
+
+	public Integer getCardDonation() {
 		return cardDonation;
 	}
-	public void setCardDonation(int cardDonation) {
+
+
+
+	public void setCardDonation(Integer cardDonation) {
 		this.cardDonation = cardDonation;
 	}
-	
-	
-	
-	
 	
 
 }

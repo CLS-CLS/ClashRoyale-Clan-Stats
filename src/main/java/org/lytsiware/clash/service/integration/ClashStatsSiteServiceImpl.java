@@ -1,28 +1,25 @@
 package org.lytsiware.clash.service.integration;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
+import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.utils.SiteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ClashStatsSiteServiceImpl implements ClashStatsSiteService {
+@Profile("clashStats")
+public class ClashStatsSiteServiceImpl implements SiteIntegrationService {
 	
 	Logger logger = LoggerFactory.getLogger(ClashStatsSiteServiceImpl.class);
 	
@@ -31,32 +28,8 @@ public class ClashStatsSiteServiceImpl implements ClashStatsSiteService {
 
 	@Override
 	public List<PlayerWeeklyStats> retrieveData() {
-		logger.info("Rertrieving data from {}", dataResource);
-		// Document result = Jsoup.parse(new
-		// URL("https://clashstat.com/Home/Clan/802LU8UY"), 10000);
-		
-		try {
-			URL url = dataResource.getURL();
-			URLConnection connection = url.openConnection();
-			connection.setRequestProperty("User-Agent",
-					"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-			StringBuilder sb = new StringBuilder();
-			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-			String inputLine;
-			while ((inputLine = br.readLine()) != null) {
-				sb.append(inputLine).append("\n");
-			}
-			br.close();
-			Document result = Jsoup.parse(sb.toString(), "utf-8");
-			return parseHtml(result);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private List<PlayerWeeklyStats> parseHtml(Document result) {
-		Elements subresult = result.select("#tbl");
+		Document document = SiteUtils.retrieveData(dataResource);
+		Elements subresult = document.select("#tbl");
 		Elements subresult2 = subresult.select(".memberRow");
 		List<PlayerWeeklyStats> playerWeeklyStats = new ArrayList<>();
 
@@ -77,6 +50,7 @@ public class ClashStatsSiteServiceImpl implements ClashStatsSiteService {
 		}
 
 		return playerWeeklyStats;
+		
 	}
 
 }

@@ -7,23 +7,24 @@ import java.time.LocalTime;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.job.WeeklyJob;
-import org.lytsiware.clash.service.IClanStatsService;
+import org.lytsiware.clash.service.ClanStatsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ClanStatsJobImpl implements ClanStatsJob {
+@Profile("clashStats")
+public class ClashStatsJobImpl implements Job, RunAtStartup {
 
-	private Logger logger = LoggerFactory.getLogger(ClanStatsJobImpl.class);
+	private Logger logger = LoggerFactory.getLogger(ClashStatsJobImpl.class);
 
 	@Autowired
-	IClanStatsService clanStatsService;
+	ClanStatsService clanStatsService;
 
 	@Autowired
 	WeekJobRepository weeklyJobRepository;

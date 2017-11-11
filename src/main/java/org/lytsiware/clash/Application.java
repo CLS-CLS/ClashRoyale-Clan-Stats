@@ -7,7 +7,7 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableCaching
+//@EnableCaching
 @EnableScheduling
 @EnableRetry
 public class Application {

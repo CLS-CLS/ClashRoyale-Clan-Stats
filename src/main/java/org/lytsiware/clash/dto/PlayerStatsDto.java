@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
+import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 
 public class PlayerStatsDto {
 

@@ -3,11 +3,9 @@ package org.lytsiware.clash.controller;
 import java.util.List;
 
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.player.PlayerWeeklyStats;
-import org.lytsiware.clash.service.ClanStatsService;
-import org.lytsiware.clash.service.integration.ClashStatsSiteService;
-import org.lytsiware.clash.service.job.ClanStatsJob;
+import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.service.ClanStatsServiceImpl;
+import org.lytsiware.clash.service.integration.SiteIntegrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -26,13 +24,10 @@ public class AdminController {
 	String baseUrl;
 
 	@Autowired
-	ClanStatsService clanStatService;
+	ClanStatsServiceImpl clanStatService;
 
 	@Autowired
-	ClashStatsSiteService siteService;
-
-	@Autowired
-	ClanStatsJob job;
+	SiteIntegrationService siteService;
 
 	@RequestMapping("/check")
 	public String checkParsing(Model model) throws JsonProcessingException {
@@ -47,12 +42,6 @@ public class AdminController {
 		return "/check";
 	}
 
-	//@RequestMapping("/enforce-run")
-	public String enfornceRun() {
-		//	TODO disabled until there is security implemented
-		job.run();
-		return "/index";
-	}
 	
 	//@RequestMapping("/recalculate-avg/{week}")
 	public String recalculateAvgs(@PathVariable(value = "week") Integer week)	{
