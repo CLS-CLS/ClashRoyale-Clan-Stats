@@ -101,6 +101,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
 		playerWeeklyStatsRepository.save(playerWeeklyStats);
 	}
+	
 
 	@Override
 	@Caching(evict = { @CacheEvict(value = "playerStats", allEntries = true),
@@ -123,6 +124,8 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 	@Override
 	@Transactional(value=TxType.REQUIRED)
 	public void updateOrInsertNewDonations(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
+		stats.stream().forEach(s -> s.setWeek(week.getWeek()));
+		
 		Map<String, PlayerWeeklyStats> databaseStats = playerWeeklyStatsRepository.findByWeek(week).stream()
 				.collect(Collectors.toMap(s -> s.getPlayer().getTag(), Function.identity()));
 		
@@ -139,6 +142,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 	@Override
 	@Transactional(value=TxType.REQUIRED)
 	public void updateChestContributions(List<PlayerWeeklyStats> stats, Week week) {
+		stats.stream().forEach(s -> s.setWeek(week.getWeek()));
 		playerWeeklyStatsRepository.updateChestContribution(stats, week);
 	}
 	

@@ -80,10 +80,13 @@ public class ClanStatsServiceTest {
 		PlayerWeeklyStats db2 = new PlayerWeeklyStats(player2, 1, 0, 10, 10, 10);
 		Player player3 = new Player("tag3", "Chris3", "Elder");
 		PlayerWeeklyStats db3 = new PlayerWeeklyStats(player3, 1, 0, 20, 10, 10);
-
-		PlayerWeeklyStats s1 = new PlayerWeeklyStats(player, 1, 0, 10, 10, 10);
-		PlayerWeeklyStats s2 = new PlayerWeeklyStats(player2, 1, 0, 20, 10, 10);
-		PlayerWeeklyStats s3 = new PlayerWeeklyStats(player3, 1, 0, 5, 10, 10);
+		
+		Player splayer = new Player("tag1", "Chris1", "Elder");
+		Player splayer2 = new Player("tag2", "Chris2", "Elder");
+		Player splayer3 = new Player("tag3", "Chris3", "Elder");
+		PlayerWeeklyStats s1 = new PlayerWeeklyStats(splayer, 1, 0, 10, 10, 10);
+		PlayerWeeklyStats s2 = new PlayerWeeklyStats(splayer2, 1, 0, 20, 10, 10);
+		PlayerWeeklyStats s3 = new PlayerWeeklyStats(splayer3, 1, 0, 5, 10, 10);
 		Player anotherPlayer = new Player("tag4", "Chris4", "Elder");
 		PlayerWeeklyStats s4 = new PlayerWeeklyStats(anotherPlayer, 1, 0, 30, 10, 10);
 		pwsRepo.save(Arrays.asList(db1, db2, db3));
@@ -98,6 +101,33 @@ public class ClanStatsServiceTest {
 		Assert.assertEquals(20, (int) results.get("tag2"));
 		Assert.assertEquals(20, (int) results.get("tag3"));
 		Assert.assertEquals(30, (int) results.get("tag4"));
+	}
+	
+	@Test 
+	public void updateDonationsNextWeek(){
+		Player player = new Player("tag1", "Chris1", "Elder");
+		PlayerWeeklyStats db1 = new PlayerWeeklyStats(player, 1, 0, null, 10, 10);
+		Player player2 = new Player("tag2", "Chris2", "Elder");
+		PlayerWeeklyStats db2 = new PlayerWeeklyStats(player2, 1, 0, 10, 10, 10);
+		Player player3 = new Player("tag3", "Chris3", "Elder");
+		PlayerWeeklyStats db3 = new PlayerWeeklyStats(player3, 1, 0, 20, 10, 10);
+		
+		pwsRepo.save(Arrays.asList(db1, db2, db3));
+		
+		Player splayer = new Player("tag1", "Chris1", "Elder");
+		PlayerWeeklyStats s1 = new PlayerWeeklyStats(splayer, 1, 0, 10, 10, 10);
+		
+		clanStatsService.updateOrInsertNewDonations(Arrays.asList(s1), new Week(2), true);
+		
+		List<PlayerWeeklyStats> results = pwsRepo.findByWeek(new Week(2));
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(2, (int)results.get(0).getWeek());
+		
+		results = pwsRepo.findByWeek(new Week(1));
+		Assert.assertEquals(3, results.size());
+		
+		
+		
 	}
 	
 	

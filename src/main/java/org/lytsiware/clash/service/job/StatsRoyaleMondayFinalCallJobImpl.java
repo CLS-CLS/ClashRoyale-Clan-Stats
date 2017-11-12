@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("statsRoyale")
-public class StatsRoyaleWeekendJobImpl implements Job {
+public class StatsRoyaleMondayFinalCallJobImpl implements Job {
 
-	private Logger logger = LoggerFactory.getLogger(StatsRoyaleWeekendJobImpl.class);
+	private Logger logger = LoggerFactory.getLogger(StatsRoyaleMondayFinalCallJobImpl.class);
 
 	@Autowired
 	ClanStatsService clanStatsService;
@@ -31,19 +31,18 @@ public class StatsRoyaleWeekendJobImpl implements Job {
 	WeekJobRepository weeklyJobRepository;
 
 	@Override
-	@Scheduled(cron = "0 0 7/4 ? * SUN,FRI,SAT")
+	@Scheduled(cron = "0 0 3-7/2 ? * MON")
 	public void run() {
 		try {
 			logger.info("Job Triggered at {}", LocalDateTime.now());
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData();
-			clanStatsService.updateOrInsertNewDonations(stats, new Week(), true);
+			clanStatsService.updateOrInsertNewDonations(stats, new Week().minusWeeks(1), true);
 			//TODO weeklyJobRepository 
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;
 		}
 	}
-	
 	
 	
 }

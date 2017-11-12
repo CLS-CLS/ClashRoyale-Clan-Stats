@@ -71,7 +71,8 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 
 	@Override
 	public void save(List<PlayerWeeklyStats> playerWeeklyStats) {
-		playerWeeklyStats.stream().forEach(em::persist);
+		//using merge because the player can already exist
+		playerWeeklyStats.stream().forEach(em::merge);
 	}
 
 	@Override

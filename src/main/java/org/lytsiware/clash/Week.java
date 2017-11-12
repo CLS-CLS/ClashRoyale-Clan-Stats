@@ -5,6 +5,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Week from Monday to Sunday(inclusive)
+ * Week number {@link #getWeek()} represents the number of weeks after the week zero
+ * which is from Monday 2/1/2017
+ */
 public class Week {
     public static final LocalDate ZERO_WEEK = LocalDate.of(2017, 1, 2);
 

@@ -1,11 +1,10 @@
 package org.lytsiware.clash.service.job;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.job.WeekJobRepository;
-import org.lytsiware.clash.domain.job.WeeklyJob;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.integration.SiteIntegrationService;
@@ -20,9 +19,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("statsRoyale")
-public class StatsRoyalJobImpl implements Job {
+public class StatsRoyalChestContrJobImpl implements Job {
 
-	private Logger logger = LoggerFactory.getLogger(StatsRoyalJobImpl.class);
+	private Logger logger = LoggerFactory.getLogger(StatsRoyalChestContrJobImpl.class);
 
 	@Autowired
 	ClanStatsService clanStatsService;
@@ -33,16 +32,17 @@ public class StatsRoyalJobImpl implements Job {
 	
 
 	@Override
-	@Scheduled(cron = "0 0 9 ? * MON ")
+	@Scheduled(cron = "0 0 10 ? * MON ")
 	@Retryable(maxAttempts = 3, backoff = @Backoff(600000))
 	public void run() {
 		try {
-			logger.info("Job Triggered at {}", LocalDate.now());
+			logger.info("Job Triggered at {}", LocalDateTime.now());
 			
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData();
 			
-			clanStatsService.updateChestContributions(stats, new Week().minusWeeks(1));
-
+			Week week = new Week().minusWeeks(1);
+			clanStatsService.updateChestContributions(stats, week);
+			clanStatsService.recalculateAvgs(week);
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;

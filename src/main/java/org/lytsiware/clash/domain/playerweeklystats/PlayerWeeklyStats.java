@@ -35,7 +35,7 @@ public class PlayerWeeklyStats {
 	@JoinColumn(name = "playerFK")
 	private Player player;
 
-	private int week;
+	private Integer week;
 	
 	
 	private Integer chestContribution;
@@ -55,6 +55,14 @@ public class PlayerWeeklyStats {
 		this.avgCardDonation = avgCardDonation;
 	}
 	
+	public PlayerWeeklyStats(Player player, Integer chestContribution, Integer cardDonation, double avgChestContribution, double avgCardDonation) {
+		super();
+		this.player = player;
+		this.chestContribution = chestContribution;
+		this.cardDonation = cardDonation;
+		this.avgChestContribution = avgChestContribution;
+		this.avgCardDonation = avgCardDonation;
+	}
 
 	public double getAvgChestContribution() {
 		return avgChestContribution;
@@ -77,7 +85,7 @@ public class PlayerWeeklyStats {
 		return player;
 	}
 
-	public int getWeek() {
+	public Integer getWeek() {
 		return week;
 	}
 
@@ -93,7 +101,7 @@ public class PlayerWeeklyStats {
 		this.player = player;
 	}
 
-	public void setWeek(int week) {
+	public void setWeek(Integer week) {
 		this.week = week;
 	}
 	
