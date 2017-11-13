@@ -6,6 +6,7 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.integration.SiteIntegrationService;
+import org.lytsiware.clash.service.job.StatsRoyaleMondayFinalCallJobImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ public class AdminController {
 
 	@Autowired
 	SiteIntegrationService siteService;
+	
 
 	@RequestMapping("/check")
 	public String checkParsing(Model model) throws JsonProcessingException {
@@ -43,14 +45,20 @@ public class AdminController {
 	}
 
 	
-	//@RequestMapping("/recalculate-avg/{week}")
+	@RequestMapping("/recalculate-avg/{week}")
 	public String recalculateAvgs(@PathVariable(value = "week") Integer week)	{
-		//	TODO disabled until there is security implemented
 		if (week < 1 ){
 			return "/index/";
 		}
-		clanStatService.recalculateAvgs(new Week().minusWeeks(week));
-		return "redirect:/" + week ;
+		clanStatService.recalculateAvgs(new Week(week));
+		return "redirect:/" + (new Week().getWeek() - week) ;
+	}
+	
+	@RequestMapping("/update/{week}")
+	public String runSchedulerUpdateOrInsertDonations(@PathVariable(value = "week") Integer week){
+		List<PlayerWeeklyStats> stats = siteService.retrieveData();
+		clanStatService.updateOrInsertNewDonations(stats, new Week(week), true);
+		return "/index/" + (new Week().getWeek() - week);
 	}
 
 }

@@ -17,7 +17,7 @@ public class StatsDto implements Serializable{
 	
 	
 	
-	public StatsDto(int week, LocalDate startDate, LocalDate endDate, int chestContribution, int cardDonation) {
+	public StatsDto(int week, LocalDate startDate, LocalDate endDate, Integer chestContribution, Integer cardDonation) {
 		super();
 		this.week = week;
 		this.startDate = startDate;
