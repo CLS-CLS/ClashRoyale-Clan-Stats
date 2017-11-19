@@ -30,7 +30,7 @@ public class AdminController {
 	@Autowired
 	StatsRoyaleSiteServiceImpl siteService;
 
-	//@RequestMapping("/check")
+	@RequestMapping("/check")
 	public String checkParsing(@RequestParam("refresh") Boolean refresh,  Model model) throws JsonProcessingException {
 		//TODO create check page
 		//TODO add security
