@@ -4,8 +4,6 @@ var maxWeek = 12;
 var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute' ]);
 
 
-
-
 app.controller("uploadController", function($scope, $http){
 	$scope.downloadTemplate = function() {
 		$http.get(baseUrl + "/rest/generateTemplate")

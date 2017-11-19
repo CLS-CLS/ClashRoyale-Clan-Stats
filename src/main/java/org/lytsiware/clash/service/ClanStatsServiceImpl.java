@@ -106,7 +106,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 	@Override
 	@Caching(evict = { @CacheEvict(value = "playerStats", allEntries = true),
 			@CacheEvict(value = "weeklyStats", allEntries = true), })
-	public void recalculateAvgs(Week week) {
+	public void recalculateAndSaveAvgs(Week week) {
 		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(week);
 		playerWeeklyStatsRepository.save(playerWeeklyStats);
 	}

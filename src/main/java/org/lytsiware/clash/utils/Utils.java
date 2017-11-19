@@ -9,7 +9,7 @@ import java.util.stream.Collector;
 public class Utils {
 	
 	/**
-	 * The {@link Collectors.#toMap(Function, Function)} throws NPE if in the key , value pair of the generated map the value is null.
+	 * The {@link Collectors.#toMap(Function, Function)} throws NPE if the value is null in the key-value pair of the generated map .
 	 * This method does not.
 	 */
 	public static <T, K,V> Collector<T, HashMap<K, V>, HashMap<K, V>> collectToMap(

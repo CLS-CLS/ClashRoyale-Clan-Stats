@@ -20,7 +20,7 @@ public interface ClanStatsService {
 
     void updateDatabaseWithLatest();
 
-    void recalculateAvgs(Week week);
+    void recalculateAndSaveAvgs(Week week);
 
     PlayerStatsDto retrievePlayerStats(String tag);
     

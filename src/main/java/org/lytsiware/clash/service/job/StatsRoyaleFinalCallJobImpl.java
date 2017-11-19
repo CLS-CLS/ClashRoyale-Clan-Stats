@@ -7,7 +7,6 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
-import org.lytsiware.clash.service.integration.SiteIntegrationService;
 import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +17,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("statsRoyale")
-public class StatsRoyaleMondayFinalCallJobImpl implements Job {
+public class StatsRoyaleFinalCallJobImpl implements Job {
 
-	private Logger logger = LoggerFactory.getLogger(StatsRoyaleMondayFinalCallJobImpl.class);
+	private Logger logger = LoggerFactory.getLogger(StatsRoyaleFinalCallJobImpl.class);
 
 	@Autowired
 	ClanStatsService clanStatsService;
@@ -37,7 +36,7 @@ public class StatsRoyaleMondayFinalCallJobImpl implements Job {
 		try {
 			logger.info("Job Triggered at {}", LocalDateTime.now());
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
-			clanStatsService.updateOrInsertNewDonations(stats, new Week().minusWeeks(1), true);
+			clanStatsService.updateOrInsertNewDonations(stats, new Week(), true);
 			//TODO weeklyJobRepository 
 		} catch (Exception e) {
 			logger.error("oops", e);

@@ -30,7 +30,7 @@ public class AdminController {
 	@Autowired
 	StatsRoyaleSiteServiceImpl siteService;
 
-	@RequestMapping("/check")
+	//@RequestMapping("/check")
 	public String checkParsing(@RequestParam("refresh") Boolean refresh,  Model model) throws JsonProcessingException {
 		//TODO create check page
 		//TODO add security
@@ -59,13 +59,16 @@ public class AdminController {
 		if (week < 1) {
 			return "/index/";
 		}
-		clanStatService.recalculateAvgs(new Week(week));
+		clanStatService.recalculateAndSaveAvgs(new Week(week));
 		return "redirect:/" + (new Week().getWeek() - week);
 	}
 
-	// @RequestMapping("/update/{week}")
+	//@RequestMapping("/updateDonations/{week}")
 	public String runSchedulerUpdateOrInsertDonations(@PathVariable(value = "week") Integer week) {
-		List<PlayerWeeklyStats> stats = siteService.retrieveData();
+		if (week == 0) {
+			week = new Week().getWeek();
+		}
+		List<PlayerWeeklyStats> stats = siteService.retrieveData(true);
 		clanStatService.updateOrInsertNewDonations(stats, new Week(week), true);
 		return "/index/" + (new Week().getWeek() - week);
 	}

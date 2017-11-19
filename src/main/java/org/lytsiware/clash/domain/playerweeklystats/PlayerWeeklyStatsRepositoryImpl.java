@@ -1,5 +1,7 @@
 package org.lytsiware.clash.domain.playerweeklystats;
 
+import static org.lytsiware.clash.utils.Utils.collectToMap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
-import static org.lytsiware.clash.utils.Utils.*;
 
 @Repository
 @Transactional(value = TxType.REQUIRED)
@@ -88,6 +89,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 	@Override
 	@CachePut(cacheNames="weeklyStats", key="#week")
 	public List<PlayerWeeklyStats> updateDonations(List<PlayerWeeklyStats> donations, Week week, final boolean onlyUpdateBiggerDonations) {
+		logger.info("updateDonations for week = " + week.toStringWithDates());
 		
 		List<PlayerWeeklyStats> stats = findByWeek(week);
 		Map<String, Integer> donationsMap = donations.stream().collect(Collectors.toMap(s-> s.getPlayer().getTag(), PlayerWeeklyStats::getCardDonation));
@@ -115,6 +117,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 	@Override
 	@CachePut(cacheNames="weeklyStats", key="#week")
 	public List<PlayerWeeklyStats> updateChestContribution(List<PlayerWeeklyStats> chestContributions, Week week) {
+		logger.info("updateChestContribution for week = " + week.toStringWithDates());
 		
 		List<PlayerWeeklyStats> stats = findByWeek(week);
 		Map<String, Integer> chestContributionsMap = chestContributions.stream().collect(collectToMap(s-> s.getPlayer().getTag(), PlayerWeeklyStats::getChestContribution));

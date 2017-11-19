@@ -6,7 +6,6 @@ import java.util.List;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
-import org.lytsiware.clash.service.integration.SiteIntegrationService;
 import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,7 @@ public class StatsRoyalChestContrJobImpl implements Job {
 			
 			Week week = new Week().minusWeeks(1);
 			clanStatsService.updateChestContributions(stats, week);
-			clanStatsService.recalculateAvgs(week);
+			clanStatsService.recalculateAndSaveAvgs(week);
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;
