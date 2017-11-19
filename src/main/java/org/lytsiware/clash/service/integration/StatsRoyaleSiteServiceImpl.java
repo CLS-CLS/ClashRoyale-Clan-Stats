@@ -33,18 +33,23 @@ public class StatsRoyaleSiteServiceImpl implements SiteIntegrationService {
 
 	@Override
 	public List<PlayerWeeklyStats> retrieveData() {
-
-		if (!StringUtils.isEmpty(refreshUrl)) {
-			refresh();
-			try {
-				Thread.sleep(5 * 1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		return retrieveData(true);
+	}
+	
+	public List<PlayerWeeklyStats>  retrieveData(boolean requestRefresh) {
+		logger.info("retrieveDate, requestRefresh: {}", requestRefresh);
+		if (requestRefresh) {
+			if (!StringUtils.isEmpty(refreshUrl)) {
+				refresh();
+				try {
+					Thread.sleep(5 * 1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}else {
+				logger.warn("Refresh url is not provided");
 			}
-		}else {
-			logger.warn("Refresh url is not provided");
 		}
-
 		Document document = SiteUtils.retrieveData(dataResource);
 		Elements rowContainer = document.select(".clan__rowContainer");
 
@@ -69,13 +74,11 @@ public class StatsRoyaleSiteServiceImpl implements SiteIntegrationService {
 
 	private void refresh() {
 		try {
-
 			URL url = new URL(refreshUrl);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setRequestProperty("User-Agent",
 					"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
-			int responseCode = con.getResponseCode();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}

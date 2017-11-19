@@ -31,7 +31,7 @@ public class StatsRoyalChestContrJobImpl implements Job {
 	
 
 	@Override
-	@Scheduled(cron = "0 0 10 ? * MON ")
+	@Scheduled(cron = "0 0 8 ? * MON ")
 	@Retryable(maxAttempts = 3, backoff = @Backoff(600000))
 	public void run() {
 		try {

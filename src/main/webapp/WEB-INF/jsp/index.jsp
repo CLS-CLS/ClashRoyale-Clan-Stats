@@ -39,6 +39,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
     <script src="lib/ui-bootstrap-tpls-2.5.0.min.js"></script>
     <script src="scripts/app.js"></script>
+    <script src="scripts/services.js"></script>
+    <script src="scripts/configuration.js"></script>
 
 
 </head>
