@@ -7,6 +7,7 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.integration.SiteIntegrationService;
+import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class StatsRoyalChestContrJobImpl implements Job {
 	ClanStatsService clanStatsService;
 	
 	@Autowired
-	SiteIntegrationService siteIntegrationService;
+	StatsRoyaleSiteServiceImpl siteIntegrationService; ;
 
 	
 
@@ -37,7 +38,7 @@ public class StatsRoyalChestContrJobImpl implements Job {
 		try {
 			logger.info("Job Triggered at {}", LocalDateTime.now());
 			
-			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData();
+			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
 			
 			Week week = new Week().minusWeeks(1);
 			clanStatsService.updateChestContributions(stats, week);
