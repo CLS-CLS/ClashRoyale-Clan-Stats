@@ -76,8 +76,8 @@ public class Week {
     public String toStringWithDates() {
         final StringBuilder sb = new StringBuilder();
         sb.append(week);
-        sb.append(" (").append(startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        sb.append("-").append(endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        sb.append(" (").append(getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        sb.append("-").append(getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         sb.append(")}");
         return sb.toString();
     }
