@@ -38,7 +38,7 @@ app.service("colorfy", function() {
 	}
 })
 
-app.directive("orderDirective", function() {
+app.directive("orderDirective", ["numberComparator", function(numberComparator) {
 	return {
 		template : "<i class='order fa fa-fw fa-sort'></i>",
 		replace : true,
@@ -49,7 +49,6 @@ app.directive("orderDirective", function() {
 		},
 		link : function(scope, elem, attrs) {
 			var state = "unselected";
-
 			function changeState() {
 				if (state == "unselected") {
 					state = "down"
@@ -89,9 +88,12 @@ app.directive("orderDirective", function() {
 				changeState()
 				applyClass(elem)
 				scope.$apply(function() {
+					if (scope.comparator == null) {
+						scope.comparator = numberComparator;
+					}
+					scope.filterBy.comparator = scope.comparator;
 					scope.filterBy.orderBy = (state == "up" ? scope.bindTo
-							: "-" + scope.bindTo)
-					scope.filterBy.comparator = scope.comparator
+							: "-" + scope.bindTo);
 				})
 
 			})
@@ -105,7 +107,20 @@ app.directive("orderDirective", function() {
 				})
 		}
 	}
-})
+}])
+
+app.factory("numberComparator", [function() {
+	return function(number1, number2){
+		if (number1.value == undefined || number1.value == null || number1.value =="null") {
+			return -1;
+		}else if (number2.value == undefined || number2.value == null || number2.value == "null") {
+			return 1
+		}else {
+			return (number1.value > number2.value ? 1: -1);
+		} 
+		return 1;
+	}
+}]) 
 
 app.factory("roleComparator", [function() {
 	return function(item1, item2) {

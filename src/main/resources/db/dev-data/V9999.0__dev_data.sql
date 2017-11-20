@@ -84,10 +84,10 @@ INSERT INTO player (tag,name,role) VALUES ('YYJGL22Q','Supercell','Member');
 
 
 INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (1,636,45,35,'222LLPCL9',636.0,45.0);
-INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (2,34,7,35,'LUCQPYY',34.0,7.0);
-INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (3,394,54,35,'QQV9L00Y',394.0,54.0);
-INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (4,138,65,35,'2PC2PLCRG',138.0,65.0);
-INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (5,833,78,35,'2P82UUYGG',833.0,78.0);
+INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (2,null,7,35,'LUCQPYY',34.0,7.0);
+INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (3,null,54,35,'QQV9L00Y',394.0,54.0);
+INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (4,138,null,35,'2PC2PLCRG',138.0,65.0);
+INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (5,833,null,35,'2P82UUYGG',833.0,78.0);
 INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (6,0,0,35,'2L9QC022',0.0,0.0);
 INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (7,22,0,35,'YLCL0V8G',22.0,0.0);
 INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution) VALUES (8,116,24,35,'UY9UR2Y2',116.0,24.0);
