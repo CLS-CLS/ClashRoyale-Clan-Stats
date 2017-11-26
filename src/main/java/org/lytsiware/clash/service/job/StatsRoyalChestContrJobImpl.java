@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.lytsiware.clash.Week;
+import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.job.WeeklyJob;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("statsRoyale")
-public class StatsRoyalChestContrJobImpl implements Job, RunAtStartup {
+public class StatsRoyalChestContrJobImpl implements Job, RunAtStartupJob {
 
 	private Logger logger = LoggerFactory.getLogger(StatsRoyalChestContrJobImpl.class);
 
@@ -71,7 +72,7 @@ public class StatsRoyalChestContrJobImpl implements Job, RunAtStartup {
 		
 		LocalDateTime dayTheSchedulerShouldHaveRun = new Week().getStartDate().atTime(LocalTime.of(8, 0)); 
 
-		if (LocalDateTime.now().isAfter(dayTheSchedulerShouldHaveRun)) {
+		if (LocalDateTime.now(ZoneIdConfiguration.zoneId()).isAfter(dayTheSchedulerShouldHaveRun)) {
 			logger.info("Scheduler was not fired");
 			result = true;
 		} else {

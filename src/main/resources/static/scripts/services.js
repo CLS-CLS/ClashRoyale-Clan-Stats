@@ -38,91 +38,46 @@ app.service("colorfy", function() {
 	}
 })
 
-app.directive("orderDirective", ["numberComparator", function(numberComparator) {
-	return {
-		template : "<i class='order fa fa-fw fa-sort'></i>",
-		replace : true,
-		scope : {
-			bindTo : '@',
-			filterBy : '=',
-			comparator : '=?'
-		},
-		link : function(scope, elem, attrs) {
-			var state = "unselected";
-			function changeState() {
-				if (state == "unselected") {
-					state = "down"
-				} else if (state == "up") {
-					state = "down"
-				} else if (state == "down") {
-					state = "up"
-				}
-			}
+app.factory('history', ["$location", function($location) {
+	var history = {};
 
-			function resetState() {
-				state = "unselected"
-			}
+	var data = []
 
-			function applyClass(elem) {
-				elem.removeClass("fa-sort-up fa-sort-down fa-sort")
-				elem.addClass(getClass())
-			}
-
-			function getClass() {
-				if (state == "unselected") {
-					return "fa-sort"
-				}
-				if (state == "up") {
-					return "fa-sort-up"
-				}
-				if (state == "down") {
-					return "fa-sort-down"
-				}
-			}
-
-			elem.bind('mouseover', function() {
-				elem.css('cursor', 'pointer')
-			})
-
-			elem.bind('click', function() {
-				changeState()
-				applyClass(elem)
-				scope.$apply(function() {
-					if (scope.comparator == null) {
-						scope.comparator = numberComparator;
-					}
-					scope.filterBy.comparator = scope.comparator;
-					scope.filterBy.orderBy = (state == "up" ? scope.bindTo
-							: "-" + scope.bindTo);
-				})
-
-			})
-			scope.$watch('filterBy.orderBy',
-				function(newValue) {
-					if (newValue != scope.bindTo
-							&& newValue != "-" + scope.bindTo) {
-						resetState();
-						applyClass(elem);
-					}
-				})
-		}
+	history.store = function() {
+		data.push($location.path())
 	}
-}])
 
-app.factory("numberComparator", [function() {
-	return function(number1, number2){
-		if (number1.value == undefined || number1.value == null || number1.value =="null") {
+	history.back = function back() {
+		var url = data.pop()
+		$location.path(url);
+	}
+	
+	history.hasBack = function(){
+		return data.length > 0;
+	}
+
+	return history;
+
+} ]);
+
+
+
+app.factory("numberComparator", [ function() {
+	return function(number1, number2) {
+		if (number1.value == undefined || number1.value == null
+				|| number1.value == "null") {
 			return -1;
-		}else if (number2.value == undefined || number2.value == null || number2.value == "null") {
+		} else if (number2.value == undefined || number2.value == null
+				|| number2.value == "null") {
 			return 1
-		}else {
-			return (number1.value > number2.value ? 1: -1);
-		} 
+		} else {
+			return (number1.value > number2.value ? 1 : -1);
+		}
 		return 1;
 	}
-}]) 
+} ])
 
-app.factory("roleComparator", [function() {
+app.factory("roleComparator", [ function() {
 	return function(item1, item2) {
 		var item1Order;
 		var item2Order;
@@ -146,7 +101,7 @@ app.factory("roleComparator", [function() {
 		item2Order = findOrder(item2);
 		return item1Order > item2Order ? 1 : -1
 	};
-}]);
+} ]);
 
 app.filter('percentage', [ '$filter', function($filter) {
 	return function(input, decimals) {

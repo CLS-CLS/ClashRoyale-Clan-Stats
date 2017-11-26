@@ -18,7 +18,7 @@ public class Week {
     private LocalDate endDate;
 
     public Week() {
-        this(LocalDate.now());
+        this(LocalDate.now(ZoneIdConfiguration.zoneId()));
     }
 
     public Week(int week) {

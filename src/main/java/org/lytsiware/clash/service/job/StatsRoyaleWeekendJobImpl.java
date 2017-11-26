@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.lytsiware.clash.Week;
+import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
@@ -31,7 +32,7 @@ public class StatsRoyaleWeekendJobImpl implements Job {
 	WeekJobRepository weeklyJobRepository;
 
 	@Override
-	@Scheduled(cron = "0 0 7/4 ? * FRI,SAT")
+	@Scheduled(cron = "0 59 7/4 ? * SUN,FRI,SAT", zone = ZoneIdConfiguration.zoneId)
 	public void run() {
 		try {
 			logger.info("Job Triggered at {}", LocalDateTime.now());
@@ -44,6 +45,9 @@ public class StatsRoyaleWeekendJobImpl implements Job {
 		}
 	}
 	
-	
+	@Scheduled(cron = "0 59 21 ? * SUN", zone = ZoneIdConfiguration.zoneId)
+	public void extraCheck(){
+		run();
+	}
 	
 }

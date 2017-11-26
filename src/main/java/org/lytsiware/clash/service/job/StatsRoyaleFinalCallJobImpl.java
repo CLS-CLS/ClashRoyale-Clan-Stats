@@ -31,7 +31,7 @@ public class StatsRoyaleFinalCallJobImpl implements Job {
 	WeekJobRepository weeklyJobRepository;
 
 	@Override
-	@Scheduled(cron = "0 59 16-22/2 ? * SUN")
+	//@Scheduled(cron = "0 59 16-22/2 ? * SUN")
 	public void run() {
 		try {
 			logger.info("Job Triggered at {}", LocalDateTime.now());

@@ -48,7 +48,6 @@ public class AdminController {
 	public String checkParsingNoRefresh(Model model) throws JsonProcessingException {
 		//TODO create check page
 		//TODO add security
-		//TODO create session to allow to import these stats now
 		return checkParsing(false, model);
 		
 	}

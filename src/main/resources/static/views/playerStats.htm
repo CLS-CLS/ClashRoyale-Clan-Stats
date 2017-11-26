@@ -1,8 +1,8 @@
 <div class="inner-container col-xs-12">
 	<div style="position:relative" ng-controller="playerStatsController">
-		<div class="row">
-			<a href="/" class="btn btnl-lg btn-primary"><span><i class="fa fa-fw fa-2x fa-arrow-left"></i> </span></a>
-		</div>
+		
+		<button class="btn btnl-lg btn-primary"  ng-disabled="!hasBack()" data-ng-click="back()"><span><i class="fa fa-fw fa-2x fa-arrow-left"></i> </span></button>
+		
 		<div class="loading" ng-show="dataLoading"><i class="fa fa-spinner fa-spin fa-5x"></i></div>
 		<div class="text-center">
 			<div>

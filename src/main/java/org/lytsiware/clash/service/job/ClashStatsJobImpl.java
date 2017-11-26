@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import org.lytsiware.clash.Week;
+import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.job.WeeklyJob;
 import org.lytsiware.clash.service.ClanStatsService;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("clashStats")
-public class ClashStatsJobImpl implements Job, RunAtStartup {
+public class ClashStatsJobImpl implements Job, RunAtStartupJob {
 
 	private Logger logger = LoggerFactory.getLogger(ClashStatsJobImpl.class);
 
@@ -68,7 +69,7 @@ public class ClashStatsJobImpl implements Job, RunAtStartup {
 		// Monday 12:10 GMT+2 time 
 		LocalDateTime dayTheSchedulerShouldHaveRun = previousWeek.getEndDate().atTime(LocalTime.of(9, 10)).plusDays(1); 
 
-		if (LocalDateTime.now().isAfter(dayTheSchedulerShouldHaveRun)) {
+		if (LocalDateTime.now(ZoneIdConfiguration.zoneId()).isAfter(dayTheSchedulerShouldHaveRun)) {
 			logger.info("Scheduler was not fired");
 			result = true;
 		} else {

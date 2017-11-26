@@ -38,8 +38,8 @@ public class ScheduleCheckService {
     	
     	logger.info("Check for missing schedulers");
     	for (Job job : jobs) {
-    		if (job instanceof RunAtStartup)
-	    	if (((RunAtStartup)job).shouldRun()) {
+    		if (job instanceof RunAtStartupJob)
+	    	if (((RunAtStartupJob)job).shouldRun()) {
 	    		logger.info("Scheduler has not ran: Starting job now");
 	    		job.run();
 	    	}else {

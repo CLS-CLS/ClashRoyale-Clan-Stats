@@ -25,7 +25,6 @@ app.controller("adminController" , function ($scope, colorfy, roleComparator) {
 		$timeout(function() {
 			$(elem.target).find("i").trigger('click');
 		}, 0, false)
-
 	}
 
 	$scope.roleOrder = roleComparator
@@ -46,7 +45,7 @@ app.controller("adminController" , function ($scope, colorfy, roleComparator) {
 	
 })
 
-app.controller("playerStatsController", function($scope, $http, $routeParams, colorfy) {
+app.controller("playerStatsController", function($scope, $http, $routeParams, colorfy, history) {
 
 	$scope.player;
 	
@@ -62,6 +61,13 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 	
 	$scope.dataLoading = true;
 	
+	$scope.back = function() {
+		history.back()
+	}
+	
+	$scope.hasBack = function() {
+		return history.hasBack();
+	}
 	
 	function loadData() {
 		$scope.dataLoading = true;
@@ -124,7 +130,7 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 
 })
 
-app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, $routeParams, colorfy, roleComparator) {
+app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history) {
 	
 	$scope.selectedItem = (function() {
 		var week =  $routeParams.week;
@@ -136,7 +142,12 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 			return week;
 		}
 	})();
-
+	
+	$scope.next = function () {
+		history.store();
+	}
+	
+	
 	$scope.selectableColumns = {
 		"role": {name: "role", show: true},
 	 	"cc": {name: "Chest Contribution", show: true },
@@ -187,10 +198,14 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		orderBy : "-role",
 		comparator : roleComparator
 	}
+	
+	$scope.roleOrder = roleComparator
+	
+	$scope.avgContrColor = colorfy.colorfy
 
 	$scope.percentageButtonLbl = "View Percentages (%)"
 		
-	$scope.dataLoading = true;
+	$scope.loading = true;
 
 	$scope.setItemSelected = function(event) {
 		if (event) {
@@ -218,16 +233,17 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		}
 		//sometimes 1 is considered a string and "+" is considered as string concatenator
 		//subtracting 1 first makes the selectedItem a number
-		$scope.selectedItem = ($scope.selectedItem  -1) + 2;
+		$scope.selectedItem = ($scope.selectedItem -1) + 2;
 	}
 
 	$scope.$watch('selectedItem', function(newValue) {
+		$location.path("/" + newValue)
 		getData(newValue);
 	})
 
 	$scope.triggerOrderDirective = function(event) {
 		$timeout(function() {
-					$(event.target).find("i").trigger('click');
+			$(event.target).find("i").trigger('click');
 		}, 0, false)
 
 	}
@@ -254,10 +270,6 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		}
 	}
 
-	$scope.roleOrder = roleComparator
-	
-
-	$scope.avgContrColor = colorfy.colorfy
 	
 	
 	function colSpan() {
@@ -281,10 +293,10 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	}
 	
 	function getData(week) {
-		$scope.dataLoading = true;
+		$scope.loading = true;
 		
 		$http.get(baseUrl + "/rest/" + week).then(function(response) {
-			$scope.dataLoading = false;
+			$scope.loading = false;
 			
 			if ($scope.stats == null) {
 				$scope.stats = [];
@@ -305,7 +317,7 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 			calculatePercentageAndUpdateData(response.data);
 			calculateRankingsAndUpdateData(response.data);
 		}, function(response) {
-			$scope.dataLoading = false;
+			$scope.loading = false;
 		})
 
 	}
@@ -353,9 +365,7 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		}
 		
 		calculateRankingAndUpdateData(data, "overallRank", "overallRank", sortCallback);
-		
 		calculateRankingAndUpdateData(data, "avgChestContribution", "avgCcRank");
-		
 		calculateRankingAndUpdateData(data, "avgChestContribution", "avgCcRank");
 		calculateRankingAndUpdateData(data, "avgCardDonation", "avgDonationRank");
 		
@@ -364,8 +374,6 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		}
 		
 		calculateRankingAndUpdateData(data, "avgOverallRank", "avgOverallRank", sortCallback);
-		
-		
 	
 	}
 
@@ -389,8 +397,6 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		$scope.totalDonations = sumDonation;
 		$scope.chectLevel = calculateChestLvl(sumChest);
 	}
-	
-	
 
 })
 

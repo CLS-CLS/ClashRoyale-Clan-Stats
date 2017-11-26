@@ -1,5 +1,7 @@
 package org.lytsiware.clash.service.job;
 
-public interface RunAtStartup {
+public interface RunAtStartupJob extends Job {
 	boolean shouldRun();
+	
+	
 }

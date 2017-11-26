@@ -41,6 +41,7 @@
     <script src="scripts/app.js"></script>
     <script src="scripts/services.js"></script>
     <script src="scripts/configuration.js"></script>
+    <script src="scripts/directive.js"></script>
 
 
 </head>
