@@ -130,7 +130,38 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 
 })
 
-app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history) {
+app.factory('clanStatsState',  function(roleComparator) {
+	var state = {
+		selectableColumns: { 
+			"role": {name: "role", show: true},
+		 	"cc": {name: "Chest Contribution", show: true },
+		 	"ccRank": {name: "Chest Contribution Rank", show: false},
+		 	"cardDonation": {name: "Card Donations", show: true},
+		 	"cardDonationRank": {name: "Card Donation Rank", show: false},
+		 	"overallRank": {name: "Overall Rank", show: false},
+		 	"avgCc": {name: "Average Chest Contribution", show: true},
+		 	"avgCcRank": {name: "Average Chest Contribution Rank", show: false},
+		 	"avgDonation": {name: "Average Card Donations", show: true},
+		 	"avgDonationRank": {name: "Average Donation Donations Rank", show: false},
+		 	"avgOverallRank": {name: "Average Final Rank", show: false}
+		},
+		bulkSelecets: {
+			"rakings": false,
+			"values" : true,
+			"avgs": true
+		},
+		showRanking: false,
+		showPercentage: false,
+		filter : {
+			orderBy : "-role",
+			comparator : roleComparator
+		}
+	}
+	return state;
+
+});
+
+app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history, clanStatsState) {
 	
 	$scope.selectedItem = (function() {
 		var week =  $routeParams.week;
@@ -147,38 +178,19 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		history.store();
 	}
 	
-	
-	$scope.selectableColumns = {
-		"role": {name: "role", show: true},
-	 	"cc": {name: "Chest Contribution", show: true },
-	 	"ccRank": {name: "Chest Contribution Rank", show: false},
-	 	"cardDonation": {name: "Card Donations", show: true},
-	 	"cardDonationRank": {name: "Card Donation Rank", show: false},
-	 	"overallRank": {name: "Overall Rank", show: false},
-	 	"avgCc": {name: "Average Chest Contribution", show: true},
-	 	"avgCcRank": {name: "Average Chest Contribution Rank", show: false},
-	 	"avgDonation": {name: "Average Card Donations", show: true},
-	 	"avgDonationRank": {name: "Average Donation Donations Rank", show: false},
-	 	"avgOverallRank": {name: "Average Final Rank", show: false}
-	}
-	
-	$scope.bulkSelects = {
-		"rakings": false,
-		"values" : true,
-		"avgs": true
-	}
+	$scope.state = clanStatsState;
 	
 	$scope.bulkSelect = function() {
-		$scope.selectableColumns.ccRank.show = $scope.bulkSelects.rankings;
-		$scope.selectableColumns.cardDonationRank.show = $scope.bulkSelects.rankings;
-		$scope.selectableColumns.overallRank.show = $scope.bulkSelects.rankings;
-		$scope.selectableColumns.avgCcRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
-		$scope.selectableColumns.avgDonationRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
-		$scope.selectableColumns.avgOverallRank.show = $scope.bulkSelects.rankings && $scope.bulkSelects.avgs;
-		$scope.selectableColumns.cc.show = $scope.bulkSelects.values;
-		$scope.selectableColumns.cardDonation.show = $scope.bulkSelects.values;
-		$scope.selectableColumns.avgCc.show = $scope.bulkSelects.values && $scope.bulkSelects.avgs;
-		$scope.selectableColumns.avgDonation.show = $scope.bulkSelects.values &&  $scope.bulkSelects.avgs;
+		$scope.state.selectableColumns.ccRank.show = $scope.state.bulkSelects.rankings;
+		$scope.state.selectableColumns.cardDonationRank.show = $scope.state.bulkSelects.rankings;
+		$scope.state.selectableColumns.overallRank.show = $scope.state.bulkSelects.rankings;
+		$scope.state.selectableColumns.avgCcRank.show = $scope.state.bulkSelects.rankings && $scope.state.bulkSelects.avgs;
+		$scope.state.selectableColumns.avgDonationRank.show = $scope.state.bulkSelects.rankings && $scope.state.bulkSelects.avgs;
+		$scope.state.selectableColumns.avgOverallRank.show = $scope.state.bulkSelects.rankings && $scope.state.bulkSelects.avgs;
+		$scope.state.selectableColumns.cc.show = $scope.state.bulkSelects.values;
+		$scope.state.selectableColumns.cardDonation.show = $scope.state.bulkSelects.values;
+		$scope.state.selectableColumns.avgCc.show = $scope.state.bulkSelects.values && $scope.state.bulkSelects.avgs;
+		$scope.state.selectableColumns.avgDonation.show = $scope.state.bulkSelects.values &&  $scope.state.bulkSelects.avgs;
 		$scope.averageColSpan = colSpan()
 	}
 	
@@ -190,15 +202,6 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 
 	$scope.stats = []
 
-	$scope.showPercentage = false;
-	
-	$scope.showRanking = false;
-
-	$scope.filter = {
-		orderBy : "-role",
-		comparator : roleComparator
-	}
-	
 	$scope.roleOrder = roleComparator
 	
 	$scope.avgContrColor = colorfy.colorfy
@@ -249,21 +252,21 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	}
 
 	$scope.togglePercentage = function() {
-		if ($scope.showRanking) {
-			$scope.showRanking = false;
-			$scope.showPercentage = false;
-		} else if ($scope.showPercentage) {
-			$scope.showPercentage = false;
-			$scope.showRanking = true;
+		if ($scope.state.showRanking) {
+			$scope.state.showRanking = false;
+			$scope.state.showPercentage = false;
+		} else if ($scope.state.showPercentage) {
+			$scope.state.showPercentage = false;
+			$scope.state.showRanking = true;
 			
 		} else {
-			$scope.showPercentage = true;
-			$scope.showRanking = false;
+			$scope.state.showPercentage = true;
+			$scope.state.showRanking = false;
 		}
 		
-		if ($scope.showRanking) {
+		if ($scope.state.showRanking) {
 			$scope.percentageButtonLbl = "View Absolute Values"
-		} else if ($scope.showPercentage) {
+		} else if ($scope.state.showPercentage) {
 			$scope.percentageButtonLbl = "View Ranking"
 		}else {
 			$scope.percentageButtonLbl = "View Percentage (%)"
@@ -274,19 +277,19 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	
 	function colSpan() {
 		var result = 0;
-		if ($scope.selectableColumns.avgCc.show == true) {
+		if ($scope.state.selectableColumns.avgCc.show == true) {
 			result++;
 		}
-		if ($scope.selectableColumns.avgCcRank.show == true) {
+		if ($scope.state.selectableColumns.avgCcRank.show == true) {
 			result++;
 		}
-		if ($scope.selectableColumns.avgDonation.show == true) {
+		if ($scope.state.selectableColumns.avgDonation.show == true) {
 			result++;
 		}
-		if ($scope.selectableColumns.avgDonationRank.show == true) {
+		if ($scope.state.selectableColumns.avgDonationRank.show == true) {
 			result++;
 		}
-		if ($scope.selectableColumns.avgOverallRank.show == true) {
+		if ($scope.state.selectableColumns.avgOverallRank.show == true) {
 			result++;
 		}
 		return result;

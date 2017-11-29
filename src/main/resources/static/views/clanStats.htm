@@ -71,21 +71,21 @@
 				      	<div class="col-xs-4 div-border-1">
 				      		<ul class="list-group">
 				                <li class="list-group-item no-border">
-					               	<label for="ranking_cb"><input id="ranking_cb" type="checkbox"  ng-model="bulkSelects.rankings" ng-click="bulkSelect()"/>&nbsp;Show Rankings</label>
+					               	<label for="ranking_cb"><input id="ranking_cb" type="checkbox"  ng-model="state.bulkSelects.rankings" ng-click="bulkSelect()"/>&nbsp;Show Rankings</label>
 					           </li>
 		               		</ul>
 				      	</div>
 				      	<div class="col-xs-4 div-border-1">
 				      		<ul class="list-group">
 				                <li class="list-group-item no-border">
-					               	<label for="values_cb"><input id="values_cb" type="checkbox"  ng-model="bulkSelects.values"ng-click="bulkSelect()"/>&nbsp;Show Contr/Donations</label>
+					               	<label for="values_cb"><input id="values_cb" type="checkbox"  ng-model="state.bulkSelects.values"ng-click="bulkSelect()"/>&nbsp;Show Contr/Donations</label>
 					           </li>
 		               		</ul>
 				      	</div>
 				      	<div class="col-xs-4 div-border-1">
 				      		<ul class="list-group">
 				                <li class="list-group-item no-border">
-					               	<label for="avg_cb"><input id="values_cb" type="checkbox"  ng-model="bulkSelects.avgs" ng-click="bulkSelect()"/>&nbsp;Show Averages</label>
+					               	<label for="avg_cb"><input id="values_cb" type="checkbox"  ng-model="state.bulkSelects.avgs" ng-click="bulkSelect()"/>&nbsp;Show Averages</label>
 					           </li>
 		               		</ul>
 				      	</div>
@@ -94,8 +94,8 @@
 			      	<div class="row">
 			      		<div class="col-xs-12">
 					        <ul class="list-group">
-				                <li class="list-group-item" ng-repeat="(key, val) in selectableColumns">
-					               	<label for="{{key}}"><input id="{{key}}" type="checkbox" ng-model="selectableColumns[key].show"  ng-click="setItemSelected($event)"/>&nbsp;{{val.name}}</label>
+				                <li class="list-group-item" ng-repeat="(key, val) in state.selectableColumns">
+					               	<label for="{{key}}"><input id="{{key}}" type="checkbox" ng-model="state.selectableColumns[key].show"  ng-click="setItemSelected($event)"/>&nbsp;{{val.name}}</label>
 					           </li>
 		               		</ul>
                			</div>
@@ -116,73 +116,73 @@
 		                <thead>
 			                <tr>
 			                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
-			                    	Player <order-directive bind-to="name" filter-by="filter"/>
+			                    	Player <order-directive bind-to="name" filter-by="state.filter"/>
 			                        </span>
 			                    </th>
-			                    <th ng-show="selectableColumns['role'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)>
-			                    	Role <order-directive bind-to="role" filter-by="filter" comparator="roleOrder"/>
+			                    <th ng-show="state.selectableColumns['role'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)>
+			                    	Role <order-directive bind-to="role" filter-by="state.filter" comparator="roleOrder"/>
 			                    	</span>
 			                    </th>
-			                    <th ng-show="selectableColumns['cc'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Chest contribution
-			                        <order-directive bind-to="chestContribution" filter-by="filter"/></span>
+			                    <th ng-show="state.selectableColumns['cc'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Chest contribution
+			                        <order-directive bind-to="chestContribution" filter-by="state.filter"/></span>
 			                    </th>
-			                     <th ng-show="selectableColumns['ccRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Chest contribution Rank
-			                        <order-directive bind-to="chestContribution" filter-by="filter"/></span>
+			                     <th ng-show="state.selectableColumns['ccRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Chest contribution Rank
+			                        <order-directive bind-to="chestContribution" filter-by="state.filter"/></span>
 			                    </th>
-			                    <th ng-show="selectableColumns['cardDonation'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Donations
-			                        <order-directive bind-to="cardDonation" filter-by="filter"/></span>
+			                    <th ng-show="state.selectableColumns['cardDonation'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Donations
+			                        <order-directive bind-to="cardDonation" filter-by="state.filter"/></span>
 			                    </th>
-			                    <th ng-show="selectableColumns['cardDonationRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Donation Rank
-			                        <order-directive bind-to="cardDonation" filter-by="filter"/></span>
+			                    <th ng-show="state.selectableColumns['cardDonationRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Donation Rank
+			                        <order-directive bind-to="cardDonation" filter-by="state.filter"/></span>
 			                    </th>
-			                    <th ng-show="selectableColumns['overallRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Overall Ranking
-			                        <order-directive bind-to="overallRank" filter-by="filter"/></span>
+			                    <th ng-show="state.selectableColumns['overallRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Overall Ranking
+			                        <order-directive bind-to="overallRank" filter-by="state.filter"/></span>
 			                    </th>
 			                    <th ng-show="averageColSpan!=0" colspan="{{averageColSpan}}"> Average Stats (of the last 12 weeks) {{averageColSpan}} </th>
 			                </tr>
 			                <tr>
-			                    <th ng-show="selectableColumns['avgCc'].show"><span ng-click=triggerOrderDirective($event)>Chest Contribution
-			                        <order-directive bind-to="avgChestContribution" filter-by="filter"/></span>
+			                    <th ng-show="state.selectableColumns['avgCc'].show"><span ng-click=triggerOrderDirective($event)>Chest Contribution
+			                        <order-directive bind-to="avgChestContribution" filter-by="state.filter"/></span>
 			                    </th>
-			                     <th ng-show="selectableColumns['avgCcRank'].show"><span  ng-click=triggerOrderDirective($event)>Chest Contribution Rank
-			                        <order-directive bind-to="avgChestContribution" filter-by="filter"/></span>
+			                     <th ng-show="state.selectableColumns['avgCcRank'].show"><span  ng-click=triggerOrderDirective($event)>Chest Contribution Rank
+			                        <order-directive bind-to="avgChestContribution" filter-by="state.filter"/></span>
 			                    </th>
-			                    <th ng-show="selectableColumns['avgDonation'].show"><span ng-click=triggerOrderDirective($event)>Donations
-			                        <order-directive bind-to="avgCardDonation" filter-by="filter"/></span>
+			                    <th ng-show="state.selectableColumns['avgDonation'].show"><span ng-click=triggerOrderDirective($event)>Donations
+			                        <order-directive bind-to="avgCardDonation" filter-by="state.filter"/></span>
 			                    </th>
-			                    <th ng-show="selectableColumns['avgDonationRank'].show" ><span ng-click=triggerOrderDirective($event)>Donations Rank
-			                        <order-directive bind-to="avgCardDonation" filter-by="filter"/></span>
+			                    <th ng-show="state.selectableColumns['avgDonationRank'].show" ><span ng-click=triggerOrderDirective($event)>Donations Rank
+			                        <order-directive bind-to="avgCardDonation" filter-by="state.filter"/></span>
 			                    </th>
-			                    <th ng-show="selectableColumns['avgOverallRank'].show" ><span ng-click=triggerOrderDirective($event)>Overall Rank
-			                        <order-directive bind-to="avgOverallRank" filter-by="filter"/></span>
+			                    <th ng-show="state.selectableColumns['avgOverallRank'].show" ><span ng-click=triggerOrderDirective($event)>Overall Rank
+			                        <order-directive bind-to="avgOverallRank" filter-by="state.filter"/></span>
 			                    </th>
 			                    
 			                </tr>
 		                </thead>
 		                <tbody>
 		
-		                <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: filter.orderBy: false : filter.comparator">
+		                <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: state.filter.orderBy: false : state.filter.comparator">
 		                	 
 		                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}" ng-click="next()">{{s.name}}</a></td>
-		                    <td ng-show="selectableColumns['role'].show">{{s.role}}</td>
+		                    <td ng-show="state.selectableColumns['role'].show">{{s.role}}</td>
 		
-		                    <td ng-show="selectableColumns['cc'].show && !showPercentage">{{s.chestContribution }}</td>
-		                    <td ng-show="selectableColumns['cc'].show && showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
-		                    <td ng-show="selectableColumns['ccRank'].show">{{s.ccRank}}</td>
+		                    <td ng-show="state.selectableColumns['cc'].show && !state.showPercentage">{{s.chestContribution }}</td>
+		                    <td ng-show="state.selectableColumns['cc'].show && state.showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
+		                    <td ng-show="state.selectableColumns['ccRank'].show">{{s.ccRank}}</td>
 		                    
-		                    <td ng-show="selectableColumns['cardDonation'].show && !showPercentage">{{s.cardDonation}}</td>
-		                    <td ng-show="selectableColumns['cardDonation'].show && showPercentage">{{s.cardDonationPerc | percentage:1}}</td>
-		                    <td ng-show="selectableColumns['cardDonationRank'].show">{{s.donationRank}}</td>
-		                    <td ng-show="selectableColumns['overallRank'].show">{{s.overallRank}}</td>
+		                    <td ng-show="state.selectableColumns['cardDonation'].show && !state.showPercentage">{{s.cardDonation}}</td>
+		                    <td ng-show="state.selectableColumns['cardDonation'].show && state.showPercentage">{{s.cardDonationPerc | percentage:1}}</td>
+		                    <td ng-show="state.selectableColumns['cardDonationRank'].show">{{s.donationRank}}</td>
+		                    <td ng-show="state.selectableColumns['overallRank'].show">{{s.overallRank}}</td>
 		                    
-		                    <td ng-show="selectableColumns['avgCc'].show && !showPercentage" ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution | number:2 }}</td>
-		                    <td ng-show="selectableColumns['avgCc'].show && showPercentage" ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContributionPerc | percentage:1 }}</td>
-		                    <td ng-show="selectableColumns['avgCcRank'].show">{{s.avgCcRank}}</td>
+		                    <td ng-show="state.selectableColumns['avgCc'].show && !state.showPercentage" ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContribution | number:2 }}</td>
+		                    <td ng-show="state.selectableColumns['avgCc'].show && state.showPercentage" ng-style="avgContrColor(s.avgChestContribution, 'chest')">{{s.avgChestContributionPerc | percentage:1 }}</td>
+		                    <td ng-show="state.selectableColumns['avgCcRank'].show">{{s.avgCcRank}}</td>
 		                    
-		                    <td ng-show="selectableColumns['avgDonation'].show && !showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation | number: 2}}</td>
-		                    <td ng-show="selectableColumns['avgDonation'].show && showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonationPerc | percentage:1 }}</td>
-		                    <td ng-show="selectableColumns['avgDonationRank'].show">{{s.avgDonationRank}}</td>
-		                    <td ng-show="selectableColumns['avgOverallRank'].show">{{s.avgOverallRank}}</td>
+		                    <td ng-show="state.selectableColumns['avgDonation'].show && !state.showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonation | number: 2}}</td>
+		                    <td ng-show="state.selectableColumns['avgDonation'].show && state.showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">{{s.avgCardDonationPerc | percentage:1 }}</td>
+		                    <td ng-show="state.selectableColumns['avgDonationRank'].show">{{s.avgDonationRank}}</td>
+		                    <td ng-show="state.selectableColumns['avgOverallRank'].show">{{s.avgOverallRank}}</td>
 		                    
 		                </tr>
 		                <tr ng-if="stats.length == 0"><td colspan="12"> <h2>No data for this period</h2></td></tr>
