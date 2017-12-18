@@ -108,6 +108,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 			{	
 				if (onlyUpdateBiggerDonations ){
 					dbStat.setCardDonation(donationsMap.get(dbStat.getPlayer().getTag()));
+					logger.info("updated : donation, contr - {}, {} ", dbStat.getCardDonation(), dbStat.getChestContribution());
 					em.merge(dbStat);
 				}
 			});
@@ -126,6 +127,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 			.forEach(dbStat -> 
 				{
 					dbStat.setChestContribution(chestContributionsMap.get(dbStat.getPlayer().getTag()));
+					logger.info("updated : donation, contr - {}, {} ", dbStat.getCardDonation(), dbStat.getChestContribution());
 					em.merge(dbStat);
 				});
 		return stats;

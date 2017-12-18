@@ -136,6 +136,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 		remainingStats.removeAll(existingStats);
 	
 		playerWeeklyStatsRepository.updateDonations(existingStats, week, updateBiggerOnly);
+		remainingStats.stream().forEach(stat -> stat.setChestContribution(null));
 		playerWeeklyStatsRepository.save(remainingStats);
 	}
 	
