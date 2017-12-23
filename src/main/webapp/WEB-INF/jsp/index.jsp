@@ -26,6 +26,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="lib/bootstrap-toggle/angular-bootstrap-toggle.min.css" rel="stylesheet">
 
 
     <!-- Custom styles for this template -->
@@ -42,6 +43,7 @@
     <script src="scripts/services.js"></script>
     <script src="scripts/configuration.js"></script>
     <script src="scripts/directive.js"></script>
+    <script src="lib/bootstrap-toggle/angular-bootstrap-toggle.min.js"></script>
 
 
 </head>

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
 import org.lytsiware.clash.service.ClanStatsServiceImpl;
@@ -19,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,8 +94,26 @@ public class ClanStatsRestController {
     	response.setContentType("application/text");      
     	response.setHeader("Content-Disposition", "attachment; filename=\"template.txt\""); 
     	response.flushBuffer();
-    			
     
     }
+    
+    @GetMapping(value="/newPlayers/{deltaWeek}")
+    public List<PlayerOverallStats> getNewPlayers(@PathVariable(required = false) Integer deltaWeek) {
+    	if (deltaWeek == null) {
+    		deltaWeek = 0;
+    	}
 
+    	Week week = new Week().minusWeeks(deltaWeek);
+    	return clanStatsService.findNewPlayersAtWeeks(week.minusWeeks(1), week);
+    }
+    
+    @PostMapping(value="/newPlayers/update/{deltaWeek}")
+    public List<PlayerOverallStats> keepOrDiscardNewPlayerStats(@PathVariable(required = false) Integer deltaWeek, @RequestBody List<NewPlayersUpdateDto> updateDto) {
+    	if (deltaWeek == null) {
+    		deltaWeek = 0;
+    	}
+    	Week week = new Week().minusWeeks(deltaWeek);
+    	return clanStatsService.updateNewPlayers(week, updateDto);
+    }
+   
 }

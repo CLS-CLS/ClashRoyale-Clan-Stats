@@ -3,6 +3,7 @@ package org.lytsiware.clash.domain.playerweeklystats;
 import static org.lytsiware.clash.utils.Utils.collectToMap;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +136,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 	
 	@Override
 	@CachePut(cacheNames={"weeklyStats"}, key="#week")
-	public List<PlayerWeeklyStats> saveOrUpdate(List<PlayerWeeklyStats> playerWeeklyStats, Week week) {
+	public List<PlayerWeeklyStats> saveOrUpdate(Collection<PlayerWeeklyStats> playerWeeklyStats, Week week) {
 		Map<String, PlayerWeeklyStats> databaseStats = findByWeek(week).stream()
 				.collect(Collectors.toMap(p -> p.getPlayer().getTag(), Function.identity()));
 		

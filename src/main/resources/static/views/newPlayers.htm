@@ -1,0 +1,50 @@
+<div ng-cloak>
+    <div class="inner-container col-xs-12">
+        <div ng-controller="newPlayersController">
+            <div style="position:relative">
+            	<h3> New Members </h3>
+            	<hr/>
+            	<loading-directive loading="loading"/>
+            	<div>
+		            <table class="table table-striped" style="overflow-x: auto">
+		                <thead>
+			                <tr>
+			                    <th>Player</th>
+			                    <th>Role</th>
+			                    <th colspan="2">Chest contribution</th>
+                                <th colspan="2">Donations</th>
+			                </tr>
+		                </thead>
+		                <tbody>
+		                
+		                <tr ng-if="stats.length > 0 " ng-repeat="s in stats">
+		                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}">{{s.name}}</a></td>
+		                    <td>{{s.role}}</td>
+		                    <td>{{s.chestContribution }}</td>
+		                    <td> <toggle ng-model="s.chestToggleValue" ng-change="changed()" 
+		                    	onstyle="btn-success" on="<i class='fa fa-check'></i>" 
+		                    	offstyle="btn-danger" off="<i class='fa fa-times'></i>"
+		                    	ng-hide="s.chestContribution == null"
+		                    	></toggle>
+		                    </td>
+		                    <td>{{s.cardDonation}} </td>
+		                    <td> <toggle ng-model="s.cardToggleValue" ng-change="changed()" 
+		                    	onstyle="btn-success" on="<i class='fa fa-check'></i>" 
+		                    	offstyle="btn-danger" off="<i class='fa fa-times'></i>"
+		                    	ng-hide="s.cardDonation == null"
+		                    	></toggle>
+		                    </td>
+		                </tr>
+		                <tr ng-if="stats.length == 0"><td colspan="12"> <h2>No new players</h2></td></tr>
+		                </tbody>
+		            </table>
+	            </div>
+	            <button class="btn btn-primary" ng-click="submit()">Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+	   
+    </script>
+</div>

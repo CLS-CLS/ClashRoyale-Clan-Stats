@@ -1,7 +1,21 @@
 var minWeek = 1;
 var maxWeek = 12;
 
-var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute' ]);
+var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute', 'ui.toggle' ])
+//hack because sometimes we want the $location not to reload the view https://github.com/angular/angular.js/issues/1699
+.run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+    var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
+}])
 
 
 app.controller("uploadController", function($scope, $http){
@@ -43,6 +57,58 @@ app.controller("adminController" , function ($scope, colorfy, roleComparator) {
 	
 	calculateSum(clanStats);
 	
+})
+
+app.controller("newPlayersController", function($scope, $http, $routeParams) { 
+	
+	$scope.submitDisabled = function(){
+		return !($routeParams.week == null || $routeParams.week == 0)  
+	}
+	
+	function loadData(week) {
+		$scope.loading = true;
+		
+		
+		if ($routeParams.week == null){
+			$routeParams.week = 0;
+		}
+		
+		$http.get(baseUrl + "/rest/newPlayers/" + $routeParams.week).then(function(response) {
+			$scope.loading = false;
+				
+			$scope.stats = response.data;
+			
+			$scope.stats.forEach(function(value, index) {
+				value.chestToggleValue = true;
+				value.cardToggleValue = true;
+			})
+		}, function(response) {
+			$scope.loading = false;
+		})
+	}
+	
+	$scope.submit = function() {
+		$scope.loading = true;
+		var request = [];
+		$scope.stats.forEach(function(value, index) {
+			if (!value.chestToggleValue || !value.cardToggleValue) {
+				request.push({
+					tag: value.tag,
+					deleteChest: !value.chestToggleValue,
+					deleteCard: !value.cardToggleValue
+				})
+			}
+		})
+		console.log(request);
+		$http.post(baseUrl+"/rest/newPlayers/update/"+ $routeParams.week, request).then(function(response){
+			loadData($routeParams.week);
+		}, function (response) {
+			$scope.loading = false;
+			alert("something went wrong!")
+		})
+	}
+	
+	loadData();
 })
 
 app.controller("playerStatsController", function($scope, $http, $routeParams, colorfy, history) {
@@ -163,7 +229,7 @@ app.factory('clanStatsState',  function(roleComparator) {
 app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history, clanStatsState) {
 	
 	$scope.selectedItem = (function() {
-		var week =  $routeParams.week;
+		var week =  $routeParams.week -1 + 1;
 		if (week >= maxWeek) {
 			return  maxWeek;
 		}else if (week <= minWeek) {
@@ -238,11 +304,11 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 		}
 		//sometimes 1 is considered a string and "+" is considered as string concatenator
 		//subtracting 1 first makes the selectedItem a number
-		$scope.selectedItem = ($scope.selectedItem -1) + 2;
+		$scope.selectedItem = ($scope.selectedItem - 1) + 2;
 	}
 
-	$scope.$watch('selectedItem', function(newValue) {
-		$location.path("/" + newValue)
+	$scope.$watch('selectedItem', function(newValue, oldValue) {
+		$location.path("/" + newValue, false)
 		getData(newValue);
 	})
 

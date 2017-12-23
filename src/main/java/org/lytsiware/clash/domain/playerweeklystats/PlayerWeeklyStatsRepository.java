@@ -1,5 +1,6 @@
 package org.lytsiware.clash.domain.playerweeklystats;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public interface PlayerWeeklyStatsRepository {
 
     void save(List<PlayerWeeklyStats> playerWeeklyStats);
     
-    List<PlayerWeeklyStats> saveOrUpdate(List<PlayerWeeklyStats> playerWeeklyStats, Week week);
+    List<PlayerWeeklyStats> saveOrUpdate(Collection<PlayerWeeklyStats> playerWeeklyStats, Week week);
 
 	List<PlayerWeeklyStats> updateDonations(List<PlayerWeeklyStats> donations, Week week, boolean onlyUpdateBiggerDonations);
 

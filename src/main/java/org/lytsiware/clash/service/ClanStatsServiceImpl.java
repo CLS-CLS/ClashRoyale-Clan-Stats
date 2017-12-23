@@ -17,6 +17,7 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
+import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
 import org.lytsiware.clash.service.integration.SiteIntegrationService;
@@ -136,7 +137,11 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 		remainingStats.removeAll(existingStats);
 	
 		playerWeeklyStatsRepository.updateDonations(existingStats, week, updateBiggerOnly);
+		
+		//for new players the site could contain 0 for contribution when null is what we really want.
+		//aka don't take under consideration new players for this clan chest as they are not part of it.
 		remainingStats.stream().forEach(stat -> stat.setChestContribution(null));
+		
 		playerWeeklyStatsRepository.save(remainingStats);
 	}
 	
@@ -175,6 +180,63 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 						.append("\r\n"));
 		return sb.toString();
 
+	}
+
+	@Override
+	public List<PlayerOverallStats> findNewPlayersAtWeeks(Week oldestWeek, Week newestWeek) {
+		List<PlayerWeeklyStats> newestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(newestWeek);
+		List<Player> oldestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(oldestWeek).stream().map(PlayerWeeklyStats::getPlayer).collect(Collectors.toList());
+		
+		List<PlayerWeeklyStats> newPlayerStats = newestWeekPlayerStats.stream().filter(week2stats -> !oldestWeekPlayerStats.contains(week2stats.getPlayer())).collect(Collectors.toList());
+		
+		List<PlayerOverallStats> overallStatsDto = newPlayerStats.stream().map(PlayerOverallStats::new).collect(Collectors.toList());
+		logger.debug("found new players: {}" , overallStatsDto);
+		return overallStatsDto;
+	}
+	
+
+
+	@Override
+	public List<PlayerOverallStats> updateNewPlayers(Week week, List<NewPlayersUpdateDto> newPlayers) {
+		//check that indeed these are new players
+		Set<String> newPlayersTag = findNewPlayersAtWeeks(week.minusWeeks(1), week).stream().map(PlayerOverallStats::getTag).collect(Collectors.toSet());
+		Set<String> toUpdate = newPlayers.stream().map(NewPlayersUpdateDto::getTag).collect(Collectors.toSet());
+		
+		if (!newPlayersTag.containsAll(toUpdate)) {
+			throw new IllegalStateException("The dto contains players that are not new");
+		}
+		
+		List<PlayerWeeklyStats> allWeeklyStats = playerWeeklyStatsRepository.findByWeek(week);
+		
+		Map<String, PlayerWeeklyStats> statsToUpdate = allWeeklyStats.stream()
+				.filter(pws -> toUpdate.contains(pws.getPlayer().getTag()))
+				.collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), Function.identity()));
+		
+				
+		for (NewPlayersUpdateDto newPlayer: newPlayers) {
+			PlayerWeeklyStats stat = statsToUpdate.get(newPlayer.getTag());
+			if (newPlayer.shouldDeleteCard()) {
+				stat.setCardDonation(null);
+			}
+			if (newPlayer.shouldDeleteChest()) {
+				stat.setChestContribution(null);
+			}
+		
+		}
+		
+		playerWeeklyStatsRepository.saveOrUpdate(statsToUpdate.values(), week);
+				
+		// update averages from the requested week until the last week, because the averages have changed, as the donations and card contributions
+		// are deleted
+		Week fromWeek = week;
+		while (fromWeek.getWeek() <= new Week().minusWeeks(1).getWeek()) {
+			logger.info("Updating averages for week {}", fromWeek);
+			recalculateAndSaveAvgs(fromWeek);
+			fromWeek = fromWeek.plusWeeks(1);
+		}
+		
+		return statsToUpdate.values().stream().map(PlayerOverallStats::new).collect(Collectors.toList());
+		
 	}
 
 }

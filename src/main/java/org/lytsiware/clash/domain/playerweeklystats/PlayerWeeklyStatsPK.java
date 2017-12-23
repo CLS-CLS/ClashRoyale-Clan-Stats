@@ -4,7 +4,12 @@ import java.io.Serializable;
 
 import org.lytsiware.clash.domain.player.Player;
 
-
+/**
+ * N+1 bug of hibernate. Used classic id instead
+ * @author Christos
+ *
+ */
+@Deprecated 
 public class PlayerWeeklyStatsPK implements Serializable {
 
   	private static final long serialVersionUID = 1L;

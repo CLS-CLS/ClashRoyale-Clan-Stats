@@ -3,6 +3,7 @@ package org.lytsiware;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -19,6 +20,7 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
+import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,6 +155,30 @@ public class ClanStatsServiceTest {
 		Assert.assertEquals(2, results.size());
 		Assert.assertEquals(100, (int)results.get("tag1"));
 		Assert.assertEquals(200, (int)results.get("tag2"));
+		
+	}
+	
+	@Test
+	public void getNewPlayersAtWeeks(){
+		Player player1 = new Player("Player1", "p1", "Elder");
+		Player player2 = new Player("Player2", "p2", "Elder");
+		Player player3 = new Player("Player3", "p3", "Elder");
+		PlayerWeeklyStats p1w1 = new PlayerWeeklyStats(player1, 10, 10, 20, 0, 0);
+		PlayerWeeklyStats p1w2 = new PlayerWeeklyStats(player1, 11, 20, 30, 0, 0);
+		PlayerWeeklyStats p2w2 = new PlayerWeeklyStats(player2, 11, 30, 40, 0, 0);
+		PlayerWeeklyStats p3w2 = new PlayerWeeklyStats(player3, 11, 40, 50, 0, 0);
+		
+		pwsRepo.save(Arrays.asList(p1w1, p1w2, p2w2, p3w2));
+		
+		List<PlayerOverallStats> newPlayers = clanStatsService.findNewPlayersAtWeeks(new Week(10), new Week(11));
+		
+		Assert.assertEquals(2, newPlayers.size());
+		
+		//convert to map for easier testing
+		Map<String, PlayerOverallStats> newPlayersMap = newPlayers.stream().collect(Collectors.toMap(PlayerOverallStats::getTag, Function.identity()));
+		
+		Assert.assertEquals(40, (int)newPlayersMap.get("Player3").getChestContribution());
+		Assert.assertEquals(40, (int)newPlayersMap.get("Player2").getCardDonation());
 		
 	}
 
