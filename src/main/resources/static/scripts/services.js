@@ -83,15 +83,14 @@ app.factory("roleComparator", [ function() {
 		var item2Order;
 
 		var findOrder = function(item) {
-			var value = item.value;
+			var value = item.value.toLowerCase();
 			switch (value) {
-			case 'Leader':
+			case 'leader':
 				return 4;
-
-			case 'Co-Leader':
+			case 'co-leader':
 				return 3;
 
-			case 'Elder':
+			case 'elder':
 				return 2;
 			default:
 				return 1;
