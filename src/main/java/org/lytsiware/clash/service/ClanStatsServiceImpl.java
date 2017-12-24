@@ -1,16 +1,6 @@
 package org.lytsiware.clash.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
+import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.player.Player;
@@ -27,6 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ClanStatsServiceImpl implements ClanStatsService {
@@ -60,7 +56,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
 		List<PlayerWeeklyStats> updatedWeeklyStats = new ArrayList<>();
 
-		Week fromWeek = toThisWeek.minusWeeks(12);
+		Week fromWeek = toThisWeek.minusWeeks(Constants.MAX_PAST_WEEK);
 
 		// finds all player stats between the provided weeks
 		Map<Player, List<PlayerWeeklyStats>> allPlayerStats = playerWeeklyStatsRepository.findByWeek(fromWeek,
@@ -98,11 +94,10 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
 		playerWeeklyStatsRepository.save(newStats);
 
-		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(new Week().minusWeeks(1));
+		List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(Week.now().previous());
 
 		playerWeeklyStatsRepository.save(playerWeeklyStats);
 	}
-	
 
 	@Override
 	@Caching(evict = { @CacheEvict(value = "playerStats", allEntries = true),
@@ -113,51 +108,47 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 	}
 
 	@Override
-	public PlayerStatsDto retrievePlayerStats(String tag) {
-		Player player = playerRepository.findByTag(tag);
-		logger.info("tag {} -> {}", tag, player.getName());
-		Week now = new Week();
-		List<PlayerWeeklyStats> stats = playerWeeklyStatsRepository.findByWeeksAndTag(tag, now.minusWeeks(12),
-				now.minusWeeks(1));
-		return PlayerStatsDto.toPlayerStatsDto(player, stats);
+	public PlayerStatsDto retrievePlayerStats(String tag, Week from, Week to) {
+		
+		List<PlayerWeeklyStats> stats = playerWeeklyStatsRepository.findByWeeksAndTag(tag, from, to);
+
+		return PlayerStatsDto.toPlayerStatsDto(stats);
 	}
-	
+
 	@Override
-	@Transactional(value=TxType.REQUIRED)
+	@Transactional(value = TxType.REQUIRED)
 	public void updateOrInsertNewDonations(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
 		stats.stream().forEach(s -> s.setWeek(week.getWeek()));
-		
+
 		Map<String, PlayerWeeklyStats> databaseStats = playerWeeklyStatsRepository.findByWeek(week).stream()
 				.collect(Collectors.toMap(s -> s.getPlayer().getTag(), Function.identity()));
-		
+
 		List<PlayerWeeklyStats> existingStats = stats.stream()
 				.filter(s -> databaseStats.containsKey(s.getPlayer().getTag())).collect(Collectors.toList());
-		
+
 		List<PlayerWeeklyStats> remainingStats = new ArrayList<>(stats);
 		remainingStats.removeAll(existingStats);
-	
+
 		playerWeeklyStatsRepository.updateDonations(existingStats, week, updateBiggerOnly);
-		
-		//for new players the site could contain 0 for contribution when null is what we really want.
-		//aka don't take under consideration new players for this clan chest as they are not part of it.
+
+		// for new players the site could contain 0 for contribution when null is what we really want.
+		// aka don't take under consideration new players for this clan chest as they are not part of it.
 		remainingStats.stream().forEach(stat -> stat.setChestContribution(null));
-		
+
 		playerWeeklyStatsRepository.save(remainingStats);
 	}
-	
+
 	@Override
-	@Transactional(value=TxType.REQUIRED)
+	@Transactional(value = TxType.REQUIRED)
 	public void updateChestContributions(List<PlayerWeeklyStats> stats, Week week) {
 		stats.stream().forEach(s -> s.setWeek(week.getWeek()));
 		playerWeeklyStatsRepository.updateChestContribution(stats, week);
 	}
-	
-	
 
 	@Override
 	public String generateTemplate() {
 		StringBuilder sb = new StringBuilder();
-		Week week = new Week();
+		Week week = Week.now();
 		List<PlayerWeeklyStats> result = playerWeeklyStatsRepository.findByWeek(week);
 		if (result.isEmpty()) {
 			week = week.minusWeeks(1);
@@ -185,35 +176,37 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 	@Override
 	public List<PlayerOverallStats> findNewPlayersAtWeeks(Week oldestWeek, Week newestWeek) {
 		List<PlayerWeeklyStats> newestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(newestWeek);
-		List<Player> oldestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(oldestWeek).stream().map(PlayerWeeklyStats::getPlayer).collect(Collectors.toList());
-		
-		List<PlayerWeeklyStats> newPlayerStats = newestWeekPlayerStats.stream().filter(week2stats -> !oldestWeekPlayerStats.contains(week2stats.getPlayer())).collect(Collectors.toList());
-		
-		List<PlayerOverallStats> overallStatsDto = newPlayerStats.stream().map(PlayerOverallStats::new).collect(Collectors.toList());
-		logger.debug("found new players: {}" , overallStatsDto);
+		List<Player> oldestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(oldestWeek).stream()
+				.map(PlayerWeeklyStats::getPlayer).collect(Collectors.toList());
+
+		List<PlayerWeeklyStats> newPlayerStats = newestWeekPlayerStats.stream()
+				.filter(week2stats -> !oldestWeekPlayerStats.contains(week2stats.getPlayer()))
+				.collect(Collectors.toList());
+
+		List<PlayerOverallStats> overallStatsDto = newPlayerStats.stream().map(PlayerOverallStats::new)
+				.collect(Collectors.toList());
+		logger.debug("found new players: {}", overallStatsDto);
 		return overallStatsDto;
 	}
-	
-
 
 	@Override
 	public List<PlayerOverallStats> updateNewPlayers(Week week, List<NewPlayersUpdateDto> newPlayers) {
-		//check that indeed these are new players
-		Set<String> newPlayersTag = findNewPlayersAtWeeks(week.minusWeeks(1), week).stream().map(PlayerOverallStats::getTag).collect(Collectors.toSet());
+		// check that indeed these are new players
+		Set<String> newPlayersTag = findNewPlayersAtWeeks(week.minusWeeks(1), week).stream()
+				.map(PlayerOverallStats::getTag).collect(Collectors.toSet());
 		Set<String> toUpdate = newPlayers.stream().map(NewPlayersUpdateDto::getTag).collect(Collectors.toSet());
-		
+
 		if (!newPlayersTag.containsAll(toUpdate)) {
 			throw new IllegalStateException("The dto contains players that are not new");
 		}
-		
+
 		List<PlayerWeeklyStats> allWeeklyStats = playerWeeklyStatsRepository.findByWeek(week);
-		
+
 		Map<String, PlayerWeeklyStats> statsToUpdate = allWeeklyStats.stream()
 				.filter(pws -> toUpdate.contains(pws.getPlayer().getTag()))
 				.collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), Function.identity()));
-		
-				
-		for (NewPlayersUpdateDto newPlayer: newPlayers) {
+
+		for (NewPlayersUpdateDto newPlayer : newPlayers) {
 			PlayerWeeklyStats stat = statsToUpdate.get(newPlayer.getTag());
 			if (newPlayer.shouldDeleteCard()) {
 				stat.setCardDonation(null);
@@ -221,22 +214,23 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 			if (newPlayer.shouldDeleteChest()) {
 				stat.setChestContribution(null);
 			}
-		
+
 		}
-		
+
 		playerWeeklyStatsRepository.saveOrUpdate(statsToUpdate.values(), week);
-				
-		// update averages from the requested week until the last week, because the averages have changed, as the donations and card contributions
+
+		// update averages from the requested week until the last week, because the averages have changed, as
+		// the donations and card contributions
 		// are deleted
 		Week fromWeek = week;
-		while (fromWeek.getWeek() <= new Week().minusWeeks(1).getWeek()) {
+		while (fromWeek.getWeek() <= Week.now().previous().getWeek()) {
 			logger.info("Updating averages for week {}", fromWeek);
 			recalculateAndSaveAvgs(fromWeek);
 			fromWeek = fromWeek.plusWeeks(1);
 		}
-		
+
 		return statsToUpdate.values().stream().map(PlayerOverallStats::new).collect(Collectors.toList());
-		
+
 	}
 
 }

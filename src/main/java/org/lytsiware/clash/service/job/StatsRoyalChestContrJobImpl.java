@@ -1,9 +1,5 @@
 package org.lytsiware.clash.service.job;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
@@ -19,6 +15,10 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @Profile("statsRoyale")
@@ -46,10 +46,10 @@ public class StatsRoyalChestContrJobImpl implements Job, RunAtStartupJob {
 			
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
 			
-			Week week = new Week().minusWeeks(1);
+			Week week = Week.now().previous();
 			clanStatsService.updateChestContributions(stats, week);
 			clanStatsService.recalculateAndSaveAvgs(week);
-			weeklyJobRepository.save(new WeeklyJob(new Week().getWeek()));
+			weeklyJobRepository.save(new WeeklyJob(Week.now().getWeek()));
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;
@@ -65,12 +65,12 @@ public class StatsRoyalChestContrJobImpl implements Job, RunAtStartupJob {
 
 		WeeklyJob latestRun = weeklyJobRepository.loadLatest();
 
-		if (latestRun.getLatestWeek() == new Week().getWeek()) {
+		if (latestRun.getLatestWeek() == Week.now().getWeek()) {
 			logger.info("scheduler has already been fired");
 			return false;
 		}
 		
-		LocalDateTime dayTheSchedulerShouldHaveRun = new Week().getStartDate().atTime(LocalTime.of(8, 0)); 
+		LocalDateTime dayTheSchedulerShouldHaveRun = Week.now().getStartDate().atTime(LocalTime.of(8, 0)); 
 
 		if (LocalDateTime.now(ZoneIdConfiguration.zoneId()).isAfter(dayTheSchedulerShouldHaveRun)) {
 			logger.info("Scheduler was not fired");

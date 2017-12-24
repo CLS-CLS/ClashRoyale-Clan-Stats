@@ -7,13 +7,14 @@ var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute', 'ui.toggle' ])
     var original = $location.path;
     $location.path = function (path, reload) {
         if (reload === false) {
-            var lastRoute = $route.current;
-            var un = $rootScope.$on('$locationChangeSuccess', function () {
-                $route.current = lastRoute;
-                un();
-            });
+        	 if (typeof (history.pushState) != "undefined") {
+                 var obj = { Page: path, Url: baseUrl + path };
+                 history.pushState(obj, obj.Page, obj.Url);
+             } 
+        }else {
+        	return original.apply($location, [path]);
         }
-        return original.apply($location, [path]);
+        
     };
 }])
 
@@ -137,35 +138,36 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 	
 	function loadData() {
 		$scope.dataLoading = true;
+
+		var currentWeek = -1;
+
+		function emptyStats() {
+            return {
+                chestContribution: "-",
+                cardDonation: "-"
+            }
+        };
 		
-		$http.get(baseUrl + "/rest/player/" + $routeParams.playerTag).then(
+		$http.get(baseUrl + "/rest/info/week").then(function(response){
+			currentWeek = response.data;
+			return $http.get(baseUrl + "/rest/player/" + $routeParams.playerTag)
+		}).then(
 			function(response) {
-				$scope.dataLoading = false;
 				var maxChestContribution = 0;
 				var maxCardDonation = 0;
 				var maxCardDonationWeek = 0;
 
 				// if there are weeks missing due to player not be part of the clan, 
 				// fill them with N/A data in order to show these missing weeks
-				var week = -1;
-				
-				function emptyStats() {
-				    return {
-                        chestContribution: "-",
-                        cardDonation: "-"
-                    }
-				};
-				
 				var completeStats = [];
 				
 				response.data.statsDto.forEach(function(value, index) {
-									
-					for (var i = 0; i < week - value.week - 1; i++) {
+					while (currentWeek > value.week) {
 						completeStats.push(new emptyStats())
+						currentWeek = currentWeek - 1;
 					}
 					completeStats.push(value)
-					week = value.week
-					
+					currentWeek = currentWeek - 1
 				})
 				
 				response.data.statsDto = completeStats;
@@ -185,11 +187,10 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 				})
 
 				$scope.player = response.data
-			}, 
-			function(response) {
-				$scope.dataLoading = false;
-			}
-		)
+			} 
+		).finally(function() {
+			$scope.dataLoading = false;
+		}, null)
 	}
 	
 	loadData();

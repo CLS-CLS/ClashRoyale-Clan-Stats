@@ -16,17 +16,25 @@ public class Week {
     private int week;
     private LocalDate startDate;
     private LocalDate endDate;
-
-    public Week() {
-        this(LocalDate.now(ZoneIdConfiguration.zoneId()));
+    
+    public static Week now(){
+    	return new Week();
     }
-
-    public Week(int week) {
-        this.week = week;
+    
+    public static Week fromWeek(int week) {
+        return new Week(week);
     }
-
-    public Week(LocalDate date) {
-        this(toWeek(date));
+    
+    public static Week fromDate(LocalDate date) {
+    	return new Week(date);
+    }
+    
+    public Week previous(){
+    	return this.minusWeeks(1);
+    }
+    
+    public Week next() {
+    	return this.plusWeeks(1);
     }
 
     public Week plusWeeks(int weeks) {
@@ -36,7 +44,19 @@ public class Week {
     public Week minusWeeks(int weeks) {
         return new Week(week - weeks);
     }
+    
+    private Week() {
+        this(LocalDate.now(ZoneIdConfiguration.zoneId()));
+    }
+    
+    private Week(int week) {
+    	this.week = week;
+    }
+   
 
+    private Week(LocalDate date) {
+        this(toWeek(date));
+    }
 
     private static int toWeek(LocalDate date) {
         long days = ZERO_WEEK.until(date, ChronoUnit.DAYS);

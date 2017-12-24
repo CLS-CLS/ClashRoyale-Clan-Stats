@@ -1,8 +1,5 @@
 package org.lytsiware.clash.service.job;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
@@ -13,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Profile("statsRoyale")
@@ -35,7 +35,7 @@ public class StatsRoyaleFinalCallJobImpl implements Job {
 		try {
 			logger.info("Job Triggered at {}", LocalDateTime.now());
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
-			clanStatsService.updateOrInsertNewDonations(stats, new Week(), true);
+			clanStatsService.updateOrInsertNewDonations(stats, Week.now(), true);
 			//TODO weeklyJobRepository 
 		} catch (Exception e) {
 			logger.error("oops", e);

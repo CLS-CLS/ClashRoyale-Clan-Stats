@@ -1,8 +1,5 @@
 package org.lytsiware.clash.service.job;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
@@ -15,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Profile("statsRoyale")
@@ -37,7 +37,7 @@ public class StatsRoyaleWeekendJobImpl implements Job {
 		try {
 			logger.info("Job Triggered at {}", LocalDateTime.now());
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
-			clanStatsService.updateOrInsertNewDonations(stats, new Week(), true);
+			clanStatsService.updateOrInsertNewDonations(stats, Week.now(), true);
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;

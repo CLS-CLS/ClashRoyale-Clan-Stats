@@ -1,11 +1,10 @@
 package org.lytsiware.clash.dto;
 
+import org.lytsiware.clash.Week;
+import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 
 public class PlayerStatsDto {
 
@@ -55,14 +54,17 @@ public class PlayerStatsDto {
 		this.statsDto = statsDto;
 	}
 
-	public static PlayerStatsDto toPlayerStatsDto(Player player, List<PlayerWeeklyStats> playerStats) {
+	public static PlayerStatsDto toPlayerStatsDto(List<PlayerWeeklyStats> playerStats) {
 		List<StatsDto> statsDto = new ArrayList<>();
+		PlayerStatsDto playerStatsDto = null;
 		for (PlayerWeeklyStats pws :playerStats ) {
-			StatsDto stat = new StatsDto(pws.getWeek(), new Week(pws.getWeek()).getStartDate(), 
-					new Week(pws.getWeek()).getEndDate(), pws.getChestContribution(), pws.getCardDonation());
+			if (playerStatsDto == null) {
+				playerStatsDto = new PlayerStatsDto(pws.getPlayer().getName(), pws.getPlayer().getTag(), statsDto);
+			}
+			StatsDto stat = new StatsDto(pws.getWeek(), Week.fromWeek(pws.getWeek()).getStartDate(), 
+					Week.fromWeek(pws.getWeek()).getEndDate(), pws.getChestContribution(), pws.getCardDonation());
 			statsDto.add(stat);
 		}
-		PlayerStatsDto playerStatsDto = new PlayerStatsDto(player.getName(), player.getTag(), statsDto);
 		return playerStatsDto;
 	}
 

@@ -1,12 +1,6 @@
 package org.lytsiware.clash.controller;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
+import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
@@ -18,15 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/rest")
@@ -43,7 +36,7 @@ public class ClanStatsRestController {
 		String content = new String(file.getBytes(), Charset.forName("UTF-8"));
 		String[] lines = content.split("\r\n");
 		List<PlayerWeeklyStats> statsList = new ArrayList<>();
-		Week week = new Week().minusWeeks(1);
+		Week week = Week.now().previous();
 		for (int i = 2; i < lines.length; i++ ){
 			String[] stats = lines[i].split(",");
 			String tag = stats[0].trim();
@@ -71,10 +64,10 @@ public class ClanStatsRestController {
     public List<PlayerOverallStats> retrieveClanStats(@PathVariable(required = false) Integer deltaWeek) {
         logger.info("START retrieveClanStats - week {}", deltaWeek);
 
-        if (deltaWeek < 1 || deltaWeek > 12) {
+        if (deltaWeek < 1 || deltaWeek > Constants.MAX_PAST_WEEK) {
            deltaWeek = 1;
         }
-        Week week = new Week().minusWeeks(deltaWeek);
+        Week week = Week.now().minusWeeks(deltaWeek);
         return clanStatsService.retrieveClanStats(week);
 
     }
@@ -83,7 +76,7 @@ public class ClanStatsRestController {
     public PlayerStatsDto retrievePlayerStats(@PathVariable(required = true) String tag) {
     	logger.info("START retrievePlayerStats - tag {}", tag);
     	
-    	return clanStatsService.retrievePlayerStats(tag);
+    	return clanStatsService.retrievePlayerStats(tag, Week.now().minusWeeks(13), Week.now().minusWeeks(1) );
     }
     
     @GetMapping(value="/generateTemplate")
@@ -103,16 +96,22 @@ public class ClanStatsRestController {
     		deltaWeek = 0;
     	}
 
-    	Week week = new Week().minusWeeks(deltaWeek);
-    	return clanStatsService.findNewPlayersAtWeeks(week.minusWeeks(1), week);
+    	Week week = Week.now().minusWeeks(deltaWeek);
+    	return clanStatsService.findNewPlayersAtWeeks(week.previous(), week);
     }
+    
+    @GetMapping(value="/info/week")
+    public Integer getWeekNumber() {
+    	return Week.now().previous().getWeek();
+    }
+    
     
 //    @PostMapping(value="/newPlayers/update/{deltaWeek}")
     public List<PlayerOverallStats> keepOrDiscardNewPlayerStats(@PathVariable(required = false) Integer deltaWeek, @RequestBody List<NewPlayersUpdateDto> updateDto) {
     	if (deltaWeek == null) {
     		deltaWeek = 0;
     	}
-    	Week week = new Week().minusWeeks(deltaWeek);
+    	Week week = Week.now().minusWeeks(deltaWeek);
     	return clanStatsService.updateNewPlayers(week, updateDto);
     }
    

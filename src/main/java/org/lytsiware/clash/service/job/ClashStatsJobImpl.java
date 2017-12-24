@@ -1,9 +1,5 @@
 package org.lytsiware.clash.service.job;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
@@ -17,6 +13,10 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 @Profile("clashStats")
@@ -39,7 +39,7 @@ public class ClashStatsJobImpl implements Job, RunAtStartupJob {
 
 			clanStatsService.updateDatabaseWithLatest();
 
-			weeklyJobRepository.save(new WeeklyJob(new Week().minusWeeks(1).getWeek()));
+			weeklyJobRepository.save(new WeeklyJob(Week.now().previous().getWeek()));
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;
@@ -51,7 +51,7 @@ public class ClashStatsJobImpl implements Job, RunAtStartupJob {
 		logger.info("Checking if scheduler should run");
 		boolean result = false;
 
-		Week previousWeek = new Week(LocalDate.now()).minusWeeks(1);
+		Week previousWeek = Week.now().previous();
 
 		WeeklyJob latestRun = weeklyJobRepository.loadLatest();
 

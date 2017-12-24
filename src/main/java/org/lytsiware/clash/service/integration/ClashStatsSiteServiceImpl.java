@@ -1,8 +1,5 @@
 package org.lytsiware.clash.service.integration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -17,6 +14,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Profile("clashStats")
 public class ClashStatsSiteServiceImpl implements SiteIntegrationService {
@@ -24,7 +24,7 @@ public class ClashStatsSiteServiceImpl implements SiteIntegrationService {
 	Logger logger = LoggerFactory.getLogger(ClashStatsSiteServiceImpl.class);
 	
 	@Value("${clientDataUrl}")
-	Resource dataResource;
+	private Resource dataResource;
 
 	@Override
 	public List<PlayerWeeklyStats> retrieveData() {
@@ -44,7 +44,7 @@ public class ClashStatsSiteServiceImpl implements SiteIntegrationService {
 			int cardDonation = Integer.parseInt(cardDonationArray[cardDonationArray.length - 1]);
 			String role = el.select("div").get(2).text();
 			Player player = new Player(memberTag, memberName, role);
-			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, new Week().minusWeeks(1).getWeek(),
+			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, Week.now().previous().getWeek(),
 					chestContribution, cardDonation, 0 , 0);
 			playerWeeklyStats.add(stats);
 		}

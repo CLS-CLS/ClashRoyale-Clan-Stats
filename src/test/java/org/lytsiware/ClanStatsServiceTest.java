@@ -1,15 +1,5 @@
 package org.lytsiware;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
-
 import org.flywaydb.core.Flyway;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,6 +20,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = Application.class)
@@ -68,7 +67,7 @@ public class ClanStatsServiceTest {
 		PlayerWeeklyStats pws3 = new PlayerWeeklyStats(player, 3, null, 50, 20, 20);
 		PlayerWeeklyStats pws4 = new PlayerWeeklyStats(player, 4, 60, null, 0, 0);
 		pwsRepo.save(Arrays.asList(pws1, pws2, pws3, pws4));
-		List<PlayerWeeklyStats> results = clanStatsService.calculateAvgs(new Week(4));
+		List<PlayerWeeklyStats> results = clanStatsService.calculateAvgs(Week.fromWeek(4));
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(35, results.get(0).getAvgChestContribution(), 0.000001);
 		Assert.assertEquals(30, results.get(0).getAvgCardDonation(), 0.000001);
@@ -93,10 +92,10 @@ public class ClanStatsServiceTest {
 		PlayerWeeklyStats s4 = new PlayerWeeklyStats(anotherPlayer, 1, 0, 30, 10, 10);
 		pwsRepo.save(Arrays.asList(db1, db2, db3));
 
-		clanStatsService.updateOrInsertNewDonations(Arrays.asList(s1, s2, s3, s4), new Week(1), true);
+		clanStatsService.updateOrInsertNewDonations(Arrays.asList(s1, s2, s3, s4), Week.fromWeek(1), true);
 		
 		
-		Map<String, Integer> results = pwsRepo.findByWeek(new Week(1)).stream()
+		Map<String, Integer> results = pwsRepo.findByWeek(Week.fromWeek(1)).stream()
 				.collect(Collectors.toMap(s -> s.getPlayer().getTag(), PlayerWeeklyStats::getCardDonation));
 
 		Assert.assertEquals(10, (int) results.get("tag1"));
@@ -119,13 +118,13 @@ public class ClanStatsServiceTest {
 		Player splayer = new Player("tag1", "Chris1", "Elder");
 		PlayerWeeklyStats s1 = new PlayerWeeklyStats(splayer, 1, 0, 10, 10, 10);
 		
-		clanStatsService.updateOrInsertNewDonations(Arrays.asList(s1), new Week(2), true);
+		clanStatsService.updateOrInsertNewDonations(Arrays.asList(s1), Week.fromWeek(2), true);
 		
-		List<PlayerWeeklyStats> results = pwsRepo.findByWeek(new Week(2));
+		List<PlayerWeeklyStats> results = pwsRepo.findByWeek(Week.fromWeek(2));
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(2, (int)results.get(0).getWeek());
 		
-		results = pwsRepo.findByWeek(new Week(1));
+		results = pwsRepo.findByWeek(Week.fromWeek(1));
 		Assert.assertEquals(3, results.size());
 		
 		
@@ -146,9 +145,9 @@ public class ClanStatsServiceTest {
 		
 		pwsRepo.save(Arrays.asList(db1, db2));
 		
-		clanStatsService.updateChestContributions(Arrays.asList(s1, s2, s3), new Week(1));
+		clanStatsService.updateChestContributions(Arrays.asList(s1, s2, s3),  Week.fromWeek(1));
 		
-		Map<String, Integer> results = pwsRepo.findByWeek(new Week(1)).stream()
+		Map<String, Integer> results = pwsRepo.findByWeek(Week.fromWeek(1)).stream()
 				.collect(Utils.collectToMap(s -> s.getPlayer().getTag(), PlayerWeeklyStats::getChestContribution));
 		
 			
@@ -170,7 +169,7 @@ public class ClanStatsServiceTest {
 		
 		pwsRepo.save(Arrays.asList(p1w1, p1w2, p2w2, p3w2));
 		
-		List<PlayerOverallStats> newPlayers = clanStatsService.findNewPlayersAtWeeks(new Week(10), new Week(11));
+		List<PlayerOverallStats> newPlayers = clanStatsService.findNewPlayersAtWeeks(Week.fromWeek(10), Week.fromWeek(11));
 		
 		Assert.assertEquals(2, newPlayers.size());
 		

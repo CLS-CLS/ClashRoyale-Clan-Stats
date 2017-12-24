@@ -1,22 +1,5 @@
 package org.lytsiware.clash.domain.playerweeklystats;
 
-import static org.lytsiware.clash.utils.Utils.collectToMap;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.slf4j.Logger;
@@ -24,6 +7,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static org.lytsiware.clash.utils.Utils.collectToMap;
 
 @Repository
 @Transactional(value = TxType.REQUIRED)
@@ -46,6 +41,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 
 		Query nquery = em.createNamedQuery("findBetweenWeeks");
 		nquery.setParameter("startWeek", startWeek.getWeek()).setParameter("endWeek", endWeek.getWeek());
+		@SuppressWarnings("unchecked")
 		List<PlayerWeeklyStats> list = nquery.getResultList();
 		Map<Player, List<PlayerWeeklyStats>> result = new HashMap<>();
 		for (PlayerWeeklyStats stat : list) {
@@ -67,6 +63,7 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 
 		Query nquery = em.createNamedQuery("findByWeek");
 		nquery.setParameter("week", week.getWeek());
+		@SuppressWarnings("unchecked")
 		List<PlayerWeeklyStats> list = nquery.getResultList();
 		return list;
 	}

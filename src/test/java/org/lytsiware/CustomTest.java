@@ -1,8 +1,5 @@
 package org.lytsiware;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +47,7 @@ public class CustomTest {
 
 	@Test
 	public void schedulePostConstruct() {
-		weeklyJobRepo.save(new WeeklyJob(new Week().minusWeeks(2).getWeek()));
+		weeklyJobRepo.save(new WeeklyJob(Week.now().minusWeeks(2).getWeek()));
 		boolean shouldRun = clanStatJob.shouldRun();
 		Assert.assertTrue(shouldRun);
 		clanStatJob.run();

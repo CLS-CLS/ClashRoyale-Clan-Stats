@@ -1,7 +1,7 @@
 package org.lytsiware.clash.controller;
 
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsServiceImpl;
@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -53,23 +52,23 @@ public class AdminController {
 	}
 	
 
-	@RequestMapping("/recalculate-avg/{week}")
+	//@RequestMapping("/recalculate-avg/{week}")
 	public String recalculateAvgs(@PathVariable(value = "week") Integer week) {
 		if (week < 1) {
 			return "/index/";
 		}
-		clanStatService.recalculateAndSaveAvgs(new Week(week));
-		return "redirect:/" + (new Week().getWeek() - week);
+		clanStatService.recalculateAndSaveAvgs(Week.fromWeek(week));
+		return "redirect:/" + (Week.now().getWeek() - week);
 	}
 
 	//@RequestMapping("/updateDonations/{week}")
 	public String runSchedulerUpdateOrInsertDonations(@PathVariable(value = "week") Integer week) {
 		if (week == 0) {
-			week = new Week().getWeek();
+			week = Week.now().getWeek();
 		}
 		List<PlayerWeeklyStats> stats = siteService.retrieveData(true);
-		clanStatService.updateOrInsertNewDonations(stats, new Week(week), true);
-		return "/index/" + (new Week().getWeek() - week);
+		clanStatService.updateOrInsertNewDonations(stats, Week.fromWeek(week), true);
+		return "/index/" + (Week.now().getWeek() - week);
 	}
 
 }
