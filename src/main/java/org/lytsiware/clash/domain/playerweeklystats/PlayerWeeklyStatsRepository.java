@@ -23,7 +23,7 @@ public interface PlayerWeeklyStatsRepository {
 
 	List<PlayerWeeklyStats> updateDonations(List<PlayerWeeklyStats> donations, Week week, boolean onlyUpdateBiggerDonations);
 
-	List<PlayerWeeklyStats> updateChestContribution(List<PlayerWeeklyStats> chestContributions, Week week);
+	List<PlayerWeeklyStats> updateChestContribution(List<PlayerWeeklyStats> chestContributions, Week week, boolean updateBiggerOnly);
 
 
 }

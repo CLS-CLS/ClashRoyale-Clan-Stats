@@ -47,7 +47,7 @@ public class StatsRoyalChestContrJobImpl implements Job, RunAtStartupJob {
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
 			
 			Week week = Week.now().previous();
-			clanStatsService.updateChestContributions(stats, week);
+			clanStatsService.updateChestContributions(stats, week, true);
 			clanStatsService.recalculateAndSaveAvgs(week);
 			weeklyJobRepository.save(new WeeklyJob(Week.now().getWeek()));
 		} catch (Exception e) {

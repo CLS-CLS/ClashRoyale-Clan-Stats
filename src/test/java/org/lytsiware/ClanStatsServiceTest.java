@@ -30,34 +30,15 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = Application.class)
-@TestPropertySource(locations = "classpath:test.properties")
-@ActiveProfiles("statsRoyale")
-@Transactional
-public class ClanStatsServiceTest {
 
-	@PersistenceContext
-	EntityManager em;
-	
+@Transactional
+public class ClanStatsServiceTest extends AbstractSpringRunnerTest {
+
 	@Autowired
 	ClanStatsService clanStatsService;
 
 	@Autowired
 	PlayerWeeklyStatsRepository pwsRepo;
-
-	@Before
-	public void initDb() {
-		EntityManagerFactoryInfo info = (EntityManagerFactoryInfo) em.getEntityManagerFactory();
-		DataSource datasource = info.getDataSource();
-		Flyway flyway = new Flyway();
-		flyway.setDataSource(datasource);
-		flyway.clean();
-		flyway.migrate();
-		em.createNativeQuery("DELETE FROM PLAYER_WEEKLY_STATS").executeUpdate();
-		em.createNativeQuery("DELETE FROM PLAYER").executeUpdate();
-
-	}
 
 	@Test
 	public void calculateAvgsWithNull() {
@@ -145,7 +126,7 @@ public class ClanStatsServiceTest {
 		
 		pwsRepo.save(Arrays.asList(db1, db2));
 		
-		clanStatsService.updateChestContributions(Arrays.asList(s1, s2, s3),  Week.fromWeek(1));
+		clanStatsService.updateChestContributions(Arrays.asList(s1, s2, s3),  Week.fromWeek(1), false);
 		
 		Map<String, Integer> results = pwsRepo.findByWeek(Week.fromWeek(1)).stream()
 				.collect(Utils.collectToMap(s -> s.getPlayer().getTag(), PlayerWeeklyStats::getChestContribution));

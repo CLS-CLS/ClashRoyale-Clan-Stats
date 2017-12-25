@@ -140,9 +140,9 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
 	@Override
 	@Transactional(value = TxType.REQUIRED)
-	public void updateChestContributions(List<PlayerWeeklyStats> stats, Week week) {
+	public void updateChestContributions(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
 		stats.stream().forEach(s -> s.setWeek(week.getWeek()));
-		playerWeeklyStatsRepository.updateChestContribution(stats, week);
+		playerWeeklyStatsRepository.updateChestContribution(stats, week, updateBiggerOnly);
 	}
 
 	@Override

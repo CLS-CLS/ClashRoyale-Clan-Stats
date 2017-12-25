@@ -28,7 +28,7 @@ public interface ClanStatsService {
 
 	void updateOrInsertNewDonations(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly);
 
-	void updateChestContributions(List<PlayerWeeklyStats> stats, Week week);
+	void updateChestContributions(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly);
 	
 	/**
 	 * Finds the new players. A new player is a player that exists in compareWeek2 and does not exist in 

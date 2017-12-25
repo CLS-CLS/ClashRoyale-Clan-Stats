@@ -38,6 +38,7 @@ public class StatsRoyaleWeekendJobImpl implements Job {
 			logger.info("Job Triggered at {}", LocalDateTime.now());
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
 			clanStatsService.updateOrInsertNewDonations(stats, Week.now(), true);
+			clanStatsService.updateChestContributions(stats, Week.now(), true);
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;

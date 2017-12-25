@@ -24,13 +24,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = Application.class)
-@TestPropertySource(locations = "classpath:test.properties")
-public class ClanStatsControllerTest {
 
-    @PersistenceContext
-    EntityManager em;
+public class ClanStatsControllerTest extends  AbstractSpringRunnerTest{
+
+
 
 
     @Autowired
@@ -40,15 +37,7 @@ public class ClanStatsControllerTest {
     ClanStatsRestController clanStatRestController;
 
 
-    @Before
-    public void initDb() {
-        EntityManagerFactoryInfo info = (EntityManagerFactoryInfo) em.getEntityManagerFactory();
-        DataSource datasource = info.getDataSource();
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(datasource);
-        flyway.clean();
-        flyway.migrate();
-    }
+
 
 
     @Test
