@@ -3,6 +3,7 @@ package org.lytsiware.clash.service;
 import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
 import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
@@ -20,7 +21,11 @@ public interface ClanStatsService {
      */
     List<PlayerWeeklyStats> calculateAvgs(Week week);
 
-    void updateDatabaseWithLatest();
+    void calculateAndUpdateClanChestScore(Week week);
+
+	ClanWeeklyStatsDto getClanChestScore(Week week);
+
+	void updateDatabaseWithLatest();
 
     void recalculateAndSaveAvgs(Week week);
 
