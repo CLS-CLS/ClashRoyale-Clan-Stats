@@ -149,6 +149,10 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
                 .getFinalDeviation();
         System.out.println(score);
 
+        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)))
+                .getPlayerDeviationPercentage();
+        System.out.println(score);
+
     }
 
 

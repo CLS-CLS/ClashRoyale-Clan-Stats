@@ -86,6 +86,9 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     @Override
     public void calculateAndUpdateClanChestScore(Week week) {
         List<PlayerWeeklyStats> playerWeeklyStats = playerWeeklyStatsRepository.findByWeek(week);
+        if (playerWeeklyStats.size() == 0) {
+            return;
+        }
         CalculationContext context = clanChestScoreCalculationService.calculateChestScore(playerWeeklyStats);
 
         double score = context.get(CalculationContext.FINAL_DEVIATION, Double.class);
