@@ -2,7 +2,6 @@ package org.lytsiware.clash.service.job;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.ZoneIdConfiguration;
-import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
@@ -27,9 +26,6 @@ public class StatsRoyaleWeekendJobImpl implements Job {
 	
 	@Autowired
 	StatsRoyaleSiteServiceImpl siteIntegrationService; ;
-
-	@Autowired
-	WeekJobRepository weeklyJobRepository;
 
 	@Override
 	@Scheduled(cron = "0 59 7/4 ? * SUN,FRI,SAT", zone = ZoneIdConfiguration.zoneId)

@@ -11,8 +11,8 @@ import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
 import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
+import org.lytsiware.clash.service.calculation.CalculationContext;
 import org.lytsiware.clash.service.calculation.ClanChestScoreCalculationService;
-import org.lytsiware.clash.service.integration.SiteIntegrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +33,6 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
     @Autowired
     PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
-
-    @Autowired
-    SiteIntegrationService siteService;
 
     @Autowired
     ClanChestScoreCalculationService clanChestScoreCalculationService;
@@ -89,36 +86,39 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     @Override
     public void calculateAndUpdateClanChestScore(Week week) {
         List<PlayerWeeklyStats> playerWeeklyStats = playerWeeklyStatsRepository.findByWeek(week);
-        double score = clanChestScoreCalculationService.calculateChestScore(playerWeeklyStats);
+        CalculationContext context = clanChestScoreCalculationService.calculateChestScore(playerWeeklyStats);
+
+        double score = context.get(CalculationContext.FINAL_DEVIATION, Double.class);
+        double playerDeviationSoore = context.get(CalculationContext.PLAYER_DEVIATION_PERC, Double.class);
+        double crownScore = context.get(CalculationContext.CROWN_SCORE_PERC, Double.class);
+
         ClanWeeklyStats clanWeeklyStat = clanWeeklyStatRepository.findOne(week.getWeek());
         if (clanWeeklyStat == null) {
-            clanWeeklyStat = new org.lytsiware.clash.domain.clanweeklystats.ClanWeeklyStats();
+            clanWeeklyStat = new ClanWeeklyStats();
             clanWeeklyStat.setWeek(week.getWeek());
         }
         clanWeeklyStat.setClanChestScore(score);
+        clanWeeklyStat.setCrownScore(crownScore);
+        clanWeeklyStat.setPlayerDeviationScore(playerDeviationSoore);
         clanWeeklyStatRepository.save(clanWeeklyStat);
     }
 
     @Override
-    public ClanWeeklyStatsDto getClanChestScore(Week week) {
-        return ClanWeeklyStatsDto.from(clanWeeklyStatRepository.findOne(week.getWeek()));
+    public List<ClanWeeklyStatsDto> getClanChestScore(Week from, Week to) {
+        List<ClanWeeklyStats> clanStats = clanWeeklyStatRepository.findByWeekBetween(from.getWeek(), to.getWeek());
+        List<ClanWeeklyStatsDto> clanStatsDto = clanStats.stream().map(ClanWeeklyStatsDto::from).collect(Collectors.toList());
+        for (ClanWeeklyStatsDto clanWeeklyStatsDto : clanStatsDto) {
+            List<Integer> data = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(clanWeeklyStatsDto.getWeek())).stream()
+                    .map(PlayerWeeklyStats::getChestContribution)
+                    .filter(Objects::nonNull)
+                    .sorted()
+                    .collect(Collectors.toList());
+            clanWeeklyStatsDto.setData(data);
+        }
+        return clanStatsDto;
+
     }
 
-
-    @Override
-    @Caching(evict = {@CacheEvict(value = "playerStats", allEntries = true),
-            @CacheEvict(value = "weeklyStats", allEntries = true),})
-    public void updateDatabaseWithLatest() {
-        logger.info("updateDatabaseWithLatest");
-
-        List<PlayerWeeklyStats> newStats = siteService.retrieveData();
-
-        playerWeeklyStatsRepository.save(newStats);
-
-        List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(Week.now().previous());
-
-        playerWeeklyStatsRepository.save(playerWeeklyStats);
-    }
 
     @Override
     @Caching(evict = {@CacheEvict(value = "playerStats", allEntries = true),
@@ -211,7 +211,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     }
 
     @Override
-    public List<PlayerOverallStats> updateNewPlayers(Week week, List<NewPlayersUpdateDto> newPlayers) {
+    public List<PlayerOverallStats> resetStatsOfNewPlayers(Week week, List<NewPlayersUpdateDto> newPlayers) {
         // check that indeed these are new players
         Set<String> newPlayersTag = findNewPlayersAtWeeks(week.minusWeeks(1), week).stream()
                 .map(PlayerOverallStats::getTag).collect(Collectors.toSet());

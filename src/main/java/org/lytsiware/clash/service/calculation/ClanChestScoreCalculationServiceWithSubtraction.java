@@ -59,17 +59,17 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
 
 
     @Override
-    public double calculateChestScore(List<PlayerWeeklyStats> playerWeeklyStats) {
+    public SubractCalculationContext calculateChestScore(List<PlayerWeeklyStats> playerWeeklyStats) {
         SubractCalculationContext context = initContext(playerWeeklyStats);
         calculateCrownScore(context);
         calculateDeviation(context);
         calculateFinalDeviation(context);
-        return context.getFinalDeviation();
+        return context;
     }
 
     @Override
     public void calculateCrownScore(SubractCalculationContext context) {
-        context.set(SubractCalculationContext.CROWN_SCORE_PERC, (double)context.getCollectedCrowns() / 1600);
+        context.set(SubractCalculationContext.CROWN_SCORE_PERC, (double) context.getCollectedCrowns() / 1600);
 
     }
 
@@ -95,11 +95,7 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
 
     public static class SubractCalculationContext extends CalculationContext {
 
-        public static final String DATA = "data";
-        public static final String COLLECTED_CROWNS = "collectedCrowns";
-        public static final String PLAYER_DEVIATION_PERC = "playerDeviationPerc";
-        public static final String FINAL_DEVIATION = "finalDeviation";
-        public static final String CROWN_SCORE_PERC = "crownScorePercentage";
+
 
         public int getCollectedCrowns() {
             return get(COLLECTED_CROWNS, Integer.class);
@@ -122,8 +118,9 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
 
 
     public static void main(String[] args) {
-        Function<List<Integer>, List<PlayerWeeklyStats>> mapper = intList -> intList.stream().map(i -> new PlayerWeeklyStats(new Player("","",""), 0,
-                i,0,0,0 )).collect(Collectors.toList());
+        Function<List<Integer>, List<PlayerWeeklyStats>> mapper = intList -> intList.stream()
+                .map(i -> new PlayerWeeklyStats(new Player("", "", ""), 0, i, 0, 0, 0))
+                .collect(Collectors.toList());
 
         double score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScoreFromData(Arrays.asList(2, 2, 2, 1));
         System.out.println(score);
@@ -136,19 +133,20 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
         score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScoreFromData(Arrays.asList(400, 500, 300, 0));
         System.out.println(score);
 
-        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(2, 2, 2, 1)));
+        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(2, 2, 2, 1))).getFinalDeviation();
         System.out.println(score);
-        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(400, 400, 0, 0)));
+        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(400, 400, 0, 0))).getFinalDeviation();
         System.out.println(score);
-        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(800, 400, 0, 0)));
+        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(800, 400, 0, 0))).getFinalDeviation();
         System.out.println(score);
-        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(700, 500, 0, 0)));
+        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(700, 500, 0, 0))).getFinalDeviation();
         System.out.println(score);
-        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(400, 500, 300, 0)));
+        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(400, 500, 300, 0))).getFinalDeviation();
         System.out.println(score);
-        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(400, 500, 300, 400)));
+        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(400, 500, 300, 400))).getFinalDeviation();
         System.out.println(score);
-        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(350, 350, 150, 100, 100, 100, 50, 40, 40, 40, 30, 30, 30, 30, 20, 20, 20, 20, 10, 10, 8, 8, 8, 8, 5, 5, 3, 2, 1, 1, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
+        score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScore(mapper.apply(Arrays.asList(350, 350, 150, 100, 100, 100, 50, 40, 40, 40, 30, 30, 30, 30, 20, 20, 20, 20, 10, 10, 8, 8, 8, 8, 5, 5, 3, 2, 1, 1, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)))
+                .getFinalDeviation();
         System.out.println(score);
 
     }

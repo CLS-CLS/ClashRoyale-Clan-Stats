@@ -21,12 +21,12 @@ public class ClanChestScoreCalculationServiceWithDeviation implements ClanChestS
     public static final Logger logger = LoggerFactory.getLogger(ClanChestScoreCalculationServiceWithDeviation.class);
 
     @Override
-    public double calculateChestScore(List<PlayerWeeklyStats> playerWeeklyStats) {
+    public DeviationCalculationContext calculateChestScore(List<PlayerWeeklyStats> playerWeeklyStats) {
         DeviationCalculationContext context = initContext(playerWeeklyStats);
         calculateDeviation(context);
         calculateCrownScore(context);
         calculateFinalDeviation(context);
-        return context.getFinalDeviation();
+        return context;
     }
 
 
@@ -131,15 +131,10 @@ public class ClanChestScoreCalculationServiceWithDeviation implements ClanChestS
 
     public static class DeviationCalculationContext extends CalculationContext{
 
-        public static final String DATA = "data";
-        public static final String COLLECTED_CROWNS = "collectedCrowns";
         public static final String OPTIMAL_CHEST_CONTRIBUTIONS = "optimalChestContributions";
         public static final String PLAYERS_WITH_OPTIMAL = "playersWithOptimal";
         public static final String MAX_DEVIATION = "maxDeviation";
         public static final String PLAYER_DEVIATION = "playerDeviation";
-        public static final String PLAYER_DEVIATION_PERC = "playerDeviationPerc";
-        public static final String FINAL_DEVIATION = "finalDeviation";
-        public static final String CROWN_SCORE_PERC = "crownScorePercentage";
 
         public int getCollectedCrowns() {
             return get(COLLECTED_CROWNS, Integer.class);

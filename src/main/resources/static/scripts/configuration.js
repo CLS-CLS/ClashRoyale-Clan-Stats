@@ -6,7 +6,9 @@ app.config([ "$locationProvider", "$routeProvider",
 			controller: "uploadController"
 		}).when("/newplayers/:week?", {
 			templateUrl: "views/newPlayers.htm"
-		}).when("/player/:playerTag", {
+		}).when("/clan/score", {
+        	templateUrl: "views/chestCharts.htm"
+       	}).when("/player/:playerTag", {
 			templateUrl : "views/playerStats.htm",
 		}).when("/:week", {
 			templateUrl : "views/clanStats.htm"

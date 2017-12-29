@@ -11,6 +11,11 @@ public class ClanWeeklyStats {
 
     private double clanChestScore;
 
+    private Double crownScore;
+
+    private Double playerDeviationScore;
+
+
     public int getWeek() {
         return week;
     }
@@ -25,5 +30,20 @@ public class ClanWeeklyStats {
 
     public void setClanChestScore(double clanChestScore) {
         this.clanChestScore = clanChestScore;
+    }
+
+    public void setCrownScore(double crownScore) {
+        this.crownScore = crownScore;
+    }
+
+    public Double getCrownScore() {
+        return crownScore;
+    }
+
+    public void setPlayerDeviationScore(double playerDeviationScore) {
+        this.playerDeviationScore = playerDeviationScore;
+    }
+    public Double getPlayerDeviationScore() {
+       return playerDeviationScore;
     }
 }

@@ -5,6 +5,12 @@ import java.util.Map;
 
 public class CalculationContext {
 
+    public static final String DATA = "data";
+    public static final String COLLECTED_CROWNS = "collectedCrowns";
+    public static final String PLAYER_DEVIATION_PERC = "playerDeviationPerc";
+    public static final String FINAL_DEVIATION = "finalDeviation";
+    public static final String CROWN_SCORE_PERC = "crownScorePercentage";
+
     Map<String, Object> context = new HashMap<>();
 
     Map<String, Object> getContext() {

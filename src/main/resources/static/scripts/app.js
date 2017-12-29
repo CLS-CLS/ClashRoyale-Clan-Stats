@@ -60,7 +60,81 @@ app.controller("adminController" , function ($scope, colorfy, roleComparator) {
 	
 })
 
-app.controller("newPlayersController", function($scope, $http, $routeParams) { 
+app.controller("chestChartsController", function($scope, $http, $timeout) {
+    function loadData() {
+        $scope.loading = true;
+        $http.get(baseUrl + "/rest/clan/score").then(function(response) {
+            $scope.loading = false;
+            $scope.clanWeeklyStats = response.data;
+            $timeout(function() {
+                response.data.forEach(function(value, index){
+                    Highcharts.chart('chart'+ index, {
+                        title: {
+                            text: 'Player Crown Distributiuon'
+                        },
+                        subtitle: {
+                            text: 'Sunday: ' + value.endDate
+                        },
+
+                        yAxis: {
+                            title: {
+                                text: 'Crowns'
+                            }
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle'
+                        },
+
+                        plotOptions: {
+                            series: {
+                                label: {
+                                    connectorAllowed: false
+                                },
+                                pointStart: 0
+                            }
+                        },
+
+                        series: [{
+                            name: 'Week ' + value.endDate,
+                            data: value.data
+                        }],
+
+                        responsive: {
+                            rules: [{
+                                condition: {
+                                    maxWidth: 500
+                                },
+                                chartOptions: {
+                                    legend: {
+                                        layout: 'horizontal',
+                                        align: 'center',
+                                        verticalAlign: 'bottom'
+                                    }
+                                }
+                            }]
+                        }
+
+                    });
+
+                })
+            })
+
+
+        }, function(response) {
+            $scope.loading = false;
+            alert ("Error!! Please try again later")
+        })
+    }
+
+
+
+    loadData();
+});
+
+
+app.controller("newPlayersController", function($scope, $http, $routeParams) {
 	
 	$scope.submitDisabled = function(){
 		return !($routeParams.week == null || $routeParams.week == 0)  

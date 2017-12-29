@@ -4,6 +4,7 @@ import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
 import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
@@ -104,6 +105,11 @@ public class ClanStatsRestController {
     public Integer getWeekNumber() {
     	return Week.now().previous().getWeek();
     }
+
+    @GetMapping(value="/clan/score")
+	public List<ClanWeeklyStatsDto> getClanChestScore() {
+    	return clanStatsService.getClanChestScore(Week.now().minusWeeks(5), Week.now().previous());
+	}
     
     
 //    @PostMapping(value="/newPlayers/update/{deltaWeek}")
@@ -112,7 +118,7 @@ public class ClanStatsRestController {
     		deltaWeek = 0;
     	}
     	Week week = Week.now().minusWeeks(deltaWeek);
-    	return clanStatsService.updateNewPlayers(week, updateDto);
+    	return clanStatsService.resetStatsOfNewPlayers(week, updateDto);
     }
    
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public interface ClanChestScoreCalculationService<T extends CalculationContext> {
 
 
-    double calculateChestScore(List<PlayerWeeklyStats> playerWeeklyStats);
+    T calculateChestScore(List<PlayerWeeklyStats> playerWeeklyStats);
 
     void calculateCrownScore(T context);
 

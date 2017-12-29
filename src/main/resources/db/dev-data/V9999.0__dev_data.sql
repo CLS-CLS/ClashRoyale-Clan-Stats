@@ -1,3 +1,7 @@
+INSERT INTO CLAN_WEEKLY_STATS (week, clan_chest_score, crown_score, player_deviation_score) VALUES (49, 0.3,1,0.3);
+INSERT INTO CLAN_WEEKLY_STATS (week, clan_chest_score, crown_score, player_deviation_score) VALUES (48, 0.2,0.3,0.8);
+
+
 INSERT INTO player (tag,name,role) VALUES ('20RLV09G0','ERRIKOS ULTRAS','Member');
 INSERT INTO player (tag,name,role) VALUES ('20VQP2Y0Y','panayiotis','Member');
 INSERT INTO player (tag,name,role) VALUES ('222LLPCL9','thanosGr','Elder');

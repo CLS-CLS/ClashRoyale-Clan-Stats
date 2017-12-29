@@ -31,7 +31,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/jumbotron.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -44,6 +44,9 @@
     <script src="scripts/configuration.js"></script>
     <script src="scripts/directive.js"></script>
     <script src="lib/bootstrap-toggle/angular-bootstrap-toggle.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 
 </head>
@@ -67,6 +70,7 @@
 				<ul class="nav navbar-nav">
 					<li><a href="#"><h3><i class='fa fa-fw fa-home'></i></h3></a></li>
 					<li><a href="/upload"><h3> Upload</h3></a></li>
+					<li><a href="/clan/score"><h3><i class='fa fa-fw fa-line-chart'></i></h3></a></li>
 				</ul>
 			</div>
 		</nav>
