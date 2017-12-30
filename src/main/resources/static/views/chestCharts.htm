@@ -1,15 +1,56 @@
 <div ng-cloak>
     <div ng-controller="chestChartsController">
 
+        <div class="modal fade" id="columnSelectModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">WT f.a.q is that?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p/>
+                        Το <b>chest score</b> κυμαινεται απο 0 - 100% και ειναι ενας δεικτης του κατα ποσο ολοι συνεισφερουν στο clan chest.
+                        Το 100% γινεται οταν ο καθε παιχτης προσφερει ακριβως 32 crowns (Οταν ειναι 50 παιχτες, εαν ειναι λιγοτεροι πχ. 40 παιχτες
+                        τοτε χρειαζονται 40 crowns απο καθε εναν) <p/>To σκορ εξαρταται απο 2 παραγοντες.
+                        <p/>Ο ενας ειναι o <b>crown score</b> που εξαρταται απο τον συνολικο αριθμος των crowns που μαζευτηκαν : Κυμαινεται απο 0% (τα crowns ειναι 0) μεχρι
+                        100% (τα crowns ειναι 1600).
+                        <p/>Ο αλλος παραγοντας ειναι o <b>player deviation</b> και εξαρταται απο τη διαφορα αναμεσα στα crowns που προσφερουν οι παιχτες. Εαν υπαρχει μεγαλη διαφορα τοτε
+                        το σκορ ειναι μικρο. Εαν ολοι οι παιχτες προσφερουν ακριβως τα ιδια τοτε το σκορ ειναι 100%.
+                        <p/>
+                        Το τελικο σκορ ειναι ο πολλαπλασιασμος των επιμερους σκορ!
+                        <p/>
+                        Πχ... εαν στους 50 παιχτες ο ενας κανει 1600 crowns και ολοι οι υπολοιποι απο 0 τοτε το σκορ θα ειναι 2%.
+                        Eαν οι ολοι οι παιχτες δωσουν 20 crowns τοτε το τελικο σκορ θα ειναι 100%  (απο το player deviation) * 62.5% (απο τα crowns που μαζευτηκαν) = 65%
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <div class="col-xs-12">
             <div class="row">
-                <div class="col-xs-12"><h3><b> Progress of chan chest score over the last weeks</b></h3></div>
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <div class="col-xs-9"><label><h3><b> Progress of chan chest score over the last weeks</b></h3></label></div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn dropdown-toggle" data-toggle="modal" data-target="#columnSelectModal"
+                                    style="color:blue;float:right; border-radius: 60px; background:transparent">
+                                <i class='fa fa-fw fa-2x fa-question-circle-o'></i>
+                            </button>
+                            <!--<button type="button" style="float:right" class="btn btn-primary"><i class='fa fa-fw fa-2x fa-question-circle-o'></i></button>-->
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="row">
                 <div id="progress_chart" class="col-xs-12"> HighChart here!</div>
             </div>
         </div>
-        <div class="col-lg-6" ng-repeat="clanStats in clanWeeklyStats">
+        <div class="col-lg-6 col-sm-12" ng-repeat="clanStats in clanWeeklyStats">
             <div class="row">
                 <div class="col-xs-12"><h3> Graph for Week: {{clanStats.week}} - Sunday {{clanStats.endDate[2]}}/{{clanStats.endDate[1]}}/{{clanStats.endDate[2]}}</h3></div>
             </div>

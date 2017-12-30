@@ -31,7 +31,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/jumbotron.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" rel="stylesheet">
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -71,7 +71,7 @@
 				<ul class="nav navbar-nav">
 					<li><a href="#"><h3><i class='fa fa-fw fa-home'></i></h3></a></li>
 					<li><a href="/upload"><h3> Upload</h3></a></li>
-					<li><a href="/clan/score"><h3><i class='fa fa-fw fa-line-chart'></i></h3></a></li>
+					<li><a href="/clan/score"><h3><i class='fa fa-fw fa-line-chart'><sup style="color:red; text-shadow: 0px 0px 9px yellow">new</sup></i></h3></a></li>
 				</ul>
 			</div>
 		</nav>
