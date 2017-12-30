@@ -108,7 +108,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
     @Override
     public List<ClanWeeklyStatsDto> getClanChestScore(Week from, Week to) {
-        List<ClanWeeklyStats> clanStats = clanWeeklyStatRepository.findByWeekBetween(from.getWeek(), to.getWeek());
+        List<ClanWeeklyStats> clanStats = clanWeeklyStatRepository.findByWeekBetweenOrderByWeekAsc(from.getWeek(), to.getWeek());
         List<ClanWeeklyStatsDto> clanStatsDto = clanStats.stream().map(ClanWeeklyStatsDto::from).collect(Collectors.toList());
         for (ClanWeeklyStatsDto clanWeeklyStatsDto : clanStatsDto) {
             List<Integer> data = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(clanWeeklyStatsDto.getWeek())).stream()

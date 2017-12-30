@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface ClanWeeklyStatRepository extends JpaRepository<ClanWeeklyStats, Integer> {
 
-    List<ClanWeeklyStats> findByWeekBetween(int from, int to);
+    List<ClanWeeklyStats> findByWeekBetweenOrderByWeekAsc(int from, int to);
 
 }
