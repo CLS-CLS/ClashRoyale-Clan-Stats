@@ -108,7 +108,7 @@ public class ClanStatsRestController {
 
     @GetMapping(value="/clan/score")
 	public List<ClanWeeklyStatsDto> getClanChestScore() {
-    	return clanStatsService.getClanChestScore(Week.now().minusWeeks(5), Week.now().previous());
+    	return clanStatsService.getClanChestScore(Week.now().minusWeeks(13), Week.now().previous());
 	}
     
     

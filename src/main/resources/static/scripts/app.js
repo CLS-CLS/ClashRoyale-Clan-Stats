@@ -62,62 +62,26 @@ app.controller("adminController" , function ($scope, colorfy, roleComparator) {
 
 app.controller("chestChartsController", function($scope, $http, $timeout) {
     function loadData() {
-        $scope.loading = true;
+        $scope.loading = false;
         $http.get(baseUrl + "/rest/clan/score").then(function(response) {
             $scope.loading = false;
             $scope.clanWeeklyStats = response.data;
+            var score = [];
+            var crowns=[];
+            var deviations=[];
+            var weeks= [];
+
+            response.data.forEach(function(value){
+                score.push(value.clanChestScore)
+                crowns.push(value.crownScore)
+                deviations.push(value.playerDeviationScore)
+                weeks.push(value.endDate[2] + "/" + value.endDate[1] + "/" +  value.endDate[0])
+            })
+
             $timeout(function() {
+                scoreProgressChart(score, deviations, crowns, weeks)
                 response.data.forEach(function(value, index){
-                    Highcharts.chart('chart'+ index, {
-                        title: {
-                            text: 'Player Crown Distributiuon'
-                        },
-                        subtitle: {
-                            text: 'Sunday: ' + value.endDate
-                        },
-
-                        yAxis: {
-                            title: {
-                                text: 'Crowns'
-                            }
-                        },
-                        legend: {
-                            layout: 'vertical',
-                            align: 'right',
-                            verticalAlign: 'middle'
-                        },
-
-                        plotOptions: {
-                            series: {
-                                label: {
-                                    connectorAllowed: false
-                                },
-                                pointStart: 0
-                            }
-                        },
-
-                        series: [{
-                            name: 'Week ' + value.endDate,
-                            data: value.data
-                        }],
-
-                        responsive: {
-                            rules: [{
-                                condition: {
-                                    maxWidth: 500
-                                },
-                                chartOptions: {
-                                    legend: {
-                                        layout: 'horizontal',
-                                        align: 'center',
-                                        verticalAlign: 'bottom'
-                                    }
-                                }
-                            }]
-                        }
-
-                    });
-
+                    crownChart(value, index)
                 })
             })
 

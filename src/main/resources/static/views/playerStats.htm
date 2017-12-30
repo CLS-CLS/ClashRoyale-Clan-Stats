@@ -2,8 +2,8 @@
 	<div style="position:relative" ng-controller="playerStatsController">
 		
 		<button class="btn btnl-lg btn-primary"  ng-disabled="!hasBack()" data-ng-click="back()"><span><i class="fa fa-fw fa-2x fa-arrow-left"></i> </span></button>
-		
-		<div class="loading" ng-show="dataLoading"><i class="fa fa-spinner fa-spin fa-5x"></i></div>
+
+		<loading-directive loading="dataLoading"/>
 		<div class="text-center">
 			<div>
 			<h1 style="font-family: 'Comic Sans MS', cursive, sans-serif;color:rgb(35, 82, 124)">{{player.name}}</h1>
