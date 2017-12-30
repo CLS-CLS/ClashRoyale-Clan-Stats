@@ -62,7 +62,7 @@ app.controller("adminController" , function ($scope, colorfy, roleComparator) {
 
 app.controller("chestChartsController", function($scope, $http, $timeout) {
     function loadData() {
-        $scope.loading = false;
+        $scope.loading = true;
         $http.get(baseUrl + "/rest/clan/score").then(function(response) {
             $scope.loading = false;
             $scope.clanWeeklyStats = response.data;
