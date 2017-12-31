@@ -24,7 +24,7 @@ function crownChart(value, index) {
             text: 'Player Crown Distribution'
         },
         subtitle: {
-            text: 'Sunday: ' + value.endDate[2] +'/' +value.endDate[2] +'/' +value.endDate[0]
+            text: 'Sunday: ' + value.endDate[2] +'/' +value.endDate[1] +'/' +value.endDate[0]
         },
 
         yAxis: {
