@@ -7,10 +7,7 @@ import org.lytsiware.clash.domain.clanweeklystats.ClanWeeklyStats;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
-import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
-import org.lytsiware.clash.dto.NewPlayersUpdateDto;
-import org.lytsiware.clash.dto.PlayerOverallStats;
-import org.lytsiware.clash.dto.PlayerStatsDto;
+import org.lytsiware.clash.dto.*;
 import org.lytsiware.clash.service.calculation.CalculationContext;
 import org.lytsiware.clash.service.calculation.ClanChestScoreCalculationService;
 import org.slf4j.Logger;
@@ -198,7 +195,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     }
 
     @Override
-    public List<PlayerOverallStats> findNewPlayersAtWeeks(Week oldestWeek, Week newestWeek) {
+    public NewPlayersDto findNewPlayersAtWeeks(Week oldestWeek, Week newestWeek) {
         List<PlayerWeeklyStats> newestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(newestWeek);
         List<Player> oldestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(oldestWeek).stream()
                 .map(PlayerWeeklyStats::getPlayer).collect(Collectors.toList());
@@ -210,13 +207,14 @@ public class ClanStatsServiceImpl implements ClanStatsService {
         List<PlayerOverallStats> overallStatsDto = newPlayerStats.stream().map(PlayerOverallStats::new)
                 .collect(Collectors.toList());
         logger.debug("found new players: {}", overallStatsDto);
-        return overallStatsDto;
+
+        return new NewPlayersDto(oldestWeek.getEndDate(), newestWeek.getEndDate(), overallStatsDto );
     }
 
     @Override
     public List<PlayerOverallStats> resetStatsOfNewPlayers(Week week, List<NewPlayersUpdateDto> newPlayers) {
         // check that indeed these are new players
-        Set<String> newPlayersTag = findNewPlayersAtWeeks(week.minusWeeks(1), week).stream()
+        Set<String> newPlayersTag = findNewPlayersAtWeeks(week.minusWeeks(1), week).getNewPlayers().stream()
                 .map(PlayerOverallStats::getTag).collect(Collectors.toSet());
         Set<String> toUpdate = newPlayers.stream().map(NewPlayersUpdateDto::getTag).collect(Collectors.toSet());
 

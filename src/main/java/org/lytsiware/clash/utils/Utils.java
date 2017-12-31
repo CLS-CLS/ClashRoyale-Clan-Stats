@@ -38,4 +38,12 @@ public class Utils {
 		return bd.doubleValue();
 	}
 
+    public static Integer parseNullableInt(String integer){
+        try {
+            return Integer.parseInt(integer);
+        } catch (Exception ex){
+            return null;
+        }
+    }
+
 }

@@ -126,7 +126,7 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 				
 			$scope.stats = response.data;
 			
-			$scope.stats.forEach(function(value, index) {
+			$scope.stats.newPlayers.forEach(function(value, index) {
 				value.chestToggleValue = true;
 				value.cardToggleValue = true;
 			})

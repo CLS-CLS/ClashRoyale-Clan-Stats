@@ -28,6 +28,6 @@ public class NewPlayersUpdateDto implements Serializable {
 	public void setDeleteCard(Boolean deleteCard) {
 		this.deleteCard = deleteCard;
 	}
-	
+
 
 }

@@ -3,10 +3,7 @@ package org.lytsiware.clash.service;
 import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
-import org.lytsiware.clash.dto.NewPlayersUpdateDto;
-import org.lytsiware.clash.dto.PlayerOverallStats;
-import org.lytsiware.clash.dto.PlayerStatsDto;
+import org.lytsiware.clash.dto.*;
 
 import java.util.List;
 
@@ -54,7 +51,7 @@ public interface ClanStatsService {
 	 * Finds the new players. A new player is a player that exists in compareWeek2 and does not exist in 
 	 * compareWeek1
 	 */
-	public List<PlayerOverallStats> findNewPlayersAtWeeks(Week compareWeek1, Week compareWeek2);
+	NewPlayersDto findNewPlayersAtWeeks(Week compareWeek1, Week compareWeek2);
 
 	/**
 	 * Resets the stats of the new players. The stats to be reset is either the chest contribution or card donation or both

@@ -3,6 +3,8 @@
         <div ng-controller="newPlayersController">
             <div style="position:relative">
             	<h3> New Members </h3>
+				<h4> between the two weeks : {{stats.oldWeek[2]}}/{{stats.oldWeek[1]}}/{{stats.oldWeek[0]}} and
+					{{stats.newWeek[2]}}/{{stats.newWeek[1]}}/{{stats.newWeek[0]}} </h4>
             	<hr/>
             	<loading-directive loading="loading"/>
             	<div>
@@ -17,7 +19,7 @@
 		                </thead>
 		                <tbody>
 		                
-		                <tr ng-if="stats.length > 0 " ng-repeat="s in stats">
+		                <tr ng-if="stats.newPlayers.length > 0 " ng-repeat="s in stats.newPlayers">
 		                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}">{{s.name}}</a></td>
 		                    <td>{{s.role}}</td>
 		                    <td>{{s.chestContribution }}</td>
@@ -35,7 +37,7 @@
 		                    	></toggle>
 		                    </td>
 		                </tr>
-		                <tr ng-if="stats.length == 0"><td colspan="12"> <h2>No new players</h2></td></tr>
+		                <tr ng-if="stats.newPlayers.length == 0"><td colspan="12"> <h2>No new players</h2></td></tr>
 		                </tbody>
 		            </table>
 	            </div>

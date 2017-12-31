@@ -1,11 +1,7 @@
 package org.lytsiware;
 
-import org.flywaydb.core.Flyway;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.lytsiware.clash.Application;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
@@ -14,16 +10,8 @@ import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.EntityManagerFactoryInfo;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +138,8 @@ public class ClanStatsServiceTest extends AbstractSpringRunnerTest {
 		
 		pwsRepo.save(Arrays.asList(p1w1, p1w2, p2w2, p3w2));
 		
-		List<PlayerOverallStats> newPlayers = clanStatsService.findNewPlayersAtWeeks(Week.fromWeek(10), Week.fromWeek(11));
+		List<PlayerOverallStats> newPlayers = clanStatsService.findNewPlayersAtWeeks(Week.fromWeek(10), Week.fromWeek(11))
+				.getNewPlayers();
 		
 		Assert.assertEquals(2, newPlayers.size());
 		
