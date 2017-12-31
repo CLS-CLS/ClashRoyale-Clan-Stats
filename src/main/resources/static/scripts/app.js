@@ -1,3 +1,8 @@
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+
 var minWeek = 1;
 var maxWeek = 12;
 
@@ -71,11 +76,15 @@ app.controller("chestChartsController", function($scope, $http, $timeout) {
             var deviations=[];
             var weeks= [];
 
+            //we want to produce newsest to latest graphs
+            response.data.reverse();
+
             response.data.forEach(function(value){
-                score.push(value.clanChestScore)
-                crowns.push(value.crownScore)
-                deviations.push(value.playerDeviationScore)
-                weeks.push(value.endDate[2] + "/" + value.endDate[1] + "/" +  value.endDate[0])
+                //unshift to produce oldest to newest progress graph
+                score.unshift(value.clanChestScore * 100)
+                crowns.unshift(value.crownScore * 100)
+                deviations.unshift(value.playerDeviationScore * 100 )
+                weeks.unshift(value.endDate[2] + "/" + value.endDate[1] + "/" +  value.endDate[0])
             })
 
             $timeout(function() {

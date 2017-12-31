@@ -1,3 +1,23 @@
+
+(function(){
+    Highcharts.setOptions({
+    chart: {
+        backgroundColor: {
+           linearGradient: {
+               x1: 0,
+               y1: 0,
+               x2: 1,
+               y2: 1
+           },
+           stops: [
+               [0, '#323d4c'],
+               [1, '#2e3948']
+           ]
+       }
+    }
+  })
+})()
+
 function crownChart(value, index) {
     Highcharts.chart('chart'+ index, {
         title: {
@@ -88,11 +108,13 @@ function scoreProgressChart(score, deviations, crowns, weeks) {
         },
         {
             name: 'Crown score',
-            data: crowns
+            data: crowns,
+            visible: false
         },
         {
             name: "Player's Crowns Deviation",
-            data: deviations
+            data: deviations,
+            visible: false
         }],
 
         responsive: {

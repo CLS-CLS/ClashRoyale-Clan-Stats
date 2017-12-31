@@ -2,12 +2,14 @@ package org.lytsiware.clash.dto;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.clanweeklystats.ClanWeeklyStats;
+import org.lytsiware.clash.utils.Utils;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class ClanWeeklyStatsDto {
 
+    public static final int DECIMALS = 4;
     private int week;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -24,9 +26,9 @@ public class ClanWeeklyStatsDto {
         this.week = week.getWeek();
         this.startDate = week.getStartDate();
         this.endDate = week.getEndDate();
-        this.clanChestScore = clanChestScore;
-        this.crownScore = crownScore;
-        this.playerDeviationScore = playerDeviationScore;
+        this.clanChestScore = Utils.round(clanChestScore, DECIMALS);
+        this.crownScore = Utils.round(crownScore, DECIMALS);
+        this.playerDeviationScore = Utils.round(playerDeviationScore, DECIMALS);
     }
 
     public static ClanWeeklyStatsDto from(ClanWeeklyStats clanWeeklyStats) {
@@ -50,7 +52,7 @@ public class ClanWeeklyStatsDto {
 
     public void setClanChestScore(double clanChestScore) {
 
-        this.clanChestScore = clanChestScore;
+        this.clanChestScore = Utils.round(clanChestScore, DECIMALS);
     }
 
     public double getCrownScore() {
@@ -58,7 +60,7 @@ public class ClanWeeklyStatsDto {
     }
 
     public void setCrownScore(double crownScore) {
-        this.crownScore = crownScore;
+        this.crownScore = Utils.round(crownScore, DECIMALS);
     }
 
     public double getPlayerDeviationScore() {
@@ -66,7 +68,7 @@ public class ClanWeeklyStatsDto {
     }
 
     public void setPlayerDeviationScore(double playerDeviationScore) {
-        this.playerDeviationScore = playerDeviationScore;
+        this.playerDeviationScore = Utils.round(playerDeviationScore, DECIMALS);
     }
 
     public List<Integer> getData() {
