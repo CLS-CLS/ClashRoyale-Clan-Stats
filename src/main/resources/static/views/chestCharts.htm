@@ -38,7 +38,7 @@
                             <div class="col-xs-9"><label><h3><b> Progress of chan chest score over the last weeks</b></h3></label></div>
                             <div class="col-xs-3">
                                 <button type="button" class="btn dropdown-toggle" data-toggle="modal" data-target="#columnSelectModal"
-                                        style="color:blue;float:right; border-radius: 60px; background:transparent">
+                                        style="color:blue;float:right; border-radius: 60px; background:transparent; margin:auto">
                                     <i class='fa fa-fw fa-2x fa-question-circle-o'></i>
                                 </button>
                                 <!--<button type="button" style="float:right" class="btn btn-primary"><i class='fa fa-fw fa-2x fa-question-circle-o'></i></button>-->
@@ -52,7 +52,7 @@
             </div>
             <div class="col-lg-6 col-sm-12" ng-repeat="clanStats in clanWeeklyStats">
                 <div class="row">
-                    <div class="col-xs-12"><h3> Graph for Week: {{clanStats.week}} - Sunday {{clanStats.endDate[2]}}/{{clanStats.endDate[1]}}/{{clanStats.endDate[2]}}</h3></div>
+                    <div class="col-xs-12"><h3> Graph for Week: {{clanStats.week}} - Sunday {{clanStats.endDate[2]}}/{{clanStats.endDate[1]}}/{{clanStats.endDate[0]}}</h3></div>
                 </div>
                 <div class="row">
                     <form class="form-horizontal">
