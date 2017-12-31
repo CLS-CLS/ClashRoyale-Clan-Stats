@@ -37,7 +37,6 @@ public class StatsRoyaleFinalCallJobImpl implements Job {
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
 			clanStatsService.updateOrInsertNewDonations(stats, Week.now(), true);
 			clanStatsService.updateChestContributions(stats, Week.now(), true);
-			//TODO weeklyJobRepository 
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;
