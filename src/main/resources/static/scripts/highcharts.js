@@ -47,7 +47,7 @@ function crownChart(value, index) {
         },
 
         series: [{
-            name: 'Week ' + value.endDate[2] +'/' +value.endDate[1] +'/' +value.endDate[0]
+            name: 'Week ' + value.endDate[2] +'/' +value.endDate[1] +'/' +value.endDate[0],
             data: value.data
         }],
 
