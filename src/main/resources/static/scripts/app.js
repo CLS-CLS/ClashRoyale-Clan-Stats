@@ -138,7 +138,7 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 	$scope.submit = function() {
 		$scope.loading = true;
 		var request = [];
-		$scope.stats.forEach(function(value, index) {
+		$scope.stats.newPlayers.forEach(function(value, index) {
 			if (!value.chestToggleValue || !value.cardToggleValue) {
 				request.push({
 					tag: value.tag,
