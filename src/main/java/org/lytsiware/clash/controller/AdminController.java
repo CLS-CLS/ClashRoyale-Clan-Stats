@@ -52,7 +52,7 @@ public class AdminController {
 	}
 	
 
-	@RequestMapping("/recalculate-avg/{week}")
+	//@RequestMapping("/recalculate-avg/{week}")
 	public String recalculateAvgs(@PathVariable(value = "week") Integer week) {
 		if (week < 1) {
 			return "/index/";

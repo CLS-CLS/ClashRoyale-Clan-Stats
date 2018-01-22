@@ -1,8 +1,8 @@
 app.service("colorfy", function() {
 	this.colorfy = function(number, type) {
-		var boundaryChest = 20;
-		var boundaryCard = 150;
-		var wowChest = 100;
+		var boundaryChest = 15;
+		var boundaryCard = 200;
+		var wowChest = 60;
 		var wowCard = 600;
 
 		var boundary = 0;
