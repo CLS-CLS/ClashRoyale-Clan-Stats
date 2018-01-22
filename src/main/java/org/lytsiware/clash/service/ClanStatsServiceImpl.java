@@ -52,7 +52,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
         List<PlayerWeeklyStats> updatedWeeklyStats = new ArrayList<>();
 
-        Week fromWeek = toThisWeek.minusWeeks(Constants.MAX_PAST_WEEK);
+        Week fromWeek = toThisWeek.minusWeeks(Constants.AVG_WEEKS);
 
         // finds all player stats between the provided weeks
         Map<Player, List<PlayerWeeklyStats>> allPlayerStats = playerWeeklyStatsRepository.findByWeek(fromWeek,

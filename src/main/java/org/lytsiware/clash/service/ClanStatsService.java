@@ -11,7 +11,7 @@ public interface ClanStatsService {
     List<PlayerOverallStats> retrieveClanStats(Week week);
 
     /**
-     * Calculates the averages of the past {@link Constants#MAX_PAST_WEEK} weeks (the provided week included
+     * Calculates the averages of the past {@link Constants#AVG_WEEKS weeks (the provided week included
      * as one of these weeks)
      * @param week
      * @return

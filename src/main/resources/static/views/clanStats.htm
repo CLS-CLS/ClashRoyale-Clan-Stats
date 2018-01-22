@@ -138,7 +138,7 @@
 			                    <th ng-show="state.selectableColumns['overallRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Overall Ranking
 			                        <order-directive bind-to="overallRank" filter-by="state.filter"/></span>
 			                    </th>
-			                    <th ng-show="averageColSpan!=0" colspan="{{averageColSpan}}"> Average Stats (of the last 12 weeks) </th>
+			                    <th ng-show="averageColSpan!=0" colspan="{{averageColSpan}}"> Average Stats (of the last 6 weeks) </th>
 			                </tr>
 			                <tr>
 			                    <th ng-show="state.selectableColumns['avgCc'].show"><span ng-click=triggerOrderDirective($event)>Chest Contribution

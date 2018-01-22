@@ -1,5 +1,6 @@
 package org.lytsiware.clash.controller;
 
+import org.apache.tomcat.util.bcel.Const;
 import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
@@ -42,7 +43,7 @@ public class ClanStatsRestController {
     public PlayerStatsDto retrievePlayerStats(@PathVariable(required = true) String tag) {
     	logger.info("START retrievePlayerStats - tag {}", tag);
     	
-    	return clanStatsService.retrievePlayerStats(tag, Week.now().minusWeeks(13), Week.now().minusWeeks(1) );
+    	return clanStatsService.retrievePlayerStats(tag, Week.now().minusWeeks(Constants.MAX_PAST_WEEK + 1), Week.now().minusWeeks(1));
     }
     
     @GetMapping(value="/generateTemplate")
@@ -73,7 +74,7 @@ public class ClanStatsRestController {
 
     @GetMapping(value="/clan/score")
 	public List<ClanWeeklyStatsDto> getClanChestScore() {
-    	return clanStatsService.getClanChestScore(Week.now().minusWeeks(13), Week.now().previous());
+    	return clanStatsService.getClanChestScore(Week.now().minusWeeks(Constants.MAX_PAST_WEEK + 1), Week.now().previous());
 	}
     
     
