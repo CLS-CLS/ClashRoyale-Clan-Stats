@@ -52,24 +52,25 @@
 		<hr />
 		
 		<div class="row">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th><span>Week #</span></th>
-						<th><span>Chest Contribution</span></th>
-						<th><span>Card Donation</span></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="s in player.statsDto">
-						<td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{$index
-							+ 1}}</td>
-						<td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution
-							}}</td>
-						<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="col-md-4">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th><span>Week #</span></th>
+							<th><span>Chest Contribution</span></th>
+							<th><span>Card Donation</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="s in player.statsDto">
+							<td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{$index + 1}}</td>
+							<td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution}}</td>
+							<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+            <div class="col-md-8" id="player_chart"></div>
 		</div>
 	</div>
 </div>

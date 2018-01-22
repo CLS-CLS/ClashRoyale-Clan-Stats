@@ -69,6 +69,73 @@ function crownChart(value, index) {
     });
 }
 
+function playerProgressChart(data) {
+
+    var chestContribution = [];
+    var cardDonation = [];
+
+    data.forEach(function(value, index) {
+        chestContribution.unshift(value.chestContribution)
+        cardDonation.unshift(value.cardDonation);
+    })
+
+
+    Highcharts.chart('player_chart', {
+        title: {
+            text: 'Player Progress'
+        },
+        yAxis: [{
+            title: {
+                text: 'Crowns'
+            }
+        },
+        {
+            title: {
+                text: 'Donation Points'
+            },
+            opposite: true
+        }],
+        xAxis: {
+            title: {
+                text: 'Week'
+            }
+        },
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart: 0
+            }
+        },
+        series: [{
+            name: 'CC Crowns',
+            data: chestContribution,
+            yAxis: 0
+        },
+        {
+            name: 'Donation Points',
+            data: cardDonation,
+            yAxis: 1
+        }],
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+
+    });
+}
+
 function scoreProgressChart(score, deviations, crowns, weeks) {
 
     Highcharts.chart('progress_chart', {
@@ -87,7 +154,6 @@ function scoreProgressChart(score, deviations, crowns, weeks) {
             categories: weeks
 
         },
-
         plotOptions: {
             series: {
                 label: {
@@ -101,7 +167,6 @@ function scoreProgressChart(score, deviations, crowns, weeks) {
             align: 'right',
             verticalAlign: 'middle'
         },
-
         series: [{
             name: 'Total Score',
             data: score
@@ -131,6 +196,5 @@ function scoreProgressChart(score, deviations, crowns, weeks) {
                 }
             }]
         }
-
     });
 }
