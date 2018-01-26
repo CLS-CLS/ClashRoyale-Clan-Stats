@@ -7,7 +7,7 @@ app.directive("loadingDirective", function() {
 	}
 })
 
-app.directive("orderDirective", ["numberComparator", function(numberComparator) {
+app.directive("orderDirective", ["generalComparator", function(generalComparator) {
 	return {
 		template : "<i class='order fa fa-fw fa-sort'></i>",
 		replace : true,
@@ -50,7 +50,7 @@ app.directive("orderDirective", ["numberComparator", function(numberComparator) 
 				applyClass()
 				scope.$apply(function() {
 					if (scope.comparator == null) {
-						scope.comparator = numberComparator;
+						scope.comparator = generalComparator;
 					}
 					scope.filterBy.comparator = scope.comparator;
 					scope.filterBy.orderBy = (state == states.up ? scope.bindTo: "-" + scope.bindTo);
