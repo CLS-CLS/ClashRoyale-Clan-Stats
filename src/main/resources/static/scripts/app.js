@@ -6,6 +6,10 @@ function round(value, decimals) {
 var minWeek = 1;
 var maxWeek = 12;
 
+function baseUrl() {
+    return window.location.protocol + "//"+ window.location.host
+}
+
 var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute', 'ui.toggle' ])
 //hack because sometimes we want the $location not to reload the view https://github.com/angular/angular.js/issues/1699
 .run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
@@ -13,7 +17,7 @@ var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute', 'ui.toggle' ])
     $location.path = function (path, reload) {
         if (reload === false) {
         	 if (typeof (history.pushState) != "undefined") {
-                 var obj = { Page: path, Url: baseUrl + path };
+                 var obj = { Page: path, Url: baseUrl() + path };
                  history.pushState(obj, obj.Page, obj.Url);
              } 
         }else {
@@ -26,7 +30,7 @@ var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute', 'ui.toggle' ])
 
 app.controller("uploadController", function($scope, $http){
 	$scope.downloadTemplate = function() {
-		$http.get(baseUrl + "/rest/generateTemplate")
+		$http.get(baseUrl() + "/rest/generateTemplate")
 	}
 })
 
@@ -68,7 +72,7 @@ app.controller("adminController" , function ($scope, colorfy, roleComparator) {
 app.controller("chestChartsController", function($scope, $http, $timeout) {
     function loadData() {
         $scope.loading = true;
-        $http.get(baseUrl + "/rest/clan/score").then(function(response) {
+        $http.get(baseUrl() + "/rest/clan/score").then(function(response) {
             $scope.loading = false;
             $scope.clanWeeklyStats = response.data;
             var score = [];
@@ -121,7 +125,7 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 			$routeParams.week = 0;
 		}
 		
-		$http.get(baseUrl + "/rest/newPlayers/" + $routeParams.week).then(function(response) {
+		$http.get(baseUrl() + "/rest/newPlayers/" + $routeParams.week).then(function(response) {
 			$scope.loading = false;
 				
 			$scope.stats = response.data;
@@ -148,7 +152,7 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 			}
 		})
 		console.log(request);
-		$http.post(baseUrl+"/rest/newPlayers/update/"+ $routeParams.week, request).then(function(response){
+		$http.post(baseUrl()+"/rest/newPlayers/update/"+ $routeParams.week, request).then(function(response){
 			loadData($routeParams.week);
 		}, function (response) {
 			$scope.loading = false;
@@ -195,9 +199,9 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
             }
         };
 		
-		$http.get(baseUrl + "/rest/info/week").then(function(response){
+		$http.get(baseUrl() + "/rest/info/week").then(function(response){
 			currentWeek = response.data;
-			return $http.get(baseUrl + "/rest/player/" + $routeParams.playerTag)
+			return $http.get(baseUrl() + "/rest/player/" + $routeParams.playerTag)
 		}).then(
 			function(response) {
 				var maxChestContribution = 0;
@@ -406,7 +410,7 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 	function getData(week) {
 		$scope.loading = true;
 		
-		$http.get(baseUrl + "/rest/" + week).then(function(response) {
+		$http.get(baseUrl() + "/rest/" + week).then(function(response) {
 			$scope.loading = false;
 			
 			if ($scope.stats == null) {

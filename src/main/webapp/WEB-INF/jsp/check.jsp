@@ -1,9 +1,9 @@
 <html lang="en">
 <head>
 	<base href="/">
-			
+
 	<script type="text/javascript">
-		var baseUrl = "${baseUrl}";
+		//var baseUrl = "${baseUrl}";
 		var clanStats =${stats};
 	</script>
 
