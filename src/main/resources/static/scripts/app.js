@@ -357,8 +357,14 @@ app.controller("weeksDropdownController", function($scope, $http, $timeout, $fil
 
 	$scope.$watch('selectedItem', function(newValue, oldValue) {
 		$location.path("/" + newValue, false)
-		getData(newValue);
+
 	})
+
+    function init() {
+        getData($scope.selectedItem);
+    }
+
+    init();
 
 	$scope.triggerOrderDirective = function(event) {
 		$timeout(function() {
