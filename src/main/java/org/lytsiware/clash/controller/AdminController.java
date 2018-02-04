@@ -7,7 +7,6 @@ import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +19,6 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-	@Value("${base.url}")
-	String baseUrl;
 
 	@Autowired
 	ClanStatsServiceImpl clanStatService;
@@ -31,12 +28,8 @@ public class AdminController {
 
 	//@RequestMapping("/check")
 	public String checkParsing(@RequestParam("refresh") Boolean refresh,  Model model) throws JsonProcessingException {
-		//TODO create check page
-		//TODO add security
-		//TODO create session to allow to import these stats now
 		refresh = (refresh != null? refresh : false);
 		List<PlayerWeeklyStats> clanStats = siteService.retrieveData(refresh);
-		model.addAttribute("baseUrl" , baseUrl);
 		ObjectMapper objectMapper = new ObjectMapper();
 		String clanstatsAsJson = objectMapper.writeValueAsString(clanStats);
 		model.addAttribute("stats", clanstatsAsJson);
