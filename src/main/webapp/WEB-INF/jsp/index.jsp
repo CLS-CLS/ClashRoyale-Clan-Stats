@@ -10,10 +10,7 @@
 
 	  gtag('config', 'UA-106574321-1');
 	</script>
-	
-	<script type="text/javascript">
-		var baseUrl = "${baseUrl}";
-	</script>
+
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
