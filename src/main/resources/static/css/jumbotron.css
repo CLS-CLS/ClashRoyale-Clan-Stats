@@ -10,7 +10,7 @@
 .rules {
     background-size: cover;
     background-repeat: no-repeat;
-    background-image: url(../images/rules_bg.png);
+    background-image: url(../images/rules_low-min.png);
     background-color: rgba(0,0,0,0);
     min-height: 768px;
     font-family: 'Comic Sans MS', 'cursive', 'sans-serif';

@@ -278,7 +278,7 @@ app.factory('clanStatsState',  function(roleComparator) {
 
 });
 
-app.controller("weeksDropdownController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history, clanStatsState) {
+app.controller("clanStatsController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history, clanStatsState) {
 	
 	$scope.selectedItem = (function() {
 		var week =  $routeParams.week -1 + 1;
