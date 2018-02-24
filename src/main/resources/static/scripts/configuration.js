@@ -10,7 +10,9 @@ app.config([ "$locationProvider", "$routeProvider",
         	templateUrl: "views/chestCharts.htm"
        	}).when("/player/:playerTag", {
 			templateUrl : "views/playerStats.htm",
-		}).when("/:week", {
+		}).when("/clanrules", {
+            templateUrl : "views/clanRules.htm"
+        }).when("/:week", {
 			templateUrl : "views/clanStats.htm"
 		}).otherwise("/1")
 

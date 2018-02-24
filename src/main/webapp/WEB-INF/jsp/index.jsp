@@ -69,7 +69,8 @@
 				<ul class="nav navbar-nav">
 					<li><a href="#"><h3><i class='fa fa-fw fa-home'></i></h3></a></li>
 					<li><a href="/upload"><h3> Upload</h3></a></li>
-					<li><a href="/clan/score"><h3><i class='fa fa-fw fa-line-chart'><sup style="color:red; text-shadow: 0px 0px 9px yellow">new</sup></i></h3></a></li>
+					<li><a href="/clan/score"><h3><i class='fa fa-fw fa-line-chart'></i></h3></a></li>
+					<li><a href="/clanrules"><h3>Clan Rules<sup style="color:red; text-shadow: 0px 0px 9px yellow">new</sup></h3></a></li>
 				</ul>
 			</div>
 		</nav>

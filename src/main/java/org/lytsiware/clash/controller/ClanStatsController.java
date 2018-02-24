@@ -31,6 +31,12 @@ public class ClanStatsController {
         return "/index";
     }
 
+    @GetMapping("/clanrules")
+    public String clanRules(){
+        logger.info("clan rules");
+        return "/index";
+    }
+
     @GetMapping("/")
     public String initialPage(Model model) {
         logger.info("main page request");

@@ -7,6 +7,15 @@
   display: none !important;
 }
 
+.rules {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url(../images/rules_bg.png);
+    background-color: rgba(0,0,0,0);
+    min-height: 768px;
+    font-family: 'Comic Sans MS', 'cursive', 'sans-serif';
+}
+
 .main-navbar {
 	background:rgba(0, 0, 0, 0) url("../images/random_grey_variations2.png") repeat scroll 0% 0%;
     border-bottom: solid #4d4451 2px !important;
