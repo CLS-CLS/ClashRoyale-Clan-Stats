@@ -163,7 +163,7 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 	loadData();
 })
 
-app.controller("playerStatsController", function($scope, $http, $routeParams, colorfy, history) {
+app.controller("playerStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
 
 	$scope.player;
 	
@@ -238,6 +238,10 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, co
 				})
 
 				$scope.player = response.data
+
+				$timeout(function() {
+                    playerProgressChart($scope.player.statsDto)
+                })
 			} 
 		).finally(function() {
 			$scope.dataLoading = false;

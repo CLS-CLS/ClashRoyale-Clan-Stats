@@ -62,16 +62,19 @@ app.factory('history', ["$location", function($location) {
 
 
 
-app.factory("numberComparator", [ function() {
-	return function(number1, number2) {
-		if (number1.value == undefined || number1.value == null
-				|| number1.value == "null") {
+app.factory("generalComparator", [ function() {
+	return function(object1, object2) {
+		if (object1.value == undefined || object1.value == null
+				|| object1.value == "null") {
 			return -1;
-		} else if (number2.value == undefined || number2.value == null
-				|| number2.value == "null") {
+		} else if (object2.value == undefined || object2.value == null
+				|| object2.value == "null") {
 			return 1
 		} else {
-			return (number1.value > number2.value ? 1 : -1);
+		    if (object1.type == "string") {
+		        return object1.value.toLowerCase().localeCompare(object2.value.toLowerCase());
+		    }
+			return (object1.value > object2.value ? 1 : -1);
 		}
 		return 1;
 	}
