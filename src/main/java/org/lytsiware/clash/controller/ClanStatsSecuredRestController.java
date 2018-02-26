@@ -33,7 +33,7 @@ public class ClanStatsSecuredRestController {
         clanStatsService.calculateAndUpdateClanChestScore(Week.now().minusWeeks(deltaWeek));
     }
 
-   @PostMapping(value="/newPlayers/update/{deltaWeek}")
+//   @PostMapping(value="/newPlayers/update/{deltaWeek}")
     public List<PlayerOverallStats> keepOrDiscardNewPlayerStats(@PathVariable(required = false) Integer deltaWeek, @RequestBody List<NewPlayersUpdateDto> updateDto) {
         if (deltaWeek == null) {
             deltaWeek = 0;
