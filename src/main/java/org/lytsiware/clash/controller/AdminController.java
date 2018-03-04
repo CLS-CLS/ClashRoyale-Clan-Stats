@@ -60,7 +60,7 @@ public class AdminController {
 			week = Week.now().getWeek();
 		}
 		List<PlayerWeeklyStats> stats = siteService.retrieveData(true);
-		clanStatService.updateOrInsertNewDonations(stats, Week.fromWeek(week), true);
+		clanStatService.updateOrInsertNewDonationsAndRole(stats, Week.fromWeek(week), true);
 		return "/index/" + (Week.now().getWeek() - week);
 	}
 

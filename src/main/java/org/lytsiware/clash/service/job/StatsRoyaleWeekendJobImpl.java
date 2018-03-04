@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @Profile("statsRoyale")
-public class StatsRoyaleWeekendJobImpl implements Job {
+public class StatsRoyaleWeekendJobImpl {
 
 	private Logger logger = LoggerFactory.getLogger(StatsRoyaleWeekendJobImpl.class);
 
@@ -27,14 +27,17 @@ public class StatsRoyaleWeekendJobImpl implements Job {
 	@Autowired
 	StatsRoyaleSiteServiceImpl siteIntegrationService; ;
 
-	@Override
+	/**
+	 * Important !! Make sure the first run is after the clan chest has started or else the previous chest's score will
+     * be persisted and it will only be updated if the new score is bigger than the previous' week score!
+	 */
 	@Scheduled(cron = "0 59 7/4 ? * SUN,FRI,SAT", zone = ZoneIdConfiguration.zoneId)
+	@ScheduledName("weekendRunner")
 	public void run() {
 		try {
 			logger.info("Job Triggered at {}", LocalDateTime.now());
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
-			clanStatsService.updateOrInsertNewDonations(stats, Week.now(), true);
-			clanStatsService.updateChestContributions(stats, Week.now(), true);
+			clanStatsService.updateOrInsertDonationAndContributions(stats, Week.now(), true);
 		} catch (Exception e) {
 			logger.error("oops", e);
 			throw e;

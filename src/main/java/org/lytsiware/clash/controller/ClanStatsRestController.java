@@ -31,8 +31,8 @@ public class ClanStatsRestController {
     public List<PlayerOverallStats> retrieveClanStats(@PathVariable(required = false) Integer deltaWeek) {
         logger.info("START retrieveClanStats - week {}", deltaWeek);
 
-        if (deltaWeek < 1 || deltaWeek > Constants.MAX_PAST_WEEK) {
-           deltaWeek = 1;
+        if (deltaWeek < Constants.MIN_PAST_WEEK || deltaWeek > Constants.MAX_PAST_WEEK) {
+           deltaWeek = Constants.DEFAULT_DELTA_WEEK;
         }
         Week week = Week.now().minusWeeks(deltaWeek);
         return clanStatsService.retrieveClanStats(week);

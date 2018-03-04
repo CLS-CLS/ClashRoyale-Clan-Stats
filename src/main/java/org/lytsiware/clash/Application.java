@@ -33,11 +33,7 @@ public class Application {
     	
     	@Override
     	public void addInterceptors(InterceptorRegistry registry) {
-    		registry.addInterceptor(baseUrlInterceptor);
+//    	    registry.addInterceptor(baseUrlInterceptor);
     	}
-    	
     }
-    
-
-
 }

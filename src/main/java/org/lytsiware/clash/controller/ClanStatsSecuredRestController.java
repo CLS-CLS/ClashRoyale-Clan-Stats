@@ -64,6 +64,6 @@ public class ClanStatsSecuredRestController {
             statsList.add(pws);
         }
 
-        clanStatsService.updateOrInsertNewDonations(statsList, week, true);
+        clanStatsService.updateOrInsertNewDonationsAndRole(statsList, week, true);
     }
 }

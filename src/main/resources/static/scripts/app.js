@@ -2,13 +2,15 @@ function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
 
-
-var minWeek = 1;
-var maxWeek = 12;
-
 function baseUrl() {
     return window.location.protocol + "//"+ window.location.host
 }
+
+
+var minWeek = 0;
+var defaultWeek = 1;
+var maxWeek = 12;
+
 
 var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute', 'ui.toggle' ])
 //hack because sometimes we want the $location not to reload the view https://github.com/angular/angular.js/issues/1699
@@ -105,8 +107,6 @@ app.controller("chestChartsController", function($scope, $http, $timeout) {
         })
     }
 
-
-
     loadData();
 });
 
@@ -166,23 +166,23 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 app.controller("playerStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
 
 	$scope.player;
-	
+
 	$scope.colorfy = colorfy.colorfy
-	
+
 	$scope.maxChestContribution
-	
+
 	$scope.maxCardDonation
-	
+
 	$scope.maxChestContributionWeek
-	
+
 	$scope.maxCardDontationWeek
-	
+
 	$scope.dataLoading = true;
-	
+
 	$scope.back = function() {
 		history.back()
 	}
-	
+
 	$scope.hasBack = function() {
 		return history.hasBack();
 	}
@@ -286,10 +286,10 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 	
 	$scope.selectedItem = (function() {
 		var week =  $routeParams.week -1 + 1;
-		if (week >= maxWeek) {
+		if (week > maxWeek) {
 			return  maxWeek;
-		}else if (week <= minWeek) {
-			return  minWeek;
+		}else if (week < minWeek) {
+			return defaultWeek;
 		}else  {
 			return week;
 		}
@@ -298,7 +298,15 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 	$scope.next = function () {
 		history.store();
 	}
-	
+
+	$scope.availableWeeks = (function(){
+        var array = [];
+        for (var i = minWeek; i <= maxWeek; i++) {
+           array.push(i);
+        }
+        return array;
+    })()
+
 	$scope.state = clanStatsState;
 	
 	$scope.bulkSelect = function() {

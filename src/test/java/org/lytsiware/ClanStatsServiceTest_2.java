@@ -6,27 +6,28 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
+import org.lytsiware.clash.service.ClanStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.Assert.*;
 
-public class PlayerWeeklyStatsRepositoryTest extends AbstractSpringRunnerTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-    @PersistenceContext
-    EntityManager em;
+public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
 
     @Autowired
-    PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
+    private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
 
-    @Override
-    protected void createData() {
+    @Autowired
+    private ClanStatsService clanStatsService;
+
+    @Before
+    public void createData() {
         try {
             EntityManagerFactoryInfo info = (EntityManagerFactoryInfo) em.getEntityManagerFactory();
             DataSource datasource = info.getDataSource();
@@ -48,6 +49,45 @@ public class PlayerWeeklyStatsRepositoryTest extends AbstractSpringRunnerTest {
 
 
     @Test
+    public void updateOrInsertDonationAndContributionsWithBiggerTrue() {
+        Player p0 = new Player("0", "1", "irrelevant");
+        Player p1 = new Player("1", "1", "irrelevant");
+        Player p2 = new Player("2", "1", "irrelevant");
+        Player p3 = new Player("3", "1", "irrelevant");
+
+        List<PlayerWeeklyStats> donations = Arrays.asList(
+                new PlayerWeeklyStats(p0, 30, 90, 190,0,0),
+                new PlayerWeeklyStats(p1, 30, 10, 200,0,0),
+                new PlayerWeeklyStats(p2, 30, 123, 230,0,0),
+                new PlayerWeeklyStats(p3, 30, 123, 230,0,0)
+        );
+
+        clanStatsService.updateOrInsertDonationAndContributions(donations, Week.fromWeek(30), true);
+
+
+        List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
+
+        assertEquals(4, pwsAll.size());
+
+        PlayerWeeklyStats pws = playerWeeklyStatsRepository.findByWeeksAndTag("0", Week.fromWeek(30), Week.fromWeek(30)).get(0);
+        assertEquals(200, (int)pws.getCardDonation());
+        assertEquals(100, (int)pws.getChestContribution());
+
+        pws = playerWeeklyStatsRepository.findByWeeksAndTag("1", Week.fromWeek(30), Week.fromWeek(30)).get(0);
+        assertEquals(200, (int)pws.getCardDonation());
+        assertEquals(10, (int)pws.getChestContribution());
+
+        pws = playerWeeklyStatsRepository.findByWeeksAndTag("2", Week.fromWeek(30), Week.fromWeek(30)).get(0);
+        assertEquals(230, (int)pws.getCardDonation());
+        assertEquals(123, (int)pws.getChestContribution());
+
+        pws = playerWeeklyStatsRepository.findByWeeksAndTag("3", Week.fromWeek(30), Week.fromWeek(30)).get(0);
+        assertEquals(230, (int)pws.getCardDonation());
+        assertEquals(123, (int)pws.getChestContribution());
+    }
+
+
+    @Test
     public void updateDonationsWithBiggerTrue() {
         Player p0 = new Player("0", "1", "irrelevant");
         Player p1 = new Player("1", "1", "irrelevant");
@@ -61,11 +101,12 @@ public class PlayerWeeklyStatsRepositoryTest extends AbstractSpringRunnerTest {
                 new PlayerWeeklyStats(p3, 30, 0, 230,0,0)
         );
 
-        playerWeeklyStatsRepository.updateDonations(donations, Week.fromWeek(30), true);
+        clanStatsService.updateOrInsertNewDonationsAndRole(donations, Week.fromWeek(30), true);
+
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
 
-        assertEquals(3, pwsAll.size());
+        assertEquals(4, pwsAll.size());
 
         PlayerWeeklyStats pws = playerWeeklyStatsRepository.findByWeeksAndTag("0", Week.fromWeek(30), Week.fromWeek(30)).get(0);
         assertEquals(200, (int)pws.getCardDonation());
@@ -95,11 +136,11 @@ public class PlayerWeeklyStatsRepositoryTest extends AbstractSpringRunnerTest {
                 new PlayerWeeklyStats(p3, 30, 0, 230,0,0)
         );
 
-        playerWeeklyStatsRepository.updateDonations(donations, Week.fromWeek(30), false);
+        clanStatsService.updateOrInsertNewDonationsAndRole(donations, Week.fromWeek(30), false);
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
 
-        assertEquals(3, pwsAll.size());
+        assertEquals(4, pwsAll.size());
 
         PlayerWeeklyStats pws = playerWeeklyStatsRepository.findByWeeksAndTag("0", Week.fromWeek(30), Week.fromWeek(30)).get(0);
         assertNull(pws.getCardDonation());
@@ -130,7 +171,7 @@ public class PlayerWeeklyStatsRepositoryTest extends AbstractSpringRunnerTest {
                 new PlayerWeeklyStats(p3, 30, 130, 0,0,0)
         );
 
-        playerWeeklyStatsRepository.updateChestContribution(donations, Week.fromWeek(30), true);
+        clanStatsService.updateChestContibutionAndRole(donations, Week.fromWeek(30), true);
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
 
@@ -164,7 +205,7 @@ public class PlayerWeeklyStatsRepositoryTest extends AbstractSpringRunnerTest {
                 new PlayerWeeklyStats(p3, 30, 3, 230,0,0)
         );
 
-        playerWeeklyStatsRepository.updateChestContribution(donations, Week.fromWeek(30), false);
+        clanStatsService.updateChestContibutionAndRole(donations, Week.fromWeek(30), false);
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
 

@@ -1,11 +1,7 @@
 package org.lytsiware;
 
-import org.flywaydb.core.Flyway;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.lytsiware.clash.Application;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.controller.ClanStatsRestController;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
@@ -13,19 +9,14 @@ import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.PlayerStatsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
 
-public class ClanStatsControllerTest extends  AbstractSpringRunnerTest{
+public class ClanStatsControllerTest extends AbstractSpringBootTest {
 
 
 

@@ -11,9 +11,9 @@ public class CalculationContext {
     public static final String FINAL_DEVIATION = "finalDeviation";
     public static final String CROWN_SCORE_PERC = "crownScorePercentage";
 
-    Map<String, Object> context = new HashMap<>();
+    private Map<String, Object> context = new HashMap<>();
 
-    Map<String, Object> getContext() {
+    private Map<String, Object> getContext() {
         return context;
     }
 

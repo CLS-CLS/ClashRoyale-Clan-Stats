@@ -1,15 +1,14 @@
 package org.lytsiware.clash.domain.playerweeklystats;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 
+import java.util.List;
+import java.util.Map;
+
 public interface PlayerWeeklyStatsRepository {
     
-    Map<Player, List<PlayerWeeklyStats>> findByWeek(Week startWeek, Week endWeek);
+    Map<Player, List<PlayerWeeklyStats>> findBetweenWeeks(Week startWeek, Week endWeek);
     
     List<PlayerWeeklyStats> findByWeeksAndTag(String tag, Week startWeek, Week endWeek);
     
@@ -17,13 +16,6 @@ public interface PlayerWeeklyStatsRepository {
     
     void save(PlayerWeeklyStats playerWeeklyStats);
 
-    void save(List<PlayerWeeklyStats> playerWeeklyStats);
-    
-    List<PlayerWeeklyStats> saveOrUpdate(Collection<PlayerWeeklyStats> playerWeeklyStats, Week week);
-
-	List<PlayerWeeklyStats> updateDonations(List<PlayerWeeklyStats> donations, Week week, boolean onlyUpdateBiggerDonations);
-
-	List<PlayerWeeklyStats> updateChestContribution(List<PlayerWeeklyStats> chestContributions, Week week, boolean updateBiggerOnly);
-
+    void saveOrUpdateAll(List<PlayerWeeklyStats> playerWeeklyStats);
 
 }

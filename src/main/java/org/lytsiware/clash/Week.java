@@ -16,25 +16,25 @@ public class Week {
     private int week;
     private LocalDate startDate;
     private LocalDate endDate;
-    
-    public static Week now(){
-    	return new Week();
+
+    public static Week now() {
+        return new Week();
     }
-    
+
     public static Week fromWeek(int week) {
         return new Week(week);
     }
-    
+
     public static Week fromDate(LocalDate date) {
-    	return new Week(date);
+        return new Week(date);
     }
-    
-    public Week previous(){
-    	return this.minusWeeks(1);
+
+    public Week previous() {
+        return this.minusWeeks(1);
     }
-    
+
     public Week next() {
-    	return this.plusWeeks(1);
+        return this.plusWeeks(1);
     }
 
     public Week plusWeeks(int weeks) {
@@ -44,15 +44,15 @@ public class Week {
     public Week minusWeeks(int weeks) {
         return new Week(week - weeks);
     }
-    
+
     private Week() {
         this(LocalDate.now(ZoneIdConfiguration.zoneId()));
     }
-    
+
     private Week(int week) {
-    	this.week = week;
+        this.week = week;
     }
-   
+
 
     private Week(LocalDate date) {
         this(toWeek(date));
@@ -65,8 +65,7 @@ public class Week {
 
 
     private static LocalDate toDate(int week) {
-        LocalDate finalDate = ZERO_WEEK.plus(week * 7, ChronoUnit.DAYS);
-        return finalDate;
+        return ZERO_WEEK.plus(week * 7, ChronoUnit.DAYS);
     }
 
 
@@ -102,27 +101,16 @@ public class Week {
         return sb.toString();
     }
 
-	@Override
-	public int hashCode() {
-		return week;
-	}
+    @Override
+    public int hashCode() {
+        return week;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Week other = (Week) obj;
-		if (week != other.week)
-			return false;
-		return true;
-	}
-    
-    
-
-    
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        return week != ((Week) obj).week;
+    }
 }

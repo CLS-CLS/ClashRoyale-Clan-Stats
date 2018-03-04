@@ -40,10 +40,8 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     @Override
     public List<PlayerOverallStats> retrieveClanStats(Week week) {
         logger.info("retrieveClanStats  week: {}", week);
-        List<PlayerWeeklyStats> weeklyStats = playerWeeklyStatsRepository.findByWeek(week);
-        List<PlayerOverallStats> stats = new ArrayList<>();
-        weeklyStats.stream().forEach(p -> stats.add(new PlayerOverallStats(p)));
-        return stats;
+        return playerWeeklyStatsRepository.findByWeek(week).stream().map(PlayerOverallStats::new).collect(Collectors.toList());
+
     }
 
     @Override
@@ -55,7 +53,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
         Week fromWeek = toThisWeek.minusWeeks(Constants.AVG_WEEKS);
 
         // finds all player stats between the provided weeks
-        Map<Player, List<PlayerWeeklyStats>> allPlayerStats = playerWeeklyStatsRepository.findByWeek(fromWeek,
+        Map<Player, List<PlayerWeeklyStats>> allPlayerStats = playerWeeklyStatsRepository.findBetweenWeeks(fromWeek,
                 toThisWeek);
 
         // finds the players that are currently in the clan
@@ -125,7 +123,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
             @CacheEvict(value = "weeklyStats", allEntries = true),})
     public void recalculateAndSaveAvgs(Week week) {
         List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(week);
-        playerWeeklyStatsRepository.save(playerWeeklyStats);
+        playerWeeklyStatsRepository.saveOrUpdateAll(playerWeeklyStats);
     }
 
     @Override
@@ -136,35 +134,89 @@ public class ClanStatsServiceImpl implements ClanStatsService {
         return PlayerStatsDto.toPlayerStatsDto(stats);
     }
 
-    @Override
     @Transactional(value = TxType.REQUIRED)
-    public void updateOrInsertNewDonations(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
-        stats.stream().forEach(s -> s.setWeek(week.getWeek()));
+    @Override
+    public void updateOrInsertDonationAndContributions(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
+        logger.info("Update/insert weekly stats for week {} , bigger-only={}", week.getWeek(), updateBiggerOnly);
+        Map<String, PlayerWeeklyStats> dbStatsPerTag = playerWeeklyStatsRepository.findByWeek(week).stream().collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), Function.identity()));
 
-        Map<String, PlayerWeeklyStats> databaseStats = playerWeeklyStatsRepository.findByWeek(week).stream()
-                .collect(Collectors.toMap(s -> s.getPlayer().getTag(), Function.identity()));
+        List<PlayerWeeklyStats> toUpdate = new ArrayList<>();
 
-        List<PlayerWeeklyStats> existingStats = stats.stream()
-                .filter(s -> databaseStats.containsKey(s.getPlayer().getTag())).collect(Collectors.toList());
-
-        List<PlayerWeeklyStats> remainingStats = new ArrayList<>(stats);
-        remainingStats.removeAll(existingStats);
-
-        playerWeeklyStatsRepository.updateDonations(existingStats, week, updateBiggerOnly);
-
-        // for new players the site could contain 0 for contribution when null is what we really want.
-        // aka don't take under consideration new players for this clan chest as they are not part of it.
-        remainingStats.stream().forEach(stat -> stat.setChestContribution(null));
-
-        playerWeeklyStatsRepository.save(remainingStats);
+        for (PlayerWeeklyStats newStat : stats) {
+            PlayerWeeklyStats dbStat = dbStatsPerTag.get(newStat.getPlayer().getTag());
+            if (dbStat != null) {
+                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getChestContribution(), dbStat.getChestContribution()) == 1) {
+                    logger.info("update contribution for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
+                            newStat.getChestContribution());
+                    dbStat.setChestContribution(newStat.getChestContribution());
+                }
+                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardDonation(), dbStat.getCardDonation()) == 1) {
+                    logger.info("update donation for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getCardDonation(), newStat.getCardDonation());
+                    dbStat.setCardDonation(newStat.getCardDonation());
+                }
+            } else {
+                Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole());
+                dbStat = new PlayerWeeklyStats(newPlayer, week.getWeek(), newStat.getChestContribution(), newStat.getCardDonation(), 0, 0);
+                dbStat.setWeek(week.getWeek());
+                logger.info("add new player {} with chestContribution  {} and donation {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
+                        dbStat.getCardDonation());
+            }
+            toUpdate.add(dbStat);
+        }
+        playerWeeklyStatsRepository.saveOrUpdateAll(toUpdate);
     }
 
     @Override
     @Transactional(value = TxType.REQUIRED)
-    public void updateChestContributions(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
-        stats.stream().forEach(s -> s.setWeek(week.getWeek()));
-        playerWeeklyStatsRepository.updateChestContribution(stats, week, updateBiggerOnly);
+    public void updateOrInsertNewDonationsAndRole(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
+        logger.info("Update/insert card donations for week {} , bigger-only={}", week.getWeek(), updateBiggerOnly);
+        Map<String, PlayerWeeklyStats> dbStatsPerTag = playerWeeklyStatsRepository.findByWeek(week).stream().collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), Function.identity()));
+
+        List<PlayerWeeklyStats> toUpdate = new ArrayList<>();
+
+        for (PlayerWeeklyStats newStat : stats) {
+            PlayerWeeklyStats dbStat = dbStatsPerTag.get(newStat.getPlayer().getTag());
+            if (dbStat != null) {
+                dbStat.getPlayer().setRole(newStat.getPlayer().getRole());
+                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardDonation(), dbStat.getCardDonation()) == 1) {
+                    logger.info("update donation for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getCardDonation(), newStat.getCardDonation());
+                    dbStat.setCardDonation(newStat.getCardDonation());
+                }
+            } else {
+                Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole());
+                dbStat = new PlayerWeeklyStats(newPlayer, week.getWeek(), null, newStat.getCardDonation(), 0, 0);
+                dbStat.setWeek(week.getWeek());
+                logger.info("add new player {} with donation {}", dbStat.getPlayer().getName(), dbStat.getCardDonation());
+            }
+            toUpdate.add(dbStat);
+        }
+        playerWeeklyStatsRepository.saveOrUpdateAll(toUpdate);
     }
+
+    @Override
+    @Transactional(value = TxType.REQUIRED)
+    public void updateChestContibutionAndRole(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
+        logger.info("Update chest contributions for week {} , bigger-only={}", week.getWeek(), updateBiggerOnly);
+        Map<String, PlayerWeeklyStats> dbStatsPerTag = playerWeeklyStatsRepository.findByWeek(week).stream().collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), Function.identity()));
+
+        List<PlayerWeeklyStats> toUpdate = new ArrayList<>();
+
+        for (PlayerWeeklyStats newStat : stats) {
+            PlayerWeeklyStats dbStat = dbStatsPerTag.get(newStat.getPlayer().getTag());
+            if (dbStat == null) {
+                continue;
+            }
+            dbStat.getPlayer().setRole(newStat.getPlayer().getRole());
+            if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getChestContribution(), dbStat.getChestContribution()) == 1) {
+                logger.info("update contribution for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
+                        newStat.getChestContribution());
+                dbStat.setChestContribution(newStat.getChestContribution());
+            }
+            toUpdate.add(dbStat);
+        }
+        playerWeeklyStatsRepository.saveOrUpdateAll(toUpdate);
+    }
+
 
     @Override
     public String generateTemplate() {
@@ -208,7 +260,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
                 .collect(Collectors.toList());
         logger.debug("found new players: {}", overallStatsDto);
 
-        return new NewPlayersDto(oldestWeek.getEndDate(), newestWeek.getEndDate(), overallStatsDto );
+        return new NewPlayersDto(oldestWeek.getEndDate(), newestWeek.getEndDate(), overallStatsDto);
     }
 
     @Override
@@ -239,7 +291,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
         }
 
-        playerWeeklyStatsRepository.saveOrUpdate(statsToUpdate.values(), week);
+        playerWeeklyStatsRepository.saveOrUpdateAll(new ArrayList<>(statsToUpdate.values()));
 
         // update averages from the requested week until the last week, because the averages have changed, as
         // the donations and card contributions

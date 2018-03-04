@@ -95,15 +95,9 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
 
     public static class SubractCalculationContext extends CalculationContext {
 
+        public int getCollectedCrowns() { return get(COLLECTED_CROWNS, Integer.class); }
 
-
-        public int getCollectedCrowns() {
-            return get(COLLECTED_CROWNS, Integer.class);
-        }
-
-        public List<Integer> getData() {
-            return get(DATA, List.class);
-        }
+        public List<Integer> getData() { return get(DATA, List.class); }
 
         public double getPlayerDeviationPercentage() {
             return get(PLAYER_DEVIATION_PERC, Double.class);
@@ -113,19 +107,16 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
             return get(FINAL_DEVIATION, Double.class);
         }
 
-
     }
 
-
+    //TODO move this as a test
     public static void main(String[] args) {
         Function<List<Integer>, List<PlayerWeeklyStats>> mapper = intList -> intList.stream()
                 .map(i -> new PlayerWeeklyStats(new Player("", "", ""), 0, i, 0, 0, 0))
                 .collect(Collectors.toList());
 
         double score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScoreFromData(Arrays.asList(2, 2, 2, 1));
-        System.out.println(score);
         score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScoreFromData(Arrays.asList(400, 400, 0, 0));
-        System.out.println(score);
         score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScoreFromData(Arrays.asList(800, 400, 0, 0));
         System.out.println(score);
         score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScoreFromData(Arrays.asList(700, 500, 0, 0));

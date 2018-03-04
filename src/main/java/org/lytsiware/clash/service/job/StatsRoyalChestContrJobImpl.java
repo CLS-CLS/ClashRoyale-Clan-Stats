@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @Profile("statsRoyale")
-public class StatsRoyalChestContrJobImpl implements Job, RunAtStartupJob {
+public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 
 	private Logger logger = LoggerFactory.getLogger(StatsRoyalChestContrJobImpl.class);
 
@@ -36,7 +36,6 @@ public class StatsRoyalChestContrJobImpl implements Job, RunAtStartupJob {
 	WeekJobRepository weeklyJobRepository;
 
 	
-
 	@Override
 	@Scheduled(cron = "0 0 8 ? * MON")
 	@Retryable(maxAttempts = 3, backoff = @Backoff(600000))
@@ -47,7 +46,7 @@ public class StatsRoyalChestContrJobImpl implements Job, RunAtStartupJob {
 			List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
 			
 			Week week = Week.now().previous();
-			clanStatsService.updateChestContributions(stats, week, true);
+			clanStatsService.updateChestContibutionAndRole(stats, week, true);
 			clanStatsService.recalculateAndSaveAvgs(week);
 			clanStatsService.calculateAndUpdateClanChestScore(week);
 			weeklyJobRepository.save(new WeeklyJob(Week.now().getWeek()));

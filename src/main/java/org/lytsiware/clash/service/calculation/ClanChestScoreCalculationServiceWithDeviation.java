@@ -190,17 +190,18 @@ public class ClanChestScoreCalculationServiceWithDeviation implements ClanChestS
 
 
     public double calculateChestScoreTest(List<Integer> playerWeeklyStats) {
-        if (playerWeeklyStats.size() == 0) {
-            return 0d;
-        }
+        if (playerWeeklyStats.size() == 0) return 0d;
 
         DeviationCalculationContext context = initContext(null, playerWeeklyStats);
+
         calculateDeviation(context);
         calculateCrownScore(context);
         calculateFinalDeviation(context);
+
         return context.getFinalDeviation();
     }
 
+    //TODO move this as test
     public static void main(String[] args) {
         List<Integer> data = Arrays.asList(267, 267, 267, 266, 266, 266);
         System.out.println(new ClanChestScoreCalculationServiceWithDeviation().calculateChestScoreTest(data));

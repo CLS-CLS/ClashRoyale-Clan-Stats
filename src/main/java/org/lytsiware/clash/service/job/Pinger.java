@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("!dev")
+@Profile("heroku")
 public class Pinger {
 	
 	Logger logger = LoggerFactory.getLogger(Pinger.class);

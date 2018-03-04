@@ -6,9 +6,9 @@ import org.jsoup.select.Elements;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.utils.SiteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
@@ -23,12 +23,13 @@ public class ClashStatsSiteServiceImpl implements SiteIntegrationService {
 	
 	Logger logger = LoggerFactory.getLogger(ClashStatsSiteServiceImpl.class);
 	
-	@Value("${clientDataUrl}")
-	private Resource dataResource;
+	@Autowired
+	SiteConfigurationService siteConfigurationService;
+
 
 	@Override
 	public List<PlayerWeeklyStats> retrieveData() {
-		Document document = SiteUtils.retrieveData(dataResource);
+		Document document = this.createDocumentFromResource(siteConfigurationService.getDataResource());
 		Elements subresult = document.select("#tbl");
 		Elements subresult2 = subresult.select(".memberRow");
 		List<PlayerWeeklyStats> playerWeeklyStats = new ArrayList<>();
@@ -50,7 +51,8 @@ public class ClashStatsSiteServiceImpl implements SiteIntegrationService {
 		}
 
 		return playerWeeklyStats;
-		
 	}
+
+
 
 }
