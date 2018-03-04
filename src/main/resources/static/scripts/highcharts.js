@@ -19,18 +19,40 @@
 //})()
 
 function crownPieChart(value, index) {
-    var y = [0,0,0,0,0,0];
-    var name = ["0-12", "13-25", "26-38", "39-51", "52-90", "91+"]
+    var stops = [-1, 7, 16, 25, 38, 51, 90, 1600];
+    var colors = ["#790000", "#bf0000","#ffc800","#00FF00","#41c941", "#4b9c4b","#2a402a"];
+    var y = new Array(colors.length);
+    y.fill(0, 0, y.length)
+
+    var name = (function(){
+        var name = [];
+        stops.forEach(function(value, index){
+            if (index != 0) {
+                name.push((stops[index - 1] +1) + "-" + stops[index])
+            }
+        })
+        return name;
+    })()
+
     value.data.forEach(function(value, idx){
-        var index = Math.floor(value/13);
-        if (value >=39 && value <=90) {
-            index = 4;
-        }
-        if (value >= 91){
-          index = 5;
-        }
+        var index = (function(){
+            var index = 0;
+            while(value < stops[index] || value > stops[index+1]){
+                index++;
+            }
+            return index;
+        })()
         y[index] = y[index] + 1;
     })
+
+    var seriesData = [];
+    for (var i =0; i < y.length; i++){
+        seriesData.push( {
+            color: colors[i],
+            name: name[i],
+            y: y[i]
+        })
+    }
 
     Highcharts.chart('chart'+ index, {
         chart: {
@@ -50,37 +72,23 @@ function crownPieChart(value, index) {
                 dataLabels: {
                     enabled: false
                 },
-                showInLegend: true
+                showInLegend: true,
+            },
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    formatter: function() {
+                        return Math.round(this.percentage*100)/100 + ' %';
+                    },
+                    distance: 5,
+                }
             }
         },
+
         series: [{
-            name: 'Distribution',
+            name: 'Number Of Players',
             colorByPoint: true,
-            data: [{
-                color: "#bf0000",
-                name: name[0],
-                y: y[0]
-            }, {
-                color: "#d35400",
-                name: name[1],
-                y: y[1]
-            }, {
-                color: "#00FF00",
-                name: name[2],
-                y: y[2]
-            }, {
-                color: "#41c941",
-                name: name[3],
-                y: y[3]
-            }, {
-                color: "#4b9c4b",
-                name: name[4],
-                y: y[4]
-            }, {
-                color: "#2a402a",
-                name: name[5],
-                y: y[5]
-            }]
+            data: seriesData
         }],
         responsive: {
             rules: [{
