@@ -1,0 +1,120 @@
+/**
+ * @license Highcharts JS v6.0.4 (2017-12-15)
+ *
+ * (c) 2009-2017 Torstein Honsi
+ *
+ * License: www.highcharts.com/license
+ */
+'use strict';
+(function(factory) {
+    if (typeof module === 'object' && module.exports) {
+        module.exports = factory;
+    } else {
+        factory(Highcharts);
+    }
+}(function(Highcharts) {
+    (function(Highcharts) {
+        /**
+         * (c) 2010-2017 Torstein Honsi
+         *
+         * License: www.highcharts.com/license
+         *
+         * Dark theme for Highcharts JS
+         * @author Torstein Honsi
+         */
+
+        /* global document */
+        Highcharts.wrap(Highcharts.Chart.prototype, 'getContainer', function (proceed) {
+           proceed.call(this);
+           this.container.style.background =
+              'url(http://www.highcharts.com/samples/graphics/sand.png)';
+        });
+
+         Highcharts.theme = {
+            colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee',
+               '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+            chart: {
+               backgroundColor: null,
+               style: {
+                  fontFamily: 'Signika, serif'
+               }
+            },
+            title: {
+               style: {
+                  color: 'black',
+                  fontSize: '16px',
+                  fontWeight: 'bold'
+               }
+            },
+            subtitle: {
+               style: {
+                  color: 'black'
+               }
+            },
+            tooltip: {
+               borderWidth: 0
+            },
+            legend: {
+               itemStyle: {
+                  fontWeight: 'bold',
+                  fontSize: '13px'
+               }
+            },
+            xAxis: {
+               labels: {
+                  style: {
+                     color: '#6e6e70'
+                  }
+               }
+            },
+            yAxis: {
+               labels: {
+                  style: {
+                     color: '#6e6e70'
+                  }
+               }
+            },
+            plotOptions: {
+               series: {
+                  shadow: true
+               },
+               candlestick: {
+                  lineColor: '#404048'
+               },
+               map: {
+                  shadow: false
+               }
+            },
+
+            // Highstock specific
+            navigator: {
+               xAxis: {
+                  gridLineColor: '#D0D0D8'
+               }
+            },
+            rangeSelector: {
+               buttonTheme: {
+                  fill: 'white',
+                  stroke: '#C0C0C8',
+                  'stroke-width': 1,
+                  states: {
+                     select: {
+                        fill: '#D0D0D8'
+                     }
+                  }
+               }
+            },
+            scrollbar: {
+               trackBorderColor: '#C0C0C8'
+            },
+
+            // General
+            background2: '#E0E0E8'
+
+         };
+
+         // Apply the theme
+         Highcharts.setOptions(Highcharts.theme);
+
+    }(Highcharts));
+}));

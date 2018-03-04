@@ -96,7 +96,7 @@ app.controller("chestChartsController", function($scope, $http, $timeout) {
             $timeout(function() {
                 scoreProgressChart(score, deviations, crowns, weeks)
                 response.data.forEach(function(value, index){
-                    crownChart(value, index)
+                    crownPieChart(value, index)
                 })
             })
 
