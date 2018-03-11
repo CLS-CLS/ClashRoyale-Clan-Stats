@@ -72,6 +72,9 @@ app.controller("adminController" , function ($scope, colorfy, roleComparator) {
 })
 
 app.controller("chestChartsController", function($scope, $http, $timeout) {
+
+    $scope.maxPieChartsToDisplay = 12;
+
     function loadData() {
         $scope.loading = true;
         $http.get(baseUrl() + "/rest/clan/score").then(function(response) {
@@ -96,6 +99,9 @@ app.controller("chestChartsController", function($scope, $http, $timeout) {
             $timeout(function() {
                 scoreProgressChart(score, deviations, crowns, weeks)
                 response.data.forEach(function(value, index){
+                    if (index > $scope.maxPieChartsToDisplay) {
+                        return;
+                    }
                     crownPieChart(value, index)
                 })
             })

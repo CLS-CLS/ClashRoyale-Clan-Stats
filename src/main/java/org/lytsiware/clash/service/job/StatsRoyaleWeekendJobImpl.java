@@ -25,13 +25,13 @@ public class StatsRoyaleWeekendJobImpl {
 	ClanStatsService clanStatsService;
 	
 	@Autowired
-	StatsRoyaleSiteServiceImpl siteIntegrationService; ;
+	StatsRoyaleSiteServiceImpl siteIntegrationService;
 
 	/**
 	 * Important !! Make sure the first run is after the clan chest has started or else the previous chest's score will
      * be persisted and it will only be updated if the new score is bigger than the previous' week score!
 	 */
-	@Scheduled(cron = "0 59 7/4 ? * SUN,FRI,SAT", zone = ZoneIdConfiguration.zoneId)
+	@Scheduled(cron = "${cron.weekend}", zone = ZoneIdConfiguration.zoneId)
 	@ScheduledName("weekendRunner")
 	public void run() {
 		try {
@@ -43,8 +43,8 @@ public class StatsRoyaleWeekendJobImpl {
 			throw e;
 		}
 	}
-	
-	@Scheduled(cron = "0 59 21 ? * SUN", zone = ZoneIdConfiguration.zoneId)
+
+	@Scheduled(cron = "${cron.weekend.final}", zone = ZoneIdConfiguration.zoneId)
 	public void extraCheck(){
 		run();
 	}

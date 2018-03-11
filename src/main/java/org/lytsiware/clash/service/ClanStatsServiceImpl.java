@@ -26,22 +26,21 @@ import java.util.stream.Collectors;
 @Service
 public class ClanStatsServiceImpl implements ClanStatsService {
 
-    Logger logger = LoggerFactory.getLogger(ClanStatsServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(ClanStatsServiceImpl.class);
 
     @Autowired
-    PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
+    private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
 
     @Autowired
-    ClanChestScoreCalculationService clanChestScoreCalculationService;
+    private ClanChestScoreCalculationService clanChestScoreCalculationService;
 
     @Autowired
-    ClanWeeklyStatRepository clanWeeklyStatRepository;
+    private ClanWeeklyStatRepository clanWeeklyStatRepository;
 
     @Override
     public List<PlayerOverallStats> retrieveClanStats(Week week) {
         logger.info("retrieveClanStats  week: {}", week);
         return playerWeeklyStatsRepository.findByWeek(week).stream().map(PlayerOverallStats::new).collect(Collectors.toList());
-
     }
 
     @Override
@@ -77,6 +76,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
         return updatedWeeklyStats;
     }
+
 
     @Override
     public void calculateAndUpdateClanChestScore(Week week) {
@@ -145,12 +145,12 @@ public class ClanStatsServiceImpl implements ClanStatsService {
         for (PlayerWeeklyStats newStat : stats) {
             PlayerWeeklyStats dbStat = dbStatsPerTag.get(newStat.getPlayer().getTag());
             if (dbStat != null) {
-                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getChestContribution(), dbStat.getChestContribution()) == 1) {
+                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getChestContribution(), dbStat.getChestContribution()) >= 1) {
                     logger.info("update contribution for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
                             newStat.getChestContribution());
                     dbStat.setChestContribution(newStat.getChestContribution());
                 }
-                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardDonation(), dbStat.getCardDonation()) == 1) {
+                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardDonation(), dbStat.getCardDonation()) >= 1) {
                     logger.info("update donation for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getCardDonation(), newStat.getCardDonation());
                     dbStat.setCardDonation(newStat.getCardDonation());
                 }
@@ -178,7 +178,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
             PlayerWeeklyStats dbStat = dbStatsPerTag.get(newStat.getPlayer().getTag());
             if (dbStat != null) {
                 dbStat.getPlayer().setRole(newStat.getPlayer().getRole());
-                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardDonation(), dbStat.getCardDonation()) == 1) {
+                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardDonation(), dbStat.getCardDonation()) >= 1) {
                     logger.info("update donation for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getCardDonation(), newStat.getCardDonation());
                     dbStat.setCardDonation(newStat.getCardDonation());
                 }
@@ -207,7 +207,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
                 continue;
             }
             dbStat.getPlayer().setRole(newStat.getPlayer().getRole());
-            if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getChestContribution(), dbStat.getChestContribution()) == 1) {
+            if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getChestContribution(), dbStat.getChestContribution()) >= 1) {
                 logger.info("update contribution for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
                         newStat.getChestContribution());
                 dbStat.setChestContribution(newStat.getChestContribution());
@@ -235,13 +235,12 @@ public class ClanStatsServiceImpl implements ClanStatsService {
         sb.append("WEEK=").append(week.getWeek()).append(" //this week is from monday ").append(week.getStartDate())
                 .append("\r\n");
         sb.append("TAG, NAME, RANK, DONATIONS, CHEST_CONTR").append("\r\n");
-        result.stream()
-                .forEach(p -> sb.append(p.getPlayer().getTag() + ",") //
-                        .append(p.getPlayer().getName() + ", ") //
-                        .append(p.getPlayer().getRole() + ", ") //
-                        .append(p.getCardDonation() + ", ") //
-                        .append(p.getChestContribution()) //
-                        .append("\r\n"));
+        result.forEach(p -> sb.append(p.getPlayer().getTag()).append(",") //
+                .append(p.getPlayer().getName()).append(",") //
+                .append(p.getPlayer().getRole()).append(",") //
+                .append(p.getCardDonation()).append(",") //
+                .append(p.getChestContribution()) //
+                .append("\r\n"));
         return sb.toString();
 
     }

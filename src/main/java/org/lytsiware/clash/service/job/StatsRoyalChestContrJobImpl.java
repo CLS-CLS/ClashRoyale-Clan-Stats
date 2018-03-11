@@ -30,14 +30,15 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 	ClanStatsService clanStatsService;
 	
 	@Autowired
-	StatsRoyaleSiteServiceImpl siteIntegrationService; ;
-	
+	StatsRoyaleSiteServiceImpl siteIntegrationService;
+
 	@Autowired
 	WeekJobRepository weeklyJobRepository;
 
-	
+
 	@Override
-	@Scheduled(cron = "0 0 8 ? * MON")
+	@Scheduled(cron = "${cron.monday}")
+	@ScheduledName("Mondays task")
 	@Retryable(maxAttempts = 3, backoff = @Backoff(600000))
 	public void run() {
 		try {

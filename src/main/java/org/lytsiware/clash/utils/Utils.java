@@ -1,7 +1,11 @@
 package org.lytsiware.clash.utils;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -11,8 +15,8 @@ import java.util.stream.Collector;
 public class Utils {
 	
 	/**
-	 * The {@link java.util.stream.Collectors.toMap()} throws NPE if the value is null in the key-value pair of the generated map .
-	 * This method does not.
+     * The {@link java.util.stream.Collectors#toMap(Function, Function)} throws NPE if the value is null in the key-value pair of the generated map .
+     * This method does not.
 	 */
 	public static <T, K,V> Collector<T, HashMap<K, V>, HashMap<K, V>> collectToMap(
 			Function<T, K> keyMapper, Function<T, V> valueMapper) {
@@ -44,6 +48,21 @@ public class Utils {
         } catch (Exception ex){
             return null;
         }
+    }
+
+    public static String createStatsRoyaleRefreshUrlForClanTag(String clanTag) {
+        return "https://statsroyale.com/clan/" + clanTag + "/refresh";
+    }
+
+    public static Resource createStatsRoyaleForClanTag(String clanTag) {
+        Resource resource;
+        try {
+            resource = new UrlResource("https://statsroyale.com/clan/" + clanTag);
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return resource;
     }
 
 }

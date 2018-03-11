@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -31,42 +32,45 @@ public class StatsRoyaleSiteServiceImpl implements SiteIntegrationService {
 		return retrieveData(true);
 	}
 
-
     public List<PlayerWeeklyStats>  retrieveData(boolean requestRefresh) {
-		logger.info("retrieveDate, requestRefresh: {}", requestRefresh);
-		if (requestRefresh) {
-			if (!StringUtils.isEmpty(siteConfigurationService.getRefreshUrl())) {
-				refresh();
-				try {
-					Thread.sleep(5 * 1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}else {
-				logger.warn("Refresh url is not provided");
-			}
-		}
-		Document document = this.createDocumentFromResource(siteConfigurationService.getDataResource());
-		Elements rowContainer = document.select(".clan__rowContainer");
+        return retrieveData(requestRefresh, siteConfigurationService.getDataResource(), siteConfigurationService.getRefreshUrl());
+    }
 
-		List<PlayerWeeklyStats> playerWeeklyStats = new ArrayList<>();
+    public List<PlayerWeeklyStats> retrieveData(boolean requestRefresh, Resource siteUrl, String refreshUrl) {
+        logger.info("retrieveDate, requestRefresh: {}", requestRefresh);
+        if (requestRefresh) {
+            if (!StringUtils.isEmpty(refreshUrl)) {
+                refresh();
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                logger.warn("Refresh url is not provided");
+            }
+        }
+        Document document = this.createDocumentFromResource(siteUrl);
+        Elements rowContainer = document.select(".clan__rowContainer");
 
-		for (Element el : rowContainer) {
-			Elements memberLink = el.select(".ui__blueLink");
-			String memberUrl = memberLink.attr("href");
-			String memberTag = memberUrl.split("/profile/")[1];
-			String memberName = memberLink.text();
-			int chestContribution = Integer.valueOf(el.attr("data-crowns"));
-			int cardDonation = Integer.valueOf(el.attr("data-donations"));
-			String role = el.select(".clan__memberRoleInner").text().trim();
-			Player player = new Player(memberTag, memberName, role);
-			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, chestContribution, cardDonation, 0, 0);
-			playerWeeklyStats.add(stats);
-		}
+        List<PlayerWeeklyStats> playerWeeklyStats = new ArrayList<>();
 
-		return playerWeeklyStats;
+        for (Element el : rowContainer) {
+            Elements memberLink = el.select(".ui__blueLink");
+            String memberUrl = memberLink.attr("href");
+            String memberTag = memberUrl.split("/profile/")[1];
+            String memberName = memberLink.text();
+            int chestContribution = Integer.valueOf(el.attr("data-crowns"));
+            int cardDonation = Integer.valueOf(el.attr("data-donations"));
+            String role = el.select(".clan__memberRoleInner").text().trim();
+            Player player = new Player(memberTag, memberName, role);
+            PlayerWeeklyStats stats = new PlayerWeeklyStats(player, chestContribution, cardDonation, 0, 0);
+            playerWeeklyStats.add(stats);
+        }
 
-	}
+        return playerWeeklyStats;
+
+    }
 
 
 	private void refresh() {

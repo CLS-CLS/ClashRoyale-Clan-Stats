@@ -1,7 +1,5 @@
 package org.lytsiware.clash.service.job;
 
-import java.net.HttpURLConnection;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +10,10 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.net.HttpURLConnection;
+
 @Service
-@Profile("heroku")
+@Profile({"heroku", "local-herokuDB"})
 public class Pinger {
 	
 	Logger logger = LoggerFactory.getLogger(Pinger.class);
@@ -21,7 +21,7 @@ public class Pinger {
 	@Value("${ping.url}")
 	private Resource urlToPing;
 
-	@Scheduled(initialDelay = 1000 * 5, fixedRate = 25 * 60 * 1000)
+	@Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 25 * 60 * 1000)
 	@Retryable(maxAttempts = 10, backoff = @Backoff(1000 * 30))
 	public void ping() {
 		try {
