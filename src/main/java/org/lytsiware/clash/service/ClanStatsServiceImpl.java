@@ -79,6 +79,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
 
     @Override
+    @Transactional(value = TxType.REQUIRED)
     public void calculateAndUpdateClanChestScore(Week week) {
         List<PlayerWeeklyStats> playerWeeklyStats = playerWeeklyStatsRepository.findByWeek(week);
         if (playerWeeklyStats.size() == 0) {
@@ -121,6 +122,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     @Override
     @Caching(evict = {@CacheEvict(value = "playerStats", allEntries = true),
             @CacheEvict(value = "weeklyStats", allEntries = true),})
+    @Transactional(value = TxType.MANDATORY)
     public void recalculateAndSaveAvgs(Week week) {
         List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(week);
         playerWeeklyStatsRepository.saveOrUpdateAll(playerWeeklyStats);
@@ -134,8 +136,9 @@ public class ClanStatsServiceImpl implements ClanStatsService {
         return PlayerStatsDto.toPlayerStatsDto(stats);
     }
 
-    @Transactional(value = TxType.REQUIRED)
+
     @Override
+    @Transactional(value = TxType.REQUIRED)
     public void updateOrInsertDonationAndContributions(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
         logger.info("Update/insert weekly stats for week {} , bigger-only={}", week.getWeek(), updateBiggerOnly);
         Map<String, PlayerWeeklyStats> dbStatsPerTag = playerWeeklyStatsRepository.findByWeek(week).stream().collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), Function.identity()));
@@ -263,6 +266,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     }
 
     @Override
+    @Transactional(TxType.REQUIRED)
     public List<PlayerOverallStats> resetStatsOfNewPlayers(Week week, List<NewPlayersUpdateDto> newPlayers) {
         // check that indeed these are new players
         Set<String> newPlayersTag = findNewPlayersAtWeeks(week.minusWeeks(1), week).getNewPlayers().stream()

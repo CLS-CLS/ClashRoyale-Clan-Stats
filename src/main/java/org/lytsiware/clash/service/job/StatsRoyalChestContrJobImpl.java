@@ -16,24 +16,26 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 @Service
 @Profile("statsRoyale")
+@Transactional(Transactional.TxType.REQUIRED)
 public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 
 	private Logger logger = LoggerFactory.getLogger(StatsRoyalChestContrJobImpl.class);
 
 	@Autowired
-	ClanStatsService clanStatsService;
-	
-	@Autowired
-	StatsRoyaleSiteServiceImpl siteIntegrationService;
+    private ClanStatsService clanStatsService;
+
+    @Autowired
+    private StatsRoyaleSiteServiceImpl siteIntegrationService;
 
 	@Autowired
-	WeekJobRepository weeklyJobRepository;
+    private WeekJobRepository weeklyJobRepository;
 
 
 	@Override

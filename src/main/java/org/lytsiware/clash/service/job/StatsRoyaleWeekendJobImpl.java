@@ -12,26 +12,29 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @Profile("statsRoyale")
+@Transactional(Transactional.TxType.REQUIRED)
 public class StatsRoyaleWeekendJobImpl {
 
 	private Logger logger = LoggerFactory.getLogger(StatsRoyaleWeekendJobImpl.class);
 
 	@Autowired
-	ClanStatsService clanStatsService;
-	
-	@Autowired
-	StatsRoyaleSiteServiceImpl siteIntegrationService;
+    private ClanStatsService clanStatsService;
+
+    @Autowired
+    private StatsRoyaleSiteServiceImpl siteIntegrationService;
 
 	/**
 	 * Important !! Make sure the first run is after the clan chest has started or else the previous chest's score will
      * be persisted and it will only be updated if the new score is bigger than the previous' week score!
 	 */
-	@Scheduled(cron = "${cron.weekend}", zone = ZoneIdConfiguration.zoneId)
+
+    @Scheduled(cron = "${cron.weekend}", zone = ZoneIdConfiguration.zoneId)
 	@ScheduledName("weekendRunner")
 	public void run() {
 		try {
@@ -44,7 +47,8 @@ public class StatsRoyaleWeekendJobImpl {
 		}
 	}
 
-	@Scheduled(cron = "${cron.weekend.final}", zone = ZoneIdConfiguration.zoneId)
+
+    @Scheduled(cron = "${cron.weekend.final}", zone = ZoneIdConfiguration.zoneId)
 	public void extraCheck(){
 		run();
 	}

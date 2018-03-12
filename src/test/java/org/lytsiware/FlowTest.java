@@ -20,8 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
 import java.util.Map;
@@ -62,7 +60,6 @@ public class FlowTest extends AbstractSpringBootTest {
 
 
     @Test
-    @Transactional(propagation = Propagation.REQUIRED)
     public void runJobAndShowClanStats() throws MalformedURLException {
 
         //Week 10
@@ -72,12 +69,10 @@ public class FlowTest extends AbstractSpringBootTest {
         //run scheduler for first time
         given(siteConfigurationService.getDataResource()).willReturn(new ClassPathResource("statsroyale_response_1.html"));
         statsRoyaleWeekendJob.run();
-        em.flush();
 
         //run sheduler for 2nd time
         given(siteConfigurationService.getDataResource()).willReturn(new ClassPathResource("statsroyale_response_2.html"));
         statsRoyaleWeekendJob.run();
-        em.flush();
 
         //Week 11
         Mockito.when(Week.now()).thenReturn(WEEK_11);
@@ -85,7 +80,6 @@ public class FlowTest extends AbstractSpringBootTest {
         //run chest scheduler
         given(siteConfigurationService.getDataResource()).willReturn(new ClassPathResource("statsroyale_response_3.html"));
         statsRoyalChestContrJob.run();
-        em.flush();
 
         Map<String, PlayerOverallStats> result = restController.retrieveClanStats(1).stream().collect(Collectors.toMap(PlayerOverallStats::getName, Function.identity()));
         //happy path
