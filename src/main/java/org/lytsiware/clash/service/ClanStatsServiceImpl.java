@@ -157,12 +157,16 @@ public class ClanStatsServiceImpl implements ClanStatsService {
                     logger.info("update donation for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getCardDonation(), newStat.getCardDonation());
                     dbStat.setCardDonation(newStat.getCardDonation());
                 }
+                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardsReceived(), dbStat.getCardsReceived()) >= 1) {
+                    logger.info("update requests for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getCardsReceived(), newStat.getCardsReceived());
+                    dbStat.setCardsReceived(newStat.getCardsReceived());
+                }
             } else {
                 Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole());
                 dbStat = new PlayerWeeklyStats(newPlayer, week.getWeek(), newStat.getChestContribution(), newStat.getCardDonation(), 0, 0);
                 dbStat.setWeek(week.getWeek());
-                logger.info("add new player {} with chestContribution  {} and donation {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
-                        dbStat.getCardDonation());
+                logger.info("add new player {} with chestContribution {} donation {} and requests {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
+                        dbStat.getCardDonation(), dbStat.getCardsReceived());
             }
             toUpdate.add(dbStat);
         }

@@ -6,6 +6,7 @@ import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.service.ClanStatsService;
+import org.lytsiware.clash.service.job.ScheduledNameService;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,9 @@ public class ClanStatsSecuredRestController {
     @Autowired
     ClanStatsService clanStatsService;
 
+    //    @Autowired
+    ScheduledNameService scheduledNameService;
+
 //    @GetMapping("/clanchestscore/{deltaWeek}")
     public void calculateAndSaveClanchestScore (@PathVariable("deltaWeek") Integer deltaWeek) {
         clanStatsService.calculateAndUpdateClanChestScore(Week.now().minusWeeks(deltaWeek));
@@ -40,6 +44,16 @@ public class ClanStatsSecuredRestController {
         }
         Week week = Week.now().minusWeeks(deltaWeek);
         return clanStatsService.resetStatsOfNewPlayers(week, updateDto);
+    }
+
+    @GetMapping("/scheduler/{name}")
+    public void runScheduler(String name) {
+        scheduledNameService.runScheduler(name);
+    }
+
+    @GetMapping("/scheduler")
+    public List<String> getRegisteredSchedulers() {
+        return scheduledNameService.getScheduledNames();
     }
 
 //  @PostMapping("/upload")

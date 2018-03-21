@@ -20,6 +20,7 @@ import java.util.List;
 
 @Service
 @Profile("statsRoyale")
+@SiteQualifier(SiteQualifier.Name.STATS_ROYALE)
 public class StatsRoyaleSiteServiceImpl implements SiteIntegrationService {
 
 	Logger logger = LoggerFactory.getLogger(ClashStatsSiteServiceImpl.class);

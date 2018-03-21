@@ -13,11 +13,18 @@ public class SiteConfigurationService {
     @Value("${clientDataRefreshUrl}")
     private String refreshUrl;
 
+    @Value("${deckshopClanUrl}")
+    private Resource deckshopClanUrlResource;
+
     public Resource getDataResource() {
         return dataResource;
     }
 
     public String getRefreshUrl() {
         return refreshUrl;
+    }
+
+    public Resource getDeckshopClanUrlResource() {
+        return deckshopClanUrlResource;
     }
 }
