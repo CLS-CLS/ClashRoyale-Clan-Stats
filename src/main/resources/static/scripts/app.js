@@ -271,7 +271,8 @@ app.factory('clanStatsState',  function(roleComparator) {
 		 	"avgCcRank": {name: "Average Chest Contribution Rank", show: false},
 		 	"avgDonation": {name: "Average Card Donations", show: true},
 		 	"avgDonationRank": {name: "Average Donation Donations Rank", show: false},
-		 	"avgOverallRank": {name: "Average Final Rank", show: false}
+		 	"avgOverallRank": {name: "Average Final Rank", show: false},
+		 	"avgRequestDonationDiff": {name: "Average Request/Donation difference", show: false}
 		},
 		bulkSelects: {
 			"rakings": false,
@@ -428,6 +429,9 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 		if ($scope.state.selectableColumns.avgOverallRank.show == true) {
 			result++;
 		}
+		if ($scope.state.selectableColumns.avgRequestDonationDiff.show == true) {
+            result++;
+        }
 		return result;
 	}
 	
@@ -455,6 +459,7 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 			}
 			calculatePercentageAndUpdateData(response.data);
 			calculateRankingsAndUpdateData(response.data);
+			calculateRequestDonationDiffAndUpdateData(response.data);
 		}, function(response) {
 			$scope.loading = false;
 		})
@@ -514,6 +519,12 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 		
 		calculateRankingAndUpdateData(data, "avgOverallRank", "avgOverallRank", sortCallback);
 	
+	}
+
+	function calculateRequestDonationDiffAndUpdateData(data){
+	    data.forEach(function(item) {
+	        item.avgRequestDonationDiff = Math.round(item.avgCardDonation - item.avgCardsReceived);
+	    })
 	}
 
 	function calculatePercentageAndUpdateData(data) {

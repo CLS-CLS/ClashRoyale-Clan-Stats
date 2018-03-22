@@ -18,7 +18,6 @@ import javax.persistence.*;
 // @IdClass(PlayerWeeklyStatsPK.class)
 public class PlayerWeeklyStats {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PWS_SEQUENCE")
     private Long id;
@@ -33,9 +32,15 @@ public class PlayerWeeklyStats {
     private Integer cardsReceived;
     private double avgChestContribution;
     private double avgCardDonation;
+    private double avgCardsReceived;
+
+    protected PlayerWeeklyStats() {
+
+    }
 
     protected PlayerWeeklyStats(Player player, Integer week, Integer chestContribution,
-                                Integer cardDonation, Integer cardsReceived, double avgChestContribution, double avgCardDonation) {
+                                Integer cardDonation, Integer cardsReceived,
+                                double avgChestContribution, double avgCardDonation, double avgCardsReceived) {
         super();
         this.player = player;
         this.week = week;
@@ -44,6 +49,16 @@ public class PlayerWeeklyStats {
         this.cardsReceived = cardsReceived;
         this.avgChestContribution = avgChestContribution;
         this.avgCardDonation = avgCardDonation;
+        this.avgCardsReceived = avgCardsReceived;
+
+    }
+
+    public double getAvgCardsReceived() {
+        return avgCardsReceived;
+    }
+
+    public void setAvgCardsReceived(double avgCardsReceived) {
+        this.avgCardsReceived = avgCardsReceived;
     }
 
 
@@ -142,6 +157,7 @@ public class PlayerWeeklyStats {
         private Integer cardsReceived;
         private double avgChestContribution;
         private double avgCardDonation;
+        private double avgCardsReceived;
 
         public Builder withPlayer(Player player) {
             this.player = player;
@@ -178,8 +194,13 @@ public class PlayerWeeklyStats {
             return this;
         }
 
+        public Builder withAvgCardsReceived(double avgCardsReceived) {
+            this.avgCardsReceived = avgCardsReceived;
+            return this;
+        }
+
         public PlayerWeeklyStats build() {
-            return new PlayerWeeklyStats(player, week, chestContribution, cardDonation, cardsReceived, avgChestContribution, avgCardDonation);
+            return new PlayerWeeklyStats(player, week, chestContribution, cardDonation, cardsReceived, avgChestContribution, avgCardDonation, avgCardsReceived);
         }
     }
 

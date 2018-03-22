@@ -2,6 +2,7 @@ package org.lytsiware.clash.service.job;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -57,12 +58,11 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
     @PostConstruct
     private void postConstruct() {
-
-        this.applicationContext = applicationContext;
         for (String beanName : applicationContext.getBeanDefinitionNames()) {
             Class<?> beanClass = null;
             try {
-                beanClass = applicationContext.getBean(beanName).getClass();
+                Object bean = applicationContext.getBean(beanName);
+                beanClass = AopUtils.getTargetClass(bean);
             } catch (Exception ex) {
                 logger.debug("Bean could not be fetched", ex);
             }

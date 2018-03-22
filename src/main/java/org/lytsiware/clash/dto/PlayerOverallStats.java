@@ -9,15 +9,16 @@ import java.time.LocalDate;
 public class PlayerOverallStats implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private String tag;
     private String name;
     private int week;
     private double avgChestContribution;
     private double avgCardDonation;
+    private double avgCardsReceived;
     private Integer chestContribution;
     private Integer cardDonation;
+    private Integer cardsReceived;
     private LocalDate startDate;
     private LocalDate endDate;
     private String role;
@@ -38,6 +39,9 @@ public class PlayerOverallStats implements Serializable {
         this.endDate = endDate;
     }
 
+    public PlayerOverallStats() {
+    }
+
     public PlayerOverallStats(PlayerWeeklyStats playerWeeklyStats) {
         this.tag = playerWeeklyStats.getPlayer().getTag();
         this.name = playerWeeklyStats.getPlayer().getName();
@@ -50,7 +54,8 @@ public class PlayerOverallStats implements Serializable {
         this.startDate = week.getStartDate();
         this.endDate = week.getEndDate();
         this.role = playerWeeklyStats.getPlayer().getRole();
-
+        this.cardsReceived = playerWeeklyStats.getCardsReceived();
+        this.avgCardsReceived = playerWeeklyStats.getAvgCardsReceived();
     }
 
 	public String getTag() {
@@ -117,6 +122,15 @@ public class PlayerOverallStats implements Serializable {
 		this.role = role;
 	}
 
-   
-    
+    public Integer getCardsReceived() {
+        return cardsReceived;
+    }
+
+    public double getAvgCardsReceived() {
+        return avgCardsReceived;
+    }
+
+    public void setAvgCardsReceived(double avgCardsReceived) {
+        this.avgCardsReceived = avgCardsReceived;
+    }
 }

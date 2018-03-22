@@ -64,13 +64,16 @@ public class ClanStatsServiceImpl implements ClanStatsService {
             double avgCardDonation = allPlayerStats.get(player).stream().map(PlayerWeeklyStats::getCardDonation)
                     .filter(Objects::nonNull).mapToInt(Integer::intValue).average().orElse(0);
 
-            double avgChestContribution = allPlayerStats.get(player).stream()
-                    .map(PlayerWeeklyStats::getChestContribution).filter(Objects::nonNull).mapToInt(Integer::intValue)
-                    .average().orElse(0);
+            double avgChestContribution = allPlayerStats.get(player).stream().map(PlayerWeeklyStats::getChestContribution)
+                    .filter(Objects::nonNull).mapToInt(Integer::intValue).average().orElse(0);
+
+            double avgCardsReceived = allPlayerStats.get(player).stream().map(PlayerWeeklyStats::getCardsReceived)
+                    .filter(Objects::nonNull).mapToInt(Integer::intValue).average().orElse(0);
 
             PlayerWeeklyStats toUpdate = allPlayerStats.get(player).get(0);
             toUpdate.setAvgCardDonation(avgCardDonation);
             toUpdate.setAvgChestContribution(avgChestContribution);
+            toUpdate.setAvgCardsReceived(avgCardsReceived);
             updatedWeeklyStats.add(toUpdate);
         }
 
@@ -163,7 +166,12 @@ public class ClanStatsServiceImpl implements ClanStatsService {
                 }
             } else {
                 Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole());
-                dbStat = new PlayerWeeklyStats(newPlayer, week.getWeek(), newStat.getChestContribution(), newStat.getCardDonation(), 0, 0);
+                dbStat = PlayerWeeklyStats.builder()
+                        .withPlayer(newPlayer)
+                        .withWeek(week.getWeek())
+                        .withChestContribution(newStat.getChestContribution())
+                        .withCardDonation(newStat.getCardDonation())
+                        .withCardsReceived(newStat.getCardsReceived()).build();
                 dbStat.setWeek(week.getWeek());
                 logger.info("add new player {} with chestContribution {} donation {} and requests {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
                         dbStat.getCardDonation(), dbStat.getCardsReceived());
