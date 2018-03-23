@@ -272,7 +272,7 @@ app.factory('clanStatsState',  function(roleComparator) {
 		 	"avgDonation": {name: "Average Card Donations", show: true},
 		 	"avgDonationRank": {name: "Average Donation Donations Rank", show: false},
 		 	"avgOverallRank": {name: "Average Final Rank", show: false},
-		 	"avgRequestDonationDiff": {name: "Average Request/Donation difference", show: false}
+		 	"avgRequestDonationDiff": {name: "Average Request/Donation difference", show: false},
 		},
 		bulkSelects: {
 			"rakings": false,
@@ -543,6 +543,12 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 			item.cardDonationPerc = item.cardDonation / sumDonation;
 			item.avgChestContributionPerc = item.avgChestContribution / avgSumChest;
 			item.avgCardDonationPerc = item.avgCardDonation / avgSumDonation;
+			if (item.avgCardsReceived == 0 || item.avgCardDonation == 0){
+			    item.avgRequestDonationDiffPerc = item.avgCardDonation + ":" + item.avgCardsReceived;
+			}else {
+			    var denominator = Math.min(item.avgCardDonation, item.avgCardsReceived);
+			    item.avgRequestDonationDiffPerc = (Math.round((item.avgCardDonation / denominator) * 100) / 100) + ":" + (Math.round((item.avgCardsReceived / denominator) * 100) / 100);
+            }
 		})
 		$scope.totalDonations = sumDonation;
 		$scope.chectLevel = calculateChestLvl(sumChest);
