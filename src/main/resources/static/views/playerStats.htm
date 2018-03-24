@@ -36,20 +36,7 @@
 			</div>
 		</form>
 
-		<!-- 
-		<div class="row">
-			<h4 style="font-weight:bold"> Facts </h4>
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-1"><h4 style="display:inline"> Best of Chest Contribution: </h4> 
-										 <h3 style="display:inline"> 10</h3></div> 
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-1"><h4 style="display:inline"> Best Card Donation:</h4>
-			<h3 style="display:inline">100</h3></div>
-		</div>
-		-->
-		<hr />
+        <hr/>
 		
 		<div class="row">
 			<div class="col-md-4">
@@ -59,6 +46,7 @@
 							<th><span>Week #</span></th>
 							<th><span>Chest Contribution</span></th>
 							<th><span>Card Donation</span></th>
+                            <th><span>Cards Received</span></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -66,6 +54,7 @@
 							<td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{$index + 1}}</td>
 							<td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution}}</td>
 							<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
+                            <td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardsReceived}}</td>
 						</tr>
 					</tbody>
 				</table>

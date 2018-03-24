@@ -33,6 +33,11 @@
 	font-size: 12px;
 }
 
+.small-text {
+    color: grey;
+    font-size: small;
+}
+
 .center-block {
   display: block;
   margin-left: auto;

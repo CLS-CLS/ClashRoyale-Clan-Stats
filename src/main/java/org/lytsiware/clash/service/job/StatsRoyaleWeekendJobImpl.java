@@ -39,7 +39,6 @@ public class StatsRoyaleWeekendJobImpl {
 	 * Important !! Make sure the first run is after the clan chest has started or else the previous chest's score will
      * be persisted and it will only be updated if the new score is bigger than the previous' week score!
 	 */
-
     @Scheduled(cron = "${cron.weekend}", zone = ZoneIdConfiguration.zoneId)
 	@ScheduledName("weekendRunner")
 	public void run() {
@@ -51,8 +50,8 @@ public class StatsRoyaleWeekendJobImpl {
 				List<PlayerWeeklyStats> deckproStats = deckShopSiteService.retrieveData();
 				updateReceivedCards(stats, deckproStats);
 			} catch (Exception ex) {
-				logger.error("Exception when retrieving stats from deckshop", ex);
-			}
+                logger.error("Exception while retrieving stats from deckshop", ex);
+            }
 
 			clanStatsService.updateOrInsertDonationAndContributions(stats, Week.now(), true);
 		} catch (Exception e) {

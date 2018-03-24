@@ -29,7 +29,7 @@
 		                    	ng-hide="s.chestContribution == null"
 		                    	></toggle>
 		                    </td>
-		                    <td>{{s.cardDonation}} </td>
+                            <td>{{s.cardDonation}} <span class="small-text">/{{s.cardsReceived}}</span></td>
 		                    <td> <toggle ng-model="s.cardToggleValue" ng-change="changed()" 
 		                    	onstyle="btn-success" on="<i class='fa fa-check'></i>" 
 		                    	offstyle="btn-danger" off="<i class='fa fa-times'></i>"

@@ -3,88 +3,89 @@ package org.lytsiware.clash.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class StatsDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	
-	
-	private int week;
-	private LocalDate startDate;
-	private LocalDate endDate;
-	
-	private Integer chestContribution;
-	private Integer cardDonation;
-	
-	
-	
-	public StatsDto(int week, LocalDate startDate, LocalDate endDate, Integer chestContribution, Integer cardDonation) {
-		super();
-		this.week = week;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.chestContribution = chestContribution;
-		this.cardDonation = cardDonation;
-	}
+public class StatsDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
 
+    private int week;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-	public int getWeek() {
-		return week;
-	}
-
-
-
-	public void setWeek(int week) {
-		this.week = week;
-	}
+    private Integer chestContribution;
+    private Integer cardDonation;
+    private Integer cardsReceived;
 
 
-
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-
-
-
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
-	}
-
+    public StatsDto(int week, LocalDate startDate, LocalDate endDate, Integer chestContribution, Integer cardDonation, Integer cardsReceived) {
+        super();
+        this.week = week;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.chestContribution = chestContribution;
+        this.cardDonation = cardDonation;
+        this.cardsReceived = cardsReceived;
+    }
 
 
-	public LocalDate getEndDate() {
-		return endDate;
-	}
+    public int getWeek() {
+        return week;
+    }
 
 
-
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}
-
+    public void setWeek(int week) {
+        this.week = week;
+    }
 
 
-	public Integer getChestContribution() {
-		return chestContribution;
-	}
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
 
-
-	public void setChestContribution(Integer chestContribution) {
-		this.chestContribution = chestContribution;
-	}
-
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 
 
-	public Integer getCardDonation() {
-		return cardDonation;
-	}
+    public LocalDate getEndDate() {
+        return endDate;
+    }
 
 
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 
-	public void setCardDonation(Integer cardDonation) {
-		this.cardDonation = cardDonation;
-	}
-	
+
+    public Integer getChestContribution() {
+        return chestContribution;
+    }
+
+
+    public void setChestContribution(Integer chestContribution) {
+        this.chestContribution = chestContribution;
+    }
+
+
+    public Integer getCardDonation() {
+        return cardDonation;
+    }
+
+
+    public void setCardDonation(Integer cardDonation) {
+        this.cardDonation = cardDonation;
+    }
+
+
+    public Integer getCardsReceived() {
+        return cardsReceived;
+    }
+
+
+    public void setCardsReceived(Integer cardsReceived) {
+        this.cardsReceived = cardsReceived;
+    }
+
 
 }

@@ -58,6 +58,13 @@ public class Player {
 	public void setRole(String role) {
 		this.role = role;
 	}
-    
-    
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "tag='" + tag + '\'' +
+                ", name='" + name + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

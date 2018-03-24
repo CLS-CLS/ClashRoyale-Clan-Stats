@@ -299,6 +299,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
             PlayerWeeklyStats stat = statsToUpdate.get(newPlayer.getTag());
             if (newPlayer.shouldDeleteCard()) {
                 stat.setCardDonation(null);
+                stat.setCardsReceived(null);
             }
             if (newPlayer.shouldDeleteChest()) {
                 stat.setChestContribution(null);

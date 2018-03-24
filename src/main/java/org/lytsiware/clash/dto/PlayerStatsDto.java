@@ -61,9 +61,9 @@ public class PlayerStatsDto {
 			if (playerStatsDto == null) {
 				playerStatsDto = new PlayerStatsDto(pws.getPlayer().getName(), pws.getPlayer().getTag(), statsDto);
 			}
-			StatsDto stat = new StatsDto(pws.getWeek(), Week.fromWeek(pws.getWeek()).getStartDate(), 
-					Week.fromWeek(pws.getWeek()).getEndDate(), pws.getChestContribution(), pws.getCardDonation());
-			statsDto.add(stat);
+			StatsDto stat = new StatsDto(pws.getWeek(), Week.fromWeek(pws.getWeek()).getStartDate(),
+                    Week.fromWeek(pws.getWeek()).getEndDate(), pws.getChestContribution(), pws.getCardDonation(), pws.getCardsReceived());
+            statsDto.add(stat);
 		}
 		return playerStatsDto;
 	}
