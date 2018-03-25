@@ -4,7 +4,6 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -61,7 +60,6 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
     }
 
     @Override
-    @Cacheable(cacheNames = "weeklyStats", key = "#week")
     public List<PlayerWeeklyStats> findByWeek(Week week) {
         logger.info("findByWeek {}", week);
 
@@ -74,7 +72,6 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
 
 
     @Override
-    @Cacheable("playerStats")
     public List<PlayerWeeklyStats> findByWeeksAndTag(String tag, Week startWeek, Week endWeek) {
         Query nQuery = em.createNamedQuery("findByWeekAndTag").setParameter("tag", tag)
                 .setParameter("startWeek", startWeek.getWeek()).setParameter("endWeek", endWeek.getWeek());

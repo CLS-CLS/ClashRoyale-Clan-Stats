@@ -50,8 +50,8 @@ public class AdminController {
 		if (week < 1) {
 			return "/index/";
 		}
-		clanStatService.recalculateAndSaveAvgs(Week.fromWeek(week));
-		return "redirect:/" + (Week.now().getWeek() - week);
+        clanStatService.calculateAndSaveAvgs(Week.fromWeek(week));
+        return "redirect:/" + (Week.now().getWeek() - week);
 	}
 
 	//@RequestMapping("/updateDonations/{week}")

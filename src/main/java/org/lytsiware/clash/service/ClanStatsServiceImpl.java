@@ -13,8 +13,6 @@ import org.lytsiware.clash.service.calculation.ClanChestScoreCalculationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -123,19 +121,15 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
 
     @Override
-    @Caching(evict = {@CacheEvict(value = "playerStats", allEntries = true),
-            @CacheEvict(value = "weeklyStats", allEntries = true),})
     @Transactional(value = TxType.MANDATORY)
-    public void recalculateAndSaveAvgs(Week week) {
+    public void calculateAndSaveAvgs(Week week) {
         List<PlayerWeeklyStats> playerWeeklyStats = calculateAvgs(week);
         playerWeeklyStatsRepository.saveOrUpdateAll(playerWeeklyStats);
     }
 
     @Override
     public PlayerStatsDto retrievePlayerStats(String tag, Week from, Week to) {
-
         List<PlayerWeeklyStats> stats = playerWeeklyStatsRepository.findByWeeksAndTag(tag, from, to);
-
         return PlayerStatsDto.toPlayerStatsDto(stats);
     }
 
@@ -315,7 +309,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
         Week fromWeek = week;
         while (fromWeek.getWeek() <= Week.now().previous().getWeek()) {
             logger.info("Updating averages for week {}", fromWeek);
-            recalculateAndSaveAvgs(fromWeek);
+            calculateAndSaveAvgs(fromWeek);
             fromWeek = fromWeek.plusWeeks(1);
         }
 

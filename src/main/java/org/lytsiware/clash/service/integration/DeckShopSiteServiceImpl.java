@@ -9,12 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,63 +33,22 @@ public class DeckShopSiteServiceImpl implements SiteIntegrationService {
     }
 
     public List<PlayerWeeklyStats> retrieveData(Resource siteUrl) {
-        logger.info("retrieveData from deckshop, requestRefresh:");
+        logger.info("retrieveData from deckshop");
 
         Document document = this.createDocumentFromResource(siteUrl);
-        Elements rowContainer = document.select(".clan__rowContainer");
 
         List<Element> tables = document.select("table").stream()
-                .filter(e -> e.select("th").stream()
-                        .anyMatch(se -> "Clan Chest".equals(se.text())))
+                .filter(e -> e.select("th").stream().anyMatch(se -> "Clan Chest".equals(se.text())))
                 .collect(Collectors.toList());
 
-        if (tables.size() != 1) {
-            throw new ParseException("More than one table for stats was found");
-        }
-
-        Elements tableHeaders = tables.get(0).select("th");
-        //check correctnes of indexes
-        boolean ok = true;
-        String reason = "Rank";
-        ok = ok && tableHeaders.get(0).select("span").get(1).text().equals("Rank");
-        if (ok) {
-            ok = tableHeaders.get(1).text().equals("Arena");
-            reason = "Arena";
-        }
-        if (ok) {
-            ok = tableHeaders.get(2).text().trim().equals("Player Tag");
-            reason = "player";
-        }
-
-        if (ok) {
-            ok = tableHeaders.get(4).getElementsContainingText("Trophies").size() != 0;
-
-            reason = "Trophies";
-        }
-        if (ok) {
-            ok = tableHeaders.get(4).getElementsContainingText("Contribution").size() != 0;
-            reason = "Contribution";
-        }
-        if (ok) {
-            ok = tableHeaders.get(5).text().equals("Donations Received");
-            reason = "Donations";
-        }
-
-        if (ok) {
-            ok = ok && tableHeaders.get(6).text().equals("Clan Chest");
-            reason = "Clan chest";
-        }
-
-        if (!ok) {
-            throw new ParseException("Not ok because of " + reason);
-        }
+        validateTableIndex(tables);
 
         List<PlayerWeeklyStats> playerWeeklyStats = new ArrayList<>();
         try {
             Elements players = tables.get(0).select("tbody").select("tr");
             for (Element player : players) {
                 String tag = player.attr("id");
-                logger.info("TAG {}", tag);
+                logger.info("Parsing element with tag: {}", tag);
                 Elements playerStats = player.select("td");
                 Elements roleElements = playerStats.get(2).select("span");
                 String role = roleElements.size() == 0 ? "Member" : roleElements.get(0).text();
@@ -116,11 +73,24 @@ public class DeckShopSiteServiceImpl implements SiteIntegrationService {
         return playerWeeklyStats;
     }
 
-    public static void main(String[] args) throws MalformedURLException {
-        DeckShopSiteServiceImpl shopSiteService = new DeckShopSiteServiceImpl();
-        List<PlayerWeeklyStats> playerWeeklyStats = shopSiteService.retrieveData(
-                new FileSystemResource("A:\\EcliseWorkspace\\ClashRoyale-Clan-Stats\\src\\test\\resources\\deckshop.html"));
+    private void validateTableIndex(List<Element> tables) throws ParseException {
+        if (tables.size() != 1) {
+            throw new ParseException("More than one table for stats was found");
+        }
+        Elements tableHeaders = tables.get(0).select("th");
+        check("Rank", tableHeaders.get(0).select("span").get(1).text().equals("Rank"));
+        check("Arena", tableHeaders.get(1).text().equals("Arena"));
+        check("player", tableHeaders.get(2).text().trim().equals("Player Tag"));
+        check("Trophies", tableHeaders.get(4).getElementsContainingText("Trophies").size() != 0);
+        check("Contribution", tableHeaders.get(4).getElementsContainingText("Contribution").size() != 0);
+        check("Donations", tableHeaders.get(5).text().equals("Donations Received"));
+        check("Clan Chest", tableHeaders.get(6).text().equals("Clan Chest"));
+    }
 
+    private void check(String reason, boolean ok) {
+        if (!ok) {
+            throw new ParseException("Not ok because of " + reason);
+        }
     }
 
 }

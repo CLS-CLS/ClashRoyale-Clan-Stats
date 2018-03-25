@@ -5,7 +5,6 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.dto.*;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ClanStatsService {
@@ -28,7 +27,7 @@ public interface ClanStatsService {
 	 * Recaclulates the averages for the provided week and updates the db
 	 * @param week
 	 */
-    void recalculateAndSaveAvgs(Week week);
+    void calculateAndSaveAvgs(Week week);
 
    	String generateTemplate();
 
