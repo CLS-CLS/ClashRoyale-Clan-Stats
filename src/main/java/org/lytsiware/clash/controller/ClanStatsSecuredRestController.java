@@ -17,8 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/rest")
@@ -46,13 +48,13 @@ public class ClanStatsSecuredRestController {
         return clanStatsService.resetStatsOfNewPlayers(week, updateDto);
     }
 
-    //@GetMapping("/scheduler/{name}")
+    @GetMapping("/scheduler/{name}")
     public void runScheduler(@PathVariable String name) {
         scheduledNameService.runScheduler(name);
     }
 
     @GetMapping("/scheduler")
-    public List<String> getRegisteredSchedulers() {
+    public List<Map<String, String>> getRegisteredSchedulers() {
         return scheduledNameService.getScheduledNames();
     }
 
