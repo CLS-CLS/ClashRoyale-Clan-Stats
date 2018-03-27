@@ -1,5 +1,6 @@
 package org.lytsiware.clash.service.job;
 
+import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
@@ -10,20 +11,25 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
 public class ScheduledNameServiceImpl implements ScheduledNameService {
+
 
     @Autowired
     private ApplicationContext applicationContext;
 
     private Logger logger = LoggerFactory.getLogger(ScheduledNameServiceImpl.class);
 
-    private HashMap<String, ScheduledNameContext> scheduledMethods = new HashMap<>();
+    private Map<String, ScheduledNameContext> scheduledMethods = new HashMap<>();
 
     @Override
     public void register(String value, Class<?> beanClass, Method m) {
@@ -31,13 +37,19 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
             throw new IllegalArgumentException(String.format("A scheduled method is already registered under the name %s", value));
         }
         logger.info("Registering scheduled method {} under name {}", beanClass, m.getName(), value);
-        Class<?> returnType = m.getReturnType();
         scheduledMethods.put(value, new ScheduledNameServiceImpl.ScheduledNameContext(beanClass, m));
     }
 
     @Override
-    public List<String> getScheduledNames() {
-        return new ArrayList<>(scheduledMethods.keySet());
+    public List<Map<String, String>> getScheduledNames() {
+        Function<Map.Entry<String, ScheduledNameContext>, Map<String, String>> createMap = e -> {
+            Map<String, String> map = new HashMap<>();
+            map.put("name", e.getKey());
+            map.put("last run: ", String.valueOf(e.getValue().getLastRun()));
+            return map;
+        };
+        return scheduledMethods.entrySet().stream().map(e -> createMap.apply(e)).collect(Collectors.toList());
+
     }
 
     /**
@@ -51,9 +63,22 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
     public Object runScheduler(String name) {
         ScheduledNameContext scheduledNameContext = scheduledMethods.get(name);
         if (scheduledNameContext == null) {
-            throw new IllegalArgumentException("No scheduler is registered under the name %s" + name);
+            throw new IllegalArgumentException("No scheduler is registered under the name " + name);
         }
         return scheduledNameContext.invoke(applicationContext);
+    }
+
+    @Override
+    public void markTime(String name) {
+        LocalDateTime now = LocalDateTime.now();
+        scheduledMethods.get(name).setLastRun(now);
+
+
+    }
+
+    @Override
+    public LocalDateTime getLastRun(String name) {
+        return scheduledMethods.get(name).getLastRun();
     }
 
     @PostConstruct
@@ -88,10 +113,19 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
     public static class ScheduledNameContext {
         final Class<?> clazz;
         final Method method;
+        LocalDateTime lastRun;
 
         ScheduledNameContext(Class<?> clazz, Method method) {
             this.clazz = clazz;
             this.method = method;
+        }
+
+        public LocalDateTime getLastRun() {
+            return lastRun;
+        }
+
+        public void setLastRun(LocalDateTime lastRun) {
+            this.lastRun = lastRun;
         }
 
         Object invoke(ApplicationContext applicationContext) {

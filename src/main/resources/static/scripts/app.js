@@ -544,7 +544,7 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 			item.avgChestContributionPerc = item.avgChestContribution / avgSumChest;
 			item.avgCardDonationPerc = item.avgCardDonation / avgSumDonation;
 			if (item.avgCardsReceived == 0 || item.avgCardDonation == 0){
-			    item.avgRequestDonationDiffPerc = item.avgCardDonation + ":" + item.avgCardsReceived;
+			    item.avgRequestDonationDiffPerc = (Math.round(item.avgCardDonation  * 100) / 100) + ":" + (Math.round(item.avgCardsReceived * 100) / 100)
 			}else {
 			    var denominator = Math.min(item.avgCardDonation, item.avgCardsReceived);
 			    item.avgRequestDonationDiffPerc = (Math.round((item.avgCardDonation / denominator) * 100) / 100) + ":" + (Math.round((item.avgCardsReceived / denominator) * 100) / 100);
