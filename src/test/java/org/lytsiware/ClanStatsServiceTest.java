@@ -7,7 +7,9 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.PlayerOverallStats;
+import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.ClanStatsService;
+import org.lytsiware.clash.service.UpdateStatService;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,12 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
     @Autowired
     PlayerWeeklyStatsRepository pwsRepo;
 
+    @Autowired
+    private AggregationService aggregationService;
+
+    @Autowired
+    private UpdateStatService updateStatsService;
+
     @Test
     public void calculateAvgsWithNull() {
         Player player = new Player("1", "Chris", "Elder");
@@ -36,7 +44,7 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
         PlayerWeeklyStats pws3 = new PlayerWeeklyStats(player, 3, null, 50, 20, 20);
         PlayerWeeklyStats pws4 = new PlayerWeeklyStats(player, 4, 60, null, 0, 0);
         pwsRepo.saveOrUpdateAll(Arrays.asList(pws1, pws2, pws3, pws4));
-        List<PlayerWeeklyStats> results = clanStatsService.calculateAvgs(Week.fromWeek(4));
+        List<PlayerWeeklyStats> results = aggregationService.calculateAvgs(Week.fromWeek(4));
         Assert.assertEquals(1, results.size());
         Assert.assertEquals(35, results.get(0).getAvgChestContribution(), 0.000001);
         Assert.assertEquals(30, results.get(0).getAvgCardDonation(), 0.000001);
@@ -61,7 +69,7 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
         PlayerWeeklyStats s4 = new PlayerWeeklyStats(anotherPlayer, 1, 0, 30, 10, 10);
         pwsRepo.saveOrUpdateAll(Arrays.asList(db1, db2, db3));
 
-        clanStatsService.updateOrInsertNewDonationsAndRole(Arrays.asList(s1, s2, s3, s4), Week.fromWeek(1), true);
+        updateStatsService.updateOrInsertNewDonationsAndRole(Arrays.asList(s1, s2, s3, s4), Week.fromWeek(1), true);
 
 
         Map<String, Integer> results = pwsRepo.findByWeek(Week.fromWeek(1)).stream()
@@ -87,7 +95,7 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
         Player splayer = new Player("tag1", "Chris1", "Elder");
         PlayerWeeklyStats s1 = new PlayerWeeklyStats(splayer, 1, 0, 10, 10, 10);
 
-        clanStatsService.updateOrInsertNewDonationsAndRole(Arrays.asList(s1), Week.fromWeek(2), true);
+        updateStatsService.updateOrInsertNewDonationsAndRole(Arrays.asList(s1), Week.fromWeek(2), true);
 
         List<PlayerWeeklyStats> results = pwsRepo.findByWeek(Week.fromWeek(2));
         Assert.assertEquals(1, results.size());
@@ -111,7 +119,7 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
 
         pwsRepo.saveOrUpdateAll(Arrays.asList(db1, db2));
 
-        clanStatsService.updateChestContibutionAndRole(Arrays.asList(s1, s2, s3), Week.fromWeek(1), false);
+        updateStatsService.updateChestContibutionAndRole(Arrays.asList(s1, s2, s3), Week.fromWeek(1), false);
 
         Map<String, Integer> results = pwsRepo.findByWeek(Week.fromWeek(1)).stream()
                 .collect(Utils.collectToMap(s -> s.getPlayer().getTag(), PlayerWeeklyStats::getChestContribution));

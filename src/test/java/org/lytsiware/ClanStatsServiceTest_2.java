@@ -7,6 +7,7 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.service.ClanStatsService;
+import org.lytsiware.clash.service.UpdateStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 
@@ -25,6 +26,9 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
 
     @Autowired
     private ClanStatsService clanStatsService;
+
+    @Autowired
+    private UpdateStatService updateStatsService;
 
     @Before
     public void createData() {
@@ -62,7 +66,7 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
                 new PlayerWeeklyStats(p3, 30, 123, 230,0,0)
         );
 
-        clanStatsService.updateOrInsertDonationAndContributions(donations, Week.fromWeek(30), true);
+        updateStatsService.updateOrInsertDonationAndContributions(donations, Week.fromWeek(30), true);
 
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
@@ -101,7 +105,7 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
                 new PlayerWeeklyStats(p3, 30, 0, 230,0,0)
         );
 
-        clanStatsService.updateOrInsertNewDonationsAndRole(donations, Week.fromWeek(30), true);
+        updateStatsService.updateOrInsertNewDonationsAndRole(donations, Week.fromWeek(30), true);
 
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
@@ -136,7 +140,7 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
                 new PlayerWeeklyStats(p3, 30, 0, 230,0,0)
         );
 
-        clanStatsService.updateOrInsertNewDonationsAndRole(donations, Week.fromWeek(30), false);
+        updateStatsService.updateOrInsertNewDonationsAndRole(donations, Week.fromWeek(30), false);
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
 
@@ -171,7 +175,7 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
                 new PlayerWeeklyStats(p3, 30, 130, 0,0,0)
         );
 
-        clanStatsService.updateChestContibutionAndRole(donations, Week.fromWeek(30), true);
+        updateStatsService.updateChestContibutionAndRole(donations, Week.fromWeek(30), true);
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
 
@@ -205,7 +209,7 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
                 new PlayerWeeklyStats(p3, 30, 3, 230,0,0)
         );
 
-        clanStatsService.updateChestContibutionAndRole(donations, Week.fromWeek(30), false);
+        updateStatsService.updateChestContibutionAndRole(donations, Week.fromWeek(30), false);
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
 

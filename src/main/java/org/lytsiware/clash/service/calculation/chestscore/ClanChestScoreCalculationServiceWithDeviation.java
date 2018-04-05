@@ -1,6 +1,7 @@
-package org.lytsiware.clash.service.calculation;
+package org.lytsiware.clash.service.calculation.chestscore;
 
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.service.calculation.CalculationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.lytsiware.clash.service.calculation.ClanChestScoreCalculationServiceWithDeviation.DeviationCalculationContext;
+import static org.lytsiware.clash.service.calculation.chestscore.ClanChestScoreCalculationServiceWithDeviation.DeviationCalculationContext;
 
 /**
  * Deprecated in favor of {@link ClanChestScoreCalculationServiceWithSubtraction} because the results are not satisfactory enough
@@ -129,7 +130,7 @@ public class ClanChestScoreCalculationServiceWithDeviation implements ClanChestS
         return context;
     }
 
-    public static class DeviationCalculationContext extends CalculationContext{
+    public static class DeviationCalculationContext extends CalculationContext {
 
         public static final String OPTIMAL_CHEST_CONTRIBUTIONS = "optimalChestContributions";
         public static final String PLAYERS_WITH_OPTIMAL = "playersWithOptimal";

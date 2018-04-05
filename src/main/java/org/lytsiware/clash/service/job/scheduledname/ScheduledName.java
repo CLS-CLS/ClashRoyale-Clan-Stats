@@ -1,4 +1,4 @@
-package org.lytsiware.clash.service.job;
+package org.lytsiware.clash.service.job.scheduledname;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

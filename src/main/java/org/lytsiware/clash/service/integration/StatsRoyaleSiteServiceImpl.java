@@ -21,19 +21,23 @@ import java.util.List;
 @Service
 @Profile("statsRoyale")
 @SiteQualifier(SiteQualifier.Name.STATS_ROYALE)
-public class StatsRoyaleSiteServiceImpl implements SiteIntegrationService {
+public class StatsRoyaleSiteServiceImpl implements RefreshableSiteIntegrationService {
 
 	Logger logger = LoggerFactory.getLogger(ClashStatsSiteServiceImpl.class);
 
-	@Autowired
-    SiteConfigurationService siteConfigurationService;
+    private SiteConfigurationService siteConfigurationService;
 
-	@Override
+    public StatsRoyaleSiteServiceImpl(SiteConfigurationService siteConfigurationService) {
+        this.siteConfigurationService = siteConfigurationService;
+    }
+
+    @Override
 	public List<PlayerWeeklyStats> retrieveData() {
 		return retrieveData(true);
 	}
 
-    public List<PlayerWeeklyStats>  retrieveData(boolean requestRefresh) {
+	@Override
+    public List<PlayerWeeklyStats> retrieveData(boolean requestRefresh) {
         return retrieveData(requestRefresh, siteConfigurationService.getDataResource(), siteConfigurationService.getRefreshUrl());
     }
 

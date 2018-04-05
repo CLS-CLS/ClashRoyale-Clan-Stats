@@ -1,21 +1,30 @@
-package org.lytsiware.clash.service.job;
+package org.lytsiware.clash.service.job.scheduledname;
 
+import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringValueResolver;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiFunction;
+import java.time.OffsetTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -23,6 +32,8 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduledNameServiceImpl implements ScheduledNameService {
 
+    @Autowired
+    private PropertyResolver propertyResolver;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -42,10 +53,25 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
     @Override
     public List<Map<String, String>> getScheduledNames() {
-        Function<Map.Entry<String, ScheduledNameContext>, Map<String, String>> createMap = e -> {
+        Function<Map.Entry<String, ScheduledNameContext>, Map<String, String>> createMap = scheduledNameContextEntry -> {
             Map<String, String> map = new HashMap<>();
-            map.put("name", e.getKey());
-            map.put("last run: ", String.valueOf(e.getValue().getLastRun()));
+            map.put("name", scheduledNameContextEntry.getKey());
+
+            LocalDateTime lastRun = scheduledNameContextEntry.getValue().getLastRun();
+            map.put("last run: ", String.valueOf(lastRun));
+
+            String cronExpression = propertyResolver.resolvePlaceholders(scheduledNameContextEntry.getValue().getMethod().getAnnotation(Scheduled.class).cron());
+
+            CronTrigger cronTrigger = new CronTrigger(cronExpression, TimeZone.getTimeZone(ZoneIdConfiguration.zoneId()));
+            Date nextExecutionDate = cronTrigger.nextExecutionTime(new SimpleTriggerContext(Utils.convertToDate(lastRun), null, null));
+            LocalDateTime nextExecutionLocalDateTime = LocalDateTime.from(nextExecutionDate.toInstant().atZone(ZoneIdConfiguration.zoneId()));
+
+            int minutesRemaining = (int) ChronoUnit.MINUTES.between(LocalDateTime.now(ZoneIdConfiguration.zoneId()), nextExecutionLocalDateTime);
+            int daysRemaining = minutesRemaining / 1440;
+            int hoursRemaining = (minutesRemaining % 1440) / 60;
+            minutesRemaining = minutesRemaining % 60;
+            map.put("next run in:", daysRemaining + " days, " + hoursRemaining + " hours, "  + minutesRemaining  + " minutes");
+
             return map;
         };
         return scheduledMethods.entrySet().stream().map(e -> createMap.apply(e)).collect(Collectors.toList());
@@ -110,6 +136,7 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
     }
 
+
     public static class ScheduledNameContext {
         final Class<?> clazz;
         final Method method;
@@ -118,6 +145,14 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
         ScheduledNameContext(Class<?> clazz, Method method) {
             this.clazz = clazz;
             this.method = method;
+        }
+
+        public Class<?> getClazz() {
+            return clazz;
+        }
+
+        public Method getMethod() {
+            return method;
         }
 
         public LocalDateTime getLastRun() {

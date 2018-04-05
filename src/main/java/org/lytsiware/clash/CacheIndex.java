@@ -1,4 +1,4 @@
-package org.lytsiware.clash.service.job;
+package org.lytsiware.clash;
 
 public class CacheIndex {
 

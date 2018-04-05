@@ -1,11 +1,16 @@
 package org.lytsiware.clash.utils;
 
+import org.lytsiware.clash.ZoneIdConfiguration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -63,6 +68,13 @@ public class Utils {
         }
 
         return resource;
+    }
+
+    public static Date convertToDate(LocalDateTime localDateTime) {
+        Date in = new Date();
+        LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneIdConfiguration.zoneId());
+        Date out = Date.from(ldt.atZone(ZoneIdConfiguration.zoneId()).toInstant());
+        return out;
     }
 
 }

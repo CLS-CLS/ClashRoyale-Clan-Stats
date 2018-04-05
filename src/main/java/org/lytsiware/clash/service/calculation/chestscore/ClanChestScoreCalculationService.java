@@ -1,6 +1,7 @@
-package org.lytsiware.clash.service.calculation;
+package org.lytsiware.clash.service.calculation.chestscore;
 
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.service.calculation.CalculationContext;
 
 import java.util.List;
 

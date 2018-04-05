@@ -5,8 +5,10 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
+import org.lytsiware.clash.service.ClanChestScoreService;
 import org.lytsiware.clash.service.ClanStatsService;
-import org.lytsiware.clash.service.job.ScheduledNameService;
+import org.lytsiware.clash.service.UpdateStatService;
+import org.lytsiware.clash.service.job.scheduledname.ScheduledNameService;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,15 @@ public class ClanStatsSecuredRestController {
     @Autowired
     ScheduledNameService scheduledNameService;
 
-//    @GetMapping("/clanchestscore/{deltaWeek}")
+    @Autowired
+    private ClanChestScoreService clanChestScoreService;
+
+    @Autowired
+    private UpdateStatService updateService;
+
+    //    @GetMapping("/clanchestscore/{deltaWeek}")
     public void calculateAndSaveClanchestScore (@PathVariable("deltaWeek") Integer deltaWeek) {
-        clanStatsService.calculateAndUpdateClanChestScore(Week.now().minusWeeks(deltaWeek));
+        clanChestScoreService.calculateAndUpdateClanChestScore(Week.now().minusWeeks(deltaWeek));
     }
 
     @PostMapping(value = "/newPlayers/update/{deltaWeek}")
@@ -80,6 +87,6 @@ public class ClanStatsSecuredRestController {
             statsList.add(pws);
         }
 
-        clanStatsService.updateOrInsertNewDonationsAndRole(statsList, week, true);
+        updateService.updateOrInsertNewDonationsAndRole(statsList, week, true);
     }
 }

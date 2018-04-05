@@ -7,10 +7,12 @@ import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
 import org.lytsiware.clash.dto.NewPlayersDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
-import org.lytsiware.clash.service.ClanStatsServiceImpl;
+import org.lytsiware.clash.service.ClanChestScoreService;
+import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
+import org.lytsiware.clash.service.TemplateService;
 import org.lytsiware.clash.service.calculation.CalculationContext;
-import org.lytsiware.clash.service.calculation.ClanChestScoreCalculationService;
-import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
+import org.lytsiware.clash.service.calculation.chestscore.ClanChestScoreCalculationService;
+import org.lytsiware.clash.service.integration.*;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,64 +35,71 @@ public class ClanStatsRestController {
     private ClanStatsServiceImpl clanStatsService;
 
     @Autowired
+    private ClanChestScoreService clanChestScoreService;
+
+    @Autowired
     private ClanChestScoreCalculationService clanChestScoreCalculationService;
 
     @Autowired
-    private StatsRoyaleSiteServiceImpl siteIntegrationService;
+    @SiteQualifier(SiteQualifier.Name.STATS_ROYALE)
+    private RefreshableSiteIntegrationService siteIntegrationService;
+
+    @Autowired
+    private TemplateService templateService;
 
     @RequestMapping(value = "/{deltaWeek}", method = RequestMethod.GET)
     public List<PlayerOverallStats> retrieveClanStats(@PathVariable(required = false) Integer deltaWeek) {
         logger.info("START retrieveClanStats - week {}", deltaWeek);
 
         if (deltaWeek < Constants.MIN_PAST_WEEK || deltaWeek > Constants.MAX_PAST_WEEK) {
-           deltaWeek = Constants.DEFAULT_DELTA_WEEK;
+            deltaWeek = Constants.DEFAULT_DELTA_WEEK;
         }
         Week week = Week.now().minusWeeks(deltaWeek);
         return clanStatsService.retrieveClanStats(week);
 
     }
-    
-    @RequestMapping(value="/player/{tag}", method= RequestMethod.GET)
+
+    @RequestMapping(value = "/player/{tag}", method = RequestMethod.GET)
     public PlayerStatsDto retrievePlayerStats(@PathVariable String tag) {
         logger.info("START retrievePlayerStats - tag {}", tag);
-    	
-    	return clanStatsService.retrievePlayerStats(tag, Week.now().minusWeeks(Constants.MAX_PAST_WEEK + 1), Week.now().minusWeeks(1));
+
+        return clanStatsService.retrievePlayerStats(tag, Week.now().minusWeeks(Constants.MAX_PAST_WEEK + 1), Week.now().minusWeeks(1));
     }
-    
-    @GetMapping(value="/generateTemplate")
-    public void generateTemplate(HttpServletResponse response) throws IOException{
-    	logger.info("START generateTemplate");
-    	response.getOutputStream().write(
-    			clanStatsService.generateTemplate().getBytes(Charset.forName("UTF-8")));
-    	response.setContentType("application/text");      
-    	response.setHeader("Content-Disposition", "attachment; filename=\"template.txt\""); 
-    	response.flushBuffer();
-    
+
+    @GetMapping(value = "/generateTemplate")
+    public void generateTemplate(HttpServletResponse response) throws IOException {
+        logger.info("START generateTemplate");
+        response.getOutputStream().write(
+                templateService.generateTemplate().getBytes(Charset.forName("UTF-8")));
+        response.setContentType("application/text");
+        response.setHeader("Content-Disposition", "attachment; filename=\"template.txt\"");
+        response.flushBuffer();
+
     }
-    
-    @GetMapping(value="/newPlayers/{deltaWeek}")
+
+    @GetMapping(value = "/newPlayers/{deltaWeek}")
     public NewPlayersDto getNewPlayers(@PathVariable(required = false) Integer deltaWeek) {
-    	if (deltaWeek == null) {
-    		deltaWeek = 0;
-    	}
+        if (deltaWeek == null) {
+            deltaWeek = 0;
+        }
 
-    	Week week = Week.now().minusWeeks(deltaWeek);
-    	return clanStatsService.findNewPlayersAtWeeks(week.previous(), week);
+        Week week = Week.now().minusWeeks(deltaWeek);
+        return clanStatsService.findNewPlayersAtWeeks(week.previous(), week);
     }
-    
-    @GetMapping(value="/info/week")
+
+    @GetMapping(value = "/info/week")
     public Integer getWeekNumber() {
-    	return Week.now().previous().getWeek();
+        return Week.now().previous().getWeek();
     }
 
-    @GetMapping(value="/clan/score")
-	public List<ClanWeeklyStatsDto> getClanChestScore() {
-        return clanStatsService.getClanChestScore(Week.now().minusWeeks(24), Week.now().previous());
+    @GetMapping(value = "/clan/score")
+    public List<ClanWeeklyStatsDto> getClanChestScore() {
+        return clanChestScoreService.getClanChestScore(Week.now().minusWeeks(24), Week.now().previous());
     }
 
     @GetMapping(value = "clan/{clanTag}/score")
     public HashMap<String, Double> getClanXCrownScore(@PathVariable String clanTag) {
-        List<PlayerWeeklyStats> playerWeeklyStats = siteIntegrationService.retrieveData(false, Utils.createStatsRoyaleForClanTag(clanTag), "");
+        List<PlayerWeeklyStats> playerWeeklyStats = new StatsRoyaleSiteServiceImpl(new SiteConfigurationService(Utils.createStatsRoyaleForClanTag(clanTag), "", null)).retrieveData(false);
         CalculationContext calculationContext = clanChestScoreCalculationService.calculateChestScore(playerWeeklyStats);
         Double deviationScore = calculationContext.get(CalculationContext.PLAYER_DEVIATION_PERC, Double.class);
         Double crownScore = calculationContext.get(CalculationContext.CROWN_SCORE_PERC, Double.class);
@@ -102,8 +111,6 @@ public class ClanStatsRestController {
         results.put("Deviation Score", deviationScore);
         return results;
     }
-    
-    
 
-   
+
 }

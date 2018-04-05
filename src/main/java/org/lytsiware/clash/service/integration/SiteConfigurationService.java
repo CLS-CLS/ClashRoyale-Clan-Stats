@@ -16,6 +16,16 @@ public class SiteConfigurationService {
     @Value("${deckshopClanUrl}")
     private Resource deckshopClanUrlResource;
 
+    public SiteConfigurationService(){
+
+    }
+
+    public SiteConfigurationService(Resource dataResource, String refreshUrl, Resource deckshopClanUrlResource) {
+        this.dataResource = dataResource;
+        this.refreshUrl = refreshUrl;
+        this.deckshopClanUrlResource = deckshopClanUrlResource;
+    }
+
     public Resource getDataResource() {
         return dataResource;
     }

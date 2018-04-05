@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.service.ClanStatsServiceImpl;
+import org.lytsiware.clash.service.AggregationService;
+import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
+import org.lytsiware.clash.service.UpdateStatService;
 import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +28,13 @@ public class AdminController {
 	@Autowired
 	StatsRoyaleSiteServiceImpl siteService;
 
-	//@RequestMapping("/check")
+	@Autowired
+    private AggregationService aggregationService;
+
+	@Autowired
+    private UpdateStatService updateStatsService;
+
+    //@RequestMapping("/check")
 	public String checkParsing(@RequestParam("refresh") Boolean refresh,  Model model) throws JsonProcessingException {
 		refresh = (refresh != null? refresh : false);
 		List<PlayerWeeklyStats> clanStats = siteService.retrieveData(refresh);
@@ -50,7 +58,7 @@ public class AdminController {
 		if (week < 1) {
 			return "/index/";
 		}
-        clanStatService.calculateAndSaveAvgs(Week.fromWeek(week));
+        aggregationService.calculateAndSaveAvgs(Week.fromWeek(week));
         return "redirect:/" + (Week.now().getWeek() - week);
 	}
 
@@ -60,7 +68,7 @@ public class AdminController {
 			week = Week.now().getWeek();
 		}
 		List<PlayerWeeklyStats> stats = siteService.retrieveData(true);
-		clanStatService.updateOrInsertNewDonationsAndRole(stats, Week.fromWeek(week), true);
+		updateStatsService.updateOrInsertNewDonationsAndRole(stats, Week.fromWeek(week), true);
 		return "/index/" + (Week.now().getWeek() - week);
 	}
 
