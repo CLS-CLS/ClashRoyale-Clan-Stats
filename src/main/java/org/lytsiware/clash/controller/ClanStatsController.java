@@ -60,4 +60,9 @@ public class ClanStatsController {
         return "/index";
     }
 
+    @GetMapping("/scheduler")
+    public String schedulers() {
+        return "/scheduler";
+    }
+
 }

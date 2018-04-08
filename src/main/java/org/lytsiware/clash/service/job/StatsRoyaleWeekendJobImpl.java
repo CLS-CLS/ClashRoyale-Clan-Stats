@@ -103,7 +103,7 @@ public class StatsRoyaleWeekendJobImpl {
         }
     }
 
-
+    @ScheduledName("midweekRunner-final")
     @Scheduled(cron = "${cron.weekend.final}", zone = ZoneIdConfiguration.zoneId)
     public void extraCheck() {
         run();

@@ -29,6 +29,11 @@ var app = angular.module("App", [ 'ui.bootstrap', 'ngRoute', 'ui.toggle' ])
     };
 }])
 
+app.controller("scheduler", function($scope, $http) {
+    $http.get(baseUrl() + "/rest/scheduler").then(function(response){
+        $scope.schedulers = response.data;
+    })
+})
 
 app.controller("uploadController", function($scope, $http){
 	$scope.downloadTemplate = function() {

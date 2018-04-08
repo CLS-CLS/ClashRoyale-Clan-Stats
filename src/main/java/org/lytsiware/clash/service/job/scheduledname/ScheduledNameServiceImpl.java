@@ -7,22 +7,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.EmbeddedValueResolverAware;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
-import org.springframework.core.env.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringValueResolver;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
@@ -32,15 +26,21 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduledNameServiceImpl implements ScheduledNameService {
 
-    @Autowired
+    private static DateTimeFormatter DATE_TIME_FORMATER = DateTimeFormatter.ofPattern("dd-MM-YYYY HH:mm:ss");
+
     private PropertyResolver propertyResolver;
 
-    @Autowired
     private ApplicationContext applicationContext;
 
     private Logger logger = LoggerFactory.getLogger(ScheduledNameServiceImpl.class);
 
     private Map<String, ScheduledNameContext> scheduledMethods = new HashMap<>();
+
+    @Autowired
+    public ScheduledNameServiceImpl(PropertyResolver propertyResolver, ApplicationContext applicationContext) {
+        this.propertyResolver = propertyResolver;
+        this.applicationContext = applicationContext;
+    }
 
     @Override
     public void register(String value, Class<?> beanClass, Method m) {
@@ -54,11 +54,11 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
     @Override
     public List<Map<String, String>> getScheduledNames() {
         Function<Map.Entry<String, ScheduledNameContext>, Map<String, String>> createMap = scheduledNameContextEntry -> {
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new LinkedHashMap<>();
             map.put("name", scheduledNameContextEntry.getKey());
 
             LocalDateTime lastRun = scheduledNameContextEntry.getValue().getLastRun();
-            map.put("last run: ", String.valueOf(lastRun));
+            map.put("last run ", lastRun != null ? lastRun.format(DATE_TIME_FORMATER) : "no record");
 
             String cronExpression = propertyResolver.resolvePlaceholders(scheduledNameContextEntry.getValue().getMethod().getAnnotation(Scheduled.class).cron());
 
@@ -70,11 +70,15 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
             int daysRemaining = minutesRemaining / 1440;
             int hoursRemaining = (minutesRemaining % 1440) / 60;
             minutesRemaining = minutesRemaining % 60;
-            map.put("next run in:", daysRemaining + " days, " + hoursRemaining + " hours, "  + minutesRemaining  + " minutes");
+            map.put("next run in", daysRemaining + " days, " + hoursRemaining + " hours, " + minutesRemaining + " minutes");
 
             return map;
         };
-        return scheduledMethods.entrySet().stream().map(e -> createMap.apply(e)).collect(Collectors.toList());
+        List<Map<String, String>> result = scheduledMethods.entrySet().stream().map(e -> createMap.apply(e)).collect(Collectors.toList());
+        Map<String, String> serverTime = new HashMap<>();
+        serverTime.put("Server Time now: ", LocalDateTime.now().format(DATE_TIME_FORMATER) + " " + ZoneIdConfiguration.zoneId());
+        result.add(serverTime);
+        return result;
 
     }
 
