@@ -14,8 +14,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=768"/>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Statistics for Clash Royle clan 'The Greek Noobs'">
+    <meta name="author" content="C.L.S.">
 
 
     <title>Clash Royal Clan Stats</title>
