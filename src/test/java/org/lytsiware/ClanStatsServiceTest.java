@@ -143,7 +143,7 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
 
         pwsRepo.saveOrUpdateAll(Arrays.asList(p1w1, p1w2, p2w2, p3w2));
 
-        List<PlayerOverallStats> newPlayers = clanStatsService.findNewPlayersAtWeeks(Week.fromWeek(10), Week.fromWeek(11))
+        List<PlayerOverallStats> newPlayers = clanStatsService.findNewPlayersOfWeeks(Week.fromWeek(10), Week.fromWeek(11))
                 .getNewPlayers();
 
         Assert.assertEquals(2, newPlayers.size());

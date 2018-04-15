@@ -1,7 +1,7 @@
 package org.lytsiware.clash.service.job.scheduledname;
 
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +15,5 @@ public interface ScheduledNameService {
 
     void markTime(String name);
 
-    LocalDateTime getLastRun(String name);
+    ZonedDateTime getLastRun(String name);
 }

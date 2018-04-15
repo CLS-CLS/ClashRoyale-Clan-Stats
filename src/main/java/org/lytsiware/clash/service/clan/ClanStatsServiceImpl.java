@@ -54,7 +54,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
 
     @Override
-    public NewPlayersDto findNewPlayersAtWeeks(Week oldestWeek, Week newestWeek) {
+    public NewPlayersDto findNewPlayersOfWeeks(Week oldestWeek, Week newestWeek) {
         List<PlayerWeeklyStats> newestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(newestWeek);
         List<Player> oldestWeekPlayerStats = playerWeeklyStatsRepository.findByWeek(oldestWeek).stream()
                 .map(PlayerWeeklyStats::getPlayer).collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     @Transactional(TxType.REQUIRED)
     public List<PlayerOverallStats> resetStatsOfNewPlayers(Week week, List<NewPlayersUpdateDto> newPlayers) {
         // check that indeed these are new players
-        Set<String> newPlayersTag = findNewPlayersAtWeeks(week.minusWeeks(1), week).getNewPlayers().stream()
+        Set<String> newPlayersTag = findNewPlayersOfWeeks(week.minusWeeks(1), week).getNewPlayers().stream()
                 .map(PlayerOverallStats::getTag).collect(Collectors.toSet());
         Set<String> toUpdate = newPlayers.stream().map(NewPlayersUpdateDto::getTag).collect(Collectors.toSet());
 
@@ -103,8 +103,7 @@ public class ClanStatsServiceImpl implements ClanStatsService {
         playerWeeklyStatsRepository.saveOrUpdateAll(new ArrayList<>(statsToUpdate.values()));
 
         // update averages from the requested week until the last week, because the averages have changed, as
-        // the donations and card contributions
-        // are deleted
+        // the donations and card contributions are deleted
         Week fromWeek = week;
         while (fromWeek.getWeek() <= Week.now().previous().getWeek()) {
             logger.info("Updating averages for week {}", fromWeek);

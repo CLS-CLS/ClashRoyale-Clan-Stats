@@ -3,6 +3,7 @@ package org.lytsiware.clash.service;
 import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
 
 import java.util.List;
 
@@ -21,5 +22,10 @@ public interface AggregationService {
      * @param week
      */
     void calculateAndSaveAvgs(Week week);
+
+
+    void calculateAndUpdateClanChestScore(Week week);
+
+    List<ClanWeeklyStatsDto> getClanChestScore(Week from, Week to);
 
 }

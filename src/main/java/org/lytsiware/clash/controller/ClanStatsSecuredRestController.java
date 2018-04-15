@@ -5,7 +5,7 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
-import org.lytsiware.clash.service.ClanChestScoreService;
+import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.UpdateStatService;
 import org.lytsiware.clash.service.job.scheduledname.ScheduledNameService;
@@ -36,14 +36,14 @@ public class ClanStatsSecuredRestController {
     ScheduledNameService scheduledNameService;
 
     @Autowired
-    private ClanChestScoreService clanChestScoreService;
+    private AggregationService aggregationService;
 
     @Autowired
     private UpdateStatService updateService;
 
     //    @GetMapping("/clanchestscore/{deltaWeek}")
     public void calculateAndSaveClanchestScore (@PathVariable("deltaWeek") Integer deltaWeek) {
-        clanChestScoreService.calculateAndUpdateClanChestScore(Week.now().minusWeeks(deltaWeek));
+        aggregationService.calculateAndUpdateClanChestScore(Week.now().minusWeeks(deltaWeek));
     }
 
     @PostMapping(value = "/newPlayers/update/{deltaWeek}")

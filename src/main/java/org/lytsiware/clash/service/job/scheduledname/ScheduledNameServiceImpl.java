@@ -9,16 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -57,14 +59,12 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
             Map<String, String> map = new LinkedHashMap<>();
             map.put("name", scheduledNameContextEntry.getKey());
 
-            LocalDateTime lastRun = scheduledNameContextEntry.getValue().getLastRun();
+            ZonedDateTime lastRun = scheduledNameContextEntry.getValue().getLastRun();
             map.put("last run ", lastRun != null ? lastRun.format(DATE_TIME_FORMATER) : "no record");
 
             String cronExpression = propertyResolver.resolvePlaceholders(scheduledNameContextEntry.getValue().getMethod().getAnnotation(Scheduled.class).cron());
 
-            CronTrigger cronTrigger = new CronTrigger(cronExpression, TimeZone.getTimeZone(ZoneIdConfiguration.zoneId()));
-            Date nextExecutionDate = cronTrigger.nextExecutionTime(new SimpleTriggerContext(Utils.convertToDate(lastRun), null, null));
-            LocalDateTime nextExecutionLocalDateTime = LocalDateTime.from(nextExecutionDate.toInstant().atZone(ZoneIdConfiguration.zoneId()));
+            ZonedDateTime nextExecutionLocalDateTime = Utils.getNextExecutionDate(cronExpression, lastRun);
 
             int minutesRemaining = (int) ChronoUnit.MINUTES.between(LocalDateTime.now(ZoneIdConfiguration.zoneId()), nextExecutionLocalDateTime);
             int daysRemaining = minutesRemaining / 1440;
@@ -100,14 +100,11 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
     @Override
     public void markTime(String name) {
-        LocalDateTime now = LocalDateTime.now();
-        scheduledMethods.get(name).setLastRun(now);
-
-
+        scheduledMethods.get(name).setLastRun(ZonedDateTime.now());
     }
 
     @Override
-    public LocalDateTime getLastRun(String name) {
+    public ZonedDateTime getLastRun(String name) {
         return scheduledMethods.get(name).getLastRun();
     }
 
@@ -144,7 +141,7 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
     public static class ScheduledNameContext {
         final Class<?> clazz;
         final Method method;
-        LocalDateTime lastRun;
+        ZonedDateTime lastRun;
 
         ScheduledNameContext(Class<?> clazz, Method method) {
             this.clazz = clazz;
@@ -159,11 +156,11 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
             return method;
         }
 
-        public LocalDateTime getLastRun() {
+        public ZonedDateTime getLastRun() {
             return lastRun;
         }
 
-        public void setLastRun(LocalDateTime lastRun) {
+        public void setLastRun(ZonedDateTime lastRun) {
             this.lastRun = lastRun;
         }
 

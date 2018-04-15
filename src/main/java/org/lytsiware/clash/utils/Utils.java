@@ -3,15 +3,17 @@ package org.lytsiware.clash.utils;
 import org.lytsiware.clash.ZoneIdConfiguration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -70,11 +72,15 @@ public class Utils {
         return resource;
     }
 
-    public static Date convertToDate(LocalDateTime localDateTime) {
-        Date in = new Date();
-        LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneIdConfiguration.zoneId());
-        Date out = Date.from(ldt.atZone(ZoneIdConfiguration.zoneId()).toInstant());
-        return out;
+    public static Date convertToDate(ZonedDateTime localDateTime, ZoneId zoneId) {
+        return Date.from(localDateTime.toInstant());
+    }
+
+    public static ZonedDateTime getNextExecutionDate(String cronExpression, ZonedDateTime latestExecutionDate) {
+        CronTrigger cronTrigger = new CronTrigger(cronExpression, TimeZone.getTimeZone(ZoneIdConfiguration.zoneId()));
+        Date nextExecutionAsDate = cronTrigger.nextExecutionTime(new SimpleTriggerContext(Utils.convertToDate(latestExecutionDate, ZoneIdConfiguration.zoneId()), null, null));
+        ZonedDateTime nextExecution = nextExecutionAsDate.toInstant().atZone(ZoneIdConfiguration.zoneId());
+        return nextExecution;
     }
 
 }

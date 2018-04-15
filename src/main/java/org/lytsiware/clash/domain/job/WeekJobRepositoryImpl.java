@@ -1,14 +1,13 @@
 package org.lytsiware.clash.domain.job;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 @Repository
 
@@ -18,9 +17,7 @@ public class WeekJobRepositoryImpl implements WeekJobRepository {
 
     @PersistenceContext
     private EntityManager em;
-    
-    
-    
+
     @Override
     @Transactional(value=TxType.REQUIRED)
     public void save(WeeklyJob week) {
@@ -28,20 +25,10 @@ public class WeekJobRepositoryImpl implements WeekJobRepository {
         em.persist(week);
     }
 
-        
-
 	@Override
-	public WeeklyJob loadLatest() {
-		WeeklyJob result = null;
-		try {
-			result = (WeeklyJob)em.createNamedQuery("weeklyjob.findLatest").setMaxResults(1).getSingleResult();
-		}catch (NoResultException ex) {
-			result  = new WeeklyJob(0);
-		}
-		return result;
-		
-	}
+    public WeeklyJob loadLatest(String jobId) {
+        return em.find(WeeklyJob.class, jobId);
 
-	
+    }
 
 }

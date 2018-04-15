@@ -7,12 +7,15 @@ import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
 import org.lytsiware.clash.dto.NewPlayersDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
-import org.lytsiware.clash.service.ClanChestScoreService;
-import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
+import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.TemplateService;
 import org.lytsiware.clash.service.calculation.CalculationContext;
 import org.lytsiware.clash.service.calculation.chestscore.ClanChestScoreCalculationService;
-import org.lytsiware.clash.service.integration.*;
+import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
+import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService;
+import org.lytsiware.clash.service.integration.SiteConfigurationService;
+import org.lytsiware.clash.service.integration.SiteQualifier;
+import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +38,7 @@ public class ClanStatsRestController {
     private ClanStatsServiceImpl clanStatsService;
 
     @Autowired
-    private ClanChestScoreService clanChestScoreService;
+    private AggregationService aggregationService;
 
     @Autowired
     private ClanChestScoreCalculationService clanChestScoreCalculationService;
@@ -84,7 +87,16 @@ public class ClanStatsRestController {
         }
 
         Week week = Week.now().minusWeeks(deltaWeek);
-        return clanStatsService.findNewPlayersAtWeeks(week.previous(), week);
+        return clanStatsService.findNewPlayersOfWeeks(week.previous(), week);
+    }
+
+    @GetMapping(value = "/newPlayers")
+    public NewPlayersDto getNewPlayersBetweenWeeks(@RequestParam Integer deltaFrom, @RequestParam(required = false, defaultValue = "0") Integer deltaTo) {
+        if (deltaTo >= deltaFrom) {
+            throw new IllegalArgumentException("'from' week should be before 'to' week");
+        }
+
+        return clanStatsService.findNewPlayersOfWeeks(Week.now().minusWeeks(deltaFrom), Week.now().minusWeeks(deltaTo));
     }
 
     @GetMapping(value = "/info/week")
@@ -94,7 +106,7 @@ public class ClanStatsRestController {
 
     @GetMapping(value = "/clan/score")
     public List<ClanWeeklyStatsDto> getClanChestScore() {
-        return clanChestScoreService.getClanChestScore(Week.now().minusWeeks(24), Week.now().previous());
+        return aggregationService.getClanChestScore(Week.now().minusWeeks(24), Week.now().previous());
     }
 
     @GetMapping(value = "clan/{clanTag}/score")

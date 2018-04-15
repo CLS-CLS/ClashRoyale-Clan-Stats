@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.AggregationService;
-import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.UpdateStatService;
+import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Controller
@@ -51,16 +52,18 @@ public class AdminController {
 		return checkParsing(false, model);
 		
 	}
-	
 
-	//@RequestMapping("/recalculate-avg/{week}")
-	public String recalculateAvgs(@PathVariable(value = "week") Integer week) {
-		if (week < 1) {
-			return "/index/";
+
+    @RequestMapping("/calculateAvg/{deltaWeek}")
+    @Transactional
+    public String recalculateAvgs(@PathVariable(value = "deltaWeek") Integer deltaWeek) {
+        if (deltaWeek < 0 || deltaWeek > 6) {
+            return "/index/";
 		}
-        aggregationService.calculateAndSaveAvgs(Week.fromWeek(week));
-        return "redirect:/" + (Week.now().getWeek() - week);
-	}
+        Week week = Week.now().minusWeeks(deltaWeek);
+        aggregationService.calculateAndSaveAvgs(week);
+        return "redirect:/" + deltaWeek;
+    }
 
 	//@RequestMapping("/updateDonations/{week}")
 	public String runSchedulerUpdateOrInsertDonations(@PathVariable(value = "week") Integer week) {

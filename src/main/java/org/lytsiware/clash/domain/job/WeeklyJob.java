@@ -2,31 +2,40 @@ package org.lytsiware.clash.domain.job;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import java.time.ZonedDateTime;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "weeklyjob.findLatest", query = "select w from WeeklyJob w order by w.latestWeek desc")})
 public class WeeklyJob {
 
 	@Id
-	int latestWeek;
+    String jobId;
 
-	public int getLatestWeek() {
-		return latestWeek;
-	}
+    ZonedDateTime latestWeek;
 
-	public void setLatestWeek(int latestWeek) {
-		this.latestWeek = latestWeek;
-	}
+    public WeeklyJob(String jobId, ZonedDateTime latestWeek) {
+        this.jobId = jobId;
+        this.latestWeek = latestWeek;
+    }
 
-	public WeeklyJob(int latestWeek) {
-		super();
-		this.latestWeek = latestWeek;
-	}
+    public WeeklyJob() {
 
-	public WeeklyJob() {
-		super();
-	}
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public ZonedDateTime getLatestWeek() {
+        return latestWeek;
+    }
+
+    public void setLatestWeek(ZonedDateTime latestWeek) {
+        this.latestWeek = latestWeek;
+    }
+
 
 }

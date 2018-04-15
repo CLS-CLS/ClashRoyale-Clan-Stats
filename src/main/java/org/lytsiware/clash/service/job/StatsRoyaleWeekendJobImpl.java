@@ -83,7 +83,7 @@ public class StatsRoyaleWeekendJobImpl {
             } catch (Exception ex) {
                 logger.error("Exception while retrieving stats from deckshop", ex);
             }
-            //chest oontribution taken reflects the previous week's cc not this one (this one has not started yet)
+            //chest contribution taken reflects the previous week's cc not this one (this one has not started yet)
             stats.forEach(s -> s.setChestContribution(null));
 
             updateStatsService.updateOrInsertDonationAndContributions(stats, Week.now(), false);
@@ -94,6 +94,12 @@ public class StatsRoyaleWeekendJobImpl {
 
     }
 
+    @ScheduledName("weekendRunner-final")
+    @Scheduled(cron = "${cron.weekend.final}", zone = ZoneIdConfiguration.zoneId)
+    public void extraCheck() {
+        run();
+    }
+
     private void updateReceivedCards(List<PlayerWeeklyStats> stats, List<PlayerWeeklyStats> deckproStats) {
         for (PlayerWeeklyStats pws : stats) {
             PlayerWeeklyStats deckProStat = deckproStats.stream().filter(dps -> dps.getPlayer().getTag().equals(pws.getPlayer().getTag())).findAny().orElse(null);
@@ -101,12 +107,6 @@ public class StatsRoyaleWeekendJobImpl {
                 pws.setCardsReceived(deckProStat.getCardsReceived());
             }
         }
-    }
-
-    @ScheduledName("midweekRunner-final")
-    @Scheduled(cron = "${cron.weekend.final}", zone = ZoneIdConfiguration.zoneId)
-    public void extraCheck() {
-        run();
     }
 
 }

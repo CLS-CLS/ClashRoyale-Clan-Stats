@@ -131,12 +131,23 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 	function loadData(week) {
 		$scope.loading = true;
 		
-		
-		if ($routeParams.week == null){
+		var url = baseUrl() + "/rest/newPlayers"
+
+		if ($routeParams.week == null && $routeParams.deltaFrom == null){
 			$routeParams.week = 0;
+			url += "/" + week;
 		}
-		
-		$http.get(baseUrl() + "/rest/newPlayers/" + $routeParams.week).then(function(response) {
+		else if ($routeParams.week  != null){
+		    url += "/" + week;
+		}else {
+		    if ($routeParams.deltaTo == null) {
+		        $routeParams.deltaTo = "";
+		    }
+		    url +="?deltaFrom=" + $routeParams.deltaFrom + "&deltaTo=" + $routeParams.deltaTo
+		}
+
+
+		$http.get(url).then(function(response) {
 			$scope.loading = false;
 				
 			$scope.stats = response.data;

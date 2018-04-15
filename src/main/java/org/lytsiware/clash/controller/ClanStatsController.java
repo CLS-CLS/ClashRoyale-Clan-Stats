@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ClanStatsController {
@@ -22,6 +23,14 @@ public class ClanStatsController {
     @GetMapping("/newplayers/{week:\\d*}")
     public String newPlayersPage(@PathVariable Integer week, Model model) {
         logger.info("new players request for week {}", week);
+        return "/index";
+    }
+
+    @GetMapping(value = "/newPlayers")
+    public String getNewPlayersBetweenWeeks(@RequestParam Integer deltaFrom, @RequestParam(required = false, defaultValue = "0") Integer deltaTo) {
+        if (deltaTo <= deltaFrom) {
+            throw new IllegalArgumentException("'from' week should be before 'to' week");
+        }
         return "/index";
     }
 
