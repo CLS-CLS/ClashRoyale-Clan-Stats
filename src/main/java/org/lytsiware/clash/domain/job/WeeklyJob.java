@@ -2,19 +2,21 @@ package org.lytsiware.clash.domain.job;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.ZonedDateTime;
 
 @Entity
+@Table(name = "JOB_EXECUTION")
 public class WeeklyJob {
 
 	@Id
-    String jobId;
+    private String jobId;
 
-    ZonedDateTime latestWeek;
+    private ZonedDateTime latestExecution;
 
-    public WeeklyJob(String jobId, ZonedDateTime latestWeek) {
+    public WeeklyJob(String jobId, ZonedDateTime latestExecution) {
         this.jobId = jobId;
-        this.latestWeek = latestWeek;
+        this.latestExecution = latestExecution;
     }
 
     public WeeklyJob() {
@@ -29,12 +31,12 @@ public class WeeklyJob {
         this.jobId = jobId;
     }
 
-    public ZonedDateTime getLatestWeek() {
-        return latestWeek;
+    public ZonedDateTime getLatestExecution() {
+        return latestExecution;
     }
 
-    public void setLatestWeek(ZonedDateTime latestWeek) {
-        this.latestWeek = latestWeek;
+    public void setLatestExecution(ZonedDateTime latestWeek) {
+        this.latestExecution = latestWeek;
     }
 
 
