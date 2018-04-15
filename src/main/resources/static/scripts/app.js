@@ -125,20 +125,20 @@ app.controller("chestChartsController", function($scope, $http, $timeout) {
 app.controller("newPlayersController", function($scope, $http, $routeParams) {
 	
 	$scope.submitDisabled = function(){
-		return !($routeParams.week == null || $routeParams.week == 0)  
+		return !($routeParams.deltaWeek == null || $routeParams.deltaWeek == 0)
 	}
 	
-	function loadData(week) {
+	function loadData() {
 		$scope.loading = true;
 		
 		var url = baseUrl() + "/rest/newPlayers"
 
-		if ($routeParams.week == null && $routeParams.deltaFrom == null){
-			$routeParams.week = 0;
-			url += "/" + week;
+		if ($routeParams.deltaWeek == null && $routeParams.deltaFrom == null){
+			$routeParams.deltaWeek = 0;
+			url += "/" + $routeParams.deltaWeek;
 		}
-		else if ($routeParams.week  != null){
-		    url += "/" + week;
+		else if ($routeParams.deltaWeek != null){
+		    url += "/" + $routeParams.deltaWeek;
 		}else {
 		    if ($routeParams.deltaTo == null) {
 		        $routeParams.deltaTo = "";
@@ -174,8 +174,8 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 			}
 		})
 		console.log(request);
-		$http.post(baseUrl()+"/rest/newPlayers/update/"+ $routeParams.week, request).then(function(response){
-			loadData($routeParams.week);
+		$http.post(baseUrl()+"/rest/newPlayers/update/"+ $routeParams.deltaWeek, request).then(function(response){
+			loadData($routeParams.deltaWeek);
 		}, function (response) {
 			$scope.loading = false;
 			alert("something went wrong!")

@@ -6,7 +6,7 @@ app.config([ "$locationProvider", "$routeProvider",
                 templateUrl: "views/upload.htm",
                 controller: "uploadController"
             })
-            .when("/newplayers/:week?", {
+            .when("/newplayers/:deltaWeek?", {
                 templateUrl: "views/newPlayers.htm"
             })
             .when("/clan/score", {

@@ -1,5 +1,6 @@
 package org.lytsiware.clash.controller;
 
+import org.lytsiware.clash.Week;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,9 @@ public class ClanStatsController {
         return "/index";
     }
 
-    @GetMapping("/newplayers/{week:\\d*}")
-    public String newPlayersPage(@PathVariable Integer week, Model model) {
-        logger.info("new players request for week {}", week);
+    @GetMapping("/newplayers/{deltaWeek:\\d*}")
+    public String newPlayersPage(@PathVariable Integer deltaWeek, Model model) {
+        logger.info("new players request for week {}", Week.now().minusWeeks(deltaWeek));
         return "/index";
     }
 
