@@ -10,9 +10,9 @@ public class NewPlayersDto implements Serializable {
     private LocalDate oldWeek;
     private LocalDate newWeek;
 
-    List<PlayerOverallStats> newPlayers = new ArrayList<>();
+    List<NewPlayerOverallStats> newPlayers = new ArrayList<>();
 
-    public NewPlayersDto(LocalDate oldWeek, LocalDate newWeek, List<PlayerOverallStats> newPlayers) {
+    public NewPlayersDto(LocalDate oldWeek, LocalDate newWeek, List<NewPlayerOverallStats> newPlayers) {
         this.oldWeek = oldWeek;
         this.newWeek = newWeek;
         this.newPlayers = newPlayers;
@@ -26,7 +26,7 @@ public class NewPlayersDto implements Serializable {
         return newWeek;
     }
 
-    public List<PlayerOverallStats> getNewPlayers() {
+    public List<NewPlayerOverallStats> getNewPlayers() {
         return newPlayers;
     }
 }

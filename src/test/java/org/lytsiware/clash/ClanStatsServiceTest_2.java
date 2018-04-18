@@ -1,8 +1,7 @@
-package org.lytsiware;
+package org.lytsiware.clash;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;

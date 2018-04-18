@@ -1,10 +1,9 @@
-package org.lytsiware;
+package org.lytsiware.clash;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lytsiware.clash.Week;
 import org.lytsiware.clash.controller.ClanStatsRestController;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.service.integration.ParseException;

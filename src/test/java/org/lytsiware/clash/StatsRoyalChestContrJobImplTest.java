@@ -1,13 +1,13 @@
-package org.lytsiware.clash.service.job;
+package org.lytsiware.clash;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.job.WeekJobRepositoryImpl;
 import org.lytsiware.clash.domain.job.WeeklyJob;
+import org.lytsiware.clash.service.job.StatsRoyalChestContrJobImpl;
 import org.lytsiware.clash.utils.TestableLocalDateTime;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;

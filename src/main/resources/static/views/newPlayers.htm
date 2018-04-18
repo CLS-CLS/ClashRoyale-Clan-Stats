@@ -15,6 +15,7 @@
 			                    <th>Role</th>
 			                    <th colspan="2">Chest contribution</th>
                                 <th colspan="2">Donations</th>
+                                <th>Still in Clan</th>
 			                </tr>
 		                </thead>
 		                <tbody>
@@ -23,20 +24,23 @@
 		                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}">{{s.name}}</a></td>
 		                    <td>{{s.role}}</td>
 		                    <td>{{s.chestContribution }}</td>
-		                    <td> <toggle ng-model="s.chestToggleValue" ng-change="changed()" 
-		                    	onstyle="btn-success" on="<i class='fa fa-check'></i>" 
-		                    	offstyle="btn-danger" off="<i class='fa fa-times'></i>"
-		                    	ng-hide="s.chestContribution == null"
-		                    	></toggle>
+		                    <td> <toggle ng-model="s.chestToggleValue" ng-change="changed()"
+                                         onstyle="btn-success" on="<i class='fa fa-check'></i>"
+                                         offstyle="btn-danger" off="<i class='fa fa-times'></i>"
+                                         ng-hide="s.chestContribution == null"></toggle>
 		                    </td>
                             <td>{{s.cardDonation}} <span class="small-text">/{{s.cardsReceived}}</span></td>
-		                    <td> <toggle ng-model="s.cardToggleValue" ng-change="changed()" 
-		                    	onstyle="btn-success" on="<i class='fa fa-check'></i>" 
-		                    	offstyle="btn-danger" off="<i class='fa fa-times'></i>"
-		                    	ng-hide="s.cardDonation == null"
-		                    	></toggle>
+		                    <td> <toggle ng-model="s.cardToggleValue" ng-change="changed()"
+                                         onstyle="btn-success" on="<i class='fa fa-check'></i>"
+                                         offstyle="btn-danger" off="<i class='fa fa-times'></i>"
+                                         ng-hide="s.cardDonation == null"></toggle>
 		                    </td>
-		                </tr>
+                            <td>
+                                <span ng-show="s.stillInClan" style="color:green">YES</span>
+                                <span ng-show="!s.stillInClan" style="color:red">NO</span>
+                            </td>
+
+                        </tr>
 		                <tr ng-if="stats.newPlayers.length == 0"><td colspan="12"> <h2>No new players</h2></td></tr>
 		                </tbody>
 		            </table>

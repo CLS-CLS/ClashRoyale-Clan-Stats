@@ -1,15 +1,11 @@
-package org.lytsiware;
+package org.lytsiware.clash;
 
 
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.lytsiware.clash.Application;
-import org.lytsiware.clash.service.integration.ClashStatsSiteServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.embedded.LocalServerPort;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;

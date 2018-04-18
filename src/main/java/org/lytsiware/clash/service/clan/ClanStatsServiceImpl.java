@@ -4,10 +4,7 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
-import org.lytsiware.clash.dto.NewPlayersDto;
-import org.lytsiware.clash.dto.NewPlayersUpdateDto;
-import org.lytsiware.clash.dto.PlayerOverallStats;
-import org.lytsiware.clash.dto.PlayerStatsDto;
+import org.lytsiware.clash.dto.*;
 import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.slf4j.Logger;
@@ -22,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +61,12 @@ public class ClanStatsServiceImpl implements ClanStatsService {
                 .filter(week2stats -> !oldestWeekPlayerStats.contains(week2stats.getPlayer()))
                 .collect(Collectors.toList());
 
-        List<PlayerOverallStats> overallStatsDto = newPlayerStats.stream().map(PlayerOverallStats::new)
+        Week currentWeek = Week.now();
+        Set<Player> currentPlayers = (!currentWeek.equals(newestWeek) ? playerWeeklyStatsRepository.findByWeek(currentWeek).stream().map(PlayerWeeklyStats::getPlayer).collect(Collectors.toSet()) : null);
+        Predicate<PlayerWeeklyStats> stillInClan = playerWeeklyStats -> currentPlayers == null || currentPlayers.contains(playerWeeklyStats.getPlayer());
+
+        List<NewPlayerOverallStats> overallStatsDto = newPlayerStats.stream()
+                .map(playerWeeklyStats -> new NewPlayerOverallStats(playerWeeklyStats, stillInClan.test(playerWeeklyStats)))
                 .collect(Collectors.toList());
         logger.debug("found new players: {}", overallStatsDto);
 

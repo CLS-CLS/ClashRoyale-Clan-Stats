@@ -111,6 +111,6 @@ public class Week {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        return week != ((Week) obj).week;
+        return week == ((Week) obj).week;
     }
 }
