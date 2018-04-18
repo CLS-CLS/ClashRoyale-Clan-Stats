@@ -64,7 +64,7 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
             String cronExpression = propertyResolver.resolvePlaceholders(scheduledNameContextEntry.getValue().getMethod().getAnnotation(Scheduled.class).cron());
 
-            ZonedDateTime nextExecutionLocalDateTime = Utils.getNextExecutionDate(cronExpression, lastRun);
+            ZonedDateTime nextExecutionLocalDateTime = Utils.getNextExecutionDate(cronExpression, ZonedDateTime.now(ZoneIdConfiguration.zoneId()));
 
             int minutesRemaining = (int) ChronoUnit.MINUTES.between(LocalDateTime.now(ZoneIdConfiguration.zoneId()), nextExecutionLocalDateTime);
             int daysRemaining = minutesRemaining / 1440;

@@ -76,9 +76,11 @@ public class Utils {
         return Date.from(localDateTime.toInstant());
     }
 
-    public static ZonedDateTime getNextExecutionDate(String cronExpression, ZonedDateTime latestExecutionDate) {
+    public static ZonedDateTime getNextExecutionDate(String cronExpression, ZonedDateTime latestExecutionZonedDate) {
         CronTrigger cronTrigger = new CronTrigger(cronExpression, TimeZone.getTimeZone(ZoneIdConfiguration.zoneId()));
-        Date nextExecutionAsDate = cronTrigger.nextExecutionTime(new SimpleTriggerContext(Utils.convertToDate(latestExecutionDate, ZoneIdConfiguration.zoneId()), null, null));
+        Date lastExecutionAsDate = Utils.convertToDate(latestExecutionZonedDate, ZoneIdConfiguration.zoneId());
+        Date nextExecutionAsDate = cronTrigger.nextExecutionTime(
+                new SimpleTriggerContext(lastExecutionAsDate, lastExecutionAsDate, lastExecutionAsDate));
         ZonedDateTime nextExecution = nextExecutionAsDate.toInstant().atZone(ZoneIdConfiguration.zoneId());
         return nextExecution;
     }

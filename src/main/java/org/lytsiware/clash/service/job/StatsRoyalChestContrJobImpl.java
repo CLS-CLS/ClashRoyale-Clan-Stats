@@ -101,7 +101,8 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
         }
 
         ZonedDateTime nextExecutionDate = Utils.getNextExecutionDate(cronExpression, latestRun.getLatestExecution());
-
+        logger.info("latest scheduler run was at {} ", latestRun.getLatestExecution());
+        logger.info("next execution date is at {}", nextExecutionDate);
         if (nextExecutionDate.isAfter(TestableLocalDateTime.getZonedDateTimeNow())) {
             logger.info("Scheduler has already run");
             return false;
