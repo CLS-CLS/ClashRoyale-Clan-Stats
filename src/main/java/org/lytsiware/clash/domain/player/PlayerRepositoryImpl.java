@@ -8,8 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Repository
@@ -27,7 +29,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
-    public void saveOrUpdate(List<Player> players) {
+    public void saveOrUpdate(Collection<Player> players) {
         logger.info("saveOrUpdate players");
         players.stream().forEach(em::merge);
     }
@@ -43,7 +45,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         logger.info("loadAll");
         TypedQuery<Player> query =  em.createQuery("select p from Player p", Player.class);
         List<Player> result = query.getResultList();
-        return result.stream().collect(Collectors.toMap(Player::getTag,  s -> s));
+        return result.stream().collect(Collectors.toMap(Player::getTag, Function.identity()));
 
     }
 

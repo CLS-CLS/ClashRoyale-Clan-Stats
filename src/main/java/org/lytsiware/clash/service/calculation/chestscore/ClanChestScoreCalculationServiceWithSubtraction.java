@@ -113,7 +113,7 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
     //TODO move this as a test
     public static void main(String[] args) {
         Function<List<Integer>, List<PlayerWeeklyStats>> mapper = intList -> intList.stream()
-                .map(i -> new PlayerWeeklyStats(new Player("", "", ""), 0, i, 0, 0, 0))
+                .map(i -> new PlayerWeeklyStats(new Player("", "", "", true), 0, i, 0, 0, 0))
                 .collect(Collectors.toList());
 
         double score = new ClanChestScoreCalculationServiceWithSubtraction().calculateChestScoreFromData(Arrays.asList(2, 2, 2, 1));

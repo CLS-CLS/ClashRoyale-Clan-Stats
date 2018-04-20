@@ -14,13 +14,20 @@ public class Player {
 
     String role;
 
+    Boolean inClan;
+
     public Player() {
     }
 
     public Player(String tag, String name, String role) {
+        this(tag, name, role, true);
+    }
+
+    public Player(String tag, String name, String role, Boolean inClan) {
         this.tag = tag;
         this.name = name;
         this.role = role;
+        this.inClan = inClan;
     }
 
     public String getTag() {
@@ -31,9 +38,24 @@ public class Player {
         return name;
     }
 
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Boolean getInClan() {
+        return inClan;
+    }
+
+    public void setInClan(Boolean inClan) {
+        this.inClan = inClan;
     }
 
     @Override
@@ -51,13 +73,7 @@ public class Player {
         return tag.hashCode();
     }
 
-	public String getRole() {
-		return role;
-	}
 
-	public void setRole(String role) {
-		this.role = role;
-	}
 
     @Override
     public String toString() {

@@ -168,11 +168,16 @@
 		                <tbody>
 		
 		                <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: state.filter.orderBy: false : state.filter.comparator">
-		                	 
-		                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}" ng-click="next()">{{s.name}}</a></td>
+
+                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}"
+                                                                                              ng-click="next()">
+                                <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span></a>
+                            </td>
 		                    <td ng-show="state.selectableColumns['role'].show">{{s.role}}</td>
-		
-		                    <td ng-show="state.selectableColumns['cc'].show && !state.showPercentage">{{s.chestContribution }}</td>
+
+                            <td ng-show="state.selectableColumns['cc'].show && !state.showPercentage">
+                                {{s.chestContribution}}
+                            </td>
 		                    <td ng-show="state.selectableColumns['cc'].show && state.showPercentage">{{s.chestContributionPerc | percentage:1}}</td>
 		                    <td ng-show="state.selectableColumns['ccRank'].show">{{s.ccRank}}</td>
 

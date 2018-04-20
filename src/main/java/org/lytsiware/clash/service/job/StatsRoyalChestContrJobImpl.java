@@ -70,6 +70,7 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 
             Week week = Week.now().previous();
             updateStatsService.updateChestContibutionAndRole(stats, week, true);
+            updateStatsService.markPlayerIsInClan(stats);
             aggregationService.calculateAndSaveAvgs(week);
             aggregationService.calculateAndUpdateClanChestScore(week);
             weeklyJobRepository.save(new WeeklyJob(StatsRoyaleWeekendJobImpl.class.getSimpleName(), ZonedDateTime.now()));

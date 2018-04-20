@@ -79,7 +79,7 @@ public class ClanStatsSecuredRestController {
             String rank = stats[2].trim();
             String donations = stats[3].trim();
             String cc = stats[4].trim();
-            Player player = new Player(tag, name , rank);
+            Player player = new Player(tag, name, rank, true);
 
             PlayerWeeklyStats pws = new PlayerWeeklyStats(player, week.getWeek() ,
                     Utils.parseNullableInt(cc), Utils.parseNullableInt(donations),0,0);

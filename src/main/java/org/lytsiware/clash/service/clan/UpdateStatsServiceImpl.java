@@ -2,6 +2,7 @@ package org.lytsiware.clash.service.clan;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.service.UpdateStatService;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -24,12 +22,41 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
     private Logger logger = LoggerFactory.getLogger(UpdateStatsServiceImpl.class);
 
     private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
+    private PlayerRepository playerRepository;
+
 
     @Autowired
-    public UpdateStatsServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository){
-
+    public UpdateStatsServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository, PlayerRepository playerRepository) {
         this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
+        this.playerRepository = playerRepository;
     }
+
+
+    @Override
+    @Transactional(value = Transactional.TxType.REQUIRED)
+    public void markPlayerIsInClan(List<PlayerWeeklyStats> playerWeeklyStats) {
+        Map<String, Player> players = playerRepository.loadAll();
+        Set<Player> playersInClan = playerWeeklyStats.stream().map(PlayerWeeklyStats::getPlayer).collect(Collectors.toSet());
+        List<Player> playersToBeUpdated = new ArrayList<>();
+
+        for (Player playerInClan : playersInClan) {
+            Player player = players.remove(playerInClan.getTag());
+            if (!player.getInClan()) {
+                player.setInClan(true);
+                playersToBeUpdated.add(player);
+            }
+        }
+        //update players that are not in clan but have flag true
+        for (Player playerNotInClan : players.values()) {
+            if (playerNotInClan.getInClan()) {
+                playerNotInClan.setInClan(false);
+                playersToBeUpdated.add(playerNotInClan);
+            }
+        }
+
+        playerRepository.saveOrUpdate(playersToBeUpdated);
+    }
+
 
     @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
@@ -56,7 +83,7 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
                     dbStat.setCardsReceived(newStat.getCardsReceived());
                 }
             } else {
-                Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole());
+                Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole(), true);
                 dbStat = PlayerWeeklyStats.builder()
                         .withPlayer(newPlayer)
                         .withWeek(week.getWeek())
@@ -89,7 +116,7 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
                     dbStat.setCardDonation(newStat.getCardDonation());
                 }
             } else {
-                Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole());
+                Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole(), true);
                 dbStat = new PlayerWeeklyStats(newPlayer, week.getWeek(), null, newStat.getCardDonation(), 0, 0);
                 dbStat.setWeek(week.getWeek());
                 logger.info("add new player {} with donation {}", dbStat.getPlayer().getName(), dbStat.getCardDonation());

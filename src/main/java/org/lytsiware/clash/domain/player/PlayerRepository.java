@@ -1,13 +1,13 @@
 package org.lytsiware.clash.domain.player;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 
 public interface PlayerRepository {
     void saveOrUpdate(Player player);
 
-    void saveOrUpdate(List<Player> players);
+    void saveOrUpdate(Collection<Player> players);
 
     Player findByTag(String tag);
 

@@ -7,7 +7,6 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -68,7 +67,7 @@ public class StatsRoyaleSiteServiceImpl implements RefreshableSiteIntegrationSer
             int chestContribution = Integer.valueOf(el.attr("data-crowns"));
             int cardDonation = Integer.valueOf(el.attr("data-donations"));
             String role = el.select(".clan__memberRoleInner").text().trim();
-            Player player = new Player(memberTag, memberName, role);
+            Player player = new Player(memberTag, memberName, role, true);
             PlayerWeeklyStats stats = new PlayerWeeklyStats(player, chestContribution, cardDonation, 0, 0);
             playerWeeklyStats.add(stats);
         }

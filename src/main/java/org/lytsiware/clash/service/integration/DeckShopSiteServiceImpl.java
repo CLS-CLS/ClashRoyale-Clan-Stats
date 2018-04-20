@@ -58,7 +58,7 @@ public class DeckShopSiteServiceImpl implements SiteIntegrationService {
                 String donationString = playerStats.get(6).select("span").text();
                 Integer donations = StringUtils.isEmpty(donationString) ? 0 : Integer.valueOf(donationString);
                 PlayerWeeklyStats playerWeeklyStat = PlayerWeeklyStats.builder()
-                        .withPlayer(new Player(tag, name, role))
+                        .withPlayer(new Player(tag, name, role, true))
                         .withChestContribution(contribution)
                         .withCardDonation(donations)
                         .withCardsReceived(requests)

@@ -64,6 +64,7 @@ public class StatsRoyaleWeekendJobImpl {
             }
 
             updateStatsService.updateOrInsertDonationAndContributions(stats, Week.now(), true);
+            updateStatsService.markPlayerIsInClan(stats);
         } catch (Exception e) {
             logger.error("oops", e);
             throw e;
@@ -87,6 +88,7 @@ public class StatsRoyaleWeekendJobImpl {
             stats.forEach(s -> s.setChestContribution(null));
 
             updateStatsService.updateOrInsertDonationAndContributions(stats, Week.now(), false);
+            updateStatsService.markPlayerIsInClan(stats);
         } catch (Exception e) {
             logger.error("oops", e);
             throw e;

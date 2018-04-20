@@ -10,7 +10,8 @@ public class PlayerOverallStats implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String tag;
+    private boolean inClan;
+    private String tag;
     private String name;
     private int week;
     private double avgChestContribution;
@@ -56,6 +57,7 @@ public class PlayerOverallStats implements Serializable {
         this.role = playerWeeklyStats.getPlayer().getRole();
         this.cardsReceived = playerWeeklyStats.getCardsReceived();
         this.avgCardsReceived = playerWeeklyStats.getAvgCardsReceived();
+        this.inClan = playerWeeklyStats.getPlayer().getInClan();
     }
 
 	public String getTag() {
@@ -132,5 +134,17 @@ public class PlayerOverallStats implements Serializable {
 
     public void setAvgCardsReceived(double avgCardsReceived) {
         this.avgCardsReceived = avgCardsReceived;
+    }
+
+    public boolean isInClan() {
+        return inClan;
+    }
+
+    public void setInClan(boolean inClan) {
+        this.inClan = inClan;
+    }
+
+    public void setCardsReceived(Integer cardsReceived) {
+        this.cardsReceived = cardsReceived;
     }
 }

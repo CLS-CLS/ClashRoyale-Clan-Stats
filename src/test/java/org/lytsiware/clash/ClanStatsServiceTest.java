@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
-import org.lytsiware.clash.dto.NewPlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.ClanStatsService;
@@ -143,7 +142,7 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
 
         pwsRepo.saveOrUpdateAll(Arrays.asList(p1w1, p1w2, p2w2, p3w2));
 
-        List<NewPlayerOverallStats> newPlayers = clanStatsService.findNewPlayersOfWeeks(Week.fromWeek(10), Week.fromWeek(11))
+        List<PlayerOverallStats> newPlayers = clanStatsService.findNewPlayersOfWeeks(Week.fromWeek(10), Week.fromWeek(11))
                 .getNewPlayers();
 
         Assert.assertEquals(2, newPlayers.size());

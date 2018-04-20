@@ -9,9 +9,7 @@ import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,9 +42,9 @@ public class ClashStatsSiteServiceImpl implements SiteIntegrationService {
 			String[] cardDonationArray = el.select(".lineD").text().split(",");
 			int cardDonation = Integer.parseInt(cardDonationArray[cardDonationArray.length - 1]);
 			String role = el.select("div").get(2).text();
-			Player player = new Player(memberTag, memberName, role);
-			PlayerWeeklyStats stats = new PlayerWeeklyStats(player, Week.now().previous().getWeek(),
-					chestContribution, cardDonation, 0 , 0);
+            Player player = new Player(memberTag, memberName, role, true);
+            PlayerWeeklyStats stats = new PlayerWeeklyStats(player, Week.now().previous().getWeek(),
+                    chestContribution, cardDonation, 0 , 0);
 			playerWeeklyStats.add(stats);
 		}
 

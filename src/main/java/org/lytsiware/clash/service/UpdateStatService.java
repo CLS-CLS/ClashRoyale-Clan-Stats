@@ -8,6 +8,13 @@ import java.util.List;
 public interface UpdateStatService {
 
     /**
+     * marks the players not in clan
+     *
+     * @param playerWeeklyStats the players currently in the clan
+     */
+    void markPlayerIsInClan(List<PlayerWeeklyStats> playerWeeklyStats);
+
+    /**
      * Updates the card donation and chest contribution values
      * @param stats the stats containing the players to be updated and thei new value
      * @param week the week the update should happen
