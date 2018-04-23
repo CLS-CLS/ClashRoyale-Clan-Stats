@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
  * H2 database does not support {@link ZonedDateTime}, so we need to manually convert it to timestamp
  */
 @Converter(autoApply = true)
-@Profile("!postgres")
+@Profile({"!postgres", "!heroku"})
 public class ZonedDateTimeTimestampConverter implements AttributeConverter<ZonedDateTime, Timestamp> {
 
 
