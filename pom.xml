@@ -21,12 +21,12 @@
 	</properties>
 	<profiles>
 		<profile>
-			<id>dev</id>
+            <id>dev-h2</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<spring.profile>dev</spring.profile>
+                <spring.profile>dev, dev-h2</spring.profile>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -37,9 +37,9 @@
 			</dependencies>
 		</profile>
 		<profile>
-			<id>postgres</id>
+            <id>dev-postgres</id>
 			<properties>
-				<spring.profile>postgres</spring.profile>
+                <spring.profile>dev, dev-postgres</spring.profile>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -57,7 +57,7 @@
 				</property>
 			</activation>
 			<properties>
-				<spring.profile>postgres</spring.profile>
+                <spring.profile>heroku</spring.profile>
 			</properties>
 			<dependencies>
 				<dependency>

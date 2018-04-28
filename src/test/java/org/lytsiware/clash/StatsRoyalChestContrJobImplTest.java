@@ -15,6 +15,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.env.MockEnvironment;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @RunWith(PowerMockRunner.class)
@@ -38,14 +39,14 @@ public class StatsRoyalChestContrJobImplTest {
 
     @Test
     public void shouldNotRun() throws Exception {
-        Mockito.when(weeklyJobRepository.loadLatest(Mockito.anyString())).thenReturn(new WeeklyJob("job", ZonedDateTime.of(2018, 4, 9, 8, 0, 0, 0, ZoneIdConfiguration.zoneId())));
+        Mockito.when(weeklyJobRepository.loadLatest(Mockito.anyString())).thenReturn(new WeeklyJob("job", LocalDateTime.of(2018, 4, 9, 8, 0, 0, 0)));
         Mockito.when(TestableLocalDateTime.getZonedDateTimeNow()).thenReturn(ZonedDateTime.of(2018, 4, 16, 7, 0, 0, 0, ZoneIdConfiguration.zoneId()));
         Assert.assertFalse(statsRoyalChestContrJob.shouldRun());
     }
 
     @Test
     public void shouldRun() throws Exception {
-        Mockito.when(weeklyJobRepository.loadLatest(Mockito.anyString())).thenReturn(new WeeklyJob("job", ZonedDateTime.of(2018, 4, 9, 8, 0, 0, 0, ZoneIdConfiguration.zoneId())));
+        Mockito.when(weeklyJobRepository.loadLatest(Mockito.anyString())).thenReturn(new WeeklyJob("job", LocalDateTime.of(2018, 4, 9, 8, 0, 0, 0)));
         Mockito.when(TestableLocalDateTime.getZonedDateTimeNow()).thenReturn(ZonedDateTime.of(2018, 4, 16, 9, 0, 0, 0, ZoneIdConfiguration.zoneId()));
         Assert.assertTrue(statsRoyalChestContrJob.shouldRun());
     }

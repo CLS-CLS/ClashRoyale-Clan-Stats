@@ -64,11 +64,11 @@ public class StatsRoyaleSiteServiceImpl implements RefreshableSiteIntegrationSer
             String memberUrl = memberLink.attr("href");
             String memberTag = memberUrl.split("/profile/")[1];
             String memberName = memberLink.text();
-            int chestContribution = Integer.valueOf(el.attr("data-crowns"));
+//            int chestContribution = Integer.valueOf(el.attr("data-crowns"));
             int cardDonation = Integer.valueOf(el.attr("data-donations"));
             String role = el.select(".clan__memberRoleInner").text().trim();
             Player player = new Player(memberTag, memberName, role, true);
-            PlayerWeeklyStats stats = new PlayerWeeklyStats(player, chestContribution, cardDonation, 0, 0);
+            PlayerWeeklyStats stats = new PlayerWeeklyStats(player, null, cardDonation, 0, 0);
             playerWeeklyStats.add(stats);
         }
 

@@ -22,10 +22,14 @@ import java.util.stream.Collectors;
 @SiteQualifier(SiteQualifier.Name.DECK_SHOP)
 public class DeckShopSiteServiceImpl implements SiteIntegrationService {
 
-    Logger logger = LoggerFactory.getLogger(DeckShopSiteServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(DeckShopSiteServiceImpl.class);
+
+    private SiteConfigurationService siteConfigurationService;
 
     @Autowired
-    SiteConfigurationService siteConfigurationService;
+    public DeckShopSiteServiceImpl(SiteConfigurationService siteConfigurationService) {
+        this.siteConfigurationService = siteConfigurationService;
+    }
 
     @Override
     public List<PlayerWeeklyStats> retrieveData() {
@@ -37,15 +41,11 @@ public class DeckShopSiteServiceImpl implements SiteIntegrationService {
 
         Document document = this.createDocumentFromResource(siteUrl);
 
-        List<Element> tables = document.select("table").stream()
-                .filter(e -> e.select("th").stream().anyMatch(se -> "Clan Chest".equals(se.text())))
-                .collect(Collectors.toList());
-
-        validateTableIndex(tables);
+        Element table = findStatTable(document);
 
         List<PlayerWeeklyStats> playerWeeklyStats = new ArrayList<>();
         try {
-            Elements players = tables.get(0).select("tbody").select("tr");
+            Elements players = table.select("tbody").select("tr");
             for (Element player : players) {
                 String tag = player.attr("id");
                 logger.info("Parsing element with tag: {}", tag);
@@ -53,13 +53,11 @@ public class DeckShopSiteServiceImpl implements SiteIntegrationService {
                 Elements roleElements = playerStats.get(2).select("span");
                 String role = roleElements.size() == 0 ? "Member" : roleElements.get(0).text();
                 String name = playerStats.get(2).select("a").text();
-                Integer contribution = Integer.valueOf(playerStats.get(5).select("span").get(0).text());
                 Integer requests = Integer.valueOf(playerStats.get(5).select("span").get(1).text());
-                String donationString = playerStats.get(6).select("span").text();
+                String donationString = playerStats.get(5).select("span").get(0).text();
                 Integer donations = StringUtils.isEmpty(donationString) ? 0 : Integer.valueOf(donationString);
                 PlayerWeeklyStats playerWeeklyStat = PlayerWeeklyStats.builder()
                         .withPlayer(new Player(tag, name, role, true))
-                        .withChestContribution(contribution)
                         .withCardDonation(donations)
                         .withCardsReceived(requests)
                         .build();
@@ -73,10 +71,15 @@ public class DeckShopSiteServiceImpl implements SiteIntegrationService {
         return playerWeeklyStats;
     }
 
-    private void validateTableIndex(List<Element> tables) throws ParseException {
+    private Element findStatTable(Document document) throws ParseException {
+        List<Element> tables = document.select("table").stream()
+                .filter(e -> e.select("th").stream().anyMatch(se -> "Donations Received".equals(se.text())))
+                .collect(Collectors.toList());
+
         if (tables.size() != 1) {
-            throw new ParseException("More than one table for stats was found");
+            throw new ParseException("None or more than one table for stats was found");
         }
+
         Elements tableHeaders = tables.get(0).select("th");
         check("Rank", tableHeaders.get(0).select("span").get(1).text().equals("Rank"));
         check("Arena", tableHeaders.get(1).text().equals("Arena"));
@@ -84,7 +87,7 @@ public class DeckShopSiteServiceImpl implements SiteIntegrationService {
         check("Trophies", tableHeaders.get(4).getElementsContainingText("Trophies").size() != 0);
         check("Contribution", tableHeaders.get(4).getElementsContainingText("Contribution").size() != 0);
         check("Donations", tableHeaders.get(5).text().equals("Donations Received"));
-        check("Clan Chest", tableHeaders.get(6).text().equals("Clan Chest"));
+        return tables.get(0);
     }
 
     private void check(String reason, boolean ok) {

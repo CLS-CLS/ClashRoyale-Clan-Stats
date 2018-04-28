@@ -149,6 +149,22 @@ public class PlayerWeeklyStats {
         this.cardsReceived = cardsReceived;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("PlayerWeeklyStats{");
+        sb.append("id=").append(id);
+        sb.append(", player=").append(player);
+        sb.append(", week=").append(week);
+        sb.append(", chestContribution=").append(chestContribution);
+        sb.append(", cardDonation=").append(cardDonation);
+        sb.append(", cardsReceived=").append(cardsReceived);
+        sb.append(", avgChestContribution=").append(avgChestContribution);
+        sb.append(", avgCardDonation=").append(avgCardDonation);
+        sb.append(", avgCardsReceived=").append(avgCardsReceived);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public static class Builder {
         private Player player;
         private Integer week;

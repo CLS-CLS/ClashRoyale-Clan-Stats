@@ -1,9 +1,10 @@
 package org.lytsiware.clash.domain.job;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "JOB_EXECUTION")
@@ -12,9 +13,10 @@ public class WeeklyJob {
 	@Id
     private String jobId;
 
-    private ZonedDateTime latestExecution;
+    @Basic
+    private LocalDateTime latestExecution;
 
-    public WeeklyJob(String jobId, ZonedDateTime latestExecution) {
+    public WeeklyJob(String jobId, LocalDateTime latestExecution) {
         this.jobId = jobId;
         this.latestExecution = latestExecution;
     }
@@ -31,11 +33,11 @@ public class WeeklyJob {
         this.jobId = jobId;
     }
 
-    public ZonedDateTime getLatestExecution() {
+    public LocalDateTime getLatestExecution() {
         return latestExecution;
     }
 
-    public void setLatestExecution(ZonedDateTime latestWeek) {
+    public void setLatestExecution(LocalDateTime latestWeek) {
         this.latestExecution = latestWeek;
     }
 

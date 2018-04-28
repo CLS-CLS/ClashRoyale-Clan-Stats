@@ -70,10 +70,9 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 
             Week week = Week.now().previous();
             updateStatsService.updateChestContibutionAndRole(stats, week, true);
-            updateStatsService.markPlayerIsInClan(stats);
             aggregationService.calculateAndSaveAvgs(week);
             aggregationService.calculateAndUpdateClanChestScore(week);
-            weeklyJobRepository.save(new WeeklyJob(StatsRoyaleWeekendJobImpl.class.getSimpleName(), ZonedDateTime.now()));
+            weeklyJobRepository.save(new WeeklyJob(StatsRoyaleWeekendJobImpl.class.getSimpleName(), LocalDateTime.now()));
         } catch (Exception e) {
             logger.error("oops", e);
             throw e;
@@ -101,7 +100,7 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
             return false;
         }
 
-        ZonedDateTime nextExecutionDate = Utils.getNextExecutionDate(cronExpression, latestRun.getLatestExecution());
+        ZonedDateTime nextExecutionDate = Utils.getNextExecutionDate(cronExpression, latestRun.getLatestExecution().atZone(ZoneIdConfiguration.zoneId()));
         logger.info("latest scheduler run was at {} ", latestRun.getLatestExecution());
         logger.info("next execution date is at {}", nextExecutionDate);
         if (nextExecutionDate.isAfter(TestableLocalDateTime.getZonedDateTimeNow())) {

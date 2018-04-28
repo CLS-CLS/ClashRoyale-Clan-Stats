@@ -21,7 +21,7 @@ public class WeekJobRepositoryImpl implements WeekJobRepository {
     @Transactional(value=TxType.REQUIRED)
     public void save(WeeklyJob week) {
     	logger.info("Save job run for week: {}," + week.getLatestExecution());
-        em.persist(week);
+        em.merge(week);
     }
 
 	@Override
