@@ -68,10 +68,27 @@
 }
 
 .halfscreen {
-	height: 50vh;
 	overflow-y:auto;
 }
 
+.halfscreen .table-striped thead {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.halfscreen .table-striped tbody {
+    overflow: auto;
+    display: block;
+    height: 50vh;
+    margin-bottom: 20px;
+}
+
+.halfscreen .table-striped tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
 .loading > i {
 	position:fixed;
 	left: 50%;
