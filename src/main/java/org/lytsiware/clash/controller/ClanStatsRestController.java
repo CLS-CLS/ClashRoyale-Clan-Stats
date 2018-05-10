@@ -101,7 +101,7 @@ public class ClanStatsRestController {
 
     @GetMapping(value = "/info/week")
     public Integer getWeekNumber() {
-        return Week.now().previous().getWeek();
+        return Week.now().getWeek();
     }
 
     @GetMapping(value = "/clan/score")

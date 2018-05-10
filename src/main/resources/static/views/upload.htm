@@ -12,3 +12,24 @@
     </table>
 </form>
 
+<label>upload war stats</label>
+<form method="POST" action="/rest/uploadWarStats" enctype="multipart/form-data">
+    <table class="table">
+        <tr>
+            <td><label>Select a file to upload</label></td>
+            <td><input class="btn btn-primary" type="file" name="file" multiple></td>
+            <td><input class="btn btn-primary" type="submit" value="Submit"/></td>
+        </tr>
+    </table>
+</form>
+
+<label>replace names with tags</label>
+<form method="POST" action="/rest/tagFile" enctype="multipart/form-data">
+    <table class="table">
+        <tr>
+            <td><label>Select a file to upload</label></td>
+            <td><input class="btn btn-primary" type="file" name="file"/></td>
+            <td><input class="btn btn-primary" type="submit" value="Submit" download="tagged.csv" target="_blank"/></td>
+        </tr>
+    </table>
+</form>

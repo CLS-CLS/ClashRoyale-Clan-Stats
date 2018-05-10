@@ -17,18 +17,11 @@ import java.util.List;
 
 public class ClanStatsControllerTest extends AbstractSpringBootTest {
 
-
-
-
     @Autowired
     PlayerWeeklyStatsRepository pwsRepo;
 
     @Autowired
     ClanStatsRestController clanStatRestController;
-
-
-
-
 
     @Test
     public void getPlaylerStatisticsTest() throws SQLException {
@@ -56,8 +49,5 @@ public class ClanStatsControllerTest extends AbstractSpringBootTest {
         Assert.assertEquals(483, (int) resultsFromController.getStatsDto().get(1).getCardDonation());
         Assert.assertEquals(186, (int) resultsFromController.getStatsDto().get(1).getChestContribution());
 
-
     }
-
-
 }

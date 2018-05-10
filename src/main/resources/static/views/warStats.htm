@@ -1,0 +1,179 @@
+<div ng-cloak>
+    <div class="inner-container col-xs-12">
+        <div ng-controller="warStatsController">
+
+            <div class="filter row">
+
+                <!--<div class="col-xs-4 col-md-3" >-->
+                <!--<table>-->
+                <!--<tr><td><label>Shift to previous week No#:</label></td></tr>-->
+                <!--<tr><td><span>{{stats[0].startDate[2]}}/{{stats[0].startDate[1]}}/{{stats[0].startDate[0]}}-->
+                <!-- - {{stats[0].endDate[2]}}/{{stats[0].endDate[1]}}/{{stats[0].endDate[0]}}</span></td></tr>-->
+                <!--</table>-->
+                <!--</div>-->
+
+                <div class="btn-group" role="group">
+                    <div style="margin-top:13px">
+                        <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="previousWeek()"><i
+                                class='fa fa-fw fa-chevron-left'></i></button>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-default btn-block dropdown-toggle btn-lg" type="button"
+                                    data-toggle="dropdown">
+                                <span class="selected">{{selectedItem}}</span>
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="width:100%">
+
+                                <li ng-repeat="i in availableWeeks">
+                                    <a ng-click="dropboxitemselected(i)">{{i}}</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <button type="button" class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i
+                                class='fa fa-fw fa-chevron-right'></i></button>
+                    </div>
+                </div>
+
+                <!--<button type="button" style="margin-top:13px" class="btn btn-primary btn-lg col-xs-offset-1" ng-click="togglePercentage()">-->
+                <!--{{percentageButtonLbl}}-->
+                <!--</button>-->
+
+            </div>
+            <p/>
+
+            <!--
+			<form class="form-horizontal">
+				<div class="form-group bubble">
+					<label class="col-xs-3 control-label align-left" >Total Weekly Donations:</label>
+					<label class="col-xs-3 control-label" style="text-align:left">
+						<h3 style="display:inline">{{totalDonations}}</h3>
+					</label>
+					<label class="col-xs-3 control-label" style="float:right;text-align:left">
+						<img style="display:inline" src="images/clanChest.png">
+						<h3 style="display:inline">{{chectLevel}} <small>/10</small></h3>
+					</label>
+				</div>
+			</form> -->
+
+            <!-- Trigger the modal with a button -->
+            <!--
+			<button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="modal" data-target="#columnSelectModal">
+				<span class="glyphicon glyphicon-cog"></span> <span class="caret"></span>
+			</button> -->
+
+            <!-- Modal -->
+            <!--
+			<div class="modal fade" id="columnSelectModal" role="dialog">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			        <h4 class="modal-title">Columns to show</h4>
+			      </div>
+			      <div class="modal-body">
+			      	<div class="row">
+				      	<div class="col-xs-4">
+				      		<ul class="list-group">
+				                <li class="list-group-item no-border">
+					               	<label for="ranking_cb"><input id="ranking_cb" type="checkbox"  ng-model="state.bulkSelects.rankings" ng-click="bulkSelect()"/>&nbsp;Show Rankings</label>
+					           </li>
+		               		</ul>
+				      	</div>
+				      	<div class="col-xs-4 ">
+				      		<ul class="list-group">
+				                <li class="list-group-item no-border">
+					               	<label for="values_cb"><input id="values_cb" type="checkbox"  ng-model="state.bulkSelects.values"ng-click="bulkSelect()"/>&nbsp;Show Contr/Donations</label>
+					           </li>
+		               		</ul>
+				      	</div>
+				      	<div class="col-xs-4 ">
+				      		<ul class="list-group">
+				                <li class="list-group-item no-border">
+					               	<label for="avg_cb"><input id="avg_cb" type="checkbox"  ng-model="state.bulkSelects.avgs" ng-click="bulkSelect()"/>&nbsp;Show Averages</label>
+					           </li>
+		               		</ul>
+				      	</div>
+			      	</div>
+			      	<hr/>
+			      	<div class="row">
+			      		<div class="col-xs-12">
+					        <ul class="list-group">
+				                <li class="list-group-item" ng-repeat="(key, val) in state.selectableColumns">
+					               	<label for="{{key}}"><input id="{{key}}" type="checkbox" ng-model="state.selectableColumns[key].show"  ng-click="setItemSelected($event)"/>&nbsp;{{val.name}}</label>
+					           </li>
+		               		</ul>
+               			</div>
+               		 </div>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			    
+			  </div>
+			</div>
+            -->
+            <div style="position:relative">
+                <loading-directive loading="loading"/>
+                <div class="table-responsive halfscreen">
+                    <table class="halfscreen table table-striped war-table">
+                        <thead>
+                        <tr>
+                            <th><span ng-click=triggerOrderDirective($event)>Player
+                                    <order-directive bind-to="name" filter-by="filter"/></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)> <img style="display:inline"
+                                                                                   src="images/battle_mid.png">
+			                        <order-directive bind-to="warsParticipated" filter-by="filter"/></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)> <img style="display:inline"
+                                                                                   src="images/cards_mid.png">
+			                        <order-directive bind-to="averageCardsWon" filter-by="filter"/></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>Win Ratio
+			                        <order-directive bind-to="winRatio" filter-by="filter"/></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)><img style="display:inline"
+                                                                                  src="images/score_mid.png">
+			                        <order-directive bind-to="score" filter-by="filter"/></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)> <img style="display:inline"
+                                                                                   src="images/win_mid.png">
+			                        <order-directive bind-to="crownsWon" filter-by="filter"/></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)> <img style="display:inline"
+                                                                                   src="images/loose_mid.png">
+			                        <order-directive bind-to="crownsLost" filter-by="filter"/></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)><img style="display:inline"
+                                                                                  src="images/forfeit_mid.png">
+			                        <order-directive bind-to="gamesNotPlayed" filter-by="filter"/></span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="stats.length > 0 "
+                            ng-repeat="s in stats | orderBy: filter.orderBy: false : filter.comparator">
+                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}"
+                                                                                              ng-click="next()">{{s.name}}
+                                <!--<span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>-->
+                            </a>
+                            </td>
+                            <td>{{s.warsParticipated}}/{{s.numberOfWars}}</td>
+                            <td>{{s.averageCardsWon | number:0}}</td>
+                            <td>{{s.winRatio | percentage:2}}</td>
+                            <td>{{s.score | number:0}}</td>
+                            <td>{{s.crownsWon}}</td>
+                            <td>{{s.crownsLost}}</td>
+                            <td>{{s.gamesNotPlayed}}</td>
+                        </tr>
+                        <tr ng-if="stats.length == 0">
+                            <td colspan="12"><h2>No data for this period</h2></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

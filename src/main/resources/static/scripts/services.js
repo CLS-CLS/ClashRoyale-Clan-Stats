@@ -110,6 +110,9 @@ app.filter('percentage', [ '$filter', function($filter) {
 		if (input == 0) {
 			decimals = 0;
 		}
+		if (input == null){
+		    return "N/A"
+		}
 		return $filter('number')(input * 100, decimals) + '%';
 	};
 } ]);

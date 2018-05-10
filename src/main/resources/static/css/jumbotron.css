@@ -89,6 +89,7 @@
     width: 100%;
     table-layout: fixed;
 }
+
 .loading > i {
 	position:fixed;
 	left: 50%;
@@ -114,9 +115,9 @@ td, th {
 
 table  {
 	background: transparent;
-    margin-top: 10px;
-    max-width: none !important;
-    width: auto !important;
+//    margin-top: 10px;
+//    max-width: none !important;
+//    width: auto !important;
 }
 
 body {

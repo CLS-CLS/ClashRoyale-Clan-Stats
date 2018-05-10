@@ -27,6 +27,18 @@ public class ClanStatsController {
         return "/index";
     }
 
+    @GetMapping(value = "/warStats/{deltaWeek:\\d*}")
+    public String getWarStats(@PathVariable Integer deltaWeek) {
+        logger.info("getWarStats until week {}", Week.now().minusWeeks(deltaWeek));
+        return "/index";
+    }
+
+    @GetMapping(value = "/warStats")
+    public String getWarStats() {
+        logger.info("getWarStats until");
+        return "/index";
+    }
+
     @GetMapping(value = "/newPlayers")
     public String getNewPlayersBetweenWeeks(@RequestParam Integer deltaFrom, @RequestParam(required = false, defaultValue = "0") Integer deltaTo) {
         if (deltaTo <= deltaFrom) {

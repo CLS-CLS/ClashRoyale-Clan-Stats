@@ -222,7 +222,7 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
         };
 		
 		$http.get(baseUrl() + "/rest/info/week").then(function(response){
-			currentWeek = response.data;
+			currentWeek = response.data - 1 ;
 			return $http.get(baseUrl() + "/rest/player/" + $routeParams.playerTag)
 		}).then(
 			function(response) {
@@ -304,6 +304,111 @@ app.factory('clanStatsState',  function(roleComparator) {
 	return state;
 
 });
+
+app.controller("warStatsController", function($scope, $http, $filter, $routeParams, $location, $timeout){
+
+    $scope.filter = {
+        orderBy : "name",
+        comparator : ""
+    }
+
+   	$scope.selectedItem = (function() {
+   	    if ($routeParams.week == null) {
+   	        $routeParams.week = 0;
+   	    }
+   		var week =  $routeParams.week -1 + 1;
+   		if (week > maxWeek) {
+   			return  maxWeek;
+   		}else if (week < 0) {
+   			return 0;
+   		}else  {
+   			return week;
+   		}
+   	})();
+
+   	$scope.availableWeeks = (function(){
+        var array = [];
+        for (var i = 0; i <= maxWeek; i++) {
+           array.push(i);
+        }
+        return array;
+    })();
+
+    $scope.setItemSelected = function(event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        $scope.averageColSpan = colSpan()
+    }
+
+    $scope.dropboxitemselected = function(item) {
+        $scope.selectedItem = item;
+    }
+
+    $scope.previousWeek = function() {
+        if ($scope.selectedItem <= minWeek) {
+            $scope.selectedItem = 1;
+            return;
+        }
+        $scope.selectedItem = $scope.selectedItem - 1
+    }
+
+    $scope.nextWeek = function() {
+        if ($scope.selectedItem >= maxWeek) {
+            $scope.selectedItem = maxWeek;
+            return;
+        }
+        //sometimes 1 is considered a string and "+" is considered as string concatenator
+        //subtracting 1 first makes the selectedItem a number
+        $scope.selectedItem = ($scope.selectedItem - 1) + 2;
+    }
+
+    $scope.$watch('selectedItem', function(newValue, oldValue) {
+        $location.path("/warStats/" + newValue, false)
+
+    })
+
+    function init() {
+        getData($scope.selectedItem);
+    }
+
+    init();
+
+    $scope.triggerOrderDirective = function(event) {
+        $timeout(function() {
+            $(event.target).find("i").trigger('click');
+        }, 0, false)
+
+    }
+
+    function getData(deltaWeek) {
+        $scope.loading = true;
+
+        $http.get(baseUrl() + "/rest/warStats/" + deltaWeek).then(function(response) {
+            $scope.loading = false;
+
+            if ($scope.stats == null) {
+                $scope.stats = [];
+            }
+            if ($scope.stats.length < response.data.length) {
+                $scope.stats.forEach(function(stat, index) {
+                    $scope.stats[index] = response.data[index];
+                });
+                for (i = $scope.stats.length; i < response.data.length; i++) {
+                    $scope.stats.push(response.data[i])
+                }
+            } else {
+                response.data.forEach(function(stat, index) {
+                    $scope.stats[index] = stat
+                })
+                $scope.stats.splice(response.data.length)
+            }
+        }, function(response) {
+            $scope.loading = false;
+        })
+
+    }
+})
 
 app.controller("clanStatsController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history, clanStatsState) {
 	

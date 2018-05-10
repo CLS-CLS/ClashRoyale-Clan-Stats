@@ -9,6 +9,7 @@ import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.UpdateStatService;
 import org.lytsiware.clash.service.job.scheduledname.ScheduledNameService;
+import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class ClanStatsSecuredRestController {
 
     @Autowired
     private UpdateStatService updateService;
+
+    @Autowired
+    private PlayerWarStatsService playerWarStatsService;
 
     //    @GetMapping("/clanchestscore/{deltaWeek}")
     public void calculateAndSaveClanchestScore (@PathVariable("deltaWeek") Integer deltaWeek) {
@@ -89,4 +93,11 @@ public class ClanStatsSecuredRestController {
 
         updateService.updateOrInsertNewDonationsAndRole(statsList, week, true);
     }
+
+    @PostMapping("/upload")
+    public void uploadWarFile(@RequestParam("file") MultipartFile multipartFile, Model model) throws IOException {
+        logger.info("upload request");
+        playerWarStatsService.upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
+    }
+
 }

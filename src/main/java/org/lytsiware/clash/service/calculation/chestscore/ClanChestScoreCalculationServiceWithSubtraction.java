@@ -90,7 +90,7 @@ public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChes
         List<Integer> data = playerWeeklyStats.stream().map(PlayerWeeklyStats::getChestContribution).filter(Objects::nonNull).collect(Collectors.toList());
         SubractCalculationContext context = new SubractCalculationContext();
         context.set(SubractCalculationContext.DATA, data);
-        context.set(SubractCalculationContext.COLLECTED_CROWNS, data.stream().reduce((r, d) -> r += d).get());
+        context.set(SubractCalculationContext.COLLECTED_CROWNS, data.stream().reduce((r, d) -> r += d).orElse(0));
         return context;
     }
 
