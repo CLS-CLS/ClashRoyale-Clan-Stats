@@ -47,9 +47,8 @@ public class PlayerWarStatsRepositoryTest {
 
         pws = entityManager.persistAndFlush(pws);
         entityManager.clear();
-        Long leagueId = pws.getWarLeague().getId();
         Long pwsId = pws.getId();
-        WarLeague warLeague = entityManager.find(WarLeague.class, leagueId);
+        WarLeague warLeague = entityManager.find(WarLeague.class, LocalDate.now());
         assertEquals("War League 1", warLeague.getName());
         assertEquals(3, (int) warLeague.getRank());
 

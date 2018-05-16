@@ -2,24 +2,31 @@ package org.lytsiware.clash.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.UpdateStatService;
 import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
+import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
+@Slf4j
 public class AdminController {
 
 
@@ -34,6 +41,21 @@ public class AdminController {
 
 	@Autowired
     private UpdateStatService updateStatsService;
+
+    @Autowired
+    private PlayerWarStatsService playerWarStatsService;
+
+
+    @PostMapping("/uploadWarStats")
+    @Transactional(propagation = Propagation.REQUIRED)
+    public String uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
+        log.info("START uploadWarStats");
+        for (MultipartFile file : files) {
+            playerWarStatsService.upload(file.getInputStream(), file.getOriginalFilename());
+        }
+        return "redirect:/warStats/0";
+    }
+
 
     //@RequestMapping("/check")
 	public String checkParsing(@RequestParam("refresh") Boolean refresh,  Model model) throws JsonProcessingException {

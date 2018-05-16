@@ -51,7 +51,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
         List<PlayerWarStat> persistedWarStats = new ArrayList<>();
 
-        playerWarStatsRepository.save(playerWarStats).forEach(persisted -> persistedWarStats.add(persisted));
+        playerWarStatsRepository.saveAll(playerWarStats).forEach(persisted -> persistedWarStats.add(persisted));
 
         return persistedWarStats;
 

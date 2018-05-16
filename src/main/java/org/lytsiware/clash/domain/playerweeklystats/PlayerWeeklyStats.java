@@ -1,11 +1,12 @@
 package org.lytsiware.clash.domain.playerweeklystats;
 
+import lombok.ToString;
 import org.lytsiware.clash.domain.player.Player;
 
 import javax.persistence.*;
 
 @Entity
-@SequenceGenerator(name = "PWS_SEQUENCE", sequenceName = "PWS_SEQUENCE", initialValue = 100, allocationSize = 10)
+@SequenceGenerator(name = "PWS_SEQUENCE", sequenceName = "PWS_SEQUENCE", initialValue = 100)
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"playerFK", "week"})})
 @NamedQueries({
         @NamedQuery(name = "findByWeek", query = "select s from PlayerWeeklyStats s join fetch s.player where s.week = :week"),
@@ -16,6 +17,7 @@ import javax.persistence.*;
 
 })
 // @IdClass(PlayerWeeklyStatsPK.class)
+@ToString
 public class PlayerWeeklyStats {
 
     @Id

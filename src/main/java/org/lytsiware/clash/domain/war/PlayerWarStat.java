@@ -11,16 +11,18 @@ import javax.persistence.*;
 @Setter
 @Builder
 @NoArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"PLAYER_TAG", "WAR_LEAGUE_ID"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"PLAYER_TAG", "WAR_LEAGUE_START_DATE"}))
 @NamedEntityGraph(name = "PlayerWarStat.detail", attributeNodes = @NamedAttributeNode("player"))
+@ToString
+@SequenceGenerator(name = "PWARS_SEQUENCE", sequenceName = "PWARS_SEQUENCE", initialValue = 100)
 public class PlayerWarStat {
 
     @Id
     @Setter(AccessLevel.PACKAGE)
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PWARS_SEQUENCE")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private Player player;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)

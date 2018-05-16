@@ -17,10 +17,6 @@ import java.util.Set;
 public class WarLeague {
 
     @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(unique = true, nullable = false)
     private LocalDate startDate;
 
     private Integer rank;

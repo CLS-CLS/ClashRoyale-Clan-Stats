@@ -8,13 +8,14 @@ import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.PlayerStatsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-
+@Transactional
 public class ClanStatsControllerTest extends AbstractSpringBootTest {
 
     @Autowired

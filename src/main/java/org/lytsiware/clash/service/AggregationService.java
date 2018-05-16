@@ -24,6 +24,10 @@ public interface AggregationService {
     void calculateAndSaveAvgs(Week week);
 
 
+    @Deprecated
+    /**
+     * @deprecated ther is not chest score anymore
+     */
     void calculateAndUpdateClanChestScore(Week week);
 
     List<ClanWeeklyStatsDto> getClanChestScore(Week from, Week to);

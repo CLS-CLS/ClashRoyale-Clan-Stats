@@ -15,6 +15,7 @@ public class ClanStatsController {
     private Logger logger = LoggerFactory.getLogger(ClanStatsController.class);
 
 
+
     @GetMapping("/newplayers")
     public String newPlayersPageDefault(Model model) {
         logger.info("new players request");
@@ -46,6 +47,7 @@ public class ClanStatsController {
         }
         return "/index";
     }
+
 
     @GetMapping("/upload")
     public String uploadPage(Model model) {

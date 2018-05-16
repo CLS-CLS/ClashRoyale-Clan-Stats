@@ -99,11 +99,13 @@ public class AggregationServiceImpl implements AggregationService {
         double playerDeviationSoore = context.get(CalculationContext.PLAYER_DEVIATION_PERC, Double.class);
         double crownScore = context.get(CalculationContext.CROWN_SCORE_PERC, Double.class);
 
-        ClanWeeklyStats clanWeeklyStat = clanWeeklyStatRepository.findOne(week.getWeek());
+        ClanWeeklyStats clanWeeklyStat = clanWeeklyStatRepository.findById(week.getWeek()).orElse(null);
+
         if (clanWeeklyStat == null) {
             clanWeeklyStat = new ClanWeeklyStats();
             clanWeeklyStat.setWeek(week.getWeek());
         }
+
         clanWeeklyStat.setClanChestScore(score);
         clanWeeklyStat.setCrownScore(crownScore);
         clanWeeklyStat.setPlayerDeviationScore(playerDeviationSoore);

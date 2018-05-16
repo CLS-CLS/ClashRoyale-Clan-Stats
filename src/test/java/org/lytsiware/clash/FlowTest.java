@@ -71,12 +71,12 @@ public class FlowTest extends AbstractSpringBootTest {
         given(siteConfigurationService.getDataResource()).willReturn(new ClassPathResource("statsroyale_response_1.html"));
         statsRoyaleWeekendJob.run();
 
-        //run sheduler for 2nd time
+        //run scheduler for 2nd time
         given(siteConfigurationService.getDeckshopClanUrlResource()).willReturn(new ClassPathResource("deckshop_response_1.html"));
         given(siteConfigurationService.getDataResource()).willReturn(new ClassPathResource("statsroyale_response_2.html"));
         statsRoyaleWeekendJob.run();
 
-        //run sheduler for 3rd time
+        //run scheduler for 3rd time
         given(siteConfigurationService.getDeckshopClanUrlResource()).willThrow(new ParseException("exception in deckshop parsing"));
         given(siteConfigurationService.getDataResource()).willReturn(new ClassPathResource("statsroyale_response_2_2.html"));
         statsRoyaleWeekendJob.run();
@@ -90,23 +90,22 @@ public class FlowTest extends AbstractSpringBootTest {
 
         Map<String, PlayerOverallStats> result = restController.retrieveClanStats(1).stream().collect(Collectors.toMap(PlayerOverallStats::getName, Function.identity()));
         //happy path
-        assertDonationAndConrubution(result.get("yatagarasu"), 30, 3, null);
+        assertDonation(result.get("yatagarasu"), 30, null);
         //kots13 has left during the cc and came back
-        assertDonationAndConrubution(result.get("kots13"), 20, 2, 160);
+        assertDonation(result.get("kots13"), 20, 160);
         //thanosGR something went wrong in 2nd call of the weekend job and had less crowns , donations unexpectedly
-        assertDonationAndConrubution(result.get("thanosGr"), 50, 40, 80);
+        assertDonation(result.get("thanosGr"), 50, 80);
         //kirakos vins joined after the cc started - and mondays contr is bigger but only saturdays should be taken into account
-        assertDonationAndConrubution(result.get("Kiriakos Vins"), 70, 0, 80);
+        assertDonation(result.get("Kiriakos Vins"), 70, 80);
         //paris z left during cc and never joined back
-        assertDonationAndConrubution(result.get("paris z"), 5, 26, 200);
+        assertDonation(result.get("paris z"), 5, 200);
         //chrisXD was promoted during the cc
         Assert.assertEquals("the role should have been updated", "new_role", result.get("ChrisXD").getRole());
 
     }
 
-    private void assertDonationAndConrubution(PlayerOverallStats playerOverallStats, int expectedDonation, int expectedContribution, Integer expectedReceived) {
+    private void assertDonation(PlayerOverallStats playerOverallStats, int expectedDonation, Integer expectedReceived) {
         Assert.assertEquals(expectedDonation, (int)playerOverallStats.getCardDonation());
-        Assert.assertEquals(expectedContribution, (int)playerOverallStats.getChestContribution());
         Assert.assertEquals(expectedReceived, playerOverallStats.getCardsReceived());
     }
 

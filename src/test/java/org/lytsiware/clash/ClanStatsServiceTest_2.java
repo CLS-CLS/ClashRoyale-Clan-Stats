@@ -9,6 +9,7 @@ import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.UpdateStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Statement;
@@ -18,6 +19,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+@Transactional
 public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
 
     @Autowired
@@ -159,7 +161,6 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
     }
 
 
-
     @Test
     public void updateChestContributionsWithBiggerTrue() {
         Player p0 = new Player("0", "1", "irrelevant");
@@ -226,7 +227,6 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
         assertEquals(2, (int)pws.getChestContribution());
         assertEquals(220, (int)pws.getCardDonation());
     }
-
 
 
 }
