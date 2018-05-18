@@ -278,22 +278,22 @@ app.factory('clanStatsState',  function(roleComparator) {
 	var state = {
 		selectableColumns: { 
 			"role": {name: "role", show: true},
-		 	"cc": {name: "Chest Contribution", show: true },
+		 	"cc": {name: "Chest Contribution", show: false },
 		 	"ccRank": {name: "Chest Contribution Rank", show: false},
 		 	"cardDonation": {name: "Card Donations", show: true},
-		 	"cardDonationRank": {name: "Card Donation Rank", show: false},
+		 	"cardDonationRank": {name: "Card Donation Rank", show: true},
 		 	"overallRank": {name: "Overall Rank", show: false},
-		 	"avgCc": {name: "Average Chest Contribution", show: true},
+		 	"avgCc": {name: "Average Chest Contribution", show: false},
 		 	"avgCcRank": {name: "Average Chest Contribution Rank", show: false},
 		 	"avgDonation": {name: "Average Card Donations", show: true},
-		 	"avgDonationRank": {name: "Average Donation Donations Rank", show: false},
+		 	"avgDonationRank": {name: "Average Donation Donations Rank", show: true},
 		 	"avgOverallRank": {name: "Average Final Rank", show: false},
-		 	"avgRequestDonationDiff": {name: "Average Request/Donation difference", show: false},
+		 	"avgRequestDonationDiff": {name: "Average Request/Donation difference", show: true},
 		},
 		bulkSelects: {
 			"rakings": false,
-			"values" : true,
-			"avgs": true
+			"values" : false,
+			"avgs": false
 		},
 		showPercentage: false,
 		filter : {

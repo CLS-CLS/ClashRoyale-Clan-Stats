@@ -34,7 +34,7 @@ public class StatsRoyalChestContrJobImplTest {
         weeklyJobRepository = Mockito.mock(WeekJobRepositoryImpl.class);
         propertyResolver.setProperty(StatsRoyalChestContrJobImpl.CRON_MONDAY, "0 0 8 ? * MON");
         PowerMockito.mockStatic(TestableLocalDateTime.class);
-        statsRoyalChestContrJob = new StatsRoyalChestContrJobImpl(null, weeklyJobRepository, null, null, propertyResolver);
+        statsRoyalChestContrJob = new StatsRoyalChestContrJobImpl(weeklyJobRepository, null, propertyResolver);
     }
 
     @Test

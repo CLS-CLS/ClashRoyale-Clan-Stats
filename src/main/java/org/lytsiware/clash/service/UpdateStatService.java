@@ -37,7 +37,9 @@ public interface UpdateStatService {
      * @param updateBiggerOnly if true the contributions are only updated if the new contribution value is bigger than the current.
      * if the current contribution is null then it is only updated if the new one is bigger than 0. A null current contribution, indicates
      * that the player has joined after the chan chest was started
+     * @deprecated there is no CC anymore
      */
+    @Deprecated
     void updateChestContibutionAndRole(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly);
 
 }

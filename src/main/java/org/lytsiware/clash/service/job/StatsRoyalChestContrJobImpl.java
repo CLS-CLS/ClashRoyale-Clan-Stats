@@ -4,10 +4,7 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.WeekJobRepository;
 import org.lytsiware.clash.domain.job.WeeklyJob;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.AggregationService;
-import org.lytsiware.clash.service.clan.UpdateStatsServiceImpl;
-import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
 import org.lytsiware.clash.service.job.scheduledname.ScheduledName;
 import org.lytsiware.clash.utils.TestableLocalDateTime;
 import org.lytsiware.clash.utils.Utils;
@@ -24,7 +21,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.List;
 
 @Service
 @Profile("statsRoyale")
@@ -36,23 +32,15 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 
     private Logger logger = LoggerFactory.getLogger(StatsRoyalChestContrJobImpl.class);
 
-    private StatsRoyaleSiteServiceImpl siteIntegrationService;
-
     private WeekJobRepository weeklyJobRepository;
-
-    private UpdateStatsServiceImpl updateStatsService;
 
     private AggregationService aggregationService;
 
     private PropertyResolver propertyResolver;
 
     @Autowired
-    public StatsRoyalChestContrJobImpl(StatsRoyaleSiteServiceImpl siteIntegrationService, WeekJobRepository weeklyJobRepository,
-                                       UpdateStatsServiceImpl updateStatsService, AggregationService aggregationService,
-                                       PropertyResolver propertyResolver) {
-        this.siteIntegrationService = siteIntegrationService;
+    public StatsRoyalChestContrJobImpl(WeekJobRepository weeklyJobRepository, AggregationService aggregationService, PropertyResolver propertyResolver) {
         this.weeklyJobRepository = weeklyJobRepository;
-        this.updateStatsService = updateStatsService;
         this.aggregationService = aggregationService;
         this.propertyResolver = propertyResolver;
     }
@@ -65,11 +53,7 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
     public void run() {
         try {
             logger.info("Job Triggered at {}", LocalDateTime.now());
-
-            List<PlayerWeeklyStats> stats = siteIntegrationService.retrieveData(true);
-
             Week week = Week.now().previous();
-            updateStatsService.updateChestContibutionAndRole(stats, week, true);
             aggregationService.calculateAndSaveAvgs(week);
             weeklyJobRepository.save(new WeeklyJob(StatsRoyaleWeekendJobImpl.class.getSimpleName(), LocalDateTime.now()));
         } catch (Exception e) {

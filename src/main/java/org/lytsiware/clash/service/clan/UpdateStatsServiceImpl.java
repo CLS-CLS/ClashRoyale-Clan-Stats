@@ -150,4 +150,5 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
         playerWeeklyStatsRepository.saveOrUpdateAll(toUpdate);
     }
 
+
 }

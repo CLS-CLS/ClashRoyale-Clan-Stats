@@ -107,6 +107,8 @@ public class StatsRoyaleWeekendJobImpl {
             PlayerWeeklyStats deckProStat = deckproStats.stream().filter(dps -> dps.getPlayer().getTag().equals(pws.getPlayer().getTag())).findAny().orElse(null);
             if (deckProStat != null) {
                 pws.setCardsReceived(deckProStat.getCardsReceived());
+                //TODO just for now because clash royale stats page is broken regearding the role
+                pws.getPlayer().setRole(deckProStat.getPlayer().getRole());
             }
         }
     }
