@@ -36,7 +36,7 @@ public class ClanStatsController {
 
     @GetMapping(value = "/warStats")
     public String getWarStats() {
-        logger.info("getWarStats until");
+        logger.info("getWarStats week 0");
         return "/index";
     }
 

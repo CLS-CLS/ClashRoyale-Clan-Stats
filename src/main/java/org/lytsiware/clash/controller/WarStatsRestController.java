@@ -4,7 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.PlayerWarStat;
-import org.lytsiware.clash.dto.ClanWarBiWeeklyStatsDto;
+import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
+import org.lytsiware.clash.dto.PlayerWarBiWeeklyStatsDto;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
@@ -53,7 +54,7 @@ public class WarStatsRestController {
 
 
     @GetMapping("/warStats/{deltaWeek}")
-    public List<ClanWarBiWeeklyStatsDto> getWarStatsForWeeks(@PathVariable(value = "deltaWeek", required = false) Integer deltaWeek) {
+    public ClansWarGlobalStatsDto getWarStatsForWeeks(@PathVariable(value = "deltaWeek", required = false) Integer deltaWeek) {
         log.info("START warStats deltaWeek = {}", deltaWeek);
         LocalDate endDate = Week.now().minusWeeks(deltaWeek).getEndDate();
         if (deltaWeek == 0) {
@@ -62,7 +63,7 @@ public class WarStatsRestController {
 
         Map<Player, List<PlayerWarStat>> playerWarStats = playerWarStatsService.findAllPlayerWarStats(7, endDate);
 
-        return playerWarStats.entrySet().stream().map(Map.Entry::getValue).map(ClanWarBiWeeklyStatsDto::new).collect(Collectors.toList());
+        return new ClansWarGlobalStatsDto(playerWarStats);
 
     }
 

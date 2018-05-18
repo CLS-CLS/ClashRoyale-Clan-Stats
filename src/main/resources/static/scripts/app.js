@@ -307,6 +307,10 @@ app.factory('clanStatsState',  function(roleComparator) {
 
 app.controller("warStatsController", function($scope, $http, $filter, $routeParams, $location, $timeout){
 
+    $scope.stats = {
+        playerWarStats : []
+    }
+
     $scope.filter = {
         orderBy : "name",
         comparator : ""
@@ -334,15 +338,10 @@ app.controller("warStatsController", function($scope, $http, $filter, $routePara
         return array;
     })();
 
-    $scope.setItemSelected = function(event) {
-        if (event) {
-            event.stopPropagation();
-        }
-        $scope.averageColSpan = colSpan()
-    }
 
     $scope.dropboxitemselected = function(item) {
         $scope.selectedItem = item;
+        $location.path("/warStats/" + $scope.selectedItem)
     }
 
     $scope.previousWeek = function() {
@@ -351,6 +350,7 @@ app.controller("warStatsController", function($scope, $http, $filter, $routePara
             return;
         }
         $scope.selectedItem = $scope.selectedItem - 1
+        $location.path("/warStats/" + $scope.selectedItem)
     }
 
     $scope.nextWeek = function() {
@@ -361,12 +361,8 @@ app.controller("warStatsController", function($scope, $http, $filter, $routePara
         //sometimes 1 is considered a string and "+" is considered as string concatenator
         //subtracting 1 first makes the selectedItem a number
         $scope.selectedItem = ($scope.selectedItem - 1) + 2;
+        $location.path("/warStats/" + $scope.selectedItem)
     }
-
-    $scope.$watch('selectedItem', function(newValue, oldValue) {
-        $location.path("/warStats/" + newValue, false)
-
-    })
 
     function init() {
         getData($scope.selectedItem);
@@ -384,25 +380,25 @@ app.controller("warStatsController", function($scope, $http, $filter, $routePara
     function getData(deltaWeek) {
         $scope.loading = true;
 
+
         $http.get(baseUrl() + "/rest/warStats/" + deltaWeek).then(function(response) {
             $scope.loading = false;
+            $scope.stats = response.data;
 
-            if ($scope.stats == null) {
-                $scope.stats = [];
-            }
-            if ($scope.stats.length < response.data.length) {
-                $scope.stats.forEach(function(stat, index) {
-                    $scope.stats[index] = response.data[index];
-                });
-                for (i = $scope.stats.length; i < response.data.length; i++) {
-                    $scope.stats.push(response.data[i])
-                }
-            } else {
-                response.data.forEach(function(stat, index) {
-                    $scope.stats[index] = stat
-                })
-                $scope.stats.splice(response.data.length)
-            }
+//            if ($scope.stats.playerWarStats.length < response.data.playerWarStats.length) {
+//                $scope.stats.playerWarStats.forEach(function(stat, index) {
+//                    $scope.stats.playerWarStats[index] = response.data.playerWarStats[index];
+//                });
+//                for (i = $scope.stats.playerWarStats.length; i < response.data.playerWarStats.length; i++) {
+//                    $scope.stats.playerWarStats.push(response.data.playerWarStats[i])
+//                }
+//            } else {
+//                response.data.playerWarStats.forEach(function(stat, index) {
+//                    $scope.stats.playerWarStats[index] = stat
+//                })
+//                $scope.stats.playerWarStats.splice(response.data.playerWarStats.length)
+//            }
+
         }, function(response) {
             $scope.loading = false;
         })
