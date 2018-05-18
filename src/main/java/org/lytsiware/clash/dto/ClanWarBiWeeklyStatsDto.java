@@ -19,6 +19,7 @@ public class ClanWarBiWeeklyStatsDto implements Serializable {
     private Integer gamesNotPlayed;
     private Double winRatio;
     private Integer score;
+    private boolean inClan;
 
 
     public ClanWarBiWeeklyStatsDto(List<PlayerWarStat> playerWarStats) {
@@ -37,6 +38,7 @@ public class ClanWarBiWeeklyStatsDto implements Serializable {
             winRatio = crownsWon / (double) (crownsLost + crownsWon);
             score = (int) ((0.75 + 0.25 * winRatio * (1 - gamesNotPlayed / (crownsWon + crownsLost))) * averageCardsWon);
         }
+        inClan = participatedWars.get(0).getPlayer().getInClan();
 
     }
 
