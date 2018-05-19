@@ -68,7 +68,7 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
         PlayerWeeklyStats s4 = new PlayerWeeklyStats(anotherPlayer, 1, 0, 30, 10, 10);
         pwsRepo.saveOrUpdateAll(Arrays.asList(db1, db2, db3));
 
-        updateStatsService.updateOrInsertNewDonationsAndRole(Arrays.asList(s1, s2, s3, s4), Week.fromWeek(1), true);
+        updateStatsService.updatePlayerWeeklyStats(Arrays.asList(s1, s2, s3, s4), Week.fromWeek(1), true);
 
 
         Map<String, Integer> results = pwsRepo.findByWeek(Week.fromWeek(1)).stream()
@@ -94,7 +94,7 @@ public class ClanStatsServiceTest extends AbstractSpringBootTest {
         Player splayer = new Player("tag1", "Chris1", "Elder");
         PlayerWeeklyStats s1 = new PlayerWeeklyStats(splayer, 1, 0, 10, 10, 10);
 
-        updateStatsService.updateOrInsertNewDonationsAndRole(Arrays.asList(s1), Week.fromWeek(2), true);
+        updateStatsService.updatePlayerWeeklyStats(Arrays.asList(s1), Week.fromWeek(2), true);
 
         List<PlayerWeeklyStats> results = pwsRepo.findByWeek(Week.fromWeek(2));
         Assert.assertEquals(1, results.size());

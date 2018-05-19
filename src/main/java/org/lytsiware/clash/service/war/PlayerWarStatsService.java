@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface PlayerWarStatsService {
 
-    List<PlayerWarStat> persistPlayerWarStats(List<PlayerWarStat> playerWarStats, LocalDate leagueStartDate, String leagueName);
+    List<PlayerWarStat> persistPlayerWarStats(List<PlayerWarStat> playerWarStats);
 
     Map<Player, List<PlayerWarStat>> findAllPlayerWarStats(int numberOfPastWars, LocalDate toDate);
 

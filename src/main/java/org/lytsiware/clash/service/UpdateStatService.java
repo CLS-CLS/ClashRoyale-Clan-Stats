@@ -20,15 +20,7 @@ public interface UpdateStatService {
      * @param week the week the update should happen
      * @param updateBiggerOnly if true then each value is only updated if the new value is bigger than the current one
      */
-    void updateOrInsertDonationAndContributions(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly);
-
-    /**
-     * Updates the card donation value
-     * @param stats the stats containing the players to be updated and their new card donation value
-     * @param week the week the update should  happen
-     * @param updateBiggerOnly if true the card donations are only updated if the new card donations value is bigger than the current
-     */
-    void updateOrInsertNewDonationsAndRole(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly);
+    void updatePlayerWeeklyStats(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly);
 
     /**
      * Updates the chest contributions

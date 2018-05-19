@@ -47,7 +47,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     }
 
     @Override
-    public List<PlayerWarStat> persistPlayerWarStats(List<PlayerWarStat> playerWarStats, LocalDate leagueStartDate, String leagueName) {
+    public List<PlayerWarStat> persistPlayerWarStats(List<PlayerWarStat> playerWarStats) {
 
         List<PlayerWarStat> persistedWarStats = new ArrayList<>();
 
@@ -121,64 +121,21 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     }
 
 
+
     @Override
     public void upload(InputStream inputStream, String fileName) {
         log.info("uploading file {}", fileName);
-        List<String> lines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
-        String leagueName = lines.get(0).split(",")[0].trim();
-        String rank = lines.get(0).split(",")[1].trim();
-        String trophies = lines.get(0).split(",")[2].trim();
 
-        lines = lines.subList(2, lines.size()); //remove two first lines (league stats, and header)
+        List<PlayerWarStat> statsList = Utils.parseCsv(inputStream, fileName);
 
-        List<PlayerWarStat> statsList = new ArrayList<>();
-
-        LocalDate leagueDate = LocalDate.parse(fileName.split("\\.")[0], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-
-        WarLeague warLeague = new WarLeague(leagueDate);
-        warLeague.setName(leagueName);
-        warLeague.setRank(Integer.valueOf(rank));
-        warLeague.setTrophies(Integer.valueOf(rank));
-
-        for (String line : lines) {
-            String[] stats = line.split(",");
-            String tag = stats[0].trim();
-            Integer cardsWon = Integer.valueOf(stats[1].trim());
-            Integer gamesGranted = Integer.valueOf(stats[2].trim());
-            Integer gamesWon = Utils.parseNullableInt(stats[3].trim());
-            Integer gamesLost = Utils.parseNullableInt(stats[4].trim());
-
-            if (gamesLost == null) {
-                if (gamesGranted != gamesWon) {
-                    throw new IllegalArgumentException("Games lost should have been provided");
-                }
-                gamesLost = 0;
-            }
-
-            if (gamesWon == null) {
-                if (gamesGranted != gamesLost) {
-                    throw new IllegalArgumentException("Games won should have been provided");
-                }
-                gamesWon = 0;
-            }
-
-            PlayerWarStat pws = PlayerWarStat.builder()
-                    .player(new Player(tag, null, null, true))
-                    .warLeague(warLeague)
-                    .collectionPhaseStats(CollectionPhaseStats.builder()
-                            .cardsWon(cardsWon)
-                            .build())
-                    .warPhaseStats(WarPhaseStats.builder()
-                            .gamesWon(gamesWon)
-                            .gamesLost(gamesLost)
-                            .gamesGranted(gamesGranted)
-                            .build())
-                    .build();
-            statsList.add(pws);
+        if (statsList.isEmpty()) {
+            return;
         }
+        WarLeague warLeague = statsList.get(0).getWarLeague();
 
-        Set<String> playersInClan = playerWeeklyStatsRepository.findByWeek(Week.fromDate(leagueDate))
+        Set<String> playersInClan = playerWeeklyStatsRepository.findByWeek(Week.fromDate(warLeague.getStartDate()))
                 .stream().map(PlayerWeeklyStats::getPlayer).map(Player::getTag).collect(Collectors.toSet());
+
 
         for (PlayerWarStat pws : statsList) {
             playersInClan.remove(pws.getPlayer().getTag());
@@ -200,7 +157,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         }
 
 
-        this.persistPlayerWarStats(statsList, leagueDate, leagueName);
+        this.persistPlayerWarStats(statsList);
 
     }
 }

@@ -87,14 +87,5 @@ public class AdminController {
         return "redirect:/" + deltaWeek;
     }
 
-	//@RequestMapping("/updateDonations/{week}")
-	public String runSchedulerUpdateOrInsertDonations(@PathVariable(value = "week") Integer week) {
-		if (week == 0) {
-			week = Week.now().getWeek();
-		}
-		List<PlayerWeeklyStats> stats = siteService.retrieveData(true);
-		updateStatsService.updateOrInsertNewDonationsAndRole(stats, Week.fromWeek(week), true);
-		return "/index/" + (Week.now().getWeek() - week);
-	}
 
 }

@@ -67,7 +67,7 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
                 new PlayerWeeklyStats(p3, 30, 123, 230,0,0)
         );
 
-        updateStatsService.updateOrInsertDonationAndContributions(donations, Week.fromWeek(30), true);
+        updateStatsService.updatePlayerWeeklyStats(donations, Week.fromWeek(30), true);
 
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
@@ -106,7 +106,7 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
                 new PlayerWeeklyStats(p3, 30, 0, 230,0,0)
         );
 
-        updateStatsService.updateOrInsertNewDonationsAndRole(donations, Week.fromWeek(30), true);
+        updateStatsService.updatePlayerWeeklyStats(donations, Week.fromWeek(30), true);
 
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
@@ -141,7 +141,7 @@ public class ClanStatsServiceTest_2 extends AbstractSpringBootTest {
                 new PlayerWeeklyStats(p3, 30, 0, 230,0,0)
         );
 
-        updateStatsService.updateOrInsertNewDonationsAndRole(donations, Week.fromWeek(30), false);
+        updateStatsService.updatePlayerWeeklyStats(donations, Week.fromWeek(30), false);
 
         List<PlayerWeeklyStats> pwsAll = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(30));
 

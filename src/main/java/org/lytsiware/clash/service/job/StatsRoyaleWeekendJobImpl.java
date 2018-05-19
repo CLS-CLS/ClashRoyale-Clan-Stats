@@ -63,7 +63,7 @@ public class StatsRoyaleWeekendJobImpl {
                 logger.error("Exception while retrieving stats from deckshop", ex);
             }
 
-            updateStatsService.updateOrInsertDonationAndContributions(stats, Week.now(), true);
+            updateStatsService.updatePlayerWeeklyStats(stats, Week.now(), true);
             updateStatsService.markPlayerIsInClan(stats);
         } catch (Exception e) {
             logger.error("oops", e);
@@ -87,7 +87,7 @@ public class StatsRoyaleWeekendJobImpl {
             //chest contribution taken reflects the previous week's cc not this one (this one has not started yet)
             stats.forEach(s -> s.setChestContribution(null));
 
-            updateStatsService.updateOrInsertDonationAndContributions(stats, Week.now(), false);
+            updateStatsService.updatePlayerWeeklyStats(stats, Week.now(), false);
             updateStatsService.markPlayerIsInClan(stats);
         } catch (Exception e) {
             logger.error("oops", e);

@@ -60,7 +60,7 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
 
     @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public void updateOrInsertDonationAndContributions(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
+    public void updatePlayerWeeklyStats(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
         logger.info("Update/insert weekly stats for week {} , bigger-only={}", week.getWeek(), updateBiggerOnly);
         Map<String, PlayerWeeklyStats> dbStatsPerTag = playerWeeklyStatsRepository.findByWeek(week).stream().collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), Function.identity()));
 
@@ -69,11 +69,7 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
         for (PlayerWeeklyStats newStat : stats) {
             PlayerWeeklyStats dbStat = dbStatsPerTag.get(newStat.getPlayer().getTag());
             if (dbStat != null) {
-                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getChestContribution(), dbStat.getChestContribution()) >= 1) {
-                    logger.info("update contribution for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
-                            newStat.getChestContribution());
-                    dbStat.setChestContribution(newStat.getChestContribution());
-                }
+                dbStat.setPlayer(newStat.getPlayer());
                 if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardDonation(), dbStat.getCardDonation()) >= 1) {
                     logger.info("update donation for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getCardDonation(), newStat.getCardDonation());
                     dbStat.setCardDonation(newStat.getCardDonation());
@@ -83,13 +79,6 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
                     dbStat.setCardsReceived(newStat.getCardsReceived());
                 }
             } else {
-                Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole(), true);
-                dbStat = PlayerWeeklyStats.builder()
-                        .withPlayer(newPlayer)
-                        .withWeek(week.getWeek())
-                        .withChestContribution(newStat.getChestContribution())
-                        .withCardDonation(newStat.getCardDonation())
-                        .withCardsReceived(newStat.getCardsReceived()).build();
                 dbStat.setWeek(week.getWeek());
                 logger.info("add new player {} with chestContribution {} donation {} and requests {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
                         dbStat.getCardDonation(), dbStat.getCardsReceived());
@@ -99,32 +88,6 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
         playerWeeklyStatsRepository.saveOrUpdateAll(toUpdate);
     }
 
-    @Override
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public void updateOrInsertNewDonationsAndRole(List<PlayerWeeklyStats> stats, Week week, boolean updateBiggerOnly) {
-        logger.info("Update/insert card donations for week {} , bigger-only={}", week.getWeek(), updateBiggerOnly);
-        Map<String, PlayerWeeklyStats> dbStatsPerTag = playerWeeklyStatsRepository.findByWeek(week).stream().collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), Function.identity()));
-
-        List<PlayerWeeklyStats> toUpdate = new ArrayList<>();
-
-        for (PlayerWeeklyStats newStat : stats) {
-            PlayerWeeklyStats dbStat = dbStatsPerTag.get(newStat.getPlayer().getTag());
-            if (dbStat != null) {
-                dbStat.getPlayer().setRole(newStat.getPlayer().getRole());
-                if (!updateBiggerOnly || Comparator.nullsFirst(Integer::compare).compare(newStat.getCardDonation(), dbStat.getCardDonation()) >= 1) {
-                    logger.info("update donation for player {} from {} to {}", dbStat.getPlayer().getName(), dbStat.getCardDonation(), newStat.getCardDonation());
-                    dbStat.setCardDonation(newStat.getCardDonation());
-                }
-            } else {
-                Player newPlayer = new Player(newStat.getPlayer().getTag(), newStat.getPlayer().getName(), newStat.getPlayer().getRole(), true);
-                dbStat = new PlayerWeeklyStats(newPlayer, week.getWeek(), null, newStat.getCardDonation(), 0, 0);
-                dbStat.setWeek(week.getWeek());
-                logger.info("add new player {} with donation {}", dbStat.getPlayer().getName(), dbStat.getCardDonation());
-            }
-            toUpdate.add(dbStat);
-        }
-        playerWeeklyStatsRepository.saveOrUpdateAll(toUpdate);
-    }
 
     @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
