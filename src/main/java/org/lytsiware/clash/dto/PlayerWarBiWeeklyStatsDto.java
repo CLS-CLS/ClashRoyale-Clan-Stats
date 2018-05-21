@@ -1,7 +1,7 @@
 package org.lytsiware.clash.dto;
 
 import lombok.Data;
-import org.lytsiware.clash.domain.war.PlayerWarStat;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 
 import java.io.Serializable;
 import java.util.List;

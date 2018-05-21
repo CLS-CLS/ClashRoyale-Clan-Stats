@@ -5,8 +5,8 @@ import org.junit.runner.RunWith;
 import org.lytsiware.clash.Application;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.domain.war.PlayerWarStat;
-import org.lytsiware.clash.domain.war.PlayerWarStatsRepository;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,7 +35,7 @@ public class PlayerWarStatsServiceImplTest {
     EntityManager em;
 
     @Autowired
-    PlayerWarStatsService playerWarStatsService;
+    WarUploadService warUploadService;
 
     @Autowired
     PlayerWarStatsRepository playerWarStatsRepository;
@@ -80,7 +80,7 @@ public class PlayerWarStatsServiceImplTest {
 
         em.flush();
 
-        playerWarStatsService.upload(new FileInputStream(ResourceUtils.getFile("classpath:04-05-2018.csv")), "04-05-2018.csv");
+        warUploadService.upload(new FileInputStream(ResourceUtils.getFile("classpath:04-05-2018.csv")), "04-05-2018.csv");
 
         Map<String, PlayerWarStat> warStats = StreamSupport.stream(playerWarStatsRepository.findAll().spliterator(), false)
                 .collect(Collectors.toMap(warStat -> warStat.getPlayer().getTag(), Function.identity()));

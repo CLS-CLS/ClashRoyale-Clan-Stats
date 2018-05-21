@@ -2,10 +2,10 @@ package org.lytsiware.clash.utils;
 
 import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.war.CollectionPhaseStats;
-import org.lytsiware.clash.domain.war.PlayerWarStat;
-import org.lytsiware.clash.domain.war.WarLeague;
-import org.lytsiware.clash.domain.war.WarPhaseStats;
+import org.lytsiware.clash.domain.war.league.WarLeague;
+import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
+import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.scheduling.support.CronTrigger;
@@ -183,6 +183,22 @@ public class Utils {
             statsList.add(pws);
         }
         return statsList;
+    }
+
+    public static void validateWarStats(String[] stats, String[] previousStats, String line) {
+        if (previousStats == null) {
+            return;
+        }
+        if (Integer.valueOf(previousStats[3].trim()) < Integer.valueOf(stats[3].trim())) {
+            throw new IllegalArgumentException("Games won should not be more in the previous stat, line: " + line);
+        }
+        if (Integer.valueOf(previousStats[4].trim()) == Integer.valueOf(stats[4].trim()) &&
+                Integer.valueOf(previousStats[2].trim()) == Integer.valueOf(stats[2].trim())
+                && Integer.valueOf(previousStats[3].trim()) == Integer.valueOf(stats[3].trim())) {
+            if (Integer.valueOf(previousStats[1].trim()) < Integer.valueOf(stats[1].trim())) {
+                throw new IllegalArgumentException("Cards cannot be more that the previous stat, line: " + line);
+            }
+        }
     }
 
 }

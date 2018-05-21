@@ -1,4 +1,4 @@
-package org.lytsiware.clash.domain.war;
+package org.lytsiware.clash.domain.war.playerwarstat;
 
 import lombok.*;
 

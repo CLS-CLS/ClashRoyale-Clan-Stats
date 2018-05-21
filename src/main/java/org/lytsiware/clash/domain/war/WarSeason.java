@@ -1,6 +1,7 @@
 package org.lytsiware.clash.domain.war;
 
 import lombok.*;
+import org.lytsiware.clash.domain.war.league.WarLeague;
 
 import javax.persistence.*;
 import java.time.LocalDate;

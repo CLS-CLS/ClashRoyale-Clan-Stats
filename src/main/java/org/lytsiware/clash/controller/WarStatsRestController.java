@@ -3,10 +3,10 @@ package org.lytsiware.clash.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.war.PlayerWarStat;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
-import org.lytsiware.clash.dto.PlayerWarBiWeeklyStatsDto;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
+import org.lytsiware.clash.service.war.WarUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -29,12 +28,15 @@ public class WarStatsRestController {
 
 
     @Autowired
+    WarUploadService warUploadService;
+
+    @Autowired
     PlayerWarStatsService playerWarStatsService;
 
     @PostMapping(value = "/tagFile")
     public void tagFile(@RequestParam("file") MultipartFile file, Model model, HttpServletResponse response) throws IOException {
         log.info("START tagFile");
-        String replaced = playerWarStatsService.replaceNameWithTag(file.getInputStream(), file.getOriginalFilename());
+        String replaced = warUploadService.replaceNameWithTag(file.getInputStream(), file.getOriginalFilename());
         response.getOutputStream().write(replaced.getBytes(StandardCharsets.UTF_8));
         response.setContentType("application/text");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getOriginalFilename() + "\"");
@@ -48,7 +50,7 @@ public class WarStatsRestController {
     public void uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
         log.info("START uploadWarStats");
         for (MultipartFile file : files) {
-            playerWarStatsService.upload(file.getInputStream(), file.getOriginalFilename());
+            warUploadService.upload(file.getInputStream(), file.getOriginalFilename());
         }
     }
 

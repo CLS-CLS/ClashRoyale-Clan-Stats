@@ -1,8 +1,9 @@
 package org.lytsiware.clash.service.war;
 
-import org.lytsiware.clash.domain.war.WarLeague;
+import org.lytsiware.clash.domain.war.league.WarLeague;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface WarLeagueService {
 
@@ -10,5 +11,5 @@ public interface WarLeagueService {
 
     WarLeague findLeagueForDate(LocalDate date, WarLeaguePhase warLeaguePhase);
 
-
+    List<WarLeague> getAffectedLeagues(LocalDate date, int span);
 }

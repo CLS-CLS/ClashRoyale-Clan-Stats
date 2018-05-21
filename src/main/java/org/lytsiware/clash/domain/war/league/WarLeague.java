@@ -1,9 +1,11 @@
-package org.lytsiware.clash.domain.war;
+package org.lytsiware.clash.domain.war.league;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.lytsiware.clash.domain.war.WarSeason;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 
 import javax.persistence.*;
 import java.time.LocalDate;

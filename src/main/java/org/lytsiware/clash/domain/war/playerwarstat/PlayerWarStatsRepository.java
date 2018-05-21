@@ -1,6 +1,7 @@
-package org.lytsiware.clash.domain.war;
+package org.lytsiware.clash.domain.war.playerwarstat;
 
 
+import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 

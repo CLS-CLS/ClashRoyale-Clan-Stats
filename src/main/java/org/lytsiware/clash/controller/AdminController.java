@@ -6,10 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.AggregationService;
-import org.lytsiware.clash.service.UpdateStatService;
-import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
-import org.lytsiware.clash.service.war.PlayerWarStatsService;
+import org.lytsiware.clash.service.war.WarUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,21 +27,14 @@ import java.util.List;
 @Slf4j
 public class AdminController {
 
-
-	@Autowired
-	ClanStatsServiceImpl clanStatService;
-
 	@Autowired
 	StatsRoyaleSiteServiceImpl siteService;
 
 	@Autowired
-    private AggregationService aggregationService;
+    WarUploadService warUploadService;
 
 	@Autowired
-    private UpdateStatService updateStatsService;
-
-    @Autowired
-    private PlayerWarStatsService playerWarStatsService;
+    AggregationService aggregationService;
 
 
     @PostMapping("/uploadWarStats")
@@ -51,7 +42,7 @@ public class AdminController {
     public String uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
         log.info("START uploadWarStats");
         for (MultipartFile file : files) {
-            playerWarStatsService.upload(file.getInputStream(), file.getOriginalFilename());
+            warUploadService.upload(file.getInputStream(), file.getOriginalFilename());
         }
         return "redirect:/warStats/0";
     }

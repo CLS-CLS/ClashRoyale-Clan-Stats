@@ -7,7 +7,7 @@ import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.UpdateStatService;
 import org.lytsiware.clash.service.job.scheduledname.ScheduledNameService;
-import org.lytsiware.clash.service.war.PlayerWarStatsService;
+import org.lytsiware.clash.service.war.WarUploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ClanStatsSecuredRestController {
     private UpdateStatService updateService;
 
     @Autowired
-    private PlayerWarStatsService playerWarStatsService;
+    private WarUploadService warUploadService;
 
     //    @GetMapping("/clanchestscore/{deltaWeek}")
     public void calculateAndSaveClanchestScore (@PathVariable("deltaWeek") Integer deltaWeek) {
@@ -68,7 +68,7 @@ public class ClanStatsSecuredRestController {
     @PostMapping("/upload")
     public void uploadWarFile(@RequestParam("file") MultipartFile multipartFile, Model model) throws IOException {
         logger.info("upload request");
-        playerWarStatsService.upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
+        warUploadService.upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
     }
 
 }

@@ -1,7 +1,8 @@
-package org.lytsiware.clash.domain.war;
+package org.lytsiware.clash.domain.war.playerwarstat;
 
 import lombok.*;
 import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.war.league.WarLeague;
 
 import javax.persistence.*;
 
