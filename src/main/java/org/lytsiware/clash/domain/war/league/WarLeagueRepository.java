@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface WarLeagueRepository extends Repository<WarLeague, Long>, WarLeagueRepositoryCustom {
 
-    Optional<WarLeague> findOneByStartDate(LocalDate startDate);
 
     List<WarLeague> findByStartDateBetween(LocalDate from, LocalDate to);
 

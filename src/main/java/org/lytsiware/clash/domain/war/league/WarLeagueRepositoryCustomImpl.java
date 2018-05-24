@@ -28,4 +28,11 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
         leagues.addAll(createQuery.apply("<", "DESC").getResultList());
         return leagues;
     }
+
+    @Override
+    public List<WarLeague> findFirstNthWarLeaguesBeforeDate(LocalDate date, int n) {
+        return em.createQuery("select l from WarLeague l where l.startDate <= :date order by l.startDate DESC", WarLeague.class)
+                .setMaxResults(n)
+                .setParameter("date", date).getResultList();
+    }
 }

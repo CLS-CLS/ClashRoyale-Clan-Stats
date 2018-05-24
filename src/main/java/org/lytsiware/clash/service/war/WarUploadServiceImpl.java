@@ -119,8 +119,9 @@ public class WarUploadServiceImpl implements WarUploadService {
         playerWarStatsService.persistPlayerWarStats(statsList);
 
         List<WarLeague> affectedLeagues = warLeagueService.getAffectedLeagues(warLeague.getStartDate(), WarConstants.leagueSpan);
+
         for (WarLeague warLeague1: affectedLeagues) {
-            playerAggregationWarStatsService.calculateStats(warLeague1.getStartDate(), WarConstants.leagueSpan);
+            playerAggregationWarStatsService.calculateAndSaveStats(warLeague1.getStartDate(), WarConstants.leagueSpan, true);
         }
 
     }

@@ -1,9 +1,15 @@
 package org.lytsiware.clash.service.war;
 
+import lombok.extern.slf4j.Slf4j;
+import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
+import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsPK;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
+import org.lytsiware.clash.domain.war.league.WarLeague;
+import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
+import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -11,15 +17,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class PlayerAggregationWarStatsServiceImpl implements org.lytsiware.clash.service.war.PlayerAggregationWarStatsService {
+@Slf4j
+public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWarStatsService {
 
     @Autowired
     PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
@@ -27,16 +32,32 @@ public class PlayerAggregationWarStatsServiceImpl implements org.lytsiware.clash
     @Autowired
     PlayerWarStatsService playerWarStatsService;
 
+    @Autowired
+    WarLeagueRepository warLeagueRepository;
+
     @Override
-    @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Future calculateStats(LocalDate startDate, int leagueSpan){
+    public List<PlayerAggregationWarStats> calculateStats(LocalDate latestLeagueStartDate, int leagueSpan, boolean strict) {
 
-        Map<Player, List<PlayerWarStat>> warStatsPerPlayer = playerWarStatsService.findAllPlayerWarStats(leagueSpan, startDate.plusDays(WarConstants.leagueDays * leagueSpan));
+        List<WarLeague> warLeagues = warLeagueRepository.findFirstNthWarLeaguesBeforeDate(latestLeagueStartDate, leagueSpan);
 
-        List<PlayerAggregationWarStats> playerAggregationWarStatServices = new ArrayList<>();
+        Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
+                .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
+                .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
 
-        for (List<PlayerWarStat> playerWarStats: warStatsPerPlayer.values()){
+        if (strict) {
+            if (warLeagues.isEmpty() || !warLeagues.get(0).getStartDate().equals(latestLeagueStartDate)) {
+                throw new IllegalArgumentException("Strict mode enabled but no league with the provided start date exists");
+            }
+        } else {
+            if (!warLeagues.isEmpty() && !latestLeagueStartDate.equals(warLeagues.get(0).getStartDate())) {
+                log.warn("The provided date {} does not correspond to the closest league date {}", latestLeagueStartDate, warLeagues.get(0).getStartDate());
+                latestLeagueStartDate = warLeagues.get(0).getStartDate();
+            }
+        }
+
+        List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
+
+        for (List<PlayerWarStat> playerWarStats : warStatsPerPlayer.values()) {
 
             int numberOfWars = playerWarStats.stream().map(PlayerWarStat::getWarLeague).collect(Collectors.toSet()).size();
             List<PlayerWarStat> participatedWars = playerWarStats.stream()
@@ -53,12 +74,12 @@ public class PlayerAggregationWarStatsServiceImpl implements org.lytsiware.clash
             int score = 0;
             if (numberOfWarsParticipated > 0) {
                 winRatio = wins / (double) (crownsLost + wins);
-                 score = (int) ((0.75 + 0.25 * winRatio) * averageCardsWon);
+                score = (int) ((0.75 + 0.25 * winRatio) * averageCardsWon);
             }
             PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
                     .avgCards(averageCardsWon)
                     .avgWins(winRatio)
-                    .dateFrom(startDate)
+                    .date(latestLeagueStartDate)
                     .gamesGranted(numberOfWarsParticipated)
                     .gamesNotPlayed(gamesNotPlayed)
                     .gamesWon(wins)
@@ -69,15 +90,32 @@ public class PlayerAggregationWarStatsServiceImpl implements org.lytsiware.clash
                     .warsEligibleForParticipation(numberOfWars)
                     .warsParticipated(numberOfWarsParticipated).build();
 
-            playerAggregationWarStatServices.add(playerAggregationWarStat);
+            playerAggregationWarStats.add(playerAggregationWarStat);
 
         }
 
-        Iterable<PlayerAggregationWarStats> saved = playerAggregationWarStatsRepository.saveAll(playerAggregationWarStatServices);
-
-        return CompletableFuture.completedFuture(saved);
+        return playerAggregationWarStats;
     }
 
+
+    @Override
+//    @Async
+    @Transactional(propagation = Propagation.REQUIRED)
+    public CompletableFuture<List<PlayerAggregationWarStats>> calculateAndSaveStats(LocalDate startDate, int leagueSpan, boolean strict) {
+        List<PlayerAggregationWarStats> stats = new ArrayList<>();
+        Iterable<PlayerAggregationWarStats> saved = playerAggregationWarStatsRepository.saveAll(this.calculateStats(startDate, leagueSpan, strict));
+        saved.forEach(stats::add);
+        return CompletableFuture.completedFuture(stats);
+    }
+
+    @Override
+    public List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWeek(Week week) {
+        List<WarLeague> warLeague = warLeagueRepository.findFirstNthWarLeaguesBeforeDate(week.getStartDate(), 1);
+        if (warLeague.isEmpty()){
+            return Collections.EMPTY_LIST;
+        }
+        return playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.get(0).getStartDate(), WarConstants.leagueSpan);
+    }
 
 
 }

@@ -22,7 +22,7 @@ public class PlayerAggregationWarStats {
     Player player;
 
     @Id
-    LocalDate dateFrom;
+    LocalDate date;
 
     @Id
     Integer leagueSpan;

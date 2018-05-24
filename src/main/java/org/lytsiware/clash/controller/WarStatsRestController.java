@@ -3,8 +3,10 @@ package org.lytsiware.clash.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
+import org.lytsiware.clash.service.war.PlayerAggregationWarStatsService;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.lytsiware.clash.service.war.WarUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class WarStatsRestController {
     WarUploadService warUploadService;
 
     @Autowired
-    PlayerWarStatsService playerWarStatsService;
+    PlayerAggregationWarStatsService playerAggregationWarStatsService;
 
     @PostMapping(value = "/tagFile")
     public void tagFile(@RequestParam("file") MultipartFile file, Model model, HttpServletResponse response) throws IOException {
@@ -58,14 +60,10 @@ public class WarStatsRestController {
     @GetMapping("/warStats/{deltaWeek}")
     public ClansWarGlobalStatsDto getWarStatsForWeeks(@PathVariable(value = "deltaWeek", required = false) Integer deltaWeek) {
         log.info("START warStats deltaWeek = {}", deltaWeek);
-        LocalDate endDate = Week.now().minusWeeks(deltaWeek).getEndDate();
-        if (deltaWeek == 0) {
-            endDate = LocalDate.now();
-        }
 
-        Map<Player, List<PlayerWarStat>> playerWarStats = playerWarStatsService.findAllPlayerWarStats(7, endDate);
+        List<PlayerAggregationWarStats> playerAggregationWarStats = playerAggregationWarStatsService.findLatestWarAggregationStatsForWeek(Week.now().minusWeeks(deltaWeek));
 
-        return new ClansWarGlobalStatsDto(playerWarStats);
+        return new ClansWarGlobalStatsDto(playerAggregationWarStats);
 
     }
 

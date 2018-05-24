@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.lytsiware.clash.domain.war.WarSeason;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
+import org.lytsiware.clash.service.war.WarConstants;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,6 +28,10 @@ public class WarLeague {
 
     private Integer trophies;
 
+    @Transient
+    @Setter(AccessLevel.NONE)
+    private LocalDate endDate;
+
     //TODO war season
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private WarSeason warSeason;
@@ -42,4 +47,9 @@ public class WarLeague {
     public void addPlayerWarStats(PlayerWarStat playerWarStat) {
         this.playerWarStats.add(playerWarStat);
     }
+
+    public LocalDate getEndDate() {
+        return getStartDate().plusDays(WarConstants.leagueDays - 1);
+    }
+
 }

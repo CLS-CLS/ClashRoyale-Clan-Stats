@@ -6,4 +6,6 @@ import java.util.List;
 public interface WarLeagueRepositoryCustom {
 
     List<WarLeague> findLeaguesAroundDate(LocalDate date, int span);
+
+    List<WarLeague> findFirstNthWarLeaguesBeforeDate(LocalDate date, int n);
 }

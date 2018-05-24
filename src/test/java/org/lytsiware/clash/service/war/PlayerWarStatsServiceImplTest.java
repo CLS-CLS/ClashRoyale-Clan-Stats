@@ -2,6 +2,7 @@ package org.lytsiware.clash.service.war;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lytsiware.clash.AbstractSpringBootTest;
 import org.lytsiware.clash.Application;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
@@ -25,14 +26,7 @@ import java.util.stream.StreamSupport;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("statsRoyale")
-@ContextConfiguration(classes = Application.class)
-@TestPropertySource(locations = "classpath:test.properties")
-public class PlayerWarStatsServiceImplTest {
-
-    @PersistenceContext
-    EntityManager em;
+public class PlayerWarStatsServiceImplTest extends AbstractSpringBootTest {
 
     @Autowired
     WarUploadService warUploadService;
