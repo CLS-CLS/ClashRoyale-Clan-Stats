@@ -31,4 +31,5 @@ public interface PlayerAggregationWarStatsService {
 
     List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWeek(Week week);
 
+    void calculateMissingStats(LocalDate from, LocalDate to);
 }

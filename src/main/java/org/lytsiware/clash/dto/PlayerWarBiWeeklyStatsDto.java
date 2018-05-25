@@ -17,11 +17,11 @@ public class PlayerWarBiWeeklyStatsDto implements Serializable {
     private int warsParticipated;
     private Integer crownsWon;
     private Integer crownsLost;
+    private int gamesGranted;
     private Integer gamesNotPlayed;
     private Double winRatio;
     private Integer score;
     private boolean inClan;
-
 
     public PlayerWarBiWeeklyStatsDto(PlayerAggregationWarStats playerWarStats) {
         name = playerWarStats.getPlayer().getName();
@@ -33,8 +33,9 @@ public class PlayerWarBiWeeklyStatsDto implements Serializable {
         gamesNotPlayed = playerWarStats.getGamesNotPlayed();
         crownsLost = playerWarStats.getGamesGranted() - playerWarStats.getGamesWon();
         winRatio = playerWarStats.getAvgWins();
-        score =  playerWarStats.getScore();
+        score = playerWarStats.getScore();
         inClan = playerWarStats.getPlayer().getInClan();
+        gamesGranted = playerWarStats.getGamesGranted();
     }
 
 }

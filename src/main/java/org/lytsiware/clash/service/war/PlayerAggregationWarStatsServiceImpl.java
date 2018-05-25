@@ -98,7 +98,6 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     }
 
 
-
     @Override
 //    @Async
     @Transactional(propagation = Propagation.REQUIRED)
@@ -112,13 +111,29 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     @Override
     public List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWeek(Week week) {
         List<WarLeague> warLeague = warLeagueRepository.findFirstNthWarLeaguesBeforeDate(week.getStartDate(), 1);
-        if (warLeague.isEmpty()){
+        if (warLeague.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
         return playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.get(0).getStartDate(), WarConstants.leagueSpan);
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void calculateMissingStats(LocalDate from, LocalDate to) {
+        List<LocalDate> leagueStartDates = warLeagueRepository.findAll().stream().map(WarLeague::getStartDate).collect(Collectors.toList());
+        if (from != null) {
+            leagueStartDates = leagueStartDates.stream().filter(date -> date.isAfter(from)).collect(Collectors.toList());
+        }
 
+        if (to != null) {
+            leagueStartDates = leagueStartDates.stream().filter(date -> date.isBefore(to)).collect(Collectors.toList());
+        }
 
-
+        for (LocalDate startDate : leagueStartDates) {
+            if (playerAggregationWarStatsRepository.findByDateAndLeagueSpan(startDate, WarConstants.leagueSpan).isEmpty()) {
+                log.info("Calculating missing war stats fro date {}", startDate);
+                calculateAndSaveStats(startDate, WarConstants.leagueSpan, true);
+            }
+        }
+    }
 }

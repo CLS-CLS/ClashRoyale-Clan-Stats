@@ -56,6 +56,12 @@ public class WarStatsRestController {
         }
     }
 
+    @GetMapping("/calculateWarStats")
+    public void calculateWarStats(){
+        log.info("START calculating missing war stats");
+        playerAggregationWarStatsService.calculateMissingStats(null, null);
+    }
+
 
     @GetMapping("/warStats/{deltaWeek}")
     public ClansWarGlobalStatsDto getWarStatsForWeeks(@PathVariable(value = "deltaWeek", required = false) Integer deltaWeek) {

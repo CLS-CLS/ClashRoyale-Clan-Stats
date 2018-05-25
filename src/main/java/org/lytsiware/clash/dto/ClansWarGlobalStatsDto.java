@@ -14,15 +14,18 @@ import java.util.stream.Collectors;
 @Data
 public class ClansWarGlobalStatsDto implements Serializable {
 
-    private int avgCards;
+    private double avgCards;
     private double avgWins;
 
     List<PlayerWarBiWeeklyStatsDto> playerWarStats = new ArrayList<>();
 
     public ClansWarGlobalStatsDto(List<PlayerAggregationWarStats> playerAggregationWarStats) {
         this.playerWarStats = playerAggregationWarStats.stream().map(PlayerWarBiWeeklyStatsDto::new).collect(Collectors.toList());
-       //TODO avgCards, avfWins
+        int totalGamesGranted = playerWarStats.stream().mapToInt(PlayerWarBiWeeklyStatsDto::getGamesGranted).sum();
+        if (totalGamesGranted != 0) {
+            avgWins = playerWarStats.stream().mapToInt(PlayerWarBiWeeklyStatsDto::getCrownsWon).sum() / (double) totalGamesGranted;
+        }
+        avgCards = playerWarStats.stream().mapToDouble(pws -> pws.getAverageCardsWon() * pws.getWarsParticipated()).sum() / playerWarStats.stream().mapToInt(PlayerWarBiWeeklyStatsDto::getWarsParticipated).sum();
     }
-
 
 }
