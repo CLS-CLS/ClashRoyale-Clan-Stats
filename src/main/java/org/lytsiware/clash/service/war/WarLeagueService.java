@@ -11,5 +11,4 @@ public interface WarLeagueService {
 
     WarLeague findLeagueForDate(LocalDate date, WarLeaguePhase warLeaguePhase);
 
-    List<WarLeague> getAffectedLeagues(LocalDate date, int span);
 }

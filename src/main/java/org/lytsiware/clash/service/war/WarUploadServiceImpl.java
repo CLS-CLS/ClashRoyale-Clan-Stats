@@ -6,22 +6,23 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
+import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,16 +32,16 @@ public class WarUploadServiceImpl implements WarUploadService {
 
     private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
     private PlayerWarStatsService playerWarStatsService;
-    private WarLeagueService warLeagueService;
+    private WarLeagueRepository warLeagueRepository;
     private PlayerAggregationWarStatsService playerAggregationWarStatsService;
 
     @Autowired
     public WarUploadServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository, PlayerWarStatsService playerWarStatsService,
-                                PlayerAggregationWarStatsService playerAggregationWarStatsService, WarLeagueService warLeagueService) {
+                                PlayerAggregationWarStatsService playerAggregationWarStatsService, WarLeagueRepository warLeagueRepository) {
         this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
         this.playerWarStatsService = playerWarStatsService;
         this.playerAggregationWarStatsService = playerAggregationWarStatsService;
-        this.warLeagueService = warLeagueService;
+        this.warLeagueRepository = warLeagueRepository;
     }
 
 
@@ -80,6 +81,57 @@ public class WarUploadServiceImpl implements WarUploadService {
     }
 
 
+    @Override
+    public void upload(MultipartFile[] files) throws IOException {
+        List<WarLeague> warLeagues = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            log.info("uploading file {}", file.getOriginalFilename());
+            List<PlayerWarStat> statsList = Utils.parseCsv(file.getInputStream(), file.getOriginalFilename());
+
+            if (statsList.isEmpty()) {
+                log.warn("File {} was empty", file.getOriginalFilename());
+                continue;
+            }
+            persistStats(statsList).ifPresent(warLeagues::add);
+        }
+
+        warLeagues.stream()
+                .flatMap(warLeague -> warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan).stream())
+                .distinct()
+                .forEach(warLeague -> playerAggregationWarStatsService.calculateAndSaveStats(warLeague.getStartDate(), WarConstants.leagueSpan, true));
+
+    }
+
+    private Optional<WarLeague> persistStats(List<PlayerWarStat> statsList) throws IOException {
+
+        WarLeague warLeague = statsList.get(0).getWarLeague();
+        Set<String> playersInClan = playerWeeklyStatsRepository.findByWeek(Week.fromDate(warLeague.getStartDate()))
+                .stream().map(PlayerWeeklyStats::getPlayer).map(Player::getTag).collect(Collectors.toSet());
+
+        for (PlayerWarStat pws : statsList) {
+            playersInClan.remove(pws.getPlayer().getTag());
+        }
+
+        for (String playerTag : playersInClan) {
+            statsList.add(PlayerWarStat.builder()
+                    .warLeague(warLeague)
+                    .player(new Player(playerTag, null, null, true))
+                    .warPhaseStats(WarPhaseStats.builder()
+                            .gamesGranted(0)
+                            .gamesLost(0)
+                            .gamesWon(0)
+                            .build())
+                    .collectionPhaseStats(CollectionPhaseStats.builder()
+                            .cardsWon(0)
+                            .gamesPlayed(0)
+                            .build())
+                    .build());
+        }
+
+        playerWarStatsService.persistPlayerWarStats(statsList);
+        return Optional.of(warLeague);
+    }
 
 
     @Override
@@ -118,11 +170,12 @@ public class WarUploadServiceImpl implements WarUploadService {
 
         playerWarStatsService.persistPlayerWarStats(statsList);
 
-        List<WarLeague> affectedLeagues = warLeagueService.getAffectedLeagues(warLeague.getStartDate(), WarConstants.leagueSpan);
+        List<WarLeague> affectedLeagues = warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan);
 
-        for (WarLeague warLeague1: affectedLeagues) {
+        for (WarLeague warLeague1 : affectedLeagues) {
             playerAggregationWarStatsService.calculateAndSaveStats(warLeague1.getStartDate(), WarConstants.leagueSpan, true);
         }
+
 
     }
 

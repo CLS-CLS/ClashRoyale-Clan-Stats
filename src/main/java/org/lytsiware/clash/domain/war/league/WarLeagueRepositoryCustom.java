@@ -8,4 +8,6 @@ public interface WarLeagueRepositoryCustom {
     List<WarLeague> findLeaguesAroundDate(LocalDate date, int span);
 
     List<WarLeague> findFirstNthWarLeaguesBeforeDate(LocalDate date, int n);
+
+    List<WarLeague> findFirstNthWarLeaguesAfterDate(LocalDate date, int n);
 }

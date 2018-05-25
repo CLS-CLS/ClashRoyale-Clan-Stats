@@ -35,4 +35,11 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
                 .setMaxResults(n)
                 .setParameter("date", date).getResultList();
     }
+
+    @Override
+    public List<WarLeague> findFirstNthWarLeaguesAfterDate(LocalDate date, int n) {
+        return em.createQuery("select l from WarLeague l where l.startDate >= :date order by l.startDate ASC", WarLeague.class)
+                .setMaxResults(n)
+                .setParameter("date", date).getResultList();
+    }
 }

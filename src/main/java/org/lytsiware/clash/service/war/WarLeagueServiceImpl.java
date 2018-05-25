@@ -23,8 +23,4 @@ public class WarLeagueServiceImpl implements WarLeagueService {
         return null;
     }
 
-    @Override
-    public List<WarLeague> getAffectedLeagues(LocalDate date, int span) {
-        return warLeagueRepository.findLeaguesAroundDate(date, span);
-    }
 }

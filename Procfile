@@ -1,1 +1,1 @@
-web: java -agentlib:jdwp=transport=dt_socket,server=y,address=9090,suspend=n -Dserver.port=$PORT -jar target/*.war --spring.profiles.active=heroku
+web: java -Dserver.port=$PORT -jar target/*.war --spring.profiles.active=heroku

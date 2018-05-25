@@ -98,6 +98,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     }
 
 
+
     @Override
 //    @Async
     @Transactional(propagation = Propagation.REQUIRED)
@@ -116,6 +117,8 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
         }
         return playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.get(0).getStartDate(), WarConstants.leagueSpan);
     }
+
+
 
 
 }

@@ -16,7 +16,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class WarLeague {
 
     @Id
@@ -27,6 +26,7 @@ public class WarLeague {
     private String name;
 
     private Integer trophies;
+
 
     @Transient
     @Setter(AccessLevel.NONE)
@@ -40,6 +40,10 @@ public class WarLeague {
     @Setter(AccessLevel.PACKAGE)
     private Set<PlayerWarStat> playerWarStats = new HashSet<>();
 
+    WarLeague() {
+        this.startDate = LocalDate.now();
+    }
+
     public WarLeague(LocalDate startDate) {
         this.startDate = startDate;
     }
@@ -52,4 +56,18 @@ public class WarLeague {
         return getStartDate().plusDays(WarConstants.leagueDays - 1);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WarLeague warLeague = (WarLeague) o;
+
+        return startDate.equals(warLeague.startDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return startDate.hashCode();
+    }
 }

@@ -2,6 +2,7 @@ package org.lytsiware.clash.service.war;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
+import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,4 +30,5 @@ public interface PlayerAggregationWarStatsService {
     CompletableFuture<List<PlayerAggregationWarStats>> calculateAndSaveStats(LocalDate startDate, int leagueSpan, boolean strict);
 
     List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWeek(Week week);
+
 }
