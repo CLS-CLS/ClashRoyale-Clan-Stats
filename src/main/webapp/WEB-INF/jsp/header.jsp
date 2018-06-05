@@ -25,8 +25,8 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h1 class="clan-header"><img src="images/clanlogo.png">
-        The Greek Noobs</h1>
+        <h1 class="clan-header"><!--<img src="images/clanlogo.png">-->
+        Small Heroes</h1>
         <p style="text-align:center">Donations and Clan Chest Contribution Statistics </p>
     </div>
 </div>
