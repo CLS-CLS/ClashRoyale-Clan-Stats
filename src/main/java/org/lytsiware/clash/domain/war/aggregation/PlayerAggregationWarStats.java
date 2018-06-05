@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Builder
 @IdClass(PlayerAggregationWarStatsPK.class)
 @Entity
+@NamedEntityGraphs(@NamedEntityGraph(name = "playerAggregationService.graph", attributeNodes = @NamedAttributeNode("player")))
 public class PlayerAggregationWarStats {
 
     @Id

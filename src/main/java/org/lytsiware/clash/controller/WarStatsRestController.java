@@ -2,10 +2,9 @@ package org.lytsiware.clash.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
-import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
+import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.service.war.PlayerAggregationWarStatsService;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.lytsiware.clash.service.war.WarUploadService;
@@ -19,9 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -35,6 +32,9 @@ public class WarStatsRestController {
     @Autowired
     PlayerAggregationWarStatsService playerAggregationWarStatsService;
 
+    @Autowired
+    PlayerWarStatsService playerWarStatsService;
+
     @PostMapping(value = "/tagFile")
     public void tagFile(@RequestParam("file") MultipartFile file, Model model, HttpServletResponse response) throws IOException {
         log.info("START tagFile");
@@ -46,6 +46,10 @@ public class WarStatsRestController {
 
     }
 
+    @GetMapping(value = "/test")
+    public PlaywerWarStatsWithAvgsDto test() {
+        return playerWarStatsService.getPlayerWarStatsForWeek("2JGGY989R", Week.now().getEndDate());
+    }
 
     @PostMapping("/uploadWarStats")
     @Transactional(propagation = Propagation.REQUIRED)

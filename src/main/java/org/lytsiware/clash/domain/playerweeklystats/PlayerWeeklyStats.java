@@ -24,7 +24,7 @@ public class PlayerWeeklyStats {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PWS_SEQUENCE")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "playerFK")
     private Player player;
 

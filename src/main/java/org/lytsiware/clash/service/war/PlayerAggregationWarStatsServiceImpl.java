@@ -4,20 +4,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
-import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsPK;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,9 +29,6 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
 
     @Autowired
     PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
-
-    @Autowired
-    PlayerWarStatsService playerWarStatsService;
 
     @Autowired
     WarLeagueRepository warLeagueRepository;

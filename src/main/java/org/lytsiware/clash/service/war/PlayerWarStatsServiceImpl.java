@@ -1,12 +1,13 @@
 package org.lytsiware.clash.service.war;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
-import org.lytsiware.clash.domain.war.league.WarLeague;
+import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
+import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
+import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -29,17 +29,20 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     private PlayerWarStatsRepository playerWarStatsRepository;
     private WarLeagueRepository warLeagueRepository;
     private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
+    private PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
     private Clock clock;
 
     @Autowired
     public PlayerWarStatsServiceImpl(PlayerWarStatsRepository playerWarStatsRepository,
                                      WarLeagueRepository warLeagueRepository,
                                      PlayerWeeklyStatsRepository playerWeeklyStatsRepository,
+                                     PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository,
                                      Clock clock) {
 
         this.playerWarStatsRepository = playerWarStatsRepository;
         this.warLeagueRepository = warLeagueRepository;
         this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
+        this.playerAggregationWarStatsRepository = playerAggregationWarStatsRepository;
         this.clock = clock;
     }
 
@@ -54,16 +57,18 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
     }
 
+
     @Override
-    public Map<Player, List<PlayerWarStat>> findAllPlayerWarStats(int numberOfPastWars, LocalDate endDate) {
+    public PlaywerWarStatsWithAvgsDto getPlayerWarStatsForWeek(String tag, LocalDate untilDate) {
 
-        List<WarLeague> leagues = warLeagueRepository.findByStartDateBetween(endDate.minusDays(WAR_DURATION * numberOfPastWars), endDate);
-        List<PlayerWarStat> playerWarStats = playerWarStatsRepository.findByWarLeagueIn(leagues);
+        Map<LocalDate, PlayerWarStat> playerWarStats = playerWarStatsRepository.findFirst20ByPlayerTagAndWarLeagueStartDateBeforeOrderByWarLeagueStartDateDesc(tag, untilDate)
+                .stream().collect(Utils.collectToMap(pws -> pws.getWarLeague().getStartDate(), Function.identity()));
 
-        HashMap<Player, List<PlayerWarStat>> statsPerPlayer = playerWarStats.stream()
-                .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
+        Map<LocalDate, PlayerAggregationWarStats> playerAggrWarStats = playerAggregationWarStatsRepository.findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(tag, WarConstants.leagueSpan, untilDate)
+                .stream().collect(Utils.collectToMap(PlayerAggregationWarStats::getDate, Function.identity()));
 
-        return statsPerPlayer;
+        return new PlaywerWarStatsWithAvgsDto(playerWarStats, playerAggrWarStats);
+
     }
 
 

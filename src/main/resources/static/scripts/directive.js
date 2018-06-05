@@ -9,15 +9,16 @@ app.directive("loadingDirective", function() {
 
 app.directive("orderDirective", ["generalComparator", function(generalComparator) {
 	return {
-		template : "<i class='order fa fa-fw fa-sort'></i>",
-		replace : true,
+		template : "<span><ng-transclude></ng-transclude><i class='order fa fa-fw fa-sort'/></span>",
+		replace : false,
+		transclude: true,
 		scope : {
 			bindTo : '@',
 			filterBy : '=',
 			comparator : '=?'
 		},
 		link : function(scope, elem, attrs) {
-			
+			var iElem = elem.find("i.order");
 			var states = {
 					unselected: {
 						clazz:"fa-sort",
@@ -26,7 +27,7 @@ app.directive("orderDirective", ["generalComparator", function(generalComparator
 					down: {
 						clazz:"fa-sort-down",
 						next: "up"
-					},
+					},x3
 					up: {
 						clazz:"fa-sort-up",
 						next: "down"
@@ -36,8 +37,8 @@ app.directive("orderDirective", ["generalComparator", function(generalComparator
 			var state = states.unselected;
 			
 			function applyClass() {
-				elem.removeClass("fa-sort-up fa-sort-down fa-sort")
-				elem.addClass(state.clazz)
+				iElem.removeClass("fa-sort-up fa-sort-down fa-sort")
+				iElem.addClass(state.clazz)
 			}
 
 		

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"PLAYER_TAG", "WAR_LEAGUE_START_DATE"}))
-@NamedEntityGraph(name = "PlayerWarStat.detail", attributeNodes = @NamedAttributeNode("player"))
+@NamedEntityGraphs({@NamedEntityGraph(name = "playerWarStat.graph", attributeNodes = {@NamedAttributeNode("player"), @NamedAttributeNode("warLeague")})})
 @ToString
 @SequenceGenerator(name = "PWARS_SEQUENCE", sequenceName = "PWARS_SEQUENCE", initialValue = 100)
 public class PlayerWarStat {

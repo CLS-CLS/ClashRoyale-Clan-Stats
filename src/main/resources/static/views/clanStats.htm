@@ -116,51 +116,64 @@
 		                <thead>
 			                <tr>
 			                    <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
-			                    	Player <order-directive bind-to="name" filter-by="state.filter"/>
+                                    <order-directive bind-to="name" filter-by="state.filter">Player</order-directive>
 			                        </span>
 			                    </th>
 			                    <th ng-show="state.selectableColumns['role'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)>
-			                    	Role <order-directive bind-to="role" filter-by="state.filter" comparator="roleOrder"/>
+                                    <order-directive bind-to="role" filter-by="state.filter"
+                                                     comparator="roleOrder">Role </order-directive>
 			                    	</span>
 			                    </th>
-			                    <th ng-show="state.selectableColumns['cc'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Chest contribution
-			                        <order-directive bind-to="chestContribution" filter-by="state.filter"/></span>
+                                <th ng-show="state.selectableColumns['cc'].show" rowspan="2"><span
+                                        ng-click=triggerOrderDirective($event)>
+			                        <order-directive bind-to="chestContribution" filter-by="state.filter">Chest contribution</order-directive></span>
 			                    </th>
-			                     <th ng-show="state.selectableColumns['ccRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Chest contribution Rank
-			                        <order-directive bind-to="chestContribution" filter-by="state.filter"/></span>
+                                <th ng-show="state.selectableColumns['ccRank'].show" rowspan="2"><span
+                                        ng-click=triggerOrderDirective($event)>
+                                     <order-directive bind-to="chestContribution" filter-by="state.filter">Chest contribution Rank</order-directive></span>
 			                    </th>
                                 <th ng-show="state.selectableColumns['cardDonation'].show" rowspan="2"><span
-                                        ng-click=triggerOrderDirective($event)> Donations / Requests
-			                        <order-directive bind-to="cardDonation" filter-by="state.filter"/></span>
+                                        ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="cardDonation" filter-by="state.filter">Donations / Requests</order-directive></span>
 			                    </th>
-			                    <th ng-show="state.selectableColumns['cardDonationRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Donation Rank
-			                        <order-directive bind-to="cardDonation" filter-by="state.filter"/></span>
+                                <th ng-show="state.selectableColumns['cardDonationRank'].show" rowspan="2"><span
+                                        ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="cardDonation"
+                                                     filter-by="state.filter">Donation Rank</order-directive></span>
 			                    </th>
-			                    <th ng-show="state.selectableColumns['overallRank'].show" rowspan="2"><span ng-click=triggerOrderDirective($event)> Overall Ranking
-			                        <order-directive bind-to="overallRank" filter-by="state.filter"/></span>
+                                <th ng-show="state.selectableColumns['overallRank'].show" rowspan="2"><span
+                                        ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="overallRank"
+                                                     filter-by="state.filter">Overall Ranking</order-directive></span>
 			                    </th>
 			                    <th ng-show="averageColSpan!=0" colspan="{{averageColSpan}}"> Average Stats (of the last 6 weeks) </th>
 			                </tr>
 			                <tr>
-			                    <th ng-show="state.selectableColumns['avgCc'].show"><span ng-click=triggerOrderDirective($event)>Chest Contribution
-			                        <order-directive bind-to="avgChestContribution" filter-by="state.filter"/></span>
+                                <th ng-show="state.selectableColumns['avgCc'].show"><span
+                                        ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="avgChestContribution" filter-by="state.filter">Chest Contribution</order-directive></span>
 			                    </th>
-			                     <th ng-show="state.selectableColumns['avgCcRank'].show"><span  ng-click=triggerOrderDirective($event)>Chest Contribution Rank
-			                        <order-directive bind-to="avgChestContribution" filter-by="state.filter"/></span>
+                                <th ng-show="state.selectableColumns['avgCcRank'].show"><span
+                                        ng-click=triggerOrderDirective($event)>
+                                     <order-directive bind-to="avgChestContribution" filter-by="state.filter">Chest Contribution Rank</order-directive></span>
 			                    </th>
                                 <th ng-show="state.selectableColumns['avgDonation'].show"><span
-                                        ng-click=triggerOrderDirective($event)>Donations / Requests
-			                        <order-directive bind-to="avgCardDonation" filter-by="state.filter"/></span>
+                                        ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="avgCardDonation" filter-by="state.filter">Donations / Requests</order-directive></span>
 			                    </th>
                                 <th ng-show="state.selectableColumns['avgRequestDonationDiff'].show"><span
-                                        ng-click=triggerOrderDirective($event)>  Donations/Requests Diff (ratio)
-			                        <order-directive bind-to="avgRequestDonationDiff" filter-by="state.filter"/></span>
+                                        ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="avgRequestDonationDiff" filter-by="state.filter">Donations/Requests Diff (ratio)</order-directive></span>
                                 </th>
-			                    <th ng-show="state.selectableColumns['avgDonationRank'].show" ><span ng-click=triggerOrderDirective($event)>Donations Rank
-			                        <order-directive bind-to="avgCardDonation" filter-by="state.filter"/></span>
+                                <th ng-show="state.selectableColumns['avgDonationRank'].show"><span
+                                        ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="avgCardDonation"
+                                                     filter-by="state.filter">Donations Rank</order-directive></span>
 			                    </th>
-			                    <th ng-show="state.selectableColumns['avgOverallRank'].show" ><span ng-click=triggerOrderDirective($event)>Overall Rank
-			                        <order-directive bind-to="avgOverallRank" filter-by="state.filter"/></span>
+                                <th ng-show="state.selectableColumns['avgOverallRank'].show"><span
+                                        ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="avgOverallRank"
+                                                     filter-by="state.filter">Overall Rank</order-directive></span>
 			                    </th>
 			                    
 			                </tr>
