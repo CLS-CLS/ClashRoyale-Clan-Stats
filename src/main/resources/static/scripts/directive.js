@@ -27,7 +27,7 @@ app.directive("orderDirective", ["generalComparator", function(generalComparator
 					down: {
 						clazz:"fa-sort-down",
 						next: "up"
-					},x3
+					},
 					up: {
 						clazz:"fa-sort-up",
 						next: "down"
