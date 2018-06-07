@@ -170,7 +170,6 @@ public class Utils {
 
             PlayerWarStat pws = PlayerWarStat.builder()
                     .player(new Player(tag, null, null, true))
-                    .warLeague(warLeague)
                     .collectionPhaseStats(CollectionPhaseStats.builder()
                             .cardsWon(cardsWon)
                             .build())
@@ -180,6 +179,7 @@ public class Utils {
                             .gamesGranted(gamesGranted)
                             .build())
                     .build();
+            pws.setWarLeague(warLeague);
             statsList.add(pws);
         }
         return statsList;

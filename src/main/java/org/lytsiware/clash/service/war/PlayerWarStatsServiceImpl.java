@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -48,13 +47,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
     @Override
     public List<PlayerWarStat> persistPlayerWarStats(List<PlayerWarStat> playerWarStats) {
-
-        List<PlayerWarStat> persistedWarStats = new ArrayList<>();
-
-        playerWarStatsRepository.saveAll(playerWarStats).forEach(persisted -> persistedWarStats.add(persisted));
-
-        return persistedWarStats;
-
+        List<PlayerWarStat> persisted = playerWarStatsRepository.saveAll(playerWarStats);
+        playerWarStatsRepository.flush();
+        return persisted;
     }
 
 

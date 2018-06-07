@@ -22,7 +22,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -93,7 +96,7 @@ public class WarUploadServiceImpl implements WarUploadService {
                 log.warn("File {} was empty", file.getOriginalFilename());
                 continue;
             }
-            persistStats(statsList).ifPresent(warLeagues::add);
+            warLeagues.add(calculateLegueAvgsAndSaveWarStats(statsList));
         }
 
         warLeagues.stream()
@@ -103,7 +106,7 @@ public class WarUploadServiceImpl implements WarUploadService {
 
     }
 
-    private Optional<WarLeague> persistStats(List<PlayerWarStat> statsList) throws IOException {
+    private WarLeague calculateLegueAvgsAndSaveWarStats(List<PlayerWarStat> statsList) {
 
         WarLeague warLeague = statsList.get(0).getWarLeague();
         Set<String> playersInClan = playerWeeklyStatsRepository.findByWeek(Week.fromDate(warLeague.getStartDate()))
@@ -112,10 +115,11 @@ public class WarUploadServiceImpl implements WarUploadService {
         for (PlayerWarStat pws : statsList) {
             playersInClan.remove(pws.getPlayer().getTag());
         }
+        calculateLeagueAvgs(statsList, warLeague);
+        warLeague = warLeagueRepository.saveAndFlush(warLeague);
 
         for (String playerTag : playersInClan) {
-            statsList.add(PlayerWarStat.builder()
-                    .warLeague(warLeague)
+            PlayerWarStat notParticipatingPWS = PlayerWarStat.builder()
                     .player(new Player(playerTag, null, null, true))
                     .warPhaseStats(WarPhaseStats.builder()
                             .gamesGranted(0)
@@ -126,11 +130,24 @@ public class WarUploadServiceImpl implements WarUploadService {
                             .cardsWon(0)
                             .gamesPlayed(0)
                             .build())
-                    .build());
+                    .build();
+            statsList.add(notParticipatingPWS);
+        }
+
+        for (PlayerWarStat playerWarStat : statsList) {
+            playerWarStat.setWarLeague(warLeague);
         }
 
         playerWarStatsService.persistPlayerWarStats(statsList);
-        return Optional.of(warLeague);
+        return warLeague;
+    }
+
+    private void calculateLeagueAvgs(List<PlayerWarStat> statsList, WarLeague warLeague) {
+        int cardAvg = (int) statsList.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon()).average().orElse(0);
+        double winPercentage = (double) statsList.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum() /
+                Math.max(statsList.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum(), 1);
+        warLeague.setTeamCardAvg(cardAvg);
+        warLeague.setTeamWinRatio(winPercentage);
     }
 
 
@@ -144,31 +161,7 @@ public class WarUploadServiceImpl implements WarUploadService {
             return;
         }
 
-        WarLeague warLeague = statsList.get(0).getWarLeague();
-        Set<String> playersInClan = playerWeeklyStatsRepository.findByWeek(Week.fromDate(warLeague.getStartDate()))
-                .stream().map(PlayerWeeklyStats::getPlayer).map(Player::getTag).collect(Collectors.toSet());
-
-        for (PlayerWarStat pws : statsList) {
-            playersInClan.remove(pws.getPlayer().getTag());
-        }
-
-        for (String playerTag : playersInClan) {
-            statsList.add(PlayerWarStat.builder()
-                    .warLeague(warLeague)
-                    .player(new Player(playerTag, null, null, true))
-                    .warPhaseStats(WarPhaseStats.builder()
-                            .gamesGranted(0)
-                            .gamesLost(0)
-                            .gamesWon(0)
-                            .build())
-                    .collectionPhaseStats(CollectionPhaseStats.builder()
-                            .cardsWon(0)
-                            .gamesPlayed(0)
-                            .build())
-                    .build());
-        }
-
-        playerWarStatsService.persistPlayerWarStats(statsList);
+        WarLeague warLeague = calculateLegueAvgsAndSaveWarStats(statsList);
 
         List<WarLeague> affectedLeagues = warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan);
 
