@@ -41,9 +41,7 @@ public class AdminController {
     @Transactional(propagation = Propagation.REQUIRED)
     public String uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
         log.info("START uploadWarStats");
-        for (MultipartFile file : files) {
-            warUploadService.upload(file.getInputStream(), file.getOriginalFilename());
-        }
+        warUploadService.upload(files);
         return "redirect:/warStats/0";
     }
 

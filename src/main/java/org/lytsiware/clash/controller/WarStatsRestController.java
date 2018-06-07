@@ -46,9 +46,9 @@ public class WarStatsRestController {
 
     }
 
-    @GetMapping(value = "/test")
-    public PlaywerWarStatsWithAvgsDto test() {
-        return playerWarStatsService.getPlayerWarStatsForWeek("2JGGY989R", Week.now().getEndDate());
+    @GetMapping(value = "/player/{tag}/war")
+    public PlaywerWarStatsWithAvgsDto playerWarStats(@PathVariable("tag") String tag) {
+        return playerWarStatsService.getPlayerWarStatsForWeek(tag, Week.now().getEndDate());
     }
 
     @PostMapping("/uploadWarStats")

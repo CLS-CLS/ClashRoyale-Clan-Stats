@@ -274,6 +274,49 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 
 })
 
+app.controller("playerWarStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
+
+	$scope.player;
+
+	$scope.colorfy = colorfy.colorfy
+
+	$scope.dataLoading = true;
+
+	$scope.back = function() {
+		history.back()
+	}
+
+	$scope.hasBack = function() {
+		return history.hasBack();
+	}
+
+	function loadData() {
+		$scope.dataLoading = true;
+		$http.get(baseUrl() + "/rest/player/" + $routeParams.playerTag +"/war").then(
+			function(response) {
+				$scope.player = response.data
+				$scope.player.stats.forEach(function(element, index){
+				    element.fightStatuses = [];
+				    for (var i = 0; i < element.gamesWon; i++) {
+				        element.fightStatuses.push("win");
+				    }
+                    for (var i = 0; i < element.gamesLost; i++) {
+                        element.fightStatuses.push("loose");
+                    }
+                    for (var i = 0; i < element.gamesNotPlayed; i++) {
+                        element.fightStatuses.push("forfeit");
+                    }
+				})
+			}
+		).finally(function() {
+			$scope.dataLoading = false;
+		}, null)
+	}
+
+	loadData();
+
+})
+
 app.factory('clanStatsState',  function(roleComparator) {
 	var state = {
 		selectableColumns: { 

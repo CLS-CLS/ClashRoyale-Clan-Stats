@@ -27,6 +27,10 @@ public class WarLeague {
 
     private Integer trophies;
 
+    private Integer teamCardAvg;
+
+    private Double teamWinRatio;
+
 
     @Transient
     @Setter(AccessLevel.NONE)

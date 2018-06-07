@@ -84,6 +84,12 @@ public class ClanStatsController {
         return "/index";
     }
 
+    @GetMapping("/player/{tag}/war")
+    public String playerWarStats(@PathVariable String tag, Model model) {
+        logger.info("war stats requested for tag {}", tag);
+        return "/index";
+    }
+
     @GetMapping("/scheduler")
     public String schedulers() {
         return "/scheduler";

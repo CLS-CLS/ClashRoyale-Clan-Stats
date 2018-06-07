@@ -29,7 +29,7 @@ public class PlayerAggregationWarStats {
     Integer leagueSpan;
 
     Double avgWins;
-    Double avgCards;
+    Integer avgCards;
     Integer totalCards;
     Integer gamesWon;
     Integer gamesGranted;

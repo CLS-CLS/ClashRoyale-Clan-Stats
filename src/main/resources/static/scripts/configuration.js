@@ -15,8 +15,11 @@ app.config([ "$locationProvider", "$routeProvider",
             .when("/clan/score", {
                 templateUrl: "views/chestCharts.htm"
             })
+            .when("/player/:playerTag/war", {
+                templateUrl: "views/playerWarStats.htm"
+            })
             .when("/player/:playerTag", {
-                templateUrl : "views/playerStats.htm",
+                templateUrl : "views/playerStats.htm"
             })
             .when("/clanrules", {
                 templateUrl : "views/clanRules.htm"
