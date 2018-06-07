@@ -348,7 +348,7 @@ app.factory('clanStatsState',  function(roleComparator) {
 
 });
 
-app.controller("warStatsController", function($scope, $http, $filter, $routeParams, $location, $timeout){
+app.controller("warStatsController", function($scope, $http, $filter, $routeParams, $location, $timeout, history){
 
     $scope.stats = {
         playerWarStats : []
@@ -357,6 +357,10 @@ app.controller("warStatsController", function($scope, $http, $filter, $routePara
     $scope.filter = {
         orderBy : "name",
         comparator : ""
+    }
+
+    $scope.next = function(){
+        history.store();
     }
 
    	$scope.selectedItem = (function() {

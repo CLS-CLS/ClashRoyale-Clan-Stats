@@ -133,7 +133,7 @@ public class WarUploadServiceImpl implements WarUploadService {
                     .build();
             statsList.add(notParticipatingPWS);
         }
-
+        warLeague.getPlayerWarStats().clear();
         for (PlayerWarStat playerWarStat : statsList) {
             playerWarStat.setWarLeague(warLeague);
         }

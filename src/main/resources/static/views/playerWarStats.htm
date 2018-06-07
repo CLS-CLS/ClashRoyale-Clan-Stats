@@ -1,30 +1,10 @@
 <div ng-cloak>
     <div class="inner-container col-xs-12">
         <div ng-controller="playerWarStatsController">
-
+            <button class="btn btnl-lg btn-primary" ng-disabled="!hasBack()" data-ng-click="back()"><span><i
+                    class="fa fa-fw fa-2x fa-arrow-left"></i> </span></button>
             <div class="filter row">
-
-                <div class="btn-group" role="group">
-                    <div style="margin-top:13px">
-                        <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="previousWeek()"><i
-                                class='fa fa-fw fa-chevron-left'></i></button>
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-default btn-block dropdown-toggle btn-lg" type="button"
-                                    data-toggle="dropdown">
-                                <span class="selected">{{selectedItem}}</span>
-                                <span class="caret"></span></button>
-                            <ul class="dropdown-menu" style="width:100%">
-
-                                <li ng-repeat="i in availableWeeks">
-                                    <a ng-click="dropboxitemselected(i)">{{i}}</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <button type="button" class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i
-                                class='fa fa-fw fa-chevron-right'></i></button>
-                    </div>
-                </div>
+                * All the averages are calculated based on the last 7 war leagues
             </div>
             <p/>
 
@@ -41,19 +21,20 @@
                 <div class="table-responsive halfscreen">
                     <table class="halfscreen table table-striped war-table">
                         <thead>
-                        <tr>
-                            <th colspan="3"></th>
-                            <th colspan="2"> Player Average </th>
-                            <th colspan="2"> League Average </th>
-                        </tr>
+
                         <tr>
                             <th rowspan="2">League</th>
                             <th rowspan="2"><img style="display:inline" src="images/cards_mid.png"></th>
                             <th rowspan="2">Battles</th>
-                            <th>Cards</th>
-                            <th>wins</th>
-                            <th>Cards</th>
-                            <th>wins</th>
+                            <th colspan="2"> Player Average </th>
+                            <th colspan="2"> League Average </th>
+                        </tr>
+                        <tr>
+                            <th><img style="display:inline" src="images/cards_mid.png"></th>
+                            <th>Win Ratio</th>
+                            <th><img style="display:inline" src="images/cards_mid.png"></th>
+                            <th>Win Ratio</th>
+
                         </tr>
                         </thead>
                         <tbody>
