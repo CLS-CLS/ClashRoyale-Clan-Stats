@@ -61,7 +61,7 @@ public class WarUploadServiceImpl implements WarUploadService {
 //                playerWeeklyStatsRepository.findByWeek(Week.fromDate(leagueDate).minusWeeks(1)).stream())
 //                .map(PlayerWeeklyStats::getPlayer).collect(Collectors.toMap(player -> player.getName().toLowerCase(), player -> player.getTag(), (l, r) -> l));
 
-        Map<String, String> playersInClan = playerRepository.loadAll().entrySet().stream().collect(Collectors.toMap(entry -> entry.getValue().getName(),
+        Map<String, String> playersInClan = playerRepository.loadAll().entrySet().stream().collect(Collectors.toMap(entry -> entry.getValue().getName().toLowerCase(),
                 entry -> entry.getKey()));
 
         StringBuilder stringBuilder = new StringBuilder();
