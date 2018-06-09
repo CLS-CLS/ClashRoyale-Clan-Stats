@@ -13,23 +13,24 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@IdClass(PlayerAggregationWarStatsPK.class)
 @Entity
 @NamedEntityGraphs(@NamedEntityGraph(name = "playerAggregationService.graph", attributeNodes = @NamedAttributeNode("player")))
+@SequenceGenerator(name = "wars_sequence", sequenceName = "PWARS_SEQUENCE")
 public class PlayerAggregationWarStats {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wars_sequence")
+    Long id;
+
     @ManyToOne
     Player player;
 
-    @Id
     LocalDate date;
 
-    @Id
     Integer leagueSpan;
 
     Double avgWins;
-    Double avgCards;
+    Integer avgCards;
     Integer totalCards;
     Integer gamesWon;
     Integer gamesGranted;

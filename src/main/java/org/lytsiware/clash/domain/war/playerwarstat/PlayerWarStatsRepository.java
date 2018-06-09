@@ -3,12 +3,12 @@ package org.lytsiware.clash.domain.war.playerwarstat;
 
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface PlayerWarStatsRepository extends CrudRepository<PlayerWarStat, Long> {
+public interface PlayerWarStatsRepository extends JpaRepository<PlayerWarStat, Long> {
 
     List<PlayerWarStat> findAllByWarLeague(WarLeague warLeague);
 

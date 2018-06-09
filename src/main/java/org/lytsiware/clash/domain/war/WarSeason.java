@@ -20,7 +20,7 @@ public class WarSeason {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private LocalDate stardDate;
+    private LocalDate startDate;
 
     private Integer rank;
 
@@ -29,7 +29,7 @@ public class WarSeason {
     private List<WarLeague> warLeagues;
 
     public WarSeason(LocalDate startDate) {
-        this.stardDate = startDate;
+        this.startDate = startDate;
     }
 
 }

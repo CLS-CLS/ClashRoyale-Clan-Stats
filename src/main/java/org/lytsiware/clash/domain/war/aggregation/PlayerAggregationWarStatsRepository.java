@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface PlayerAggregationWarStatsRepository extends CrudRepository<PlayerAggregationWarStats, PlayerAggregationWarStatsPK> {
+public interface PlayerAggregationWarStatsRepository extends CrudRepository<PlayerAggregationWarStats, Long> {
 
     @EntityGraph(value = "playerAggregationService.graph", type = EntityGraph.EntityGraphType.LOAD)
     List<PlayerAggregationWarStats> findByDateAndLeagueSpan(LocalDate startDate, int leagueSpan);

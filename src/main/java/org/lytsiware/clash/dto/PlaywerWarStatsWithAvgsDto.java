@@ -52,7 +52,11 @@ public class PlaywerWarStatsWithAvgsDto implements Serializable {
                     .avgCards(paws.getAvgCards())
                     .avgScore(paws.getScore())
                     .avgWins(paws.getAvgWins())
-                    .totalCards(paws.getTotalCards()).build();
+                    .totalCards(paws.getTotalCards())
+                    .avgLeagueCards(pws.getWarLeague().getTeamCardAvg())
+                    .avgLeagueWins(pws.getWarLeague().getTeamWinRatio())
+                    .build();
+
             stats.add(statsDto);
         });
     }
@@ -69,10 +73,13 @@ public class PlaywerWarStatsWithAvgsDto implements Serializable {
         private Integer gamesNotPlayed;
         private Integer cards;
 
+
         //aggr
         private Double avgWins;
-        private Double avgCards;
+        private Integer avgCards;
         private Integer avgScore;
         private Integer totalCards;
+        private Integer avgLeagueCards;
+        private Double avgLeagueWins;
     }
 }

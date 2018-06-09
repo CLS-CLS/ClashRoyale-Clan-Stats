@@ -10,7 +10,7 @@ public class PlayerWarBiWeeklyStatsDto implements Serializable {
     private String name;
     private String tag;
     private int numberOfWars;
-    private Double averageCardsWon;
+    private Integer averageCardsWon;
     private int warsParticipated;
     private Integer crownsWon;
     private Integer crownsLost;

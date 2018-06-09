@@ -1,39 +1,19 @@
 <div ng-cloak>
     <div class="inner-container col-xs-12">
-        <div ng-controller="warStatsController">
-
+        <div ng-controller="playerWarStatsController">
+            <button class="btn btnl-lg btn-primary" ng-disabled="!hasBack()" data-ng-click="back()"><span><i
+                    class="fa fa-fw fa-2x fa-arrow-left"></i> </span></button>
             <div class="filter row">
-
-                <div class="btn-group" role="group">
-                    <div style="margin-top:13px">
-                        <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="previousWeek()"><i
-                                class='fa fa-fw fa-chevron-left'></i></button>
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-default btn-block dropdown-toggle btn-lg" type="button"
-                                    data-toggle="dropdown">
-                                <span class="selected">{{selectedItem}}</span>
-                                <span class="caret"></span></button>
-                            <ul class="dropdown-menu" style="width:100%">
-
-                                <li ng-repeat="i in availableWeeks">
-                                    <a ng-click="dropboxitemselected(i)">{{i}}</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <button type="button" class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i
-                                class='fa fa-fw fa-chevron-right'></i></button>
-                    </div>
-                </div>
+                * All the averages are calculated based on the last 7 war leagues
             </div>
             <p/>
 
             <div class="row">
                 <div class="col-xs-6 col-md-3">
-                    <h3><label class="label label-info">Name: {{stats.name}} </label></h3>
+                    <h3><label class="label label-info">Name: {{player.name}} </label></h3>
                 </div>
                 <div class="col-xs-6 col-md-3">
-                    <h3><label class="label label-info">rank: {{stats.rank}}</label></h3>
+                    <h3><label class="label label-info">Role: {{player.role}}</label></h3>
                 </div>
             </div>
             <div style="position:relative">
@@ -41,29 +21,37 @@
                 <div class="table-responsive halfscreen">
                     <table class="halfscreen table table-striped war-table">
                         <thead>
+
                         <tr>
-                            <th>League</th>
+                            <th rowspan="2">League</th>
+                            <th rowspan="2"><img style="display:inline" src="images/cards_mid.png"></th>
+                            <th rowspan="2">Battles</th>
+                            <th colspan="2"> Player Average </th>
+                            <th colspan="2"> League Average </th>
+                        </tr>
+                        <tr>
                             <th><img style="display:inline" src="images/cards_mid.png"></th>
-                            <th>Battles</th>
-                            <th>Avg Cards</th>
-                            <th>Avg wins</th>
+                            <th>Win Ratio</th>
+                            <th><img style="display:inline" src="images/cards_mid.png"></th>
+                            <th>Win Ratio</th>
 
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-if="stats.stats.length > 0 " ng-repeat="s in stats.stats">
+                        <tr ng-if="player.stats.length > 0 " ng-repeat="s in player.stats">
                             <td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{s.leagueDate}}</td>
-                            <td
+                            <td>{{s.cards}}</td>
                             <td><span ng-repeat="fightStatus in s.fightStatuses">
-                                 <img ng-if="fightStatus == 'win'" style="display:inline" src="images/win_mid.png">
+                                <img ng-if="fightStatus == 'win'" style="display:inline" src="images/win_mid.png">
                                 <img ng-if="fightStatus == 'loose'" style="display:inline" src="images/loose_mid.png">
-                                <img ng-if="fightStatus == 'forfeit'" style="display:inline"
-                                     src="images/forfeit_mid.png">
+                                <img ng-if="fightStatus == 'forfeit'" style="display:inline" src="images/forfeit_mid.png">
                             </span></td>
-                            <td>{{s.avgCards | percentage:2}}</td>
+                            <td>{{s.avgCards | number:2}}</td>
                             <td>{{s.avgWins | percentage:2}}</td>
+                            <td>{{s.avgLeagueCards | number:2}}</td>
+                            <td>{{s.avgLeagueWins | percentage:2}}</td>
                         </tr>
-                        <tr ng-if="stats.stats.length == 0">
+                        <tr ng-if="player.stats.length == 0">
                             <td colspan="12"><h2>No data for this period</h2></td>
                         </tr>
                         </tbody>

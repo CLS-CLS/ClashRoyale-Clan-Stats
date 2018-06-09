@@ -167,7 +167,7 @@
                         <tbody>
                         <tr ng-if="stats.playerWarStats.length > 0 "
                             ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator">
-                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}" ng-click="next()">
+                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="/player/{{s.tag}}/war" ng-click="next()">
                                 <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                             </a>
                             </td>

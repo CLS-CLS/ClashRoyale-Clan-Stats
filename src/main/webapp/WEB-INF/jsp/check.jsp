@@ -38,9 +38,9 @@
 <div class="jumbotron">
     <div class="container">
     	
-        <h1 class="clan-header"><img src="images/clanlogo.png">
+        <h1 class="clan-header">
         The Greek Noobs</h1>
-        <p style="text-align:center">Donations and Clan Chest Contribution Statistics </p>
+        <p style="text-align:center">Donations and Clan War Statistics </p>
 
     </div>
 </div>

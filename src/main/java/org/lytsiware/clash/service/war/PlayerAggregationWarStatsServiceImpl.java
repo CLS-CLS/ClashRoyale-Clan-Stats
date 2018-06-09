@@ -61,7 +61,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             List<PlayerWarStat> participatedWars = playerWarStats.stream()
                     .filter(pws -> pws.getCollectionPhaseStats().getCardsWon() != 0).collect(Collectors.toList());
             int numberOfWarsParticipated = participatedWars.size();
-            double averageCardsWon = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
+            int averageCardsWon = (int) playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
                     .filter(i -> i != 0).average().orElse(0);
             int totalCards = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
                     .filter(i -> i != 0).sum();

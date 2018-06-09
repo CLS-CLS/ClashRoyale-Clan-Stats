@@ -15,11 +15,11 @@ import java.net.HttpURLConnection;
 @Service
 @Profile({"heroku", "local-herokuDB"})
 public class Pinger {
-	
-	Logger logger = LoggerFactory.getLogger(Pinger.class);
 
-	@Value("${ping.url}")
-	private Resource urlToPing;
+    Logger logger = LoggerFactory.getLogger(Pinger.class);
+
+    @Value("${ping.url}")
+    private Resource urlToPing;
 
     //TODO add fixed rate as application property
     @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 125 * 60 * 1000)

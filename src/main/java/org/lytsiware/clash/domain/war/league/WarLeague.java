@@ -2,7 +2,6 @@ package org.lytsiware.clash.domain.war.league;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.lytsiware.clash.domain.war.WarSeason;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
@@ -16,9 +15,13 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@SequenceGenerator(name = "wars_sequence", sequenceName = "PWARS_SEQUENCE")
 public class WarLeague {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wars_sequence")
+    private Long id;
+
     private LocalDate startDate;
 
     private Integer rank;
@@ -26,6 +29,10 @@ public class WarLeague {
     private String name;
 
     private Integer trophies;
+
+    private Integer teamCardAvg;
+
+    private Double teamWinRatio;
 
 
     @Transient
