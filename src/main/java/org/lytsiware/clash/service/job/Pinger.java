@@ -22,7 +22,7 @@ public class Pinger {
     private Resource urlToPing;
 
     //TODO add fixed rate as application property
-    @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 125 * 60 * 1000)
+    @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 25 * 60 * 1000)
     @Retryable(maxAttempts = 10, backoff = @Backoff(1000 * 30))
     public void ping() {
         try {

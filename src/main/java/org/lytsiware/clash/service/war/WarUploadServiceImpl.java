@@ -123,7 +123,7 @@ public class WarUploadServiceImpl implements WarUploadService {
         }
         calculateLeagueAvgs(statsList, warLeague);
 
-       warLeagueRepository.saveAndFlush(warLeague);
+        warLeagueRepository.saveAndFlush(warLeague);
 
         for (String playerTag : playersInClan) {
             PlayerWarStat notParticipatingPWS = PlayerWarStat.builder()
@@ -180,7 +180,6 @@ public class WarUploadServiceImpl implements WarUploadService {
         for (WarLeague warLeague1 : affectedLeagues) {
             playerAggregationWarStatsService.calculateAndSaveStats(warLeague1.getStartDate(), WarConstants.leagueSpan, true);
         }
-
 
     }
 

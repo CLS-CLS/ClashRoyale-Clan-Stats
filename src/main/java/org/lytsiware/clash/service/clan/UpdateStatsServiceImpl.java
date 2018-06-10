@@ -81,8 +81,7 @@ public class UpdateStatsServiceImpl implements UpdateStatService {
             } else {
                 dbStat = newStat;
                 dbStat.setWeek(week.getWeek());
-                logger.info("add new player {} with chestContribution {} donation {} and requests {}", dbStat.getPlayer().getName(), dbStat.getChestContribution(),
-                        dbStat.getCardDonation(), dbStat.getCardsReceived());
+                logger.info("add new player {} with donation {} and requests {}", dbStat.getPlayer().getName(), dbStat.getCardDonation(), dbStat.getCardsReceived());
             }
             toUpdate.add(dbStat);
         }

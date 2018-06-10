@@ -47,7 +47,7 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 
 
     @Override
-    @Scheduled(cron = "${" + CRON_MONDAY + "}", zone = ZoneIdConfiguration.zoneId)
+    @Scheduled(cron = "${" + CRON_MONDAY + "}")
     @ScheduledName("Mondays task")
     @Retryable(maxAttempts = 3, backoff = @Backoff(600000))
     public void run() {

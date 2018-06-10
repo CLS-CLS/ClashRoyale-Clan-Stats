@@ -1,7 +1,6 @@
 package org.lytsiware.clash.service.job;
 
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.clan.UpdateStatsServiceImpl;
@@ -12,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -45,33 +45,8 @@ public class StatsRoyaleWeekendJobImpl {
         this.updateStatsService = updateStatsService;
     }
 
-    /**
-     * Important !! Make sure the first run is after the clan chest has started or else the previous chest's score will
-     * be persisted and it will only be updated if the new score is bigger than the previous' week score!
-     */
-    @Scheduled(cron = "${cron.weekend}", zone = ZoneIdConfiguration.zoneId)
-    @ScheduledName("weekendRunner")
-    public void run() {
-        try {
-            logger.info("Job Triggered at {}", LocalDateTime.now());
 
-            List<PlayerWeeklyStats> stats = statsRoyaleSiteService.retrieveData();
-            try {
-                List<PlayerWeeklyStats> deckproStats = deckShopSiteService.retrieveData();
-                updateReceivedCards(stats, deckproStats);
-            } catch (Exception ex) {
-                logger.error("Exception while retrieving stats from deckshop", ex);
-            }
-
-            updateStatsService.updatePlayerWeeklyStats(stats, Week.now(), true);
-            updateStatsService.markPlayerIsInClan(stats);
-        } catch (Exception e) {
-            logger.error("oops", e);
-            throw e;
-        }
-    }
-
-    @Scheduled(cron = "${cron.midweek}", zone = ZoneIdConfiguration.zoneId)
+    @Scheduled(cron = "${cron.midweek}")
     @ScheduledName("midweekRunner")
     public void midweek() {
         try {
@@ -84,31 +59,28 @@ public class StatsRoyaleWeekendJobImpl {
             } catch (Exception ex) {
                 logger.error("Exception while retrieving stats from deckshop", ex);
             }
-            //chest contribution taken reflects the previous week's cc not this one (this one has not started yet)
-            stats.forEach(s -> s.setChestContribution(null));
-
             updateStatsService.updatePlayerWeeklyStats(stats, Week.now(), false);
             updateStatsService.markPlayerIsInClan(stats);
         } catch (Exception e) {
             logger.error("oops", e);
             throw e;
         }
-
     }
 
-    @ScheduledName("weekendRunner-final")
-    @Scheduled(cron = "${cron.weekend.final}", zone = ZoneIdConfiguration.zoneId)
-    public void extraCheck() {
-        run();
+    @Scheduled(cron = "${cron.sundayRunner}", zone = "GMT+3")
+    @ScheduledName("sundayRunner")
+    @Retryable(maxAttempts = 2)
+    public void sundayRunner() {
+        logger.info("Sunday Runner triggered");
+        midweek();
     }
+
 
     private void updateReceivedCards(List<PlayerWeeklyStats> stats, List<PlayerWeeklyStats> deckproStats) {
         for (PlayerWeeklyStats pws : stats) {
             PlayerWeeklyStats deckProStat = deckproStats.stream().filter(dps -> dps.getPlayer().getTag().equals(pws.getPlayer().getTag())).findAny().orElse(null);
             if (deckProStat != null) {
                 pws.setCardsReceived(deckProStat.getCardsReceived());
-                //TODO just for now because clash royale stats page is broken regearding the role
-                pws.getPlayer().setRole(deckProStat.getPlayer().getRole());
             }
         }
     }
