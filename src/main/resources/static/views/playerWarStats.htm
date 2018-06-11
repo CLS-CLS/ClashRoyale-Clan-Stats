@@ -41,7 +41,7 @@
                         <tr ng-if="player.stats.length > 0 " ng-repeat="s in player.stats">
                             <td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{s.leagueDate}}</td>
                             <td>{{s.cards}}</td>
-                            <td><span ng-repeat="fightStatus in s.fightStatuses">
+                            <td><span ng-repeat="fightStatus in s.fightStatuses track by $index">
                                 <img ng-if="fightStatus == 'win'" style="display:inline" src="images/win_mid.png">
                                 <img ng-if="fightStatus == 'loose'" style="display:inline" src="images/loose_mid.png">
                                 <img ng-if="fightStatus == 'forfeit'" style="display:inline" src="images/forfeit_mid.png">
