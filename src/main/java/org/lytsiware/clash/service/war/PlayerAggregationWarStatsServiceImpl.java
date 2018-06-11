@@ -72,7 +72,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             int score = 0;
             if (numberOfWarsParticipated > 0) {
                 winRatio = wins / (double) (crownsLost + wins);
-                score = (int) ((0.75 + 0.25 * winRatio) * averageCardsWon);
+                score = (int) ((0.50 + 0.50 * winRatio) * averageCardsWon);
             }
             PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
                     .avgCards(averageCardsWon)
