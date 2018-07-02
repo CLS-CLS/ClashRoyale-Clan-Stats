@@ -2,9 +2,12 @@ app.config([ "$locationProvider", "$routeProvider",
 	function config($locationProvider, $routeProvider) {
 
 		$routeProvider
+		    .when("/warStats/input", {
+		        templateUrl: "/views/warStatsInput.htm"
+		    })
 		    .when("/warStats/:week?", {
                 templateUrl: "views/warStats.htm"
-		    })
+            })
             .when("/upload" , {
                 templateUrl: "views/upload.htm",
                 controller: "uploadController"

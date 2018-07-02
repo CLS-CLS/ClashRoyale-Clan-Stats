@@ -2,14 +2,9 @@ package org.lytsiware.clash.service.war;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
-import org.lytsiware.clash.domain.war.league.WarLeague;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public interface PlayerAggregationWarStatsService {
 
@@ -27,9 +22,11 @@ public interface PlayerAggregationWarStatsService {
     List<PlayerAggregationWarStats> calculateStats(LocalDate latestLeagueStartDate, int leagueSpan, boolean strict);
 
 
-    CompletableFuture<List<PlayerAggregationWarStats>> calculateAndSaveStats(LocalDate startDate, int leagueSpan, boolean strict);
+    List<PlayerAggregationWarStats> calculateAndUpdateStats(LocalDate startDate, int leagueSpan, boolean strict);
 
     List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWeek(Week week);
 
     void calculateMissingStats(LocalDate from, LocalDate to);
+
+    List<PlayerAggregationWarStats> findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate);
 }

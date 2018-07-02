@@ -15,7 +15,7 @@ import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService;
 import org.lytsiware.clash.service.integration.SiteConfigurationService;
 import org.lytsiware.clash.service.integration.SiteQualifier;
-import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
+import org.lytsiware.clash.service.integration.statsroyale.StatsRoyaleSiteServiceImpl;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +111,7 @@ public class ClanStatsRestController {
 
     @GetMapping(value = "clan/{clanTag}/score")
     public HashMap<String, Double> getClanXCrownScore(@PathVariable String clanTag) {
-        List<PlayerWeeklyStats> playerWeeklyStats = new StatsRoyaleSiteServiceImpl(new SiteConfigurationService(Utils.createStatsRoyaleForClanTag(clanTag), "", null)).retrieveData(false);
+        List<PlayerWeeklyStats> playerWeeklyStats = new StatsRoyaleSiteServiceImpl(new SiteConfigurationService(Utils.createStatsRoyaleForClanTag(clanTag), "", null, null)).retrieveData(false);
         CalculationContext calculationContext = clanChestScoreCalculationService.calculateChestScore(playerWeeklyStats);
         Double deviationScore = calculationContext.get(CalculationContext.PLAYER_DEVIATION_PERC, Double.class);
         Double crownScore = calculationContext.get(CalculationContext.CROWN_SCORE_PERC, Double.class);

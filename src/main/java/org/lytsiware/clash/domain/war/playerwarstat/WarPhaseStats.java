@@ -34,4 +34,5 @@ public class WarPhaseStats {
         return Optional.of(gamesWon).orElse(0) + Optional.ofNullable(gamesLost).orElse(0) > 0;
     }
 
+
 }

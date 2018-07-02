@@ -1,23 +1,17 @@
 package org.lytsiware.clash.service.war;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.lytsiware.clash.AbstractSpringBootTest;
-import org.lytsiware.clash.Application;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.FileInputStream;
 import java.util.Map;
 import java.util.function.Function;
@@ -73,8 +67,7 @@ public class PlayerWarStatsServiceImplTest extends AbstractSpringBootTest {
         em.persist(weekStat6);
 
         em.flush();
-
-        warUploadService.upload(new FileInputStream(ResourceUtils.getFile("classpath:04-05-2018.csv")), "04-05-2018.csv");
+        warUploadService.upload(new MultipartFile[]{new MockMultipartFile("04-05-2018.csv", new FileInputStream(ResourceUtils.getFile("classpath:04-05-2018.csv")))});
 
         Map<String, PlayerWarStat> warStats = StreamSupport.stream(playerWarStatsRepository.findAll().spliterator(), false)
                 .collect(Collectors.toMap(warStat -> warStat.getPlayer().getTag(), Function.identity()));

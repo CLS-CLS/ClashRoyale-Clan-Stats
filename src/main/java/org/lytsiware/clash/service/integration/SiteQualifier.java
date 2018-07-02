@@ -19,6 +19,7 @@ public @interface SiteQualifier {
 
     enum Name {
         STATS_ROYALE,
+        STATS_ROYALE_WAR,
         DECK_SHOP
     }
 }

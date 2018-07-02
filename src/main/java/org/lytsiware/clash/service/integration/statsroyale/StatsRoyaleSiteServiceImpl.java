@@ -1,10 +1,13 @@
-package org.lytsiware.clash.service.integration;
+package org.lytsiware.clash.service.integration.statsroyale;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService;
+import org.lytsiware.clash.service.integration.SiteConfigurationService;
+import org.lytsiware.clash.service.integration.SiteQualifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -22,7 +25,7 @@ import java.util.List;
 @SiteQualifier(SiteQualifier.Name.STATS_ROYALE)
 public class StatsRoyaleSiteServiceImpl implements RefreshableSiteIntegrationService {
 
-	Logger logger = LoggerFactory.getLogger(ClashStatsSiteServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(StatsRoyaleSiteServiceImpl.class);
 
     private SiteConfigurationService siteConfigurationService;
 

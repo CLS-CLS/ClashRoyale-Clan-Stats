@@ -274,6 +274,67 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 
 })
 
+app.controller("warStatsInputController", function($scope, $http){
+
+
+    $scope.activateTab = function(event, tabId) {
+//        console.log(event);
+        event.preventDefault();
+//        $('#'+ tabId).show();
+  //
+
+    }
+
+
+    $scope.saveWar = function(event, index) {
+        if (angular.element(event.currentTarget).scope()[event.currentTarget.name].$valid) {
+            console.log("saved")
+            $http.post(baseUrl() + "/rest/warStats/saveInputStats", $scope.statsList[index]).then(function(response){
+                console.log("TODO")
+                $scope.errors = response.data;
+                if ($scope.errors.length > 0) {
+                    $("#errorModal").modal()
+                }else {
+                    alert("data saved");
+                }
+            },
+            function(errorResponse) {
+                console.log(errorResponse)
+            })
+        }
+    }
+
+    $scope.refresh = function(date, index) {
+        $scope.loading = true;
+        if (date instanceof Date){
+            date = date.toJSON().split("T")[0];
+        }
+        $http.post(baseUrl() + "/rest/warStats/playersNotParticipated/" + date, $scope.statsList[index].playerWarStats).then(
+            function(response) {
+                $scope.statsList[index].playersNotParticipated = response.data
+            },
+            function(response){
+
+            }).finally(function() {
+                $scope.loading = false;
+            }, null)
+    }
+
+    function loadData() {
+        $scope.loading = true;
+        $http.get(baseUrl() + "/rest/warStats/retrieveSiteData").then(
+            function(response) {
+                $scope.statsList = response.data
+            }
+        ).finally(function() {
+            $scope.loading = false;
+        }, null)
+    }
+
+
+    loadData();
+})
+
 app.controller("playerWarStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
 
 	$scope.player;

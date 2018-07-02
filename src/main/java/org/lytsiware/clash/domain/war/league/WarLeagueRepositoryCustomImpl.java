@@ -2,15 +2,13 @@ package org.lytsiware.clash.domain.war.league;
 
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 @Repository
 public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom {
@@ -41,5 +39,10 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
         return em.createQuery("select l from WarLeague l where l.startDate >= :date order by l.startDate ASC", WarLeague.class)
                 .setMaxResults(n)
                 .setParameter("date", date).getResultList();
+    }
+
+    @Override
+    public void persistAndFlush(WarLeague warLeague) throws EntityExistsException {
+        em.persist(warLeague);
     }
 }

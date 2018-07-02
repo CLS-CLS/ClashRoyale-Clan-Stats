@@ -10,4 +10,6 @@ public interface WarLeagueRepositoryCustom {
     List<WarLeague> findFirstNthWarLeaguesBeforeDate(LocalDate date, int n);
 
     List<WarLeague> findFirstNthWarLeaguesAfterDate(LocalDate date, int n);
+
+    void persistAndFlush(WarLeague warLeague);
 }

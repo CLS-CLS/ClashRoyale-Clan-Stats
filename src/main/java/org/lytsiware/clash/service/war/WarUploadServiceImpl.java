@@ -1,16 +1,10 @@
 package org.lytsiware.clash.service.war;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerRepository;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
-import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
-import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
-import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,18 +28,18 @@ public class WarUploadServiceImpl implements WarUploadService {
 
     private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
     private PlayerWarStatsService playerWarStatsService;
-    private WarLeagueRepository warLeagueRepository;
+    private WarLeagueService warLeagueService;
     private PlayerAggregationWarStatsService playerAggregationWarStatsService;
     private PlayerRepository playerRepository;
 
     @Autowired
     public WarUploadServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository, PlayerWarStatsService playerWarStatsService,
-                                PlayerAggregationWarStatsService playerAggregationWarStatsService, WarLeagueRepository warLeagueRepository,
+                                PlayerAggregationWarStatsService playerAggregationWarStatsService, WarLeagueService warLeagueService,
                                 PlayerRepository playerRepository) {
         this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
         this.playerWarStatsService = playerWarStatsService;
         this.playerAggregationWarStatsService = playerAggregationWarStatsService;
-        this.warLeagueRepository = warLeagueRepository;
+        this.warLeagueService = warLeagueService;
         this.playerRepository = playerRepository;
     }
 
@@ -102,85 +95,14 @@ public class WarUploadServiceImpl implements WarUploadService {
                 log.warn("File {} was empty", file.getOriginalFilename());
                 continue;
             }
-            warLeagues.add(calculateLegueAvgsAndSaveWarStats(statsList));
+
+            warLeagueService.calculateLeagueAvgsAndSave(statsList.get(0).getWarLeague());
+            warLeagues.add(playerWarStatsService.saveWarStatsWithMissingParticipants(statsList));
         }
 
-        warLeagues.stream()
-                .flatMap(warLeague -> warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan).stream())
-                .distinct()
-                .forEach(warLeague -> playerAggregationWarStatsService.calculateAndSaveStats(warLeague.getStartDate(), WarConstants.leagueSpan, true));
+        playerWarStatsService.updateWarStatsForAffectedLeagues(warLeagues);
 
     }
 
-    private WarLeague calculateLegueAvgsAndSaveWarStats(List<PlayerWarStat> statsList) {
-
-        WarLeague warLeague = statsList.get(0).getWarLeague();
-        Set<String> playersInClan = playerWeeklyStatsRepository.findByWeek(Week.fromDate(warLeague.getStartDate()))
-                .stream().map(PlayerWeeklyStats::getPlayer).map(Player::getTag).collect(Collectors.toSet());
-
-        for (PlayerWarStat pws : statsList) {
-            playersInClan.remove(pws.getPlayer().getTag());
-        }
-        calculateLeagueAvgs(statsList, warLeague);
-
-        warLeagueRepository.saveAndFlush(warLeague);
-
-        for (String playerTag : playersInClan) {
-            PlayerWarStat notParticipatingPWS = PlayerWarStat.builder()
-                    .player(new Player(playerTag, null, null, true))
-                    .warPhaseStats(WarPhaseStats.builder()
-                            .gamesGranted(0)
-                            .gamesLost(0)
-                            .gamesWon(0)
-                            .build())
-                    .collectionPhaseStats(CollectionPhaseStats.builder()
-                            .cardsWon(0)
-                            .gamesPlayed(0)
-                            .build())
-                    .build();
-            notParticipatingPWS.setWarLeague(warLeague);
-            statsList.add(notParticipatingPWS);
-        }
-        //set the persited warLeague to all the stats otherwise you get a bug later on when loading the league where
-        // the stats are empty (null values!!) and eventually you get a NPE
-//        warLeague.getPlayerWarStats().clear();
-//
-//        for (PlayerWarStat playerWarStat : statsList) {
-//            playerWarStat.setWarLeague(warLeague);
-//        }
-
-        playerWarStatsService.persistPlayerWarStats(statsList);
-
-        return warLeague;
-    }
-
-    private void calculateLeagueAvgs(List<PlayerWarStat> statsList, WarLeague warLeague) {
-        int cardAvg = (int) statsList.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon()).average().orElse(0);
-        double winPercentage = (double) statsList.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum() /
-                Math.max(statsList.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum(), 1);
-        warLeague.setTeamCardAvg(cardAvg);
-        warLeague.setTeamWinRatio(winPercentage);
-    }
-
-
-    @Override
-    public void upload(InputStream inputStream, String fileName) {
-        log.info("uploading file {}", fileName);
-
-        List<PlayerWarStat> statsList = Utils.parseCsv(inputStream, fileName);
-
-        if (statsList.isEmpty()) {
-            return;
-        }
-
-        WarLeague warLeague = calculateLegueAvgsAndSaveWarStats(statsList);
-
-        List<WarLeague> affectedLeagues = warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan);
-
-        for (WarLeague warLeague1 : affectedLeagues) {
-            playerAggregationWarStatsService.calculateAndSaveStats(warLeague1.getStartDate(), WarConstants.leagueSpan, true);
-        }
-
-    }
 
 }

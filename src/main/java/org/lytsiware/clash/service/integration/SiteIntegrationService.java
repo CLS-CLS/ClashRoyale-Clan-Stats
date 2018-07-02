@@ -2,7 +2,6 @@ package org.lytsiware.clash.service.integration;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.springframework.core.io.Resource;
 
 import java.io.BufferedReader;
@@ -10,11 +9,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 
-public interface SiteIntegrationService {
+public interface SiteIntegrationService<R> {
 
-	List<PlayerWeeklyStats> retrieveData();
+    R retrieveData();
 
 	default Document createDocumentFromResource(Resource dataResource) {
 		// Document result = Jsoup.parse(new

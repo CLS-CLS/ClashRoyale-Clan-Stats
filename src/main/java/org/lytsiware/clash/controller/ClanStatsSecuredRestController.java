@@ -68,7 +68,7 @@ public class ClanStatsSecuredRestController {
     @PostMapping("/upload")
     public void uploadWarFile(@RequestParam("file") MultipartFile multipartFile, Model model) throws IOException {
         logger.info("upload request");
-        warUploadService.upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
+        warUploadService.upload(new MultipartFile[]{multipartFile});
     }
 
 }

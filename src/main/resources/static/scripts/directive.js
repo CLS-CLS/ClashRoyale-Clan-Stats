@@ -7,6 +7,17 @@ app.directive("loadingDirective", function() {
 	}
 })
 
+app.directive("formatDate", function(){
+  return {
+   require: 'ngModel',
+    link: function(scope, elem, attr, modelCtrl) {
+      modelCtrl.$formatters.push(function(modelValue){
+        return new Date(modelValue);
+      })
+    }
+  }
+})
+
 app.directive("orderDirective", ["generalComparator", function(generalComparator) {
 	return {
 		template : "<span><ng-transclude></ng-transclude><i class='order fa fa-fw fa-sort'/></span>",

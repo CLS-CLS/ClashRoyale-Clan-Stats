@@ -80,7 +80,8 @@
 .halfscreen .table-striped tbody {
     overflow: auto;
     display: block;
-    height: 50vh;
+    max-height: 50vh;
+    min-height: 10vh;
     margin-bottom: 20px;
 }
 
@@ -120,6 +121,9 @@ table  {
 //	background: transparent;
 }
 
+.war-input {
+    text-align: center;
+}
 body {
  //   background: rgba(0, 0, 0, 0) url("../images/bright_squares.png")  repeat scroll 0% 0%;
     min-width: 768px;

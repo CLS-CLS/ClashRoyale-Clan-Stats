@@ -1,10 +1,14 @@
-package org.lytsiware.clash.service.integration;
+package org.lytsiware.clash.service.integration.deckshop;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.service.integration.ParseException;
+import org.lytsiware.clash.service.integration.SiteConfigurationService;
+import org.lytsiware.clash.service.integration.SiteIntegrationService;
+import org.lytsiware.clash.service.integration.SiteQualifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @Profile("statsRoyale")
 @SiteQualifier(SiteQualifier.Name.DECK_SHOP)
-public class DeckShopSiteServiceImpl implements SiteIntegrationService {
+public class DeckShopSiteServiceImpl implements SiteIntegrationService<List<PlayerWeeklyStats>> {
 
     private Logger logger = LoggerFactory.getLogger(DeckShopSiteServiceImpl.class);
 

@@ -1,0 +1,171 @@
+<div ng-cloak>
+
+    <div class="inner-container col-xs-12">
+        <div ng-controller="warStatsInputController">
+            <!-- Trigger the modal with a button -->
+            <!--
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+
+            <!-- Modal -->
+            <div id="errorModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Form was not saved</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p> form was not saved due to the following errors: </p>
+                            <p>{{errors}}.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div style="position:relative">
+
+                <ul class="nav nav-tabs">
+                    <li ng-class="$first? 'active' : ''" ng-repeat="stats in statsList"><a data-toggle="tab"
+                                                                                           href="#input{{$index}}"
+                                                                                           ng-click="activateTab($event)">tab{{$index}}</a>
+                    </li>
+                    <!--<li class="active"><a data-toggle="tab" href="#input1" ng-click="activateTab($event)">tab1</a></li>-->
+                    <!--<li><a data-toggle="tab" href="#input2" ng-click="activateTab($event, 'input2')">tab2</a></li>-->
+                    <!--<li><a data-toggle="tab" href="#input3" ng-click="activateTab($event,'input3')">tab3</a></li>-->
+                    <!--<li><a data-toggle="tab" href="#input4"ng-click="activateTab($event ,'input4')">tab4</a></li>-->
+                </ul>
+                <div class="tab-content" style="margin-top: 10px">
+                    <loading-directive loading="loading"/>
+                    <div ng-repeat="stats in statsList" id="input{{$index}}"
+                         ng-class="$first? 'tab-pane fade in active' : 'tab-pane fade in' ">
+                        <form name="inputForm_{{$index}}" method="POST" novalidate ng-class="{'form-error':submitted}"
+                              ng-submit="saveWar($event, $index)" autocomplete="off">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label for="leagueName">League Name</label>
+                                        <input type="text" id="leagueName" name="leagueName" ng-model="stats.leagueName"
+                                               class="form-input form-control" required>
+                                        <div ng-show="(inputForm_{{$index}}.$submitted || inputForm_{{$index}}.leagueName.$touched) && inputForm_{{$index}}.leagueName.$invalid"
+                                             style="color:red">The field is mandatory
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <label for="rank">Rank</label>
+                                        <input type="text" id="rank" name="leagueName" ng-model="stats.rank"
+                                               class="form-input form-control" disabled>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <label for="trophies">Trophies</label>
+                                        <input type="text" id="trophies" name="leagueName" ng-model="stats.trophies"
+                                               class="form-input form-control" disabled>
+                                    </div>
+                                    <label for="startDate">League Start Date</label>
+                                    <div class="col-xs-2 input-group">
+                                        <input type="date" id="startDate" name="startDate" ng-model="stats.startDate"
+                                               class="form-input form-control" required format-date>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button"
+                                                    ng-click="refresh(stats.startDate, $index)"><span
+                                                    class="fa fa-refresh"></span></button>
+                                        </span>
+                                        <div ng-show="(inputForm_{{$index}}.$submitted || inputForm_{{$index}}.startDate.$touched) && inputForm_{{$index}}.startDate.$error.required"
+                                             style="color:red">The field is mandatory
+                                        </div>
+                                        <div ng-show="(inputForm_{{$index}}.$submitted || inputForm_{{$index}}.startDate.$touched) && inputForm_{{$index}}.startDate.$error.invalid"
+                                             style="color:red">Wrong date
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="table-responsive halfscreen col-lg-6">
+                                    <table class="halfscreen table table-striped war-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Player</th>
+                                            <th><img style="display:inline" src="images/cards_mid.png"></th>
+                                            <th><img style="display:inline" src="images/battle_mid.png"></th>
+                                            <th><img style="display:inline" src="images/win_mid.png"></th>
+                                            <th><img style="display:inline" src="images/loose_mid.png"></th>
+                                            <th><img style="display:inline" src="images/forfeit_mid.png"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="s in stats.playerWarStats"
+                                            ng-style="s.gamesWon + s.gamesLost + s.gamesNotPlayed != s.gamesGranted ? {'border': '1px solid red'}:''">
+                                            <td style="display:none"><input type="hidden" name="tag" required
+                                                                            ng-model="s.tag" class="form-input"/></td>
+                                            <td>{{s.name}}</td>
+                                            <td>{{s.cards}}</td>
+                                            <td><input type="number" autocomplete="off" name="battles_{{$index}}"
+                                                       required ng-model="s.gamesGranted"
+                                                       class="form-input form-control war-input"/></td>
+                                            <td><input type="number" autocomplete="off" name="wins_{{$index}}" required
+                                                       ng-model="s.gamesWon" class="form-input form-control war-input"/>
+                                            </td>
+                                            <td><input type="number" autocomplete="off" name="looses_{{$index}}"
+                                                       required ng-model="s.gamesLost"
+                                                       class="form-input form-control war-input"/></td>
+                                            <td><input type="number" autocomplete="off" name="forfeit_{{$index}}"
+                                                       ng-model="s.gamesNotPlayed"
+                                                       class="form-input form-control war-input"/></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="table-responsive halfscreen col-lg-6">
+                                    <div><h3>Players Not Participating</h3></div>
+                                    <table class="halfscreen table table-striped war-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Player</th>
+                                            <th>Keep</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="s in stats.playersNotParticipated">
+                                            <td style="display:none"><input type="hidden" name="tag" required
+                                                                            ng-model="s.tag" class="form-input"/></td>
+                                            <td>{{s.name}}</td>
+                                            <td>
+                                                <toggle ng-model="s.delete" ng-change="changed()"
+                                                        onstyle="btn-danger" on="<i class='fa fa-times'></i>"
+                                                        offstyle="btn-success" off="<i class='fa fa-check'></i>">
+                                                </toggle>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <input style="float:right" type="submit" class="btn btn-primary">
+                        </form>
+                    </div>
+                    <!--<div id="input2" class="tab-pane fade">-->
+                    <!--<h3>Menu 1</h3>-->
+                    <!--<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
+                    <!--</div>-->
+                    <!--<div id="input3" class="tab-pane fade">-->
+                    <!--<h3>Menu 2</h3>-->
+                    <!--<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>-->
+                    <!--</div>-->
+                    <!--<div id="input4" class="tab-pane fade">-->
+                    <!--<h3>Menu 3</h3>-->
+                    <!--<p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

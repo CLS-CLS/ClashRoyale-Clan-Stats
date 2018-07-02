@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface WarLeagueRepository extends JpaRepository<WarLeague, Long>, WarLeagueRepositoryCustom {
 
@@ -14,6 +15,8 @@ public interface WarLeagueRepository extends JpaRepository<WarLeague, Long>, War
 
     @Query("select l from WarLeague l join fetch l.playerWarStats ps where l.startDate between :fromDate and :toDate")
     List<WarLeague> findAllBetweenStartDateEagerFetchPlayerStats(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+
+    Optional<WarLeague> findByStartDate(LocalDate date);
 
 
 }

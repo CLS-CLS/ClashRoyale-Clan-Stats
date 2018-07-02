@@ -10,5 +10,4 @@ public interface WarUploadService {
 
     void upload(MultipartFile[] files) throws IOException;
 
-    void upload(InputStream inputStream, String fileName);
 }

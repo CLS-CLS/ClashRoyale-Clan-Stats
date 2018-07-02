@@ -39,4 +39,23 @@ public class PlayerAggregationWarStats {
     Integer warsEligibleForParticipation;
     Integer score;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PlayerAggregationWarStats that = (PlayerAggregationWarStats) o;
+
+        if (!player.equals(that.player)) return false;
+        if (!date.equals(that.date)) return false;
+        return leagueSpan.equals(that.leagueSpan);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = player.hashCode();
+        result = 31 * result + date.hashCode();
+        result = 31 * result + leagueSpan.hashCode();
+        return result;
+    }
 }

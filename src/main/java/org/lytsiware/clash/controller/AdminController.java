@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.AggregationService;
-import org.lytsiware.clash.service.integration.StatsRoyaleSiteServiceImpl;
+import org.lytsiware.clash.service.integration.statsroyale.StatsRoyaleSiteServiceImpl;
 import org.lytsiware.clash.service.war.WarUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

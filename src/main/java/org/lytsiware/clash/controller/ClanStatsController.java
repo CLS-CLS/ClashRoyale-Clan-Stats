@@ -14,6 +14,10 @@ public class ClanStatsController {
 
     private Logger logger = LoggerFactory.getLogger(ClanStatsController.class);
 
+    @GetMapping("/warStats/input")
+    public String warStatsInput() {
+        return "/index";
+    }
 
 
     @GetMapping("/newplayers")
@@ -56,7 +60,7 @@ public class ClanStatsController {
     }
 
     @GetMapping("/clanrules")
-    public String clanRules(){
+    public String clanRules() {
         logger.info("clan rules");
         return "/index";
     }

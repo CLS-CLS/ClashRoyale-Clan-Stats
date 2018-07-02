@@ -16,14 +16,18 @@ public class SiteConfigurationService {
     @Value("${deckshopClanUrl}")
     private Resource deckshopClanUrlResource;
 
+    @Value("${statsRoyaleWarUrl}")
+    private String statsRoyeleWarUrl;
+
     public SiteConfigurationService(){
 
     }
 
-    public SiteConfigurationService(Resource dataResource, String refreshUrl, Resource deckshopClanUrlResource) {
+    public SiteConfigurationService(Resource dataResource, String refreshUrl, Resource deckshopClanUrlResource, String statsRoyeleWarUrl) {
         this.dataResource = dataResource;
         this.refreshUrl = refreshUrl;
         this.deckshopClanUrlResource = deckshopClanUrlResource;
+        this.statsRoyeleWarUrl = statsRoyeleWarUrl;
     }
 
     public Resource getDataResource() {
@@ -36,5 +40,9 @@ public class SiteConfigurationService {
 
     public Resource getDeckshopClanUrlResource() {
         return deckshopClanUrlResource;
+    }
+
+    public String getStatsRoyeleWarUrl() {
+        return statsRoyeleWarUrl;
     }
 }

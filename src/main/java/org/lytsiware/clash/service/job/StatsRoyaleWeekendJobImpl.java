@@ -28,9 +28,9 @@ public class StatsRoyaleWeekendJobImpl {
 
     private ClanStatsService clanStatsService;
 
-    private SiteIntegrationService statsRoyaleSiteService;
+    private SiteIntegrationService<List<PlayerWeeklyStats>> statsRoyaleSiteService;
 
-    private SiteIntegrationService deckShopSiteService;
+    private SiteIntegrationService<List<PlayerWeeklyStats>> deckShopSiteService;
 
     private UpdateStatsServiceImpl updateStatsService;
 

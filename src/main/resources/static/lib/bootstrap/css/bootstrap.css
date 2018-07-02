@@ -2556,8 +2556,8 @@ output {
   padding: 8px 12px;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #272b30;
-  background-color: #ffffff;
+  color: #ffffff;
+  background-color: #2e3338;
   background-image: none;
   border: 1px solid #000000;
   border-radius: 4px;
@@ -2590,7 +2590,7 @@ output {
 .form-control[disabled],
 .form-control[readonly],
 fieldset[disabled] .form-control {
-  background-color: #999999;
+  background-color: #424148;
   opacity: 1;
 }
 .form-control[disabled],

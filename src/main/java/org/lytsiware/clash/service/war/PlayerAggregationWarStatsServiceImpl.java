@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -99,11 +98,20 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     @Override
 //    @Async
     @Transactional(propagation = Propagation.REQUIRED)
-    public CompletableFuture<List<PlayerAggregationWarStats>> calculateAndSaveStats(LocalDate startDate, int leagueSpan, boolean strict) {
-        List<PlayerAggregationWarStats> stats = new ArrayList<>();
-        Iterable<PlayerAggregationWarStats> saved = playerAggregationWarStatsRepository.saveAll(this.calculateStats(startDate, leagueSpan, strict));
-        saved.forEach(stats::add);
-        return CompletableFuture.completedFuture(stats);
+    public List<PlayerAggregationWarStats> calculateAndUpdateStats(LocalDate startDate, int leagueSpan, boolean strict) {
+        List<PlayerAggregationWarStats> aggregationStatsToUpdate = calculateStats(startDate, leagueSpan, strict);
+
+        Map<PlayerAggregationWarStats, Long> aggregationWarStatsInDb = playerAggregationWarStatsRepository.findByDateAndLeagueSpan(startDate, leagueSpan)
+                .stream().collect(Collectors.toMap(Function.identity(), PlayerAggregationWarStats::getId));
+
+        for (PlayerAggregationWarStats aggregationWarStatToUpdate : aggregationStatsToUpdate) {
+            aggregationWarStatToUpdate.setId(aggregationWarStatsInDb.get(aggregationWarStatToUpdate));
+        }
+
+        Iterable<PlayerAggregationWarStats> iterable = playerAggregationWarStatsRepository.saveAll(aggregationStatsToUpdate);
+        List<PlayerAggregationWarStats> saved = new ArrayList<>();
+        iterable.forEach(saved::add);
+        return saved;
     }
 
     @Override
@@ -130,8 +138,13 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
         for (LocalDate startDate : leagueStartDates) {
             if (playerAggregationWarStatsRepository.findByDateAndLeagueSpan(startDate, WarConstants.leagueSpan).isEmpty()) {
                 log.info("Calculating missing war stats fro date {}", startDate);
-                calculateAndSaveStats(startDate, WarConstants.leagueSpan, true);
+                calculateAndUpdateStats(startDate, WarConstants.leagueSpan, true);
             }
         }
+    }
+
+    @Override
+    public List<PlayerAggregationWarStats> findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate) {
+        return playerAggregationWarStatsRepository.findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(tag, leagueSpan, untilDate);
     }
 }
