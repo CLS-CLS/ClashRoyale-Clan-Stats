@@ -60,6 +60,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             List<PlayerWarStat> participatedWars = playerWarStats.stream()
                     .filter(pws -> pws.getCollectionPhaseStats().getCardsWon() != 0).collect(Collectors.toList());
             int numberOfWarsParticipated = participatedWars.size();
+            int gamesGranted = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
             int averageCardsWon = (int) playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
                     .filter(i -> i != 0).average().orElse(0);
             int totalCards = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
@@ -77,7 +78,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
                     .avgCards(averageCardsWon)
                     .avgWins(winRatio)
                     .date(latestLeagueStartDate)
-                    .gamesGranted(numberOfWarsParticipated)
+                    .gamesGranted(gamesGranted)
                     .gamesNotPlayed(gamesNotPlayed)
                     .gamesWon(wins)
                     .leagueSpan(leagueSpan)
