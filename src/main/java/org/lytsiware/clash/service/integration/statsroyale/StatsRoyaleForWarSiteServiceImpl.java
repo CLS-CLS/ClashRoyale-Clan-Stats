@@ -53,7 +53,7 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
     }
 
     public List<WarStatsInputDto> retrieveData(boolean requestRefresh, String siteUrl, String refreshUrl) {
-        logger.info("retrieveDate, requestRefresh: {}", requestRefresh);
+        logger.info("retrieveDate, siteUrl={} requestRefresh: {}", siteUrl, requestRefresh);
         if (requestRefresh) {
             if (!StringUtils.isEmpty(refreshUrl)) {
                 refresh();
@@ -149,7 +149,7 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
         for (Element clanDiv : clanDivs) {
             String clanTag = Arrays.stream(clanDiv.select(".clanWarHistory__row")
                     .get(1).select("a").attr("href").split("/")).reduce((first, second) -> second).orElse("");
-            if (clanTag.equals("802LU8UY")) { //20G0YGP
+            if (clanTag.equals("20G0YGP")) { //  802LU8UY
                 return clanDiv;
             }
         }
