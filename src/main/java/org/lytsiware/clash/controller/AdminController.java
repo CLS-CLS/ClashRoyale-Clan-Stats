@@ -28,13 +28,13 @@ import java.util.List;
 public class AdminController {
 
 	@Autowired
-	StatsRoyaleSiteServiceImpl siteService;
+    private StatsRoyaleSiteServiceImpl siteService;
 
 	@Autowired
-    WarUploadService warUploadService;
+    private WarUploadService warUploadService;
 
 	@Autowired
-    AggregationService aggregationService;
+    private AggregationService aggregationService;
 
 
     @PostMapping("/uploadWarStats")

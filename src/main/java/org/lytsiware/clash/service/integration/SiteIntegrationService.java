@@ -30,8 +30,7 @@ public interface SiteIntegrationService<R> {
                 sb.append(inputLine).append("\n");
             }
             br.close();
-            Document result = Jsoup.parse(sb.toString(), "utf-8");
-            return result;
+            return Jsoup.parse(sb.toString(), "utf-8");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

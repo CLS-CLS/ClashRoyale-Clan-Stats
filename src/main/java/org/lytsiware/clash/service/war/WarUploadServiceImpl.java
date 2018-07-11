@@ -2,7 +2,6 @@ package org.lytsiware.clash.service.war;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.PlayerRepository;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.utils.Utils;
@@ -26,19 +25,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WarUploadServiceImpl implements WarUploadService {
 
-    private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
     private PlayerWarStatsService playerWarStatsService;
     private WarLeagueService warLeagueService;
-    private PlayerAggregationWarStatsService playerAggregationWarStatsService;
     private PlayerRepository playerRepository;
 
     @Autowired
-    public WarUploadServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository, PlayerWarStatsService playerWarStatsService,
-                                PlayerAggregationWarStatsService playerAggregationWarStatsService, WarLeagueService warLeagueService,
-                                PlayerRepository playerRepository) {
-        this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
+    public WarUploadServiceImpl(PlayerWarStatsService playerWarStatsService, WarLeagueService warLeagueService, PlayerRepository playerRepository) {
         this.playerWarStatsService = playerWarStatsService;
-        this.playerAggregationWarStatsService = playerAggregationWarStatsService;
         this.warLeagueService = warLeagueService;
         this.playerRepository = playerRepository;
     }
@@ -55,7 +48,7 @@ public class WarUploadServiceImpl implements WarUploadService {
 //                .map(PlayerWeeklyStats::getPlayer).collect(Collectors.toMap(player -> player.getName().toLowerCase(), player -> player.getTag(), (l, r) -> l));
 
         Map<String, String> playersInClan = playerRepository.loadAll().entrySet().stream().collect(Collectors.toMap(entry -> entry.getValue().getName().toLowerCase(),
-                entry -> entry.getKey()));
+                Map.Entry::getKey));
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(lines.get(0)).append("\r\n").append(lines.get(1)).append("\r\n");

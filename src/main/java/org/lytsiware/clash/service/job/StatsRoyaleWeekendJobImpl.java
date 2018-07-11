@@ -2,7 +2,6 @@ package org.lytsiware.clash.service.job;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.clan.UpdateStatsServiceImpl;
 import org.lytsiware.clash.service.integration.SiteIntegrationService;
 import org.lytsiware.clash.service.integration.SiteQualifier;
@@ -26,8 +25,6 @@ public class StatsRoyaleWeekendJobImpl {
 
     private Logger logger = LoggerFactory.getLogger(StatsRoyaleWeekendJobImpl.class);
 
-    private ClanStatsService clanStatsService;
-
     private SiteIntegrationService<List<PlayerWeeklyStats>> statsRoyaleSiteService;
 
     private SiteIntegrationService<List<PlayerWeeklyStats>> deckShopSiteService;
@@ -35,11 +32,9 @@ public class StatsRoyaleWeekendJobImpl {
     private UpdateStatsServiceImpl updateStatsService;
 
     @Autowired
-    public StatsRoyaleWeekendJobImpl(ClanStatsService clanStatsService,
-                                     @SiteQualifier(SiteQualifier.Name.STATS_ROYALE) SiteIntegrationService statsRoyaleSiteService,
+    public StatsRoyaleWeekendJobImpl(@SiteQualifier(SiteQualifier.Name.STATS_ROYALE) SiteIntegrationService statsRoyaleSiteService,
                                      @SiteQualifier(SiteQualifier.Name.DECK_SHOP) SiteIntegrationService deckShopSiteService,
                                      UpdateStatsServiceImpl updateStatsService) {
-        this.clanStatsService = clanStatsService;
         this.statsRoyaleSiteService = statsRoyaleSiteService;
         this.deckShopSiteService = deckShopSiteService;
         this.updateStatsService = updateStatsService;

@@ -144,7 +144,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
         warLeagueService.calculateLeagueAvgsAndSave(warLeague);
         persistPlayerWarStats(statsList);
-        updateWarStatsForAffectedLeagues(Arrays.asList(warLeague));
+        updateWarStatsForAffectedLeagues(Collections.singletonList(warLeague));
     }
 
     @Override
@@ -153,10 +153,10 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
         for (WarStatsInputDto siteWarLeagueStat : siteAllWarLeagueStats) {
 
-            LocalDate leagueStartDate = LocalDate.now();
+            LocalDate leagueStartDate = LocalDate.now(clock);
 
             try {
-                leagueStartDate = statsRoyaleDateParse.parseDescriptiveDate(siteWarLeagueStat.getLeagueName(), LocalDateTime.now()).toLocalDate();
+                leagueStartDate = statsRoyaleDateParse.parseDescriptiveDate(siteWarLeagueStat.getLeagueName(), LocalDateTime.now(clock)).toLocalDate();
             } catch (IllegalArgumentException ex) {
                 log.warn("Error while trying to parse date from leagues description -  falling back to current date. ");
                 log.warn("With exception : {}", ex);
@@ -188,7 +188,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
                         player.setGamesNotPlayed(1);
                     }
             );
-            Collections.sort(siteWarLeagueStat.getPlayerWarStats(), Comparator.comparing(PlayerWarStatInputDto::getGamesWon)
+            siteWarLeagueStat.getPlayerWarStats().sort(Comparator.comparing(PlayerWarStatInputDto::getGamesWon)
                     .thenComparing(PlayerWarStatInputDto::getGamesLost)
                     .thenComparing(PlayerWarStatInputDto::getGamesNotPlayed)
                     .thenComparing(PlayerWarStatInputDto::getCards).reversed());
@@ -205,9 +205,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     }
 
 
-    public Map<String, Player> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDate date) {
+    private Map<String, Player> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDate date) {
         Map<String, Player> playersNotParticipated = playerWeeklyStatsRepository.findByWeek(Week.fromDate(date)).stream()
-                .collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), pws -> pws.getPlayer()));
+                .collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), PlayerWeeklyStats::getPlayer));
 
         Set<String> playersInWarSet = playersInWar.getPlayerWarStats().stream()
                 .map(WarStatsInputDto.PlayerWarStatInputDto::getTag).collect(Collectors.toSet());

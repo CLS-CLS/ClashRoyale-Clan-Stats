@@ -35,9 +35,8 @@ public class PlayerWeeklyStatsRepositoryImpl implements PlayerWeeklyStatsReposit
     @Transactional(value = TxType.MANDATORY)
     public void saveOrUpdateAll(List<PlayerWeeklyStats> playerWeeklyStats) {
         //using merge because the player can already exist
-        List<PlayerWeeklyStats> saved = new ArrayList<>();
         for (PlayerWeeklyStats pws : playerWeeklyStats) {
-            saved.add(em.merge(pws));
+            em.merge(pws);
         }
     }
 

@@ -138,7 +138,7 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
     }
 
 
-    public static class ScheduledNameContext {
+    static class ScheduledNameContext {
         final Class<?> clazz;
         final Method method;
         ZonedDateTime lastRun;

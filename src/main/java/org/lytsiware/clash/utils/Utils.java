@@ -124,8 +124,7 @@ public class Utils {
         Date lastExecutionAsDate = Utils.convertToDate(latestExecutionZonedDate, ZoneIdConfiguration.zoneId());
         Date nextExecutionAsDate = cronTrigger.nextExecutionTime(
                 new SimpleTriggerContext(lastExecutionAsDate, lastExecutionAsDate, lastExecutionAsDate));
-        ZonedDateTime nextExecution = nextExecutionAsDate.toInstant().atZone(ZoneIdConfiguration.zoneId());
-        return nextExecution;
+        return nextExecutionAsDate.toInstant().atZone(ZoneIdConfiguration.zoneId());
     }
 
     public static List<PlayerWarStat> parseCsv(InputStream inputStream, String fileName) {
@@ -149,23 +148,17 @@ public class Utils {
         for (String line : lines) {
             String[] stats = line.split(",");
             String tag = stats[0].trim();
-            Integer cardsWon = Integer.valueOf(stats[1].trim());
-            Integer gamesGranted = Integer.valueOf(stats[2].trim());
-            Integer gamesWon = Utils.parseNullableInt(stats[3].trim());
-            Integer gamesLost = Utils.parseNullableInt(stats[4].trim());
+            int cardsWon = Integer.parseInt(stats[1].trim());
+            int gamesGranted = Integer.parseInt(stats[2].trim());
+            int gamesWon = Optional.ofNullable(Utils.parseNullableInt(stats[3].trim())).orElse(0);
+            int gamesLost = Optional.ofNullable(Utils.parseNullableInt(stats[4].trim())).orElse(0);
 
-            if (gamesLost == null) {
-                if (gamesGranted != gamesWon) {
-                    throw new IllegalArgumentException("Games lost should have been provided");
-                }
-                gamesLost = 0;
+            if (gamesGranted != gamesWon) {
+                throw new IllegalArgumentException("Games lost should have been provided");
             }
 
-            if (gamesWon == null) {
-                if (gamesGranted != gamesLost) {
-                    throw new IllegalArgumentException("Games won should have been provided");
-                }
-                gamesWon = 0;
+            if (gamesGranted != gamesLost) {
+                throw new IllegalArgumentException("Games won should have been provided");
             }
 
             PlayerWarStat pws = PlayerWarStat.builder()
@@ -189,13 +182,13 @@ public class Utils {
         if (previousStats == null) {
             return;
         }
-        if (Integer.valueOf(previousStats[3].trim()) < Integer.valueOf(stats[3].trim())) {
+        if (Integer.parseInt(previousStats[3].trim()) < Integer.parseInt(stats[3].trim())) {
             throw new IllegalArgumentException("Games won should not be more in the previous stat, line: " + line);
         }
-        if (Integer.valueOf(previousStats[4].trim()) == Integer.valueOf(stats[4].trim()) &&
-                Integer.valueOf(previousStats[2].trim()) == Integer.valueOf(stats[2].trim())
-                && Integer.valueOf(previousStats[3].trim()) == Integer.valueOf(stats[3].trim())) {
-            if (Integer.valueOf(previousStats[1].trim()) < Integer.valueOf(stats[1].trim())) {
+        if (Integer.parseInt(previousStats[4].trim()) == Integer.parseInt(stats[4].trim()) &&
+                Integer.parseInt(previousStats[2].trim()) == Integer.parseInt(stats[2].trim())
+                && Integer.parseInt(previousStats[3].trim()) == Integer.parseInt(stats[3].trim())) {
+            if (Integer.parseInt(previousStats[1].trim()) < Integer.parseInt(stats[1].trim())) {
                 throw new IllegalArgumentException("Cards cannot be more that the previous stat, line: " + line);
             }
         }
