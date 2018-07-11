@@ -8,10 +8,7 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
-import org.lytsiware.clash.service.war.PlayerAggregationWarStatsService;
-import org.lytsiware.clash.service.war.PlayerWarStatsService;
-import org.lytsiware.clash.service.war.WarInputService;
-import org.lytsiware.clash.service.war.WarUploadService;
+import org.lytsiware.clash.service.war.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +56,19 @@ public class WarStatsRestController {
         response.setContentType("application/text");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getOriginalFilename() + "\"");
         response.flushBuffer();
+
+    }
+
+    @GetMapping(value = "/warStats/recalculate")
+    public ResponseEntity recalculate(@RequestParam(required = false, defaultValue = "" + WarConstants.leagueSpan) int span,
+                                      @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate from,
+                                      @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM--yyyy") LocalDate to) {
+
+        if (to == null) {
+            to = LocalDate.now();
+        }
+        playerAggregationWarStatsService.calculateStatsBetweenDates(from, to, span);
+        return ResponseEntity.ok().build();
 
     }
 

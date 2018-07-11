@@ -32,14 +32,20 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     @Autowired
     WarLeagueRepository warLeagueRepository;
 
+
+    @Override
+    public void calculateStatsBetweenDates(LocalDate from, LocalDate to, int span) {
+        List<WarLeague> warLeagues = warLeagueRepository.findAllBetweenStartDateEagerFetchPlayerStats(from, to);
+        for (WarLeague warLeague : warLeagues) {
+            calculateAndUpdateStats(warLeague.getStartDate(), span, true);
+        }
+    }
+
+
     @Override
     public List<PlayerAggregationWarStats> calculateStats(LocalDate latestLeagueStartDate, int leagueSpan, boolean strict) {
 
         List<WarLeague> warLeagues = warLeagueRepository.findFirstNthWarLeaguesBeforeDate(latestLeagueStartDate, leagueSpan);
-
-        Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
-                .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
-                .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
 
         if (strict) {
             if (warLeagues.isEmpty() || !warLeagues.get(0).getStartDate().equals(latestLeagueStartDate)) {
@@ -52,52 +58,11 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             }
         }
 
-        List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
-
-        for (List<PlayerWarStat> playerWarStats : warStatsPerPlayer.values()) {
-
-            int numberOfWars = playerWarStats.stream().map(PlayerWarStat::getWarLeague).collect(Collectors.toSet()).size();
-            List<PlayerWarStat> participatedWars = playerWarStats.stream()
-                    .filter(pws -> pws.getCollectionPhaseStats().getCardsWon() != 0).collect(Collectors.toList());
-            int numberOfWarsParticipated = participatedWars.size();
-            int gamesGranted = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
-            int averageCardsWon = (int) playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
-                    .filter(i -> i != 0).average().orElse(0);
-            int totalCards = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
-                    .filter(i -> i != 0).sum();
-            int wins = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum();
-            int gamesNotPlayed = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
-            int crownsLost = gamesNotPlayed + participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesLost()).sum();
-            double winRatio = 0;
-            int score = 0;
-            if (numberOfWarsParticipated > 0) {
-                winRatio = wins / (double) (crownsLost + wins);
-                score = (int) ((0.50 + 0.50 * winRatio) * averageCardsWon);
-            }
-            PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
-                    .avgCards(averageCardsWon)
-                    .avgWins(winRatio)
-                    .date(latestLeagueStartDate)
-                    .gamesGranted(gamesGranted)
-                    .gamesNotPlayed(gamesNotPlayed)
-                    .gamesWon(wins)
-                    .leagueSpan(leagueSpan)
-                    .player(playerWarStats.get(0).getPlayer())
-                    .score(score)
-                    .totalCards(totalCards)
-                    .warsEligibleForParticipation(numberOfWars)
-                    .warsParticipated(numberOfWarsParticipated).build();
-
-            playerAggregationWarStats.add(playerAggregationWarStat);
-
-        }
-
-        return playerAggregationWarStats;
+        return calculateStats(warLeagues, latestLeagueStartDate, leagueSpan);
     }
 
 
     @Override
-//    @Async
     @Transactional(propagation = Propagation.REQUIRED)
     public List<PlayerAggregationWarStats> calculateAndUpdateStats(LocalDate startDate, int leagueSpan, boolean strict) {
         List<PlayerAggregationWarStats> aggregationStatsToUpdate = calculateStats(startDate, leagueSpan, strict);
@@ -147,5 +112,55 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     @Override
     public List<PlayerAggregationWarStats> findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate) {
         return playerAggregationWarStatsRepository.findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(tag, leagueSpan, untilDate);
+    }
+
+
+    private List<PlayerAggregationWarStats> calculateStats(List<WarLeague> warLeagues, LocalDate date, int leagueSpan) {
+        Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
+                .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
+                .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
+
+        List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
+
+        for (List<PlayerWarStat> playerWarStats : warStatsPerPlayer.values()) {
+
+            int numberOfWars = playerWarStats.stream().map(PlayerWarStat::getWarLeague).collect(Collectors.toSet()).size();
+            List<PlayerWarStat> participatedWars = playerWarStats.stream()
+                    .filter(pws -> pws.getCollectionPhaseStats().getCardsWon() != 0).collect(Collectors.toList());
+            int numberOfWarsParticipated = participatedWars.size();
+            int gamesGranted = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
+            int averageCardsWon = (int) playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
+                    .filter(i -> i != 0).average().orElse(0);
+            int totalCards = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
+                    .filter(i -> i != 0).sum();
+            int wins = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum();
+            int gamesNotPlayed = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
+            int crownsLost = gamesNotPlayed + participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesLost()).sum();
+            double winRatio = 0;
+            int score = 0;
+            if (numberOfWarsParticipated > 0) {
+                winRatio = wins / (double) (crownsLost + wins);
+                score = (int) ((0.50 + 0.50 * winRatio) * averageCardsWon);
+            }
+            PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
+                    .avgCards(averageCardsWon)
+                    .avgWins(winRatio)
+                    .date(date)
+                    .gamesGranted(gamesGranted)
+                    .gamesNotPlayed(gamesNotPlayed)
+                    .gamesWon(wins)
+                    .leagueSpan(leagueSpan)
+                    .player(playerWarStats.get(0).getPlayer())
+                    .score(score)
+                    .totalCards(totalCards)
+                    .warsEligibleForParticipation(numberOfWars)
+                    .warsParticipated(numberOfWarsParticipated).build();
+
+            playerAggregationWarStats.add(playerAggregationWarStat);
+
+        }
+
+        return playerAggregationWarStats;
+
     }
 }

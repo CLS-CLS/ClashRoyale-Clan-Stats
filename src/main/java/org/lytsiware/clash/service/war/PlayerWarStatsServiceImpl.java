@@ -28,6 +28,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.lytsiware.clash.dto.war.input.WarStatsInputDto.PlayerWarStatInputDto;
+
 @Service
 @Transactional
 @Slf4j
@@ -171,8 +173,26 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
         }
 
+        normilizaWarInputData(siteAllWarLeagueStats);
+
         return siteAllWarLeagueStats;
 
+    }
+
+    private void normilizaWarInputData(List<WarStatsInputDto> siteAllWarLeagueStats) {
+
+        for (WarStatsInputDto siteWarLeagueStat : siteAllWarLeagueStats) {
+            siteWarLeagueStat.getPlayerWarStats().stream().filter(player -> player.getGamesGranted() == 0).forEach(
+                    player -> {
+                        player.setGamesGranted(1);
+                        player.setGamesNotPlayed(1);
+                    }
+            );
+            Collections.sort(siteWarLeagueStat.getPlayerWarStats(), Comparator.comparing(PlayerWarStatInputDto::getGamesWon)
+                    .thenComparing(PlayerWarStatInputDto::getGamesLost)
+                    .thenComparing(PlayerWarStatInputDto::getGamesNotPlayed)
+                    .thenComparing(PlayerWarStatInputDto::getCards).reversed());
+        }
     }
 
     @Override
@@ -197,8 +217,6 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         return playersNotParticipated;
 
     }
-
-
 
 
 }
