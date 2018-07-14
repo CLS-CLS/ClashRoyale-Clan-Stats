@@ -66,7 +66,7 @@ public class ClanStatsRestController {
     public PlayerStatsDto retrievePlayerStats(@PathVariable String tag) {
         logger.info("START retrievePlayerStats - tag {}", tag);
 
-        return clanStatsService.retrievePlayerStats(tag, Week.now().minusWeeks(Constants.MAX_PAST_WEEK + 1), Week.now().minusWeeks(1));
+        return clanStatsService.retrievePlayerStats(tag, Week.now().minusWeeks(Constants.MAX_PAST_WEEK + 1), Week.now());
     }
 
     @GetMapping(value = "/generateTemplate")

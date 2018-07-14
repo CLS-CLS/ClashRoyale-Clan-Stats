@@ -21,7 +21,8 @@ public class StatsRoyaleDateParse {
 
         while (matcher.find()) {
             Integer delta = Integer.valueOf(matcher.group(1));
-            KeywordMap keywordMap = KeywordMap.map(matcher.group(2)).orElseThrow(IllegalStateException::new);
+            KeywordMap keywordMap = KeywordMap.map(matcher.group(2)).orElseThrow(
+                    () -> new IllegalArgumentException(String.format("Could not found keyword map for %1", matcher.group(2))));
             combiner = combiner.andThen(keywordMap.apply(delta));
         }
 

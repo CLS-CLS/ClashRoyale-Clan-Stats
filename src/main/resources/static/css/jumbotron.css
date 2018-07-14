@@ -16,6 +16,11 @@
     font-family: 'Comic Sans MS', 'cursive', 'sans-serif';
 }
 
+.player-header {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    color:rgb(35, 82, 124);
+}
+
 .main-navbar {
 //	background:rgba(0, 0, 0, 0) url("../images/random_grey_variations2.png") repeat scroll 0% 0%;
 //    border-bottom: solid #4d4451 2px !important;

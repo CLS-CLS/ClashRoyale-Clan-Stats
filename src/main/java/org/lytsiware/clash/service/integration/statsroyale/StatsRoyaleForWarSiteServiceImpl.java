@@ -10,6 +10,8 @@ import org.lytsiware.clash.service.integration.SiteConfigurationService;
 import org.lytsiware.clash.service.integration.SiteQualifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -30,11 +32,17 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
 
     Logger logger = LoggerFactory.getLogger(StatsRoyaleSiteServiceImpl.class);
 
+
+    @Value("${clanTag:20G0YGP}")
+    private String clanTag;
+
     private SiteConfigurationService siteConfigurationService;
 
+    @Autowired
     public StatsRoyaleForWarSiteServiceImpl(SiteConfigurationService siteConfigurationService) {
         this.siteConfigurationService = siteConfigurationService;
     }
+
 
     public static void main(String[] args) {
 
@@ -149,7 +157,7 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
         for (Element clanDiv : clanDivs) {
             String clanTag = Arrays.stream(clanDiv.select(".clanWarHistory__row")
                     .get(1).select("a").attr("href").split("/")).reduce((first, second) -> second).orElse("");
-            if (clanTag.equals("20G0YGP")) { //  802LU8UY
+            if (clanTag.equals(clanTag)) { //  802LU8UY
                 return clanDiv;
             }
         }
@@ -169,5 +177,13 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
         }
     }
 
+
+    public String getClanTag() {
+        return clanTag;
+    }
+
+    public void setClanTag(String clanTag) {
+        this.clanTag = clanTag;
+    }
 
 }

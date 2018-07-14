@@ -154,7 +154,7 @@ INSERT INTO player(tag,name,role) VALUES ('9YJCUUCVV','Rafto4','Member');
 INSERT INTO player(tag,name,role) VALUES ('QY8QJY80','pawan','Member');
 INSERT INTO player(tag,name,role) VALUES ('8GU99VUU9','GIANNHS7','Member');
 INSERT INTO player(tag,name,role) VALUES ('9JPYQ090Y','Andreas','Member');
-INSERT INTO player(tag,name,role) VALUES ('9Q0UP9GJP','Panos','Mililou');
+INSERT INTO player(tag,name,role) VALUES ('9Q0UP9GJP','Mililou','Member');
 
 
 INSERT INTO player_weekly_stats (id,card_donation,chest_contribution,week,playerfk,avg_card_donation,avg_chest_contribution,cards_received,avg_cards_received) VALUES (-9999,null,76,45,'MOCK',0.0,76.0,null,0);

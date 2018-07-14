@@ -8,14 +8,15 @@
             </div>
             <p/>
 
-            <div class="row">
-                <div class="col-xs-6 col-md-3">
-                    <h3><label class="label label-info">Name: {{player.name}} </label></h3>
+            <div class="text-center">
+                <div>
+                    <h1 class="player-header">{{player.name}}</h1>
                 </div>
-                <div class="col-xs-6 col-md-3">
-                    <h3><label class="label label-info">Role: {{player.role}}</label></h3>
-                </div>
+                <div class="row"></div>
+                <h4>Role: {{player.role}}</h4>
             </div>
+            <hr/>
+
             <div style="position:relative">
                 <loading-directive loading="loading"/>
                 <div class="table-responsive halfscreen">

@@ -137,7 +137,7 @@
                                         <tr ng-repeat="s in stats.playersNotParticipated">
                                             <td style="display:none"><input type="hidden" name="tag" required
                                                                             ng-model="s.tag" class="form-input"/></td>
-                                            <td>{{s.name}}</td>
+                                            <td><a ng-href="player/{{s.tag}}" target="_blank">{{s.name}}</a></td>
                                             <td>
                                                 <toggle ng-model="s.delete" ng-change="changed()"
                                                         onstyle="btn-danger" on="<i class='fa fa-times'></i>"

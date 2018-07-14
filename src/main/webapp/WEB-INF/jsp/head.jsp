@@ -45,7 +45,7 @@
     <!--<script src="https://code.highcharts.com/modules/exporting.js"></script>-->
 
     <!--<script src="scripts/dark-unica.src.js"></script> -->
-    <script src="scripts/grid-light.js"></script>
+    <script src="scripts/dark-unica.src.js"></script>
     <script src="scripts/highcharts.js"></script>
 
 
