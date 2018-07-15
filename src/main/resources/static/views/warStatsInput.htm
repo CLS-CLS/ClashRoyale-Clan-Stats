@@ -2,11 +2,6 @@
 
     <div class="inner-container col-xs-12">
         <div ng-controller="warStatsInputController">
-            <!-- Trigger the modal with a button -->
-            <!--
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
-
-            <!-- Modal -->
             <div id="errorModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
 
@@ -29,16 +24,11 @@
             </div>
 
             <div style="position:relative">
-
                 <ul class="nav nav-tabs">
-                    <li ng-class="$first? 'active' : ''" ng-repeat="stats in statsList"><a data-toggle="tab"
-                                                                                           href="#input{{$index}}"
-                                                                                           ng-click="activateTab($event)">tab{{$index}}</a>
+                    <li ng-class="$first? 'active' : ''" ng-repeat="stats in statsList">
+                        <a data-toggle="tab" href="#input{{$index}}" ng-click="activateTab($event)"><h4>{{$index}}</h4>
+                        </a>
                     </li>
-                    <!--<li class="active"><a data-toggle="tab" href="#input1" ng-click="activateTab($event)">tab1</a></li>-->
-                    <!--<li><a data-toggle="tab" href="#input2" ng-click="activateTab($event, 'input2')">tab2</a></li>-->
-                    <!--<li><a data-toggle="tab" href="#input3" ng-click="activateTab($event,'input3')">tab3</a></li>-->
-                    <!--<li><a data-toggle="tab" href="#input4"ng-click="activateTab($event ,'input4')">tab4</a></li>-->
                 </ul>
                 <div class="tab-content" style="margin-top: 10px">
                     <loading-directive loading="loading"/>
@@ -108,17 +98,28 @@
                                             <td>{{s.name}}</td>
                                             <td>{{s.cards}}</td>
                                             <td><input type="number" autocomplete="off" name="battles_{{$index}}"
-                                                       required ng-model="s.gamesGranted"
-                                                       class="form-input form-control war-input"/></td>
-                                            <td><input type="number" autocomplete="off" name="wins_{{$index}}" required
-                                                       ng-model="s.gamesWon" class="form-input form-control war-input"/>
+                                                       ng-model="s.gamesGranted"
+                                                       class="form-input form-control war-input"
+                                                       min="0" max="3" required
+                                                       ng-style="hasError('battles', $parent.$index, $index) > 0 ? {'border': '1px solid red'}:''"/>
+                                            </td>
+                                            <td><input type="number" autocomplete="off" name="wins_{{$index}}"
+                                                       ng-model="s.gamesWon" class="form-input form-control war-input"
+                                                       min="0" max="3" required
+                                                       ng-style="hasError('wins', $parent.$index, $index) > 0 ? {'border': '1px solid red'}:''"/>
                                             </td>
                                             <td><input type="number" autocomplete="off" name="looses_{{$index}}"
                                                        required ng-model="s.gamesLost"
-                                                       class="form-input form-control war-input"/></td>
+                                                       class="form-input form-control war-input"
+                                                       min="0" max="3" required
+                                                       ng-style="hasError('battles', $parent.$index, $index) > 0 ? {'looses': '1px solid red'}:''"/>
+                                            </td>
                                             <td><input type="number" autocomplete="off" name="forfeit_{{$index}}"
                                                        ng-model="s.gamesNotPlayed"
-                                                       class="form-input form-control war-input"/></td>
+                                                       class="form-input form-control war-input"
+                                                       min="0" max="3" required
+                                                       ng-style="hasError('battles', $parent.$index, $index) > 0 ? {'looses': '1px solid red'}:''"/>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -152,18 +153,6 @@
                             <input style="float:right" type="submit" class="btn btn-primary">
                         </form>
                     </div>
-                    <!--<div id="input2" class="tab-pane fade">-->
-                    <!--<h3>Menu 1</h3>-->
-                    <!--<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
-                    <!--</div>-->
-                    <!--<div id="input3" class="tab-pane fade">-->
-                    <!--<h3>Menu 2</h3>-->
-                    <!--<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>-->
-                    <!--</div>-->
-                    <!--<div id="input4" class="tab-pane fade">-->
-                    <!--<h3>Menu 3</h3>-->
-                    <!--<p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>-->
-                    <!--</div>-->
                 </div>
             </div>
         </div>
