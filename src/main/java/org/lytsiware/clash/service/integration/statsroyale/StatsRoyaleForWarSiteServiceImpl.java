@@ -155,9 +155,9 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
     private Element findClanDivWithTags(Element pastClanWar) {
         Elements clanDivs = pastClanWar.select(".clanWarHistory__cell");
         for (Element clanDiv : clanDivs) {
-            String clanTag = Arrays.stream(clanDiv.select(".clanWarHistory__row")
+            String clanTagInDiv = Arrays.stream(clanDiv.select(".clanWarHistory__row")
                     .get(1).select("a").attr("href").split("/")).reduce((first, second) -> second).orElse("");
-            if (clanTag.equals(clanTag)) { //  802LU8UY
+            if (clanTag.equals(clanTagInDiv)) {
                 return clanDiv;
             }
         }
