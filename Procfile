@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/*.war --spring.profiles.active=heroku
+web:  java -Dserver.port=$PORT -jar target/*.war --spring.profiles.active=heroku migrate

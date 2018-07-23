@@ -2,6 +2,7 @@ package org.lytsiware.clash.service.job;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.service.clan.PlayerInOutServiceImpl;
 import org.lytsiware.clash.service.clan.UpdateStatsServiceImpl;
 import org.lytsiware.clash.service.integration.SiteIntegrationService;
 import org.lytsiware.clash.service.integration.SiteQualifier;
@@ -23,6 +24,7 @@ import java.util.List;
 @Transactional(Transactional.TxType.REQUIRED)
 public class StatsRoyaleWeekendJobImpl {
 
+    private final PlayerInOutServiceImpl playerInOutServiceImpl;
     private Logger logger = LoggerFactory.getLogger(StatsRoyaleWeekendJobImpl.class);
 
     private SiteIntegrationService<List<PlayerWeeklyStats>> statsRoyaleSiteService;
@@ -34,10 +36,11 @@ public class StatsRoyaleWeekendJobImpl {
     @Autowired
     public StatsRoyaleWeekendJobImpl(@SiteQualifier(SiteQualifier.Name.STATS_ROYALE) SiteIntegrationService statsRoyaleSiteService,
                                      @SiteQualifier(SiteQualifier.Name.DECK_SHOP) SiteIntegrationService deckShopSiteService,
-                                     UpdateStatsServiceImpl updateStatsService) {
+                                     UpdateStatsServiceImpl updateStatsService, PlayerInOutServiceImpl playerInOutServiceImpl) {
         this.statsRoyaleSiteService = statsRoyaleSiteService;
         this.deckShopSiteService = deckShopSiteService;
         this.updateStatsService = updateStatsService;
+        this.playerInOutServiceImpl = playerInOutServiceImpl;
     }
 
 
@@ -54,15 +57,15 @@ public class StatsRoyaleWeekendJobImpl {
             } catch (Exception ex) {
                 logger.error("Exception while retrieving stats from deckshop", ex);
             }
-            updateStatsService.updatePlayerWeeklyStats(stats, Week.now(), false);
-            updateStatsService.markPlayerIsInClan(stats);
+            updateStatsService.updatePlayerWeeklyStats(stats, Week.now(), true);
+            playerInOutServiceImpl.markPlayersInClan(stats);
         } catch (Exception e) {
             logger.error("oops", e);
             throw e;
         }
     }
 
-    @Scheduled(cron = "${cron.sundayRunner}", zone = "GMT+3")
+    @Scheduled(cron = "${cron.sundayRunner}")
     @ScheduledName("sundayRunner")
     @Retryable(maxAttempts = 2)
     public void sundayRunner() {
