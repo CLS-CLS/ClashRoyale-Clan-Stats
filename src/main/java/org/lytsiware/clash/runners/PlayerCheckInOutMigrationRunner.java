@@ -5,7 +5,7 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.*;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.service.ClanStatsService;
-import org.lytsiware.clash.service.clan.PlayerInOutServiceImpl;
+import org.lytsiware.clash.service.clan.PlayerCheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -27,13 +27,13 @@ public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
     PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
 
     @Autowired
-    PlayerInOutServiceImpl playerInOutService;
+    PlayerCheckInService playerInOutService;
 
     @Autowired
     PlayerRepository playerRepository;
 
     @Autowired
-    PlayerInOutRepository playerInOutRepository;
+    PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
 
     @Autowired
     PlayerInOutHistoryRepository playerInOutHistoryRepository;
@@ -48,10 +48,10 @@ public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
                 migrate(i, allPlayers);
             }
             for (String tag : allPlayers.keySet()) {
-                PlayerInOut playerInOut = playerInOutRepository.findByTag(tag).orElse(null);
+                PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
                 if (playerInOut == null) {
                     playerInOut = new PlayerInOut(null, tag, Week.ZERO_WEEK, Week.ZERO_WEEK);
-                    playerInOutRepository.save(playerInOut);
+                    playerCheckInCheckOutRepository.save(playerInOut);
                 }
             }
         }
@@ -62,7 +62,7 @@ public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
         Set<String> currentWeekTags = playerWeeklyStatsRepository.findByWeek(Week.fromWeek(weekNumber)).stream()
                 .map(pws -> pws.getPlayer().getTag()).collect(Collectors.toSet());
         for (String tag : allPlayers.keySet()) {
-            PlayerInOut playerInOut = playerInOutRepository.findByTag(tag).orElse(null);
+            PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
             if (currentWeekTags.contains(tag)) {
                 if (playerInOut != null) {
                     if (playerInOut.getCheckOut() == null) {
@@ -79,11 +79,11 @@ public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
                     log.info("Checking in new player {} at week {}", tag, weekNumber);
                     playerInOut = new PlayerInOut(tag, Week.fromWeek(weekNumber).getStartDate());
                 }
-                playerInOutRepository.save(playerInOut);
+                playerCheckInCheckOutRepository.save(playerInOut);
             } else if (playerInOut != null && playerInOut.getCheckOut() == null) {
                 log.info("Checking OUT player {} at week {}", tag, weekNumber);
                 playerInOut.setCheckOut(Week.fromWeek(weekNumber).getStartDate());
-                playerInOutRepository.save(playerInOut);
+                playerCheckInCheckOutRepository.save(playerInOut);
             }
         }
 

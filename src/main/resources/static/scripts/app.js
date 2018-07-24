@@ -288,7 +288,6 @@ app.controller("warStatsInputController", function($scope, $http){
     $scope.hasError = function(type, formIndex, inputIndex) {
         var errors = this['inputForm_' + formIndex][type + '_' + inputIndex].$error;
         var result =  errors.min || errors.max || errors.number || errors.required;
-        console.log("errors : " + errors)
         return result;
     }
 

@@ -46,7 +46,8 @@ public class WarStatsRestController {
     PlayerWarStatsService playerWarStatsService;
 
     @Autowired
-    WarInputService warInputService;
+    WarInputServiceImpl warInputService;
+
 
     @PostMapping(value = "/tagFile")
     public void tagFile(@RequestParam("file") MultipartFile file, Model model, HttpServletResponse response) throws IOException {
@@ -109,7 +110,7 @@ public class WarStatsRestController {
 
     @GetMapping("/warStats/retrieveSiteData")
     public List<WarStatsInputDto> getWarStatsForInput(@RequestParam(required = false, defaultValue = "true") boolean includeNotParticipating) {
-        return playerWarStatsService.getPlayerWarStatsForInput(includeNotParticipating);
+        return warInputService.getPlayerWarStatsForInput(includeNotParticipating);
     }
 
 

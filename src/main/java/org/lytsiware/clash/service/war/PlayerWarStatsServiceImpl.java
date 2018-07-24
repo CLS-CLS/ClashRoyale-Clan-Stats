@@ -3,6 +3,8 @@ package org.lytsiware.clash.service.war;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.player.PlayerInOut;
+import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
@@ -14,6 +16,7 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
+import org.lytsiware.clash.service.clan.PlayerCheckInService;
 import org.lytsiware.clash.service.integration.statsroyale.StatsRoyaleDateParse;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityExistsException;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static org.lytsiware.clash.dto.war.input.WarStatsInputDto.PlayerWarStatInputDto;
 
 @Service
 @Transactional
@@ -41,8 +44,10 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     private WarLeagueRepository warLeagueRepository;
     private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
     private PlayerAggregationWarStatsService playerAggregationWarStatsService;
-    private WarInputService warInputService;
+    private WarInputServiceImpl warInputService;
     private StatsRoyaleDateParse statsRoyaleDateParse;
+    private PlayerCheckInService playerCheckInService;
+    private PlayerRepository playerRepository;
     private Clock clock;
 
     @Autowired
@@ -51,17 +56,16 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
                                      WarLeagueRepository warLeagueRepository,
                                      PlayerWeeklyStatsRepository playerWeeklyStatsRepository,
                                      PlayerAggregationWarStatsService playerAggregationWarStatsService,
-                                     WarInputService warInputService,
-                                     StatsRoyaleDateParse statsRoyaleDateParse,
+                                     PlayerCheckInService playerCheckInService,
+                                     PlayerRepository playerRepository,
                                      Clock clock) {
-
         this.playerWarStatsRepository = playerWarStatsRepository;
         this.warLeagueService = warLeagueService;
         this.warLeagueRepository = warLeagueRepository;
         this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
         this.playerAggregationWarStatsService = playerAggregationWarStatsService;
-        this.warInputService = warInputService;
-        this.statsRoyaleDateParse = statsRoyaleDateParse;
+        this.playerCheckInService = playerCheckInService;
+        this.playerRepository = playerRepository;
         this.clock = clock;
     }
 
@@ -148,54 +152,6 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     }
 
     @Override
-    public List<WarStatsInputDto> getPlayerWarStatsForInput(boolean includeNotParticipating) {
-        List<WarStatsInputDto> siteAllWarLeagueStats = warInputService.getWarStatsFromSite();
-
-        for (WarStatsInputDto siteWarLeagueStat : siteAllWarLeagueStats) {
-
-            LocalDate leagueStartDate = LocalDate.now(clock);
-
-            try {
-                leagueStartDate = statsRoyaleDateParse.parseDescriptiveDate(siteWarLeagueStat.getLeagueName(), LocalDateTime.now(clock)).toLocalDate();
-            } catch (IllegalArgumentException ex) {
-                log.warn("Error while trying to parse date from leagues description -  falling back to current date. ");
-                log.warn("With exception : {}", ex);
-            }
-
-            Map<String, Player> playerNotParticipated = includeNotParticipating ? findPlayersNotParticipatedInWar(siteWarLeagueStat, leagueStartDate) : new HashMap<>();
-
-            siteWarLeagueStat.setPlayersNotParticipated(
-                    playerNotParticipated.entrySet().stream()
-                            .map(entry -> WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(entry.getKey(), entry.getValue().getName()))
-                            .collect(Collectors.toList()));
-
-            siteWarLeagueStat.setStartDate(leagueStartDate);
-
-        }
-
-        normilizaWarInputData(siteAllWarLeagueStats);
-
-        return siteAllWarLeagueStats;
-
-    }
-
-    private void normilizaWarInputData(List<WarStatsInputDto> siteAllWarLeagueStats) {
-
-        for (WarStatsInputDto siteWarLeagueStat : siteAllWarLeagueStats) {
-            siteWarLeagueStat.getPlayerWarStats().stream().filter(player -> player.getGamesGranted() == 0).forEach(
-                    player -> {
-                        player.setGamesGranted(1);
-                        player.setGamesNotPlayed(1);
-                    }
-            );
-            siteWarLeagueStat.getPlayerWarStats().sort(Comparator.comparing(PlayerWarStatInputDto::getGamesWon)
-                    .thenComparing(PlayerWarStatInputDto::getGamesLost)
-                    .thenComparing(PlayerWarStatInputDto::getGamesNotPlayed)
-                    .thenComparing(PlayerWarStatInputDto::getCards).reversed());
-        }
-    }
-
-    @Override
     public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(LocalDate date,
                                                                                   List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
 
@@ -204,19 +160,18 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
                 .collect(Collectors.toList());
     }
 
-
-    private Map<String, Player> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDate date) {
-        Map<String, Player> playersNotParticipated = playerWeeklyStatsRepository.findByWeek(Week.fromDate(date)).stream()
-                .collect(Collectors.toMap(pws -> pws.getPlayer().getTag(), PlayerWeeklyStats::getPlayer));
-
+    @Override
+    public Map<String, Player> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDate date) {
         Set<String> playersInWarSet = playersInWar.getPlayerWarStats().stream()
                 .map(WarStatsInputDto.PlayerWarStatInputDto::getTag).collect(Collectors.toSet());
 
-        playersInWarSet.forEach(playersNotParticipated::remove);
+        List<String> checkedInPlayersNotParticipated = playerCheckInService.findCheckedInPlayersAtDate(date).stream()
+                .map(PlayerInOut::getTag).filter(tag -> !playersInWarSet.contains(tag)).collect(Collectors.toList());
 
-        return playersNotParticipated;
+        //better load all and filter them out than hit n times the db for each one
+        Map<String, Player> allPlayers = playerRepository.loadAll();
 
+        return checkedInPlayersNotParticipated.stream().collect(Collectors.toMap(Function.identity(), allPlayers::get));
     }
-
 
 }

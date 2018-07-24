@@ -17,10 +17,10 @@ import java.util.stream.Stream;
 
 @Service
 @Slf4j
-public class PlayerInOutServiceImpl {
+public class PlayerCheckInService {
 
     @Autowired
-    PlayerInOutRepository playerInOutRepository;
+    PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
 
     @Autowired
     PlayerInOutHistoryRepository playerInOutHistoryRepository;
@@ -31,16 +31,16 @@ public class PlayerInOutServiceImpl {
     @Transactional(propagation = Propagation.REQUIRED)
     public void checkoutPlayer(String tag) {
         log.info("Checking out player {}", tag);
-        PlayerInOut playerInOut = playerInOutRepository.findByTag(tag).get();
+        PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).get();
         if (playerInOut.getCheckOut() == null) {
             playerInOut.setCheckOut(LocalDate.now());
-            playerInOutRepository.save(playerInOut);
+            playerCheckInCheckOutRepository.save(playerInOut);
         }
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void checkinPlayer(String tag) {
-        PlayerInOut playerInOut = playerInOutRepository.findByTag(tag).orElse(null);
+        PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
         if (playerInOut != null) {
             if (playerInOut.getCheckOut() == null) {
                 log.info("Player {} already in clan", tag);
@@ -55,7 +55,7 @@ public class PlayerInOutServiceImpl {
         } else {
             playerInOut = new PlayerInOut(tag, LocalDate.now());
         }
-        playerInOutRepository.save(playerInOut);
+        playerCheckInCheckOutRepository.save(playerInOut);
 
     }
 
@@ -75,4 +75,7 @@ public class PlayerInOutServiceImpl {
     }
 
 
+    public List<PlayerInOut> findCheckedInPlayersAtDate(LocalDate date) {
+        return playerCheckInCheckOutRepository.findCheckedInAtDate(date);
+    }
 }
