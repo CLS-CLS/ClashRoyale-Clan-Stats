@@ -1,4 +1,4 @@
-package org.lytsiware.clash.validation;
+package org.lytsiware.clash;
 
 
 import org.springframework.context.annotation.Bean;
@@ -14,10 +14,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    // @formatter:off
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/**")
-                .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/", "/home").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -28,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll();
     }
+    //@formatter:on
 
     @Bean
     @Override
