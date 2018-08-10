@@ -368,17 +368,15 @@ app.controller("loginController", function($rootScope, $scope, $http, $location)
 
     $scope.login = function() {
         authenticate($scope.credentials, function() {
-        if ($rootScope.authenticated) {
-            $location.path("/");
-            $scope.error = false;
-        } else {
-            $location.path("/login");
-            $scope.error = true;
-        }
-    });
-
-
-
+            if ($rootScope.authenticated) {
+                $location.path("/");
+                $scope.error = false;
+            } else {
+                $location.path("/login");
+                $scope.error = true;
+            }
+        });
+    }
 })
 
 
