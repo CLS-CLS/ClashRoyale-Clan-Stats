@@ -13,7 +13,8 @@ public interface PlayerWarStatsRepository extends JpaRepository<PlayerWarStat, L
     List<PlayerWarStat> findAllByWarLeague(WarLeague warLeague);
 
     @EntityGraph(value = "playerWarStat.graph", type = EntityGraph.EntityGraphType.LOAD)
-    List<PlayerWarStat> findFirst20ByPlayerTagAndWarLeagueStartDateBeforeOrderByWarLeagueStartDateDesc(String tag, LocalDate startDate);
+        //lol
+    List<PlayerWarStat> findFirst20ByPlayerTagAndWarLeagueStartDateLessThanEqualOrderByWarLeagueStartDateDesc(String tag, LocalDate startDate);
 
 
 }

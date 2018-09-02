@@ -63,7 +63,7 @@ public class WarStatsRestController {
     @GetMapping(value = "/warStats/recalculate")
     public ResponseEntity recalculate(@RequestParam(required = false, defaultValue = "" + WarConstants.leagueSpan) int span,
                                       @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate from,
-                                      @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM--yyyy") LocalDate to) {
+                                      @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate to) {
 
         if (to == null) {
             to = LocalDate.now();

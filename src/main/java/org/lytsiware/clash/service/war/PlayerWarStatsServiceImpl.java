@@ -80,7 +80,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     @Override
     public PlaywerWarStatsWithAvgsDto getPlayerWarStatsForWeek(String tag, LocalDate untilDate) {
 
-        Map<LocalDate, PlayerWarStat> playerWarStats = playerWarStatsRepository.findFirst20ByPlayerTagAndWarLeagueStartDateBeforeOrderByWarLeagueStartDateDesc(tag, untilDate)
+        Map<LocalDate, PlayerWarStat> playerWarStats = playerWarStatsRepository.findFirst20ByPlayerTagAndWarLeagueStartDateLessThanEqualOrderByWarLeagueStartDateDesc(tag, untilDate)
                 .stream().collect(Utils.collectToMap(pws -> pws.getWarLeague().getStartDate(), Function.identity()));
 
         Map<LocalDate, PlayerAggregationWarStats> playerAggrWarStats = playerAggregationWarStatsService.findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(tag, WarConstants.leagueSpan, untilDate)
