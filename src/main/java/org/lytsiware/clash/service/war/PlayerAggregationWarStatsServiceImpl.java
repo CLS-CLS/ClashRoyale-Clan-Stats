@@ -82,6 +82,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
 
     @Override
     public List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWeek(Week week) {
+        log.info("START findLatestWarAggregationStatsForWeek for week {}", week);
         List<WarLeague> warLeague = warLeagueRepository.findFirstNthWarLeaguesBeforeDate(week.getEndDate(), 1);
         if (warLeague.isEmpty()) {
             return Collections.EMPTY_LIST;

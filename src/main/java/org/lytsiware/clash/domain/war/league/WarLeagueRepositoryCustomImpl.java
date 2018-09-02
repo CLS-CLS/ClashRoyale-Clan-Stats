@@ -1,5 +1,6 @@
 package org.lytsiware.clash.domain.war.league;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityExistsException;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 @Repository
+@Slf4j
 public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom {
 
     @PersistenceContext
@@ -29,6 +31,7 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
 
     @Override
     public List<WarLeague> findFirstNthWarLeaguesBeforeDate(LocalDate date, int n) {
+        log.info("START findFirstNthWarLeaguesBeforeDate for date {}", date);
         return em.createQuery("select l from WarLeague l where l.startDate <= :date order by l.startDate DESC", WarLeague.class)
                 .setMaxResults(n)
                 .setParameter("date", date).getResultList();
