@@ -227,6 +227,95 @@ function playerProgressChart(data) {
     });
 }
 
+
+function playerWarProgressChart(data) {
+
+    var winRatio =[];
+    var score = [];
+    var leagueDates = []
+
+    data.stats.forEach(function(value, index) {
+        winRatio.unshift(value.avgWins);
+        score.unshift(value.avgScore);
+        leagueDates.unshift(value.leagueDate);
+    })
+
+
+    Highcharts.chart('player_war_chart', {
+        title: {
+            text: 'Player Win Ratio Progress'
+        },
+        chart: {
+            height: 600
+        },
+        tooltip: {
+            valueDecimals: 2
+        },
+        yAxis: [{
+            title: {
+                text: 'Win ratio'
+            },
+            alignTicks: false,
+            tickInterval: 0.25,
+            max: 1.0,
+            min: 0
+        },
+        {
+            title: {
+                text: 'Score'
+            },
+            tickInterval: 200,
+            tickLength: 0,
+            opposite: true,
+            gridLineWidth :0
+        }],
+        xAxis: {
+            title: {
+                text: 'War League'
+            },
+            tickInterval: 2,
+            type: 'category',
+            categories: leagueDates,
+            labels: {
+                rotation: 70
+            }
+        },
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart: 0
+            }
+        },
+        series: [{
+            name: 'Win Ratio',
+            data: winRatio,
+            yAxis: 0
+        },
+        {
+            name: 'Score',
+            data: score,
+            yAxis: 1
+        }],
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+
+    });
+}
+
 function scoreProgressChart(score, deviations, crowns, weeks) {
 
     Highcharts.chart('progress_chart', {

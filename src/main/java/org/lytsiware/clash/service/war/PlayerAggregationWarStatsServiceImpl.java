@@ -158,7 +158,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     }
 
     @Override
-    public List<PlayerAggregationWarStats> findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate) {
+    public List<PlayerAggregationWarStats> findFirst40ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate) {
         return playerAggregationWarStatsRepository.findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(tag, leagueSpan, untilDate);
     }
 

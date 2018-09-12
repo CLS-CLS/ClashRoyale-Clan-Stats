@@ -371,6 +371,10 @@ app.controller("playerWarStatsController", function($scope, $http, $routeParams,
                         element.fightStatuses.push("forfeit");
                     }
 				})
+
+				$timeout(function() {
+                    playerWarProgressChart(response.data)
+                })
 			}
 		).finally(function() {
 			$scope.dataLoading = false;
