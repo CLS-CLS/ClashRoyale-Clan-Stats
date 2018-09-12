@@ -3,14 +3,12 @@
         <div ng-controller="playerWarStatsController">
             <button class="btn btnl-lg btn-primary" ng-disabled="!hasBack()" data-ng-click="back()"><span><i
                     class="fa fa-fw fa-2x fa-arrow-left"></i> </span></button>
-            <div class="filter row">
-                * All the averages are calculated based on the last 14 war leagues
-            </div>
-            <p/>
 
             <div class="text-center">
                 <div>
-                    <h1 class="player-header">{{player.name}}</h1>
+                    <h1><a class="player-header" ng-href="player/{{player.tag}}" ng-click="next()">{{player.name}}</a>
+                    </h1>
+
                 </div>
                 <div class="row"></div>
                 <h4>Role: {{player.role}}</h4>
@@ -19,6 +17,7 @@
 
             <div style="position:relative">
                 <loading-directive loading="loading"/>
+                * All the averages are calculated based on the last 14 war leagues
                 <div class="table-responsive halfscreen">
                     <table class="halfscreen table table-striped war-table">
                         <thead>

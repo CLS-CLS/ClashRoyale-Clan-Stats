@@ -13,7 +13,7 @@ public interface WarLeagueRepository extends JpaRepository<WarLeague, Long>, War
 
     List<WarLeague> findByStartDateBetween(LocalDate from, LocalDate to);
 
-    @Query("select l from WarLeague l join fetch l.playerWarStats ps where l.startDate between :fromDate and :toDate")
+    @Query("select l from WarLeague l join fetch l.playerWarStats ps where l.startDate between :fromDate and :toDate order by l.startDate asc")
     List<WarLeague> findAllBetweenStartDateEagerFetchPlayerStats(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
 
     Optional<WarLeague> findByStartDate(LocalDate date);

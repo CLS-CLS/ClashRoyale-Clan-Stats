@@ -275,14 +275,8 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 })
 
 app.controller("warStatsInputController", function($scope, $http){
-
-
     $scope.activateTab = function(event, tabId) {
-//        console.log(event);
         event.preventDefault();
-//        $('#'+ tabId).show();
-  //
-
     }
 
     $scope.hasError = function(type, formIndex, inputIndex) {
@@ -352,6 +346,10 @@ app.controller("playerWarStatsController", function($scope, $http, $routeParams,
 		history.back()
 	}
 
+    $scope.next = function(){
+        history.store();
+    }
+
 	$scope.hasBack = function() {
 		return history.hasBack();
 	}
@@ -414,19 +412,41 @@ app.factory('clanStatsState',  function(roleComparator) {
 
 });
 
-app.controller("warStatsController", function($scope, $http, $filter, $routeParams, $location, $timeout, history){
+
+app.factory('warStatsState',  function(roleComparator) {
+	var state = {
+		filter : {
+			orderBy : "-score",
+		},
+		hideLessThan: false,
+		hideNotInClan: false
+
+	}
+	return state;
+
+});
+
+app.controller("warStatsController", function($scope, $http, $routeParams, $location, $timeout, history, warStatsState){
 
     $scope.stats = {
         playerWarStats : []
     }
 
-    $scope.filter = {
-        orderBy : "name",
-        comparator : ""
-    }
+    $scope.filter = warStatsState.filter;
 
     $scope.next = function(){
         history.store();
+    }
+
+    $scope.hideLessThan = warStatsState.hideLessThan;
+    $scope.hideNotInClan = warStatsState.hideNotInClan;
+
+    $scope.toggleLessThan = function() {
+        $scope.hideLessThan = !$scope.hideLessThan;
+    }
+
+    $scope.toggleHideNotInClan = function() {
+        $scope.hideNotInClan = !$scope.hideNotInClan;
     }
 
    	$scope.selectedItem = (function() {
@@ -493,25 +513,9 @@ app.controller("warStatsController", function($scope, $http, $filter, $routePara
     function getData(deltaWeek) {
         $scope.loading = true;
 
-
         $http.get(baseUrl() + "/rest/warStats/" + deltaWeek).then(function(response) {
             $scope.loading = false;
             $scope.stats = response.data;
-
-//            if ($scope.stats.playerWarStats.length < response.data.playerWarStats.length) {
-//                $scope.stats.playerWarStats.forEach(function(stat, index) {
-//                    $scope.stats.playerWarStats[index] = response.data.playerWarStats[index];
-//                });
-//                for (i = $scope.stats.playerWarStats.length; i < response.data.playerWarStats.length; i++) {
-//                    $scope.stats.playerWarStats.push(response.data.playerWarStats[i])
-//                }
-//            } else {
-//                response.data.playerWarStats.forEach(function(stat, index) {
-//                    $scope.stats.playerWarStats[index] = stat
-//                })
-//                $scope.stats.playerWarStats.splice(response.data.playerWarStats.length)
-//            }
-
         }, function(response) {
             $scope.loading = false;
         })
