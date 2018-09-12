@@ -12,5 +12,5 @@ public interface PlayerAggregationWarStatsRepository extends CrudRepository<Play
     List<PlayerAggregationWarStats> findByDateAndLeagueSpan(LocalDate startDate, int leagueSpan);
 
     @EntityGraph(value = "playerAggregationService.graph", type = EntityGraph.EntityGraphType.LOAD)
-    List<PlayerAggregationWarStats> findFirst20ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate);
+    List<PlayerAggregationWarStats> findFirst40ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate);
 }

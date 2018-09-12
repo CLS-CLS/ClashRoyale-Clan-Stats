@@ -31,11 +31,15 @@ public class PlayerCheckInService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void checkoutPlayer(String tag) {
         log.info("Checking out player {}", tag);
-        PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).get();
-        if (playerInOut.getCheckOut() == null) {
-            playerInOut.setCheckOut(LocalDate.now());
-            playerCheckInCheckOutRepository.save(playerInOut);
-        }
+        playerCheckInCheckOutRepository.findByTag(tag).ifPresent(
+                playerInOut -> {
+                    if (playerInOut.getCheckOut() == null) {
+                        playerInOut.setCheckOut(LocalDate.now());
+                        playerCheckInCheckOutRepository.save(playerInOut);
+                    }
+                }
+        );
+
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
