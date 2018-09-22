@@ -14,7 +14,7 @@ public class ClanStatsController {
 
     private Logger logger = LoggerFactory.getLogger(ClanStatsController.class);
 
-    @GetMapping("/warStats/input")
+    @GetMapping("/warstats/input")
     public String warStatsInput() {
         return "/index";
     }
@@ -32,13 +32,13 @@ public class ClanStatsController {
         return "/index";
     }
 
-    @GetMapping(value = "/warStats/{deltaWeek:\\d*}")
+    @GetMapping(value = "/warstats/{deltaWeek:\\d*}")
     public String getWarStats(@PathVariable Integer deltaWeek) {
         logger.info("getWarStats until week {}", Week.now().minusWeeks(deltaWeek));
         return "/index";
     }
 
-    @GetMapping(value = "/warStats")
+    @GetMapping(value = "/warstats")
     public String getWarStats() {
         logger.info("getWarStats week 0");
         return "/index";

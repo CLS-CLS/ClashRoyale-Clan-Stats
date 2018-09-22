@@ -2,11 +2,11 @@ app.config([ "$locationProvider", "$routeProvider",
 	function config($locationProvider, $routeProvider) {
 
 		$routeProvider
-		    .when("/warStats/input", {
-		        templateUrl: "/views/warStatsInput.htm"
+		    .when("/warstats/input", {
+		        templateUrl: "/views/warstatsInput.htm"
 		    })
-		    .when("/warStats/:week?", {
-                templateUrl: "views/warStats.htm"
+		    .when("/warstats/:week?", {
+                templateUrl: "views/warstats.htm"
             })
             .when("/upload" , {
                 templateUrl: "views/upload.htm",
@@ -18,10 +18,10 @@ app.config([ "$locationProvider", "$routeProvider",
             .when("/clan/score", {
                 templateUrl: "views/chestCharts.htm"
             })
-            .when("/player/:playerTag/war", {
-                templateUrl: "views/playerWarStats.htm"
+            .when("/player/:playertag/war", {
+                templateUrl: "views/playerwarstats.htm"
             })
-            .when("/player/:playerTag", {
+            .when("/player/:playertag", {
                 templateUrl : "views/playerStats.htm"
             })
             .when("/clanrules", {

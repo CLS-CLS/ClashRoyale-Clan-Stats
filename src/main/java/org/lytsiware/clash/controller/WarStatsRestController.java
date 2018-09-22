@@ -32,7 +32,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest/")
 public class WarStatsRestController {
 
 
@@ -60,7 +60,7 @@ public class WarStatsRestController {
 
     }
 
-    @GetMapping(value = "/warStats/recalculate")
+    @GetMapping(value = "/warstats/recalculate")
     public ResponseEntity recalculate(@RequestParam(required = false, defaultValue = "" + WarConstants.leagueSpan) int span,
                                       @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate from,
                                       @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate to) {
@@ -78,21 +78,21 @@ public class WarStatsRestController {
         return playerWarStatsService.getPlayerWarStatsForWeek(tag, Week.now().getEndDate());
     }
 
-    @PostMapping("/uploadWarStats")
+    @PostMapping("/uploadwarstats")
     @Transactional(propagation = Propagation.REQUIRED)
     public void uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
         log.info("START uploadWarStats");
         warUploadService.upload(files);
     }
 
-    @GetMapping("/calculateWarStats")
+    @GetMapping("/calculatewarstats")
     public void calculateWarStats() {
         log.info("START calculating missing war stats");
         playerAggregationWarStatsService.calculateMissingStats(null, null);
     }
 
 
-    @GetMapping("/warStats/{deltaWeek}")
+    @GetMapping("/warstats/{deltaWeek}")
     public ClansWarGlobalStatsDto getWarStatsForWeeks(@PathVariable(value = "deltaWeek", required = false) Integer deltaWeek) {
         log.info("START warStats deltaWeek = {}", deltaWeek);
 
@@ -102,19 +102,19 @@ public class WarStatsRestController {
 
     }
 
-    @PostMapping("warStats/playersNotParticipated/{date}")
+    @PostMapping("warstats/playersNotParticipated/{date}")
     public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
                                                                                   @RequestBody List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
         return playerWarStatsService.getPlayersNotParticipated(date, participants);
     }
 
-    @GetMapping("/warStats/retrieveSiteData")
+    @GetMapping("/warstats/inputdata")
     public List<WarStatsInputDto> getWarStatsForInput(@RequestParam(required = false, defaultValue = "true") boolean includeNotParticipating) {
         return warInputService.getPlayerWarStatsForInput(includeNotParticipating);
     }
 
 
-    @PostMapping("/warStats/saveInputStats")
+    @PostMapping("/warstats/inputdata")
     public ResponseEntity<Optional<String>> insertWarStats(@Valid @RequestBody WarStatsInputDto warStatsInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.ok(bindingResult.getAllErrors().stream().map(ObjectError::getCodes)

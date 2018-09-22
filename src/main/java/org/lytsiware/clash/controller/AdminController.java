@@ -37,12 +37,12 @@ public class AdminController {
     private AggregationService aggregationService;
 
 
-    @PostMapping("/uploadWarStats")
+    @PostMapping("/uploadwarstats")
     @Transactional(propagation = Propagation.REQUIRED)
     public String uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
         log.info("START uploadWarStats");
         warUploadService.upload(files);
-        return "redirect:/warStats/0";
+        return "redirect:/warstats/0";
     }
 
 

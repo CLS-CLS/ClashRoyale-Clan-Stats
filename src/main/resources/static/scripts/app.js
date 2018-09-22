@@ -223,7 +223,7 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 		
 		$http.get(baseUrl() + "/rest/info/week").then(function(response){
 			currentWeek = response.data - 1 ;
-			return $http.get(baseUrl() + "/rest/player/" + $routeParams.playerTag)
+			return $http.get(baseUrl() + "/rest/player/" + $routeParams.playertag)
 		}).then(
 			function(response) {
 				var maxChestContribution = 0;
@@ -288,7 +288,7 @@ app.controller("warStatsInputController", function($scope, $http){
     $scope.saveWar = function(event, index) {
         if (angular.element(event.currentTarget).scope()[event.currentTarget.name].$valid) {
             console.log("saved")
-            $http.post(baseUrl() + "/rest/warStats/saveInputStats", $scope.statsList[index]).then(function(response){
+            $http.post(baseUrl() + "/rest/warstats/inputdata", $scope.statsList[index]).then(function(response){
                 console.log("TODO")
                 $scope.errors = response.data;
                 if ($scope.errors.length > 0) {
@@ -321,7 +321,7 @@ app.controller("warStatsInputController", function($scope, $http){
 
     function loadData() {
         $scope.loading = true;
-        $http.get(baseUrl() + "/rest/warStats/retrieveSiteData").then(
+        $http.get(baseUrl() + "/rest/warstats/inputdata").then(
             function(response) {
                 $scope.statsList = response.data
             }
@@ -356,7 +356,7 @@ app.controller("playerWarStatsController", function($scope, $http, $routeParams,
 
 	function loadData() {
 		$scope.dataLoading = true;
-		$http.get(baseUrl() + "/rest/player/" + $routeParams.playerTag +"/war").then(
+		$http.get(baseUrl() + "/rest/player/" + $routeParams.playertag +"/war").then(
 			function(response) {
 				$scope.player = response.data
 				$scope.player.stats.forEach(function(element, index){
@@ -478,7 +478,7 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
 
     $scope.dropboxitemselected = function(item) {
         $scope.selectedItem = item;
-        $location.path("/warStats/" + $scope.selectedItem)
+        $location.path("/warstats/" + $scope.selectedItem)
     }
 
     $scope.previousWeek = function() {
@@ -487,7 +487,7 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
             return;
         }
         $scope.selectedItem = $scope.selectedItem - 1
-        $location.path("/warStats/" + $scope.selectedItem)
+        $location.path("/warstats/" + $scope.selectedItem)
     }
 
     $scope.nextWeek = function() {
@@ -498,7 +498,7 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
         //sometimes 1 is considered a string and "+" is considered as string concatenator
         //subtracting 1 first makes the selectedItem a number
         $scope.selectedItem = ($scope.selectedItem - 1) + 2;
-        $location.path("/warStats/" + $scope.selectedItem)
+        $location.path("/warstats/" + $scope.selectedItem)
     }
 
     function init() {
@@ -517,7 +517,7 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
     function getData(deltaWeek) {
         $scope.loading = true;
 
-        $http.get(baseUrl() + "/rest/warStats/" + deltaWeek).then(function(response) {
+        $http.get(baseUrl() + "/rest/warstats/" + deltaWeek).then(function(response) {
             $scope.loading = false;
             $scope.stats = response.data;
         }, function(response) {
