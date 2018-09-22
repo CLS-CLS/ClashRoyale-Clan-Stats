@@ -75,6 +75,18 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+            <id>openshift</id>
+            <properties>
+                <spring.profile>heroku</spring.profile>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 
 
