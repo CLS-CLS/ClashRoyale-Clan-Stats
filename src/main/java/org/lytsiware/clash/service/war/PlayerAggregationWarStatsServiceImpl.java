@@ -158,14 +158,20 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     }
 
     @Override
-    public List<PlayerAggregationWarStats> findFirst40ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate) {
+    public List<PlayerAggregationWarStats> findWarStatsForPlayer(String tag, int leagueSpan, LocalDate untilDate) {
         return playerAggregationWarStatsRepository.findFirst40ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(tag, leagueSpan, untilDate);
     }
 
 
     private List<PlayerAggregationWarStats> calculateStats(List<WarLeague> warLeagues, LocalDate date, int leagueSpan) {
+
+        // bug : calculate stats only for the players that have warstats in the latest league , otherwise players that have left the clan
+        // will have aggregation stats. So find we find the current players and we filter out the rest (that the appear because of previous leagues)
+        Set<Player> currentPlayers = warLeagues.stream().findFirst().get().getPlayerWarStats().stream().map(PlayerWarStat::getPlayer).collect(Collectors.toSet());
+
         Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
                 .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
+                .filter(playerWarStat -> currentPlayers.contains(playerWarStat.getPlayer()))
                 .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
 
         List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
@@ -182,6 +188,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             int wins = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum();
             int gamesNotPlayed = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
             int crownsLost = gamesNotPlayed + participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesLost()).sum();
+
             PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
                     .date(date)
                     .gamesGranted(gamesGranted)
@@ -194,10 +201,9 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
                     .warsParticipated(numberOfWarsParticipated).build();
 
             playerAggregationWarStats.add(playerAggregationWarStat);
-
         }
 
         return playerAggregationWarStats;
-
     }
+
 }

@@ -83,7 +83,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         Map<LocalDate, PlayerWarStat> playerWarStats = playerWarStatsRepository.findFirst40ByPlayerTagAndWarLeagueStartDateLessThanEqualOrderByWarLeagueStartDateDesc(tag, untilDate)
                 .stream().collect(Utils.collectToMap(pws -> pws.getWarLeague().getStartDate(), Function.identity()));
 
-        Map<LocalDate, PlayerAggregationWarStats> playerAggrWarStats = playerAggregationWarStatsService.findFirst40ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(tag, WarConstants.leagueSpan, untilDate)
+        Map<LocalDate, PlayerAggregationWarStats> playerAggrWarStats = playerAggregationWarStatsService.findWarStatsForPlayer(tag, WarConstants.leagueSpan, untilDate)
                 .stream().collect(Utils.collectToMap(PlayerAggregationWarStats::getDate, Function.identity()));
 
         return new PlaywerWarStatsWithAvgsDto(playerWarStats, playerAggrWarStats);

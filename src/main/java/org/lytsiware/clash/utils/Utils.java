@@ -100,10 +100,6 @@ public class Utils {
         }
     }
 
-    public static String createStatsRoyaleRefreshUrlForClanTag(String clanTag) {
-        return "https://statsroyale.com/clan/" + clanTag + "/refresh";
-    }
-
     public static Resource createStatsRoyaleForClanTag(String clanTag) {
         Resource resource;
         try {

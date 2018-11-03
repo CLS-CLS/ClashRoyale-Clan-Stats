@@ -30,5 +30,5 @@ public interface PlayerAggregationWarStatsService {
 
     void calculateMissingStats(LocalDate from, LocalDate to);
 
-    List<PlayerAggregationWarStats> findFirst40ByPlayerTagAndLeagueSpanAndDateBeforeOrderByDateDesc(String tag, int leagueSpan, LocalDate untilDate);
+    List<PlayerAggregationWarStats> findWarStatsForPlayer(String tag, int leagueSpan, LocalDate untilDate);
 }
