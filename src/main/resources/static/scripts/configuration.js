@@ -6,7 +6,7 @@ app.config([ "$locationProvider", "$routeProvider",
 		        templateUrl: "/views/warstatsInput.htm"
 		    })
 		    .when("/warstats/:week?", {
-                templateUrl: "views/warstats.htm"
+                templateUrl: "views/warStats.htm"
             })
             .when("/upload" , {
                 templateUrl: "views/upload.htm",
@@ -19,7 +19,7 @@ app.config([ "$locationProvider", "$routeProvider",
                 templateUrl: "views/chestCharts.htm"
             })
             .when("/player/:playertag/war", {
-                templateUrl: "views/playerwarstats.htm"
+                templateUrl: "views/playerWarStats.htm"
             })
             .when("/player/:playertag", {
                 templateUrl : "views/playerStats.htm"
