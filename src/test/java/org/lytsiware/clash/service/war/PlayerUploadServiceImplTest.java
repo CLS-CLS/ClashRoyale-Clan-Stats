@@ -20,7 +20,7 @@ import java.util.stream.StreamSupport;
 
 import static org.junit.Assert.assertEquals;
 
-public class PlayerWarStatsServiceImplTest extends AbstractSpringBootTest {
+public class PlayerUploadServiceImplTest extends AbstractSpringBootTest {
 
     @Autowired
     WarUploadService warUploadService;

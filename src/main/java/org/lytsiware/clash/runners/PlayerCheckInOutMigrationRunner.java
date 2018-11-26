@@ -50,7 +50,7 @@ public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
             for (String tag : allPlayers.keySet()) {
                 PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
                 if (playerInOut == null) {
-                    playerInOut = new PlayerInOut(null, tag, Week.ZERO_WEEK, Week.ZERO_WEEK);
+                    playerInOut = new PlayerInOut(null, tag, Week.ZERO_WEEK.atStartOfDay(), Week.ZERO_WEEK.atStartOfDay());
                     playerCheckInCheckOutRepository.save(playerInOut);
                 }
             }
@@ -73,16 +73,16 @@ public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
                     PlayerInOutHistory playerInOutHistory = PlayerInOutHistory.from(playerInOut);
                     playerInOutHistoryRepository.save(playerInOutHistory);
 
-                    playerInOut.setCheckIn(LocalDate.from(Week.fromWeek(weekNumber).getStartDate()));
+                    playerInOut.setCheckIn(LocalDate.from(Week.fromWeek(weekNumber).getStartDate()).atStartOfDay());
                     playerInOut.setCheckOut(null);
                 } else {
                     log.info("Checking in new player {} at week {}", tag, weekNumber);
-                    playerInOut = new PlayerInOut(tag, Week.fromWeek(weekNumber).getStartDate());
+                    playerInOut = new PlayerInOut(tag, Week.fromWeek(weekNumber).getStartDate().atStartOfDay());
                 }
                 playerCheckInCheckOutRepository.save(playerInOut);
             } else if (playerInOut != null && playerInOut.getCheckOut() == null) {
                 log.info("Checking OUT player {} at week {}", tag, weekNumber);
-                playerInOut.setCheckOut(Week.fromWeek(weekNumber).getStartDate());
+                playerInOut.setCheckOut(Week.fromWeek(weekNumber).getStartDate().atStartOfDay());
                 playerCheckInCheckOutRepository.save(playerInOut);
             }
         }

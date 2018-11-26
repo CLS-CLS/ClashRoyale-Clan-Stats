@@ -3,6 +3,7 @@ package org.lytsiware.clash.service.war;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.player.PlayerInOut;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
 import org.lytsiware.clash.service.integration.SiteIntegrationService;
@@ -12,13 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -33,6 +29,7 @@ public class WarInputServiceImpl implements WarInputService {
     private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
 
     private PlayerWarStatsService playerWarStatsService;
+
 
     @Autowired
     public WarInputServiceImpl(@SiteQualifier(SiteQualifier.Name.STATS_ROYALE_WAR) SiteIntegrationService<List<WarStatsInputDto>> siteIntegrationService,
@@ -59,21 +56,13 @@ public class WarInputServiceImpl implements WarInputService {
 
         for (WarStatsInputDto siteWarLeagueStat : siteAllWarLeagueStats) {
 
-            LocalDate leagueStartDate = LocalDate.now(clock);
+            LocalDateTime leagueStartDate = statsRoyaleDateParse.parseDescriptiveDate(siteWarLeagueStat.getLeagueName(), LocalDateTime.now(clock));
 
-            try {
-                leagueStartDate = statsRoyaleDateParse.parseDescriptiveDate(siteWarLeagueStat.getLeagueName(), LocalDateTime.now(clock)).toLocalDate();
-            } catch (IllegalArgumentException ex) {
-                log.warn("Error while trying to parse date from leagues description -  falling back to current date. ");
-                log.warn("With exception : {}", ex);
-            }
+            Map<Player, PlayerInOut> playerNotParticipated = (includeNotParticipating ? playerWarStatsService.findPlayersNotParticipatedInWar(siteWarLeagueStat, leagueStartDate, 240) : new HashMap<>());
 
-            Map<String, Player> playerNotParticipated = includeNotParticipating ? playerWarStatsService.findPlayersNotParticipatedInWar(siteWarLeagueStat, leagueStartDate) : new HashMap<>();
+            List<WarStatsInputDto.PlayerWarStatInputDto> playerNorParticipatedWarStatsInputDto = updateDeleteStatusFonNotParticipated(playerNotParticipated, leagueStartDate, 240);
 
-            siteWarLeagueStat.setPlayersNotParticipated(
-                    playerNotParticipated.entrySet().stream()
-                            .map(entry -> WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(entry.getKey(), entry.getValue().getName()))
-                            .collect(Collectors.toList()));
+            siteWarLeagueStat.setPlayersNotParticipated(playerNorParticipatedWarStatsInputDto);
 
             siteWarLeagueStat.setStartDate(leagueStartDate);
 
@@ -82,6 +71,22 @@ public class WarInputServiceImpl implements WarInputService {
         normalizeWarInputData(siteAllWarLeagueStats);
 
         return siteAllWarLeagueStats;
+    }
+
+    private List<WarStatsInputDto.PlayerWarStatInputDto> updateDeleteStatusFonNotParticipated(Map<Player, PlayerInOut> playerNotParticipated, LocalDateTime startDate, int faultTolerance) {
+
+        List<WarStatsInputDto.PlayerWarStatInputDto> notParticipatedInputDtoList = new ArrayList<>();
+
+        for (Player player : playerNotParticipated.keySet()) {
+            WarStatsInputDto.PlayerWarStatInputDto playerWarStatsInputDto = WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(player.getTag(), player.getName());
+            PlayerInOut pIO = playerNotParticipated.get(player);
+            if (pIO.getCheckIn().isAfter(startDate)) {
+                playerWarStatsInputDto.setDelete(true);
+            }
+            notParticipatedInputDtoList.add(playerWarStatsInputDto);
+        }
+
+        return notParticipatedInputDtoList;
     }
 
 

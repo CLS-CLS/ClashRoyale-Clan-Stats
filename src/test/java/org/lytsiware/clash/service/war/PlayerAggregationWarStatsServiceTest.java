@@ -40,7 +40,7 @@ public class PlayerAggregationWarStatsServiceTest extends AbstractSpringBootTest
         }
 
         for (int i = 0; i < 12; i++) {
-            WarLeague warLeague = new WarLeague(LocalDate.now().minusDays((11 - i) * 2));
+            WarLeague warLeague = new WarLeague(LocalDate.now().minusDays((11 - i) * 2).atStartOfDay());
             em.persist(warLeague);
             for (int j = 0; j < players.size(); j++) {
 

@@ -1,7 +1,5 @@
 package org.lytsiware.clash.domain;
 
-import org.lytsiware.clash.ZoneIdConfiguration;
-
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.sql.Timestamp;
@@ -15,11 +13,17 @@ public class LocalDateTimeTimestampConverter implements AttributeConverter<Local
 
     @Override
     public Timestamp convertToDatabaseColumn(LocalDateTime attribute) {
+        if (attribute == null) {
+            return null;
+        }
         return new Timestamp(attribute.toEpochSecond(ZoneOffset.UTC));
     }
 
     @Override
     public LocalDateTime convertToEntityAttribute(Timestamp dbData) {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(dbData.getTime()), ZoneIdConfiguration.zoneId());
+        if (dbData == null) {
+            return null;
+        }
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(dbData.getTime()), ZoneOffset.UTC);
     }
 }

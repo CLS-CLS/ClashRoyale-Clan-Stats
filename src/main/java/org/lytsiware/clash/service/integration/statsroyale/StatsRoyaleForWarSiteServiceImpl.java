@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -102,7 +102,7 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
 
                 WarStatsInputDto warStatsInputDto = WarStatsInputDto.builder()
                         .leagueName(leagueFakeName)
-                        .startDate(LocalDate.now())
+                        .startDate(LocalDateTime.now())
                         .rank(rank)
                         .trophies(delta)
                         .build();

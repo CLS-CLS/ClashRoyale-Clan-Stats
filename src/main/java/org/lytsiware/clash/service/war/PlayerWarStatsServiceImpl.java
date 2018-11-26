@@ -26,10 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityExistsException;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -152,26 +150,35 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     }
 
     @Override
-    public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(LocalDate date,
-                                                                                  List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
+    public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(LocalDateTime date, List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
 
-        return findPlayersNotParticipatedInWar(WarStatsInputDto.builder().playerWarStats(participants).build(), date).entrySet().stream()
-                .map(entry -> WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(entry.getKey(), entry.getValue().getName()))
+        return findPlayersNotParticipatedInWar(WarStatsInputDto.builder().playerWarStats(participants).build(), date, null).keySet().stream()
+                .map(entry -> WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(entry.getTag(), entry.getName()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Map<String, Player> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDate date) {
+    public Map<Player, PlayerInOut> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDateTime date, Integer faultTolleranceInMinutes) {
+        if (faultTolleranceInMinutes == null) {
+            faultTolleranceInMinutes = 0;
+        }
         Set<String> playersInWarSet = playersInWar.getPlayerWarStats().stream()
                 .map(WarStatsInputDto.PlayerWarStatInputDto::getTag).collect(Collectors.toSet());
 
-        List<String> checkedInPlayersNotParticipated = playerCheckInService.findCheckedInPlayersAtDate(date).stream()
+
+        Set<PlayerInOut> checkedInAtDate = new HashSet<>(playerCheckInService.findCheckedInPlayersAtDate(date));
+        Set<PlayerInOut> checkedInWithFaultTollerance = new HashSet<>(playerCheckInService.findCheckedInPlayersAtDate(date.plusMinutes(faultTolleranceInMinutes)));
+        checkedInAtDate.addAll(checkedInWithFaultTollerance);
+
+        Map<String, PlayerInOut> allCheckedInPlayers = checkedInAtDate.stream().collect(Collectors.toMap(PlayerInOut::getTag, Function.identity()));
+
+        List<String> checkedInPlayersNotParticipated = checkedInAtDate.stream()
                 .map(PlayerInOut::getTag).filter(tag -> !playersInWarSet.contains(tag)).collect(Collectors.toList());
 
         //better load all and filter them out than hit n times the db for each one
         Map<String, Player> allPlayers = playerRepository.loadAll();
 
-        return checkedInPlayersNotParticipated.stream().collect(Collectors.toMap(Function.identity(), allPlayers::get));
+        return checkedInPlayersNotParticipated.stream().collect(Collectors.toMap(allPlayers::get, allCheckedInPlayers::get));
     }
 
 }

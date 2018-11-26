@@ -3,7 +3,7 @@ package org.lytsiware.clash.domain.player;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
@@ -21,11 +21,11 @@ public class PlayerInOutHistory {
 
     private String tag;
 
-    private LocalDate checkIn;
+    private LocalDateTime checkIn;
 
-    private LocalDate checkOut;
+    private LocalDateTime checkOut;
 
-    public PlayerInOutHistory(String tag, LocalDate checkIn) {
+    public PlayerInOutHistory(String tag, LocalDateTime checkIn) {
         this.tag = tag;
         this.checkIn = checkIn;
     }

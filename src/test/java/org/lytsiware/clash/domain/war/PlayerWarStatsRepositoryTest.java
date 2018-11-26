@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +30,7 @@ public class PlayerWarStatsRepositoryTest {
         Player player = new Player("123", "Chris", "Elder", true);
         entityManager.persist(player);
 
-        WarLeague warLeague1 = new WarLeague(LocalDate.now());
+        WarLeague warLeague1 = new WarLeague(LocalDateTime.now());
         warLeague1.setName("War League 1");
         warLeague1.setRank(3);
 

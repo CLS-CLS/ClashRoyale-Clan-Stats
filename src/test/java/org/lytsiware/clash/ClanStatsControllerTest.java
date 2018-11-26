@@ -44,11 +44,11 @@ public class ClanStatsControllerTest extends AbstractSpringBootTest {
         PlayerStatsDto resultsFromController = clanStatRestController.retrievePlayerStats("2JGGY989R");
 
         Assert.assertEquals("Hellspawn", resultsFromController.getName());
-        Assert.assertEquals(3, resultsFromController.getStatsDto().size());
-        Assert.assertEquals(Week.now().previous().getWeek(), resultsFromController.getStatsDto().get(0).getWeek());
-        Assert.assertEquals(Week.now().minusWeeks(4).getWeek(), resultsFromController.getStatsDto().get(2).getWeek());
-        Assert.assertEquals(483, (int) resultsFromController.getStatsDto().get(1).getCardDonation());
-        Assert.assertEquals(186, (int) resultsFromController.getStatsDto().get(1).getChestContribution());
+        Assert.assertEquals(4, resultsFromController.getStatsDto().size());
+        Assert.assertEquals(Week.now().getWeek(), resultsFromController.getStatsDto().get(0).getWeek());
+        Assert.assertEquals(Week.now().minusWeeks(4).getWeek(), resultsFromController.getStatsDto().get(3).getWeek());
+        Assert.assertEquals(483, (int) resultsFromController.getStatsDto().get(2).getCardDonation());
+        Assert.assertEquals(186, (int) resultsFromController.getStatsDto().get(2).getChestContribution());
 
     }
 }

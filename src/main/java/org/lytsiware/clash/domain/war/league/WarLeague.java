@@ -9,6 +9,8 @@ import org.lytsiware.clash.service.war.WarConstants;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +25,8 @@ public class WarLeague {
     private Long id;
 
     private LocalDate startDate;
+
+    private LocalTime time;
 
     private Integer rank;
 
@@ -51,8 +55,10 @@ public class WarLeague {
         this.startDate = LocalDate.now();
     }
 
-    public WarLeague(LocalDate startDate) {
-        this.startDate = startDate;
+    public WarLeague(LocalDateTime startDate) {
+        this.startDate = startDate.toLocalDate();
+        this.time = startDate.toLocalTime();
+
     }
 
     public void addPlayerWarStats(PlayerWarStat playerWarStat) {

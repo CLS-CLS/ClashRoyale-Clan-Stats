@@ -3,7 +3,7 @@ app.config([ "$locationProvider", "$routeProvider",
 
 		$routeProvider
 		    .when("/warstats/input", {
-		        templateUrl: "/views/warstatsInput.htm"
+		        templateUrl: "/views/warStatsInput.htm"
 		    })
 		    .when("/warstats/:week?", {
                 templateUrl: "views/warStats.htm"

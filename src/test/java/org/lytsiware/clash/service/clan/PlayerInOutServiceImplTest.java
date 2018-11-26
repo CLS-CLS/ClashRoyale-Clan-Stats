@@ -35,7 +35,7 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
     public void checkoutPlayer() throws Exception {
         Player p1 = new Player("tag1", "Chris", "Member");
         em.persist(p1);
-        PlayerInOut playerInOut = new PlayerInOut("tag1", LocalDate.now().minusDays(2));
+        PlayerInOut playerInOut = new PlayerInOut("tag1", LocalDate.now().minusDays(2).atStartOfDay());
         em.persist(playerInOut);
         em.flush();
         em.clear();
@@ -43,8 +43,8 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         playerInOutService.checkoutPlayer("tag1");
 
         playerInOut = playerCheckInCheckOutRepository.findByTag("tag1").get();
-        assertEquals(LocalDate.now().minusDays(2), playerInOut.getCheckIn());
-        assertEquals(LocalDate.now(), playerInOut.getCheckOut());
+        assertEquals(LocalDate.now().minusDays(2).atStartOfDay(), playerInOut.getCheckIn());
+        assertEquals(LocalDate.now(), playerInOut.getCheckOut().toLocalDate());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         LocalDate before2days = LocalDate.now().minusDays(2);
         Player p1 = new Player("tag1", "Chris", "Member");
         em.persist(p1);
-        PlayerInOut playerInOut = new PlayerInOut(null, "tag1", before4days, before2days);
+        PlayerInOut playerInOut = new PlayerInOut(null, "tag1", before4days.atStartOfDay(), before2days.atStartOfDay());
         em.persist(playerInOut);
         em.flush();
         em.clear();
@@ -61,12 +61,12 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         playerInOutService.checkinPlayer("tag1");
 
         playerInOut = playerCheckInCheckOutRepository.findByTag("tag1").get();
-        assertEquals(LocalDate.now(), playerInOut.getCheckIn());
+        assertEquals(LocalDate.now(), playerInOut.getCheckIn().toLocalDate());
         assertNull(playerInOut.getCheckOut());
 
         PlayerInOutHistory playerInOutHistory = playerInOutHistoryRepository.findByTagOrderByCheckInDesc("tag1").get(0);
-        assertEquals(before4days, playerInOutHistory.getCheckIn());
-        assertEquals(before2days, playerInOutHistory.getCheckOut());
+        assertEquals(before4days.atStartOfDay(), playerInOutHistory.getCheckIn());
+        assertEquals(before2days, playerInOutHistory.getCheckOut().toLocalDate());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         playerInOutService.checkinPlayer("tag1");
 
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag("tag1").get();
-        assertEquals(LocalDate.now(), playerInOut.getCheckIn());
+        assertEquals(LocalDate.now(), playerInOut.getCheckIn().toLocalDate());
         assertNull(playerInOut.getCheckOut());
 
         List<PlayerInOutHistory> playerInOutHistory = playerInOutHistoryRepository.findByTagOrderByCheckInDesc("tag1");
@@ -91,13 +91,13 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         LocalDate before4days = LocalDate.now().minusDays(4);
         Player p1 = new Player("tag1", "Chris", "Member");
         em.persist(p1);
-        PlayerInOut playerInOut = new PlayerInOut(null, "tag1", before4days, null);
+        PlayerInOut playerInOut = new PlayerInOut(null, "tag1", before4days.atStartOfDay(), null);
         em.persist(playerInOut);
         em.flush();
         em.clear();
 
         playerInOut = playerCheckInCheckOutRepository.findByTag("tag1").get();
-        assertEquals(before4days, playerInOut.getCheckIn());
+        assertEquals(before4days.atStartOfDay(), playerInOut.getCheckIn());
         assertNull(playerInOut.getCheckOut());
         List<PlayerInOutHistory> playerInOutHistory = playerInOutHistoryRepository.findByTagOrderByCheckInDesc("tag1");
         assertEquals(0, playerInOutHistory.size());
@@ -118,11 +118,11 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         LocalDate oneDayAgo = LocalDate.now().minusDays(1);
         Player p3 = new Player("tag3", "", "");
         em.persist(p3);
-        playerCheckInCheckOutRepository.save(new PlayerInOut(null, "tag3", twoDaysAgo, null));
+        playerCheckInCheckOutRepository.save(new PlayerInOut(null, "tag3", twoDaysAgo.atStartOfDay(), null));
 
         Player p4 = new Player("tag4", "", "");
         em.persist(p4);
-        playerCheckInCheckOutRepository.save(new PlayerInOut(null, "tag4", twoDaysAgo, oneDayAgo));
+        playerCheckInCheckOutRepository.save(new PlayerInOut(null, "tag4", twoDaysAgo.atStartOfDay(), oneDayAgo.atStartOfDay()));
 
         playerInOutService.markPlayersInClan(currentPlayers);
         em.flush();
@@ -132,9 +132,9 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         assertTrue(players.get("tag0").getInClan());
         assertFalse(players.get("tag4").getInClan());
 
-        assertEquals(LocalDate.now(), playerCheckInCheckOutRepository.findByTag("tag2").get().getCheckIn());
-        assertEquals(LocalDate.now(), playerCheckInCheckOutRepository.findByTag("tag3").get().getCheckOut());
-        assertEquals(oneDayAgo, playerCheckInCheckOutRepository.findByTag("tag4").get().getCheckOut());
+        assertEquals(LocalDate.now(), playerCheckInCheckOutRepository.findByTag("tag2").get().getCheckIn().toLocalDate());
+        assertEquals(LocalDate.now(), playerCheckInCheckOutRepository.findByTag("tag3").get().getCheckOut().toLocalDate());
+        assertEquals(oneDayAgo.atStartOfDay(), playerCheckInCheckOutRepository.findByTag("tag4").get().getCheckOut());
 
     }
 

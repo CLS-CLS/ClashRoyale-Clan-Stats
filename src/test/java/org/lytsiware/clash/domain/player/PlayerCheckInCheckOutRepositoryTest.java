@@ -31,23 +31,23 @@ public class PlayerCheckInCheckOutRepositoryTest {
         entityManager.persist(x);
         entityManager.persist(x2);
         PlayerInOut playerInOut = PlayerInOut.builder()
-                .checkIn(LocalDate.now().minusDays(5))
-                .checkOut(LocalDate.now().minusDays(2))
+                .checkIn(LocalDate.now().minusDays(5).atStartOfDay())
+                .checkOut(LocalDate.now().minusDays(2).atStartOfDay())
                 .tag("x")
                 .build();
         entityManager.persist(playerInOut);
 
-        playerInOut = PlayerInOut.builder().tag("x2").checkIn(LocalDate.now().minusDays(5)).build();
+        playerInOut = PlayerInOut.builder().tag("x2").checkIn(LocalDate.now().minusDays(5).atStartOfDay()).build();
         entityManager.persist(playerInOut);
 
         entityManager.flush();
         entityManager.clear();
 
-        List<PlayerInOut> checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now());
+        List<PlayerInOut> checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now().atStartOfDay());
         assertEquals(1, checkedIn.size());
-        checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now().minusDays(3));
+        checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now().minusDays(3).atStartOfDay());
         assertEquals(2, checkedIn.size());
-        checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now().minusDays(7));
+        checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now().minusDays(7).atStartOfDay());
         assertEquals(0, checkedIn.size());
     }
 

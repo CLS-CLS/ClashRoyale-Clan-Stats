@@ -26,6 +26,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -103,7 +104,7 @@ public class WarStatsRestController {
     }
 
     @PostMapping("warstats/playersNotParticipated/{date}")
-    public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+    public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm") LocalDateTime date,
                                                                                   @RequestBody List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
         return playerWarStatsService.getPlayersNotParticipated(date, participants);
     }

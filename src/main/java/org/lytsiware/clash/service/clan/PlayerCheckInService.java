@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,20 +32,26 @@ public class PlayerCheckInService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void checkoutPlayer(String tag) {
         log.info("Checking out player {}", tag);
-        playerCheckInCheckOutRepository.findByTag(tag).ifPresent(
-                playerInOut -> {
-                    if (playerInOut.getCheckOut() == null) {
-                        playerInOut.setCheckOut(LocalDate.now());
-                        playerCheckInCheckOutRepository.save(playerInOut);
-                    }
-                }
-        );
+        PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
+        checkoutPlayer(playerInOut);
+    }
 
+    private void checkoutPlayer(PlayerInOut playerInOut) {
+        if (playerInOut != null) {
+            if (playerInOut.getCheckOut() == null) {
+                playerInOut.setCheckOut(LocalDateTime.now());
+                playerCheckInCheckOutRepository.save(playerInOut);
+            }
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void checkinPlayer(String tag) {
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
+        checkinPlayer(playerInOut, tag);
+    }
+
+    private void checkinPlayer(PlayerInOut playerInOut, String tag) {
         if (playerInOut != null) {
             if (playerInOut.getCheckOut() == null) {
                 log.info("Player {} already in clan", tag);
@@ -54,32 +61,39 @@ public class PlayerCheckInService {
             PlayerInOutHistory playerInOutHistory = PlayerInOutHistory.from(playerInOut);
             playerInOutHistoryRepository.save(playerInOutHistory);
 
-            playerInOut.setCheckIn(LocalDate.now());
+            playerInOut.setCheckIn(LocalDateTime.now());
             playerInOut.setCheckOut(null);
         } else {
-            playerInOut = new PlayerInOut(tag, LocalDate.now());
+            playerInOut = new PlayerInOut(tag, LocalDateTime.now());
         }
         playerCheckInCheckOutRepository.save(playerInOut);
-
     }
 
     @Transactional
     public void markPlayersInClan(List<PlayerWeeklyStats> currentPlayersStats) {
         List<Player> currentPlayers = currentPlayersStats.stream().map(PlayerWeeklyStats::getPlayer).collect(Collectors.toList());
-        currentPlayers.stream().map(Player::getTag).forEach(this::checkinPlayer);
-        currentPlayers.forEach(player -> player.setInClan(true));
+        Map<String, PlayerInOut> playersInOutByTag = playerCheckInCheckOutRepository.findAll().stream().collect(Collectors.toMap(PlayerInOut::getTag, Function.identity()));
 
         Map<String, Player> checkoutPlayers = playerRepository.loadAll();
-        currentPlayers.stream().map(Player::getTag).forEach(checkoutPlayers::remove);
-        checkoutPlayers.values().forEach(player -> player.setInClan(false));
-        checkoutPlayers.keySet().forEach(this::checkoutPlayer);
+
+        for (Player player : currentPlayers) {
+            String playerTag = player.getTag();
+            checkinPlayer(playersInOutByTag.get(playerTag), playerTag);
+            player.setInClan(true);
+            checkoutPlayers.remove(player.getTag());
+        }
+
+        for (String checkoutPlayerTag : checkoutPlayers.keySet()) {
+            checkoutPlayers.get(checkoutPlayerTag).setInClan(false);
+            checkoutPlayer(playersInOutByTag.get(checkoutPlayerTag));
+        }
 
         playerRepository.saveOrUpdate(Stream.concat(currentPlayers.stream(),
                 checkoutPlayers.values().stream()).collect(Collectors.toList()));
     }
 
 
-    public List<PlayerInOut> findCheckedInPlayersAtDate(LocalDate date) {
+    public List<PlayerInOut> findCheckedInPlayersAtDate(LocalDateTime date) {
         return playerCheckInCheckOutRepository.findCheckedInAtDate(date);
     }
 }

@@ -28,7 +28,6 @@ import java.time.ZonedDateTime;
 public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 
     public static final String CRON_MONDAY = "cron.monday";
-    private static final String CRON_MONDAY_PROPERTY = "${" + CRON_MONDAY + "}";
 
     private Logger logger = LoggerFactory.getLogger(StatsRoyalChestContrJobImpl.class);
 

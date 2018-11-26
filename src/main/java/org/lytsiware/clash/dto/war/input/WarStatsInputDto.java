@@ -14,7 +14,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class WarStatsInputDto implements Serializable {
     private String leagueName;
 
     @NotNull
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Min(1)
     @Max(5)
@@ -90,5 +90,6 @@ public class WarStatsInputDto implements Serializable {
             return PlayerWarStatInputDto.builder().tag(tag).name(name).gamesNotPlayed(0).gamesLost(0).gamesGranted(0).gamesWon(0).cards(0).build();
         }
     }
+
 
 }

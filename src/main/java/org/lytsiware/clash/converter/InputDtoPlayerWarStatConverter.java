@@ -16,6 +16,7 @@ public class InputDtoPlayerWarStatConverter {
 
     public static List<PlayerWarStat> toPlayerWarStat(WarStatsInputDto warStatsInputDto) {
         WarLeague warLeague = new WarLeague(warStatsInputDto.getStartDate());
+
         warLeague.setTrophies(warStatsInputDto.getTrophies());
         warLeague.setRank(warStatsInputDto.getRank());
         warLeague.setName(warStatsInputDto.getLeagueName());

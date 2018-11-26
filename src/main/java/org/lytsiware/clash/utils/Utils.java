@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -134,7 +134,7 @@ public class Utils {
 
         List<PlayerWarStat> statsList = new ArrayList<>();
 
-        LocalDate leagueDate = LocalDate.parse(fileName.split("\\.")[0], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        LocalDateTime leagueDate = LocalDateTime.parse(fileName.split("\\.")[0], DateTimeFormatter.ofPattern("dd-MM-yyyy'T'hh-mm"));
 
         WarLeague warLeague = new WarLeague(leagueDate);
         warLeague.setName(leagueName);
