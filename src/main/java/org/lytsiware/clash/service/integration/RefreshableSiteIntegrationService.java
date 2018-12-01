@@ -4,4 +4,5 @@ public interface RefreshableSiteIntegrationService<R> extends SiteIntegrationSer
 
     R retrieveData(boolean requestRefresh);
 
+    boolean refresh();
 }

@@ -15,10 +15,13 @@ CREATE TABLE player_war_stat (
 
 CREATE TABLE war_league (
     id bigint NOT NULL,
-    start_date timestamp NOT NULL,
+    start_date DATE NOT NULL,
+    time TIME NOT NULL DEFAULT '00:00:00',
     name varchar(255),
     rank smallint,
     trophies smallint,
+    TEAM_CARD_AVG integer,
+    TEAM_WIN_RATIO real,
     war_season_id bigint
 );
 

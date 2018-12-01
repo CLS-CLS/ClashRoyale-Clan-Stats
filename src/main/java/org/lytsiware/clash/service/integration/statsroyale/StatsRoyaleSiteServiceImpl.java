@@ -79,10 +79,10 @@ public class StatsRoyaleSiteServiceImpl implements RefreshableSiteIntegrationSer
 
     }
 
-
-	private void refresh() {
-		try {
-			URL url = new URL(siteConfigurationService.getRefreshUrl());
+    @Override
+    public boolean refresh() {
+        try {
+            URL url = new URL(siteConfigurationService.getRefreshUrl());
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setRequestProperty("User-Agent",
@@ -91,6 +91,7 @@ public class StatsRoyaleSiteServiceImpl implements RefreshableSiteIntegrationSer
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
-	}
+        return true;
+    }
 
 }

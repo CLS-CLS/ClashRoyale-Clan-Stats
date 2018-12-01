@@ -1,5 +1,7 @@
 package org.lytsiware.clash.service.integration.statsroyale;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -24,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Profile("statsRoyale")
@@ -31,6 +34,8 @@ import java.util.List;
 public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrationService<List<WarStatsInputDto>> {
 
     Logger logger = LoggerFactory.getLogger(StatsRoyaleSiteServiceImpl.class);
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
 
     @Value("${clanTag:20G0YGP}")
@@ -43,12 +48,6 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
         this.siteConfigurationService = siteConfigurationService;
     }
 
-
-    public static void main(String[] args) {
-
-        List<WarStatsInputDto> warLeagues = new StatsRoyaleForWarSiteServiceImpl(new SiteConfigurationService(null, null, null, "file:///c:/users/christos/desktop/warStats.htm")).retrieveData();
-
-    }
 
     @Override
     public List<WarStatsInputDto> retrieveData() {
@@ -164,7 +163,14 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
         throw new ParseException("Could not find the clan's div");
     }
 
-    private void refresh() {
+
+    public static void main(String[] args) {
+//        List<WarStatsInputDto> warLeagues = new StatsRoyaleForWarSiteServiceImpl(new SiteConfigurationService(null, null, null, "file:///c:/users/christos/desktop/warStats.htm")).retrieveData();
+        new StatsRoyaleForWarSiteServiceImpl(new SiteConfigurationService(null, "https://statsroyale.com/clan/20G0YGP/refresh", null, null)).refresh();
+    }
+
+    @Override
+    public boolean refresh() {
         try {
             URL url = new URL(siteConfigurationService.getRefreshUrl());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -172,9 +178,18 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
             con.setRequestProperty("User-Agent",
                     "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
             logger.info("Refreshed with response code : " + con.getResponseCode());
+            Map<String, String> resultAsMap = objectMapper.readValue(con.getInputStream(), new TypeReference<Map<String, String>>() {
+            });
+            if (!"true".equals(resultAsMap.get("success"))) {
+                logger.warn("Site was not refreshed, data may not be up to date");
+                return false;
+            }
+
+
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+        return true;
     }
 
 

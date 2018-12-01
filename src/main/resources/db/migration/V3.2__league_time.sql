@@ -1,1 +1,0 @@
-ALTER TABLE war_league ADD COLUMN time TIME;
