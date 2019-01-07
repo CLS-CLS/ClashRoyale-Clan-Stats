@@ -27,7 +27,7 @@
 <div class="jumbotron">
     <div class="container">
         <h1 class="clan-header"><!--<img src="images/clanlogo.png">-->
-        Small Heroes</h1>
+        Godwokens</h1>
         <p style="text-align:center">Donations and Clan War Statistics </p>
     </div>
 </div>

@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -106,7 +107,11 @@ public class WarStatsRestController {
     @PostMapping("warstats/playersNotParticipated/{date}")
     public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm") LocalDateTime date,
                                                                                   @RequestBody List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
-        return playerWarStatsService.getPlayersNotParticipated(date, participants);
+
+        return playerWarStatsService.findPlayersNotParticipatedInWar(WarStatsInputDto.builder().playerWarStats(participants).build(), date, null).keySet().stream()
+                .map(entry -> WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(entry.getTag(), entry.getName()))
+                .collect(Collectors.toList());
+
     }
 
     @GetMapping("/warstats/inputdata")

@@ -24,8 +24,6 @@ public interface PlayerWarStatsService {
 
     void savePlayerWarStats(List<PlayerWarStat> statsList);
 
-    List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(LocalDateTime date, List<WarStatsInputDto.PlayerWarStatInputDto> participants);
-
     /**
      * Finds the players that could have participated in the war but they did not.
      * Players that could participated in war are the one that was in the clan the time the war had started

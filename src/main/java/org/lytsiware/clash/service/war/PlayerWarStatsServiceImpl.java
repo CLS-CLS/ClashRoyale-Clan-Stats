@@ -149,13 +149,6 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         updateWarStatsForAffectedLeagues(Collections.singletonList(warLeague));
     }
 
-    @Override
-    public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(LocalDateTime date, List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
-
-        return findPlayersNotParticipatedInWar(WarStatsInputDto.builder().playerWarStats(participants).build(), date, null).keySet().stream()
-                .map(entry -> WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(entry.getTag(), entry.getName()))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public Map<Player, PlayerInOut> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDateTime date, Integer faultTolleranceInMinutes) {

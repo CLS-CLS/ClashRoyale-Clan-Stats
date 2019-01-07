@@ -38,7 +38,7 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
     ObjectMapper objectMapper = new ObjectMapper();
 
 
-    @Value("${clanTag:20G0YGP}")
+    @Value("${clanTag:PG2000PL}")
     private String clanTag;
 
     private SiteConfigurationService siteConfigurationService;

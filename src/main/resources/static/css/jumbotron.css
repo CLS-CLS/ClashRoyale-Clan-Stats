@@ -113,13 +113,13 @@ td, th {
 
 .clan-header {
     text-align:center;
-    text-shadow: 1px -3px 14px #ddddff;
+    text-shadow: 1px -3px 14px #ef2121;
 }
 
 .jumbotron h1 {
-    color: #515054;
-    font-family: cursive;
+    color: #272b30;
     font-size: 7em;
+    font-weight: bold;
 }
 
 table  {
