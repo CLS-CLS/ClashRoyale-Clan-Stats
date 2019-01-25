@@ -162,30 +162,25 @@ function crownChart(value, index) {
 
 function playerProgressChart(data) {
 
-    var chestContribution = [];
+    var cardsReceived = [];
     var cardDonation = [];
 
     data.forEach(function(value, index) {
-        chestContribution.unshift(value.chestContribution)
+        cardsReceived.unshift(value.cardsReceived)
         cardDonation.unshift(value.cardDonation);
     })
 
 
     Highcharts.chart('player_chart', {
         title: {
-            text: 'Player Progress'
+            text: 'Donations / Requests'
         },
         yAxis: [{
             title: {
-                text: 'Crowns'
+                text: 'Donation/Request Points'
             }
         },
-        {
-            title: {
-                text: 'Donation Points'
-            },
-            opposite: true
-        }],
+        ],
         xAxis: {
             title: {
                 text: 'Week'
@@ -200,14 +195,12 @@ function playerProgressChart(data) {
             }
         },
         series: [{
-            name: 'CC Crowns',
-            data: chestContribution,
-            yAxis: 0
+            name: 'Received Cards (Requests)',
+            data: cardsReceived
         },
         {
-            name: 'Donation Points',
-            data: cardDonation,
-            yAxis: 1
+            name: 'Donated Cards (Donations)',
+            data: cardDonation
         }],
         responsive: {
             rules: [{

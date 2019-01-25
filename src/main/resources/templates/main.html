@@ -1,0 +1,27 @@
+<html ng-app="App" lang="en">
+<div th:replace="head"/>
+
+<body>
+
+<div th:replace="header"/>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="clan-header"><!--<img src="images/clanlogo.png">-->
+            Godwokens</h1>
+        <p style="text-align:center">Donations and Clan War Statistics </p>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="cover">
+        <div ng-view autoscroll="false"></div>
+    </div>
+</div>
+
+
+<div th:replace="footer" />
+
+</body>
+</html>

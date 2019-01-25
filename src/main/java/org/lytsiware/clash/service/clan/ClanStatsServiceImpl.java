@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,10 +35,13 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
     private AggregationService aggregationService;
 
+    private PlayerCheckInService playerCheckInService;
+
     @Autowired
-    public ClanStatsServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository, AggregationService aggregationService) {
+    public ClanStatsServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository, AggregationService aggregationService, PlayerCheckInService playerCheckInService) {
         this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
         this.aggregationService = aggregationService;
+        this.playerCheckInService = playerCheckInService;
     }
 
     @Override
@@ -49,7 +54,8 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     @Override
     public PlayerStatsDto retrievePlayerStats(String tag, Week from, Week to) {
         List<PlayerWeeklyStats> stats = playerWeeklyStatsRepository.findByWeeksAndTag(tag, from, to);
-        return PlayerStatsDto.toPlayerStatsDto(stats);
+        LocalDate joinedAt = playerCheckInService.getFirstCheckInForPlayer(tag).toLocalDate();
+        return PlayerStatsDto.toPlayerStatsDto(stats, joinedAt);
     }
 
 

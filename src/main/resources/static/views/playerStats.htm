@@ -3,63 +3,70 @@
 		
 		<button class="btn btnl-lg btn-primary"  ng-disabled="!hasBack()" data-ng-click="back()"><span><i class="fa fa-fw fa-2x fa-arrow-left"></i> </span></button>
 
-		<loading-directive loading="dataLoading"/>
-		<div class="text-center">
-			<div>
-                <h1 class="player-header">{{player.name}}</h1>
+		<div class="clan-stats-panel">
+			<loading-directive loading="dataLoading"/>
+			<div class="text-center">
+				<div>
+					<h1 class="player-header">{{player.name}}</h1>
+				</div>
+				<div class="text-center">
+					<div class="row"><h1></h1></div>
+					<h4>Joined Clan at: {{player.joinedAt}}</h4>
+				</div>
 			</div>
-			<div class="row"><h1></h1></div>
-			<h4>Overall statistics for the last 12 weeks</h4>
-		</div>
-		<hr/>
-		
-		<form class="form-horizontal">
-			<div class="form-group">
-				<label class="col-sm-3 control-label align-left">Max Chest Contribution</label>
-				<label class="col-sm-3 control-label" style="text-align:left">
-					<h3 style="display:inline">{{maxChestContribution}},</h3>
-				</label>
-				<label class="col-sm-3 control-label" style="text-align:left">
-					<h4 ng-if="maxChestContributionWeek !=1" style="display:inline">{{maxChestContributionWeek}} weeks ago</h4>
-					<h4 ng-if="maxChestContributionWeek ==1" style="display:inline">{{maxChestContributionWeek}} week ago</h4>
-				</label>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">Max Card Donations</label>
-				<label class="col-sm-3 control-label" style="text-align:left">
-					<h3 style="display:inline">{{maxCardDonation}},</h3>
-				</label>
-				<label class="col-sm-3 control-label" style="text-align:left">
-					<h4 ng-if="maxCardDonationWeek !=1" style="display:inline">{{maxCardDonationWeek}} weeks ago</h4>
-					<h4 ng-if="maxCardDonationWeek ==1" style="display:inline">{{maxCardDonationWeek}} week ago</h4>
-				</label>
-			</div>
-		</form>
+			<hr/>
 
-        <hr/>
-		
-		<div class="row">
-			<div class="col-md-4">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th><span>Week #</span></th>
-							<th><span>Chest Contribution</span></th>
-							<th><span>Card Donation</span></th>
-                            <th><span>Cards Received</span></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="s in player.statsDto">
-							<td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{$index + 1}}</td>
-							<td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution}}</td>
-							<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
-                            <td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardsReceived}}</td>
-						</tr>
-					</tbody>
-				</table>
+			<form class="form-horizontal">
+				<div class="text-center">
+					<h4>Overall statistics for the last 12 weeks</h4>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label align-left">Max Card Requested</label>
+					<label class="col-sm-3 control-label" style="text-align:left">
+						<h3 style="display:inline">{{maxCardsReceived}},</h3>
+					</label>
+					<label class="col-sm-3 control-label" style="text-align:left">
+						<h4 ng-if="maxChestContributionWeek !=1" style="display:inline">{{maxCardsReceivedWeek}} weeks ago</h4>
+						<h4 ng-if="maxChestContributionWeek ==1" style="display:inline">{{maxCardsReceivedWeek}} week ago</h4>
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Max Card Donations</label>
+					<label class="col-sm-3 control-label" style="text-align:left">
+						<h3 style="display:inline">{{maxCardDonation}},</h3>
+					</label>
+					<label class="col-sm-3 control-label" style="text-align:left">
+						<h4 ng-if="maxCardDonationWeek !=1" style="display:inline">{{maxCardDonationWeek}} weeks ago</h4>
+						<h4 ng-if="maxCardDonationWeek ==1" style="display:inline">{{maxCardDonationWeek}} week ago</h4>
+					</label>
+				</div>
+			</form>
+
+			<hr/>
+
+			<div class="row">
+				<div class="col-md-4">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th><span>Week #</span></th>
+								<th><span>Chest Contribution</span></th>
+								<th><span>Card Donation</span></th>
+								<th><span>Cards Received</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="s in player.statsDto">
+								<td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{$index + 1}}</td>
+								<td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution}}</td>
+								<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
+								<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardsReceived}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-8" id="player_chart"></div>
 			</div>
-            <div class="col-md-8" id="player_chart"></div>
 		</div>
 	</div>
 </div>

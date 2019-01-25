@@ -36,6 +36,29 @@ app.service("colorfy", function() {
 
 		return style;
 	}
+
+	this.avgRequestDonationDiffColor = function(requestDonationDiff, donated, requested) {
+		var style = {};
+		style.color = 'green';
+
+		var diff = donated - requested;
+
+		if (donated == 0 && requested == 0) {
+			return "";
+		}
+		var percentage = 0;
+
+		if (diff > 0) {
+			percentage = diff / donated
+		} else  {
+			percentage = -diff / requested
+		}
+		if (percentage > 0.25) {
+			style.color = 'red'
+		}
+
+		return style
+	}
 })
 
 app.factory('history', ["$location", function($location) {
@@ -59,8 +82,6 @@ app.factory('history', ["$location", function($location) {
 	return history;
 
 } ]);
-
-
 
 app.factory("generalComparator", [ function() {
 	return function(object1, object2) {
@@ -116,3 +137,41 @@ app.filter('percentage', [ '$filter', function($filter) {
 		return $filter('number')(input * 100, decimals) + '%';
 	};
 } ]);
+
+app.filter('playerInClan', function() {
+
+	return function(items, enabled) {
+		var filtered = [];
+
+		if (!enabled) {
+			return items;
+		}
+
+		angular.forEach(items, function(item) {
+			if(item.inClan){
+				filtered.push(item);
+			}
+		});
+
+		return filtered;
+	}
+});
+
+app.filter('moreWarsThan', function() {
+
+	return function(items, enabled) {
+		var filtered = [];
+
+		if (!enabled) {
+			return items;
+		}
+
+		angular.forEach(items, function(item) {
+			if(item.warsParticipated > 5){
+				filtered.push(item);
+			}
+		});
+
+		return filtered;
+	}
+});

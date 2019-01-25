@@ -216,7 +216,7 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 
 		function emptyStats() {
             return {
-                chestContribution: "-",
+                cardsReceived: "-",
                 cardDonation: "-"
             }
         };
@@ -226,9 +226,10 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 			return $http.get(baseUrl() + "/rest/player/" + $routeParams.playertag)
 		}).then(
 			function(response) {
-				var maxChestContribution = 0;
+				var maxCardsReceived = 0;
 				var maxCardDonation = 0;
 				var maxCardDonationWeek = 0;
+				var maxCardsReceivedWeek = 0;
 
 				// if there are weeks missing due to player not be part of the clan, 
 				// fill them with N/A data in order to show these missing weeks
@@ -250,12 +251,12 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 						maxCardDonation = value.cardDonation;
 						$scope.maxCardDonationWeek = index + 1;
 					}
-					if (value.chestContribution > maxChestContribution) {
-						maxChestContribution = value.chestContribution;
-						$scope.maxChestContributionWeek = index + 1;
+					if (value.cardsReceived > maxCardsReceived) {
+						maxCardsReceived = value.cardsReceived;
+						$scope.maxCardsReceivedWeek = index + 1;
 					}
 					
-					$scope.maxChestContribution = maxChestContribution;
+					$scope.maxCardsReceived = maxCardsReceived
 					$scope.maxCardDonation = maxCardDonation;
 				})
 
@@ -389,17 +390,14 @@ app.factory('clanStatsState',  function(roleComparator) {
 	var state = {
 		selectableColumns: { 
 			"role": {name: "role", show: true},
-		 	"cc": {name: "Chest Contribution", show: false },
-		 	"ccRank": {name: "Chest Contribution Rank", show: false},
 		 	"cardDonation": {name: "Card Donations", show: true},
-		 	"cardDonationRank": {name: "Card Donation Rank", show: true},
+		 	"donationRequestScore": {name: "Donation/Request Score", show: true},
 		 	"overallRank": {name: "Overall Rank", show: false},
-		 	"avgCc": {name: "Average Chest Contribution", show: false},
-		 	"avgCcRank": {name: "Average Chest Contribution Rank", show: false},
 		 	"avgDonation": {name: "Average Card Donations", show: true},
-		 	"avgDonationRank": {name: "Average Donation Donations Rank", show: true},
+		 	"avgDonationRank": {name: "Average Donations Rank", show: false},
 		 	"avgOverallRank": {name: "Average Final Rank", show: false},
 		 	"avgRequestDonationDiff": {name: "Average Request/Donation difference", show: true},
+		 	"avgDonationRequestScore": {name: "Average Request/Donation Score", show: false}
 		},
 		bulkSelects: {
 			"rakings": false,
@@ -410,7 +408,9 @@ app.factory('clanStatsState',  function(roleComparator) {
 		filter : {
 			orderBy : "-role",
 			comparator : roleComparator
-		}
+		},
+		hideNotInClanPlayers : false
+
 	}
 	return state;
 
@@ -422,9 +422,7 @@ app.factory('warStatsState',  function(roleComparator) {
 		filter : {
 			orderBy : "-score",
 		},
-		hideLessThan: false,
-		hideNotInClan: false
-
+		hideLessThanEnabled: false,
 	}
 	return state;
 
@@ -442,16 +440,8 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
         history.store();
     }
 
-    $scope.hideLessThan = warStatsState.hideLessThan;
-    $scope.hideNotInClan = warStatsState.hideNotInClan;
+    $scope.hideLessThanEnabled = warStatsState.hideLessThanEnabled;
 
-    $scope.toggleLessThan = function() {
-        $scope.hideLessThan = !$scope.hideLessThan;
-    }
-
-    $scope.toggleHideNotInClan = function() {
-        $scope.hideNotInClan = !$scope.hideNotInClan;
-    }
 
    	$scope.selectedItem = (function() {
    	    if ($routeParams.week == null) {
@@ -531,6 +521,9 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 	
 	$scope.selectedItem = (function() {
 		var week =  $routeParams.week -1 + 1;
+		if (isNaN(week)) {
+			week = 1;
+		}
 		if (week > maxWeek) {
 			return  maxWeek;
 		}else if (week < minWeek) {
@@ -539,7 +532,8 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 			return week;
 		}
 	})();
-	
+
+
 	$scope.next = function () {
 		history.store();
 	}
@@ -558,15 +552,10 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 		var r = $scope.state.bulkSelects.rankings;
 		var v = $scope.state.bulkSelects.values;
 		var a = $scope.state.bulkSelects.avgs
-		$scope.state.selectableColumns.ccRank.show = r;
-		$scope.state.selectableColumns.cardDonationRank.show = r;
 		$scope.state.selectableColumns.overallRank.show = r;
-		$scope.state.selectableColumns.avgCcRank.show = (a && !v && !r) || (r && a);
-		$scope.state.selectableColumns.avgDonationRank.show = (a && !v && !r) || (r && a) 
+		$scope.state.selectableColumns.avgDonationRank.show = (a && !v && !r) || (r && a)
 		$scope.state.selectableColumns.avgOverallRank.show = (a && !v && !r) || (r && a);
-		$scope.state.selectableColumns.cc.show = v;
 		$scope.state.selectableColumns.cardDonation.show = v;
-		$scope.state.selectableColumns.avgCc.show = (a && !v && !r) || (v && a);
 		$scope.state.selectableColumns.avgDonation.show = (a && !v && !r) || (v && a);
 		$scope.averageColSpan = colSpan()
 	}
@@ -582,6 +571,8 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 	$scope.roleOrder = roleComparator
 	
 	$scope.avgContrColor = colorfy.colorfy
+
+	$scope.avgRequestDonationDiffColor = colorfy.avgRequestDonationDiffColor
 
 	$scope.percentageButtonLbl = "View Percentages (%)"
 		
@@ -652,12 +643,6 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 	
 	function colSpan() {
 		var result = 0;
-		if ($scope.state.selectableColumns.avgCc.show == true) {
-			result++;
-		}
-		if ($scope.state.selectableColumns.avgCcRank.show == true) {
-			result++;
-		}
 		if ($scope.state.selectableColumns.avgDonation.show == true) {
 			result++;
 		}
@@ -670,6 +655,9 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 		if ($scope.state.selectableColumns.avgRequestDonationDiff.show == true) {
             result++;
         }
+        if ($scope.state.selectableColumns.avgDonationRequestScore.show == true) {
+                    result++;
+                }
 		return result;
 	}
 	
@@ -698,10 +686,20 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 			calculatePercentageAndUpdateData(response.data);
 			calculateRankingsAndUpdateData(response.data);
 			calculateRequestDonationDiffAndUpdateData(response.data);
+			calculateDonationRequestScoreAndUpdateData(response.data);
+
 		}, function(response) {
 			$scope.loading = false;
 		})
 
+	}
+
+
+	function calculateDonationRequestScoreAndUpdateData(data) {
+		data.forEach(function(item) {
+			item.donationRequestScore = Math.round((item.cardDonation + item.cardsReceived) / 4 + Math.min(item.cardDonation, item.cardsReceived) / 2);
+			item.avgDonationRequestScore = Math.round((item.avgCardDonation + item.avgCardsReceived) / 4 + Math.min(item.avgCardDonation, item.avgCardsReceived) / 2);
+		})
 	}
 	
 	function calculateChestLvl(sumChest) {
@@ -768,19 +766,25 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 	function calculatePercentageAndUpdateData(data) {
 		var avgSumChest  = 0;
 		var avgSumDonation = 0;
+		var avgSumRequest = 0;
 		var sumChest = 0;
 		var sumDonation = 0;
+		var sumRequest = 0;
 		data.forEach(function(item) {
 			sumChest += item.chestContribution;
 			sumDonation += item.cardDonation;
+			sumRequest += item.cardsReceived;
 			avgSumChest += item.avgChestContribution;
 			avgSumDonation += item.avgCardDonation;
+			avgSumRequest += item.avgCardsReceived;
 		})
 		data.forEach(function(item) {
 			item.chestContributionPerc = item.chestContribution / sumChest;
 			item.cardDonationPerc = item.cardDonation / sumDonation;
+			item.cardRequestPerc = item.cardsReceived / sumRequest;
 			item.avgChestContributionPerc = item.avgChestContribution / avgSumChest;
 			item.avgCardDonationPerc = item.avgCardDonation / avgSumDonation;
+			item.avgCardRequestPerc = item.avgCardsReceived / avgSumRequest;
 			if (item.avgCardsReceived == 0 || item.avgCardDonation == 0){
 			    item.avgRequestDonationDiffPerc = (Math.round(item.avgCardDonation  * 100) / 100) + ":" + (Math.round(item.avgCardsReceived * 100) / 100)
 			}else {

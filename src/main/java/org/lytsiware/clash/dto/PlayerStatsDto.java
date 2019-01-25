@@ -1,34 +1,30 @@
 package org.lytsiware.clash.dto;
 
-import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.lytsiware.clash.Week;
+import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 
 public class PlayerStatsDto {
 
 	String name;
 	String tag;
 
+	LocalDate joinedAt;
+
 	List<StatsDto> statsDto;
 
-	public PlayerStatsDto() {
-		super();
-	}
 
-	public PlayerStatsDto(String name, String tag, List<StatsDto> statsDto) {
+	public PlayerStatsDto(String name, String tag, List<StatsDto> statsDto, LocalDate joinedAt) {
 		super();
 		this.name = name;
 		this.tag = tag;
 		this.statsDto = statsDto;
+		this.joinedAt = joinedAt;
 	}
 
-	public PlayerStatsDto(String name, String tag) {
-		super();
-		this.name = name;
-		this.tag = tag;
-	}
 
 	public String getName() {
 		return name;
@@ -54,12 +50,20 @@ public class PlayerStatsDto {
 		this.statsDto = statsDto;
 	}
 
-	public static PlayerStatsDto toPlayerStatsDto(List<PlayerWeeklyStats> playerStats) {
+	public LocalDate getJoinedAt() {
+		return joinedAt;
+	}
+
+	public void setJoinedAt(LocalDate joinedAt) {
+		this.joinedAt = joinedAt;
+	}
+
+	public static PlayerStatsDto toPlayerStatsDto(List<PlayerWeeklyStats> playerStats, LocalDate joinedAt) {
 		List<StatsDto> statsDto = new ArrayList<>();
 		PlayerStatsDto playerStatsDto = null;
 		for (PlayerWeeklyStats pws :playerStats ) {
 			if (playerStatsDto == null) {
-				playerStatsDto = new PlayerStatsDto(pws.getPlayer().getName(), pws.getPlayer().getTag(), statsDto);
+				playerStatsDto = new PlayerStatsDto(pws.getPlayer().getName(), pws.getPlayer().getTag(), statsDto, joinedAt);
 			}
 			StatsDto stat = new StatsDto(pws.getWeek(), Week.fromWeek(pws.getWeek()).getStartDate(),
                     Week.fromWeek(pws.getWeek()).getEndDate(), pws.getChestContribution(), pws.getCardDonation(), pws.getCardsReceived());

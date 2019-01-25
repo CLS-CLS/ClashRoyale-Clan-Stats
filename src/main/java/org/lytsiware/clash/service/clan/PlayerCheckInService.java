@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -92,6 +93,15 @@ public class PlayerCheckInService {
                 checkoutPlayers.values().stream()).collect(Collectors.toList()));
     }
 
+    public LocalDateTime getFirstCheckInForPlayer(String tag){
+        List<PlayerInOutHistory> historyResult = playerInOutHistoryRepository.findByTagOrderByCheckInDesc(tag);
+        if (historyResult.isEmpty()) {
+            Optional<PlayerInOut> currentResult = playerCheckInCheckOutRepository.findByTag(tag);
+            return currentResult.get().getCheckIn();
+        }else {
+            return historyResult.get(0).getCheckIn();
+        }
+    }
 
     public List<PlayerInOut> findCheckedInPlayersAtDate(LocalDateTime date) {
         return playerCheckInCheckOutRepository.findCheckedInAtDate(date);

@@ -7,18 +7,55 @@
   display: none !important;
 }
 
-.rules {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: url(../images/rules_low-min.png);
-    background-color: rgba(0,0,0,0);
-    min-height: 768px;
-    font-family: 'Comic Sans MS', 'cursive', 'sans-serif';
+.clan-stats-panel {
+	background-color: #2e3338c7!important;
 }
+
+#rules li, h1 {
+	color: white;
+	margin: 8px;
+	text-shadow: -6px -6px 30px #00a2ff, 0px 1px 20px black;
+}
+
+#rules h1 {
+	margin: 0px;
+}
+
+.list-inline {
+  display: flex;
+  justify-content: center;
+}
+
+html {
+	background: url(../images/cover3.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+html.rules {
+	background: url(../images/cover5.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #353a41ba!important;
+}
+
+.table-responsive > .table {
+    background-color: #2e3338c7!important;
+}
+
+
+
 
 .player-header {
     font-family: 'Comic Sans MS', cursive, sans-serif;
-    color:rgb(35, 82, 124);
+    color:red;
 }
 
 .main-navbar {
@@ -113,11 +150,11 @@ td, th {
 
 .clan-header {
     text-align:center;
-    text-shadow: 1px -3px 14px #ef2121;
+    text-shadow: 2px 5px 6px #00000087, 0px 0px 40px #ef2121, -2px -1px 0px #ffffff;
 }
 
 .jumbotron h1 {
-    color: #272b30;
+    color: #ff0000c4;
     font-size: 7em;
     font-weight: bold;
 }
@@ -130,7 +167,7 @@ table  {
     text-align: center;
 }
 body {
- //   background: rgba(0, 0, 0, 0) url("../images/bright_squares.png")  repeat scroll 0% 0%;
+	background-color: #272b3017!important;
     min-width: 768px;
 }
 

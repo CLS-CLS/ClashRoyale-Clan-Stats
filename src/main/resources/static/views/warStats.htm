@@ -1,43 +1,48 @@
 <div ng-cloak>
     <div class="inner-container col-xs-12">
         <div ng-controller="warStatsController">
-
-            <div class="filter row">
-                <div class="btn-group" role="group">
-                    <div style="margin-top:13px">
-                        <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="previousWeek()"><i
-                                class='fa fa-fw fa-chevron-left'></i></button>
+            <div class="clan-stats-panel">
+                <div class="row">
+                    <div class="col-xs-4 col-md-3 col-xl-2 form-inline">
                         <div class="btn-group" role="group">
-                            <button class="btn btn-default btn-block dropdown-toggle btn-lg" type="button"
-                                    data-toggle="dropdown">
-                                <span class="selected">{{selectedItem}}</span>
-                                <span class="caret"></span></button>
-                            <ul class="dropdown-menu" style="width:100%">
+                            <div style="margin-top:13px">
+                                <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="previousWeek()"><i
+                                        class='fa fa-fw fa-chevron-left'></i></button>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-default btn-block dropdown-toggle btn-lg" type="button"
+                                            data-toggle="dropdown">
+                                        <span class="selected">{{selectedItem}}</span>
+                                        <span class="caret"></span></button>
+                                    <ul class="dropdown-menu" style="width:100%">
 
-                                <li ng-repeat="i in availableWeeks">
-                                    <a ng-click="dropboxitemselected(i)">{{i}}</a>
-                                </li>
-                            </ul>
+                                        <li ng-repeat="i in availableWeeks">
+                                            <a ng-click="dropboxitemselected(i)">{{i}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <button type="button" class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i
+                                        class='fa fa-fw fa-chevron-right'></i></button>
+                            </div>
                         </div>
-
-                        <button type="button" class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i
-                                class='fa fa-fw fa-chevron-right'></i></button>
+                    </div>
+                    <div class="col-xs-6">
+                        <label style="margin-top:13px">
+                            <input type="checkbox" ng-model="hideLessThanEnabled">
+                            Hide players with less than 6 wars
+                        </label>
                     </div>
                 </div>
-            </div>
-            <p/>
-            <div>
-                <label> Hide players with less than 6 wars
-                    <input type="checkbox" ng-model="hideLessThan">
-                </label>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-6 col-md-3">
-                    <h3><label class="label label-info">Team's average won cards: {{stats.avgCards}} </label></h3>
-                </div>
-                <div class="col-xs-6 col-md-3">
-                    <h3><label class="label label-info">Team's wins: {{stats.avgWins | percentage:2}}</label></h3>
+                <div class="row">
+                    <div class="col-xs-4 col-md-3">
+                        <h3><label class="label">Collected cards per war: {{stats.avgCards}} </label></h3>
+                    </div>
+                    <div class="col-xs-4 col-md-3">
+                        <h3><label class="label">Global win ratio: {{stats.avgWins | percentage:2}}</label></h3>
+                    </div>
+                    <div class="col-xs-4 col-md-3">
+                        <h3><label class="label">Global avg score: {{stats.avgClanScore}}</label></h3>
+                    </div>
                 </div>
             </div>
             <div style="position:relative">
@@ -85,8 +90,8 @@
                         </thead>
                         <tbody>
                         <tr ng-if="stats.playerWarStats.length > 0 "
-                            ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator"
-                            ng-hide="(!s.inClan && hideNotInClan) || (s.warsParticipated < 5 && hideLessThan)">
+                            ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator | moreWarsThan:hideLessThanEnabled:5">
+
                             <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="/player/{{s.tag}}/war" ng-click="next()">
                                 <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                             </a>
@@ -104,6 +109,11 @@
                         </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span class="clan-stats-panel"> The  <img style="display:inline" src="images/score_mid.png"> is calculated based the win ratio, the average cards collected and the war participation </span>
+                    </div>
                 </div>
             </div>
         </div>

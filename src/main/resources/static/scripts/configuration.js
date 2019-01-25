@@ -2,6 +2,12 @@ app.config([ "$locationProvider", "$routeProvider",
 	function config($locationProvider, $routeProvider) {
 
 		$routeProvider
+			.when("/", {
+				templateUrl: "/views/clanRules.htm"
+			})
+			.when("/scheduler", {
+				templateUrl: "/views/scheduler.htm"
+			})
 		    .when("/warstats/input", {
 		        templateUrl: "/views/warStatsInput.htm"
 		    })

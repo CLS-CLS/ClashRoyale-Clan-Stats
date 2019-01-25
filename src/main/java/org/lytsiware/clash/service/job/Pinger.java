@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.net.HttpURLConnection;
 
 @Service
-@Profile({"heroku", "local-herokuDB"})
+@Profile({"heroku"})
 public class Pinger {
 
     Logger logger = LoggerFactory.getLogger(Pinger.class);
@@ -21,8 +21,7 @@ public class Pinger {
     @Value("${ping.url}")
     private Resource urlToPing;
 
-    //TODO add fixed rate as application property
-    @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 25 * 60 * 1000)
+//    @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 25 * 60 * 1000)
     @Retryable(maxAttempts = 10, backoff = @Backoff(1000 * 30))
     public void ping() {
         try {

@@ -1,0 +1,32 @@
+<html class="rules" lang="en">
+<div th:replace="head"/>
+
+<body>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="clan-header"><!--<img src="images/clanlogo.png">-->
+        Godwokens</h1>
+        <p style="text-align:center">Donations and Clan War Statistics </p>
+    </div>
+</div>
+
+
+<div class="container">
+	<div class="cover">
+		 <div class="row">
+			<div class="col-xs-12 text-center">
+				<a href="/1" class="btn btn-success btn-lg">ENTER</a>
+			</div>
+		</div>
+    	<div class="cover">
+			<div th:replace="../static/views/clanRules.htm"/>
+		</div>
+	</div>
+</div>
+
+
+<div th:replace="footer"/>
+
+</body>
+</html>
