@@ -38,7 +38,7 @@ public class StatsRoyaleDateParse {
 
     @Getter
     private enum KeywordMap {
-
+        SECONDS(new String[]{"second", "seconds"}, delta -> ldt -> ldt.minusSeconds(delta)),
         MIMUTES(new String[]{"minute", "minutes"}, delta -> ldt -> ldt.minusMinutes(delta)),
         HOUR(new String[]{"hour", "hours"}, delta -> ldt -> ldt.minusHours(delta)),
         DAY(new String[]{"day", "days"}, delta -> ldt -> ldt.minusDays(delta)),
