@@ -1,6 +1,7 @@
 package org.lytsiware.clash.service.integration.statsroyale;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,9 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@Slf4j
 public class StatsRoyaleDateParse {
 
     public LocalDateTime parseDescriptiveDate(String descriptiveDate, LocalDateTime localDateTime) throws IllegalStateException {
+        log.info("Parsing to date string {}", descriptiveDate);
         String regexExpr = "(\\d+)\\s(\\w+)";
         Pattern pattern = Pattern.compile(regexExpr);
         Matcher matcher = pattern.matcher(descriptiveDate.toLowerCase());
@@ -22,7 +25,7 @@ public class StatsRoyaleDateParse {
         while (matcher.find()) {
             Integer delta = Integer.valueOf(matcher.group(1));
             KeywordMap keywordMap = KeywordMap.map(matcher.group(2)).orElseThrow(
-                    () -> new IllegalArgumentException(String.format("Could not found keyword map for %1", matcher.group(2))));
+                    () -> new IllegalArgumentException(String.format("Could not found keyword map for matcher %s", matcher.group(2))));
             combiner = combiner.andThen(keywordMap.apply(delta));
         }
 
