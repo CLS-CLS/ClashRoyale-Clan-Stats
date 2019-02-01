@@ -21,7 +21,7 @@ public class Pinger {
     @Value("${ping.url}")
     private Resource urlToPing;
 
-//    @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 25 * 60 * 1000)
+    @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 25 * 60 * 1000)
     @Retryable(maxAttempts = 10, backoff = @Backoff(1000 * 30))
     public void ping() {
         try {

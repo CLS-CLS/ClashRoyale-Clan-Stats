@@ -39,7 +39,7 @@ public class StatsRoyaleDateParse {
     @Getter
     private enum KeywordMap {
         SECONDS(new String[]{"second", "seconds"}, delta -> ldt -> ldt.minusSeconds(delta)),
-        MIMUTES(new String[]{"minute", "minutes"}, delta -> ldt -> ldt.minusMinutes(delta)),
+        MINUTES(new String[]{"minute", "minutes"}, delta -> ldt -> ldt.minusMinutes(delta)),
         HOUR(new String[]{"hour", "hours"}, delta -> ldt -> ldt.minusHours(delta)),
         DAY(new String[]{"day", "days"}, delta -> ldt -> ldt.minusDays(delta)),
         WEEK(new String[]{"week", "weeks"}, delta -> ldt -> ldt.minusWeeks(delta));
@@ -50,7 +50,6 @@ public class StatsRoyaleDateParse {
         KeywordMap(String[] keywords, Function<Integer, Function<LocalDateTime, LocalDateTime>> converter) {
             this.keywords = keywords;
             this.converter = converter;
-            String subpattern = Arrays.stream(getKeywords()).reduce((l, r) -> l + "| + r").orElse("");
         }
 
         public static Optional<KeywordMap> map(String dateExpression) {
