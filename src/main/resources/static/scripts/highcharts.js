@@ -184,7 +184,8 @@ function playerProgressChart(data) {
         xAxis: {
             title: {
                 text: 'Week'
-            }
+            },
+            tickInterval: 1
         },
         plotOptions: {
             series: {

@@ -29,12 +29,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-6 col-md-3">
                         <button type="button" class="btn btn-primary btn-lg" ng-click="togglePercentage()">
                             {{percentageButtonLbl}}
                         </button>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-6 col-md-3">
                         <label for="hidePlayers_cb">
                             <input id="hidePlayers_cb" type="checkbox" ng-model="state.hideNotInClanPlayers">
                                 Hide players not in Clan
@@ -178,10 +178,12 @@
 
                         <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: state.filter.orderBy: false : state.filter.comparator | playerInClan:state.hideNotInClanPlayers">
 
-                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}"
-                                                                                              ng-click="next()">
-                                <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span></a>
+                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;">
+                                <a ng-href="player/{{s.tag}}" ng-click="next()">
+                                    <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
+                                </a>
                             </td>
+
                             <td ng-show="state.selectableColumns['role'].show">{{s.role}}</td>
 
                             <td ng-show="state.selectableColumns['ccRank'].show">{{s.ccRank}}</td>

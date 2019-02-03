@@ -205,6 +205,10 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 		history.back()
 	}
 
+	$scope.next = function() {
+        history.store()
+    }
+
 	$scope.hasBack = function() {
 		return history.hasBack();
 	}
@@ -409,7 +413,7 @@ app.factory('clanStatsState',  function(roleComparator) {
 			orderBy : "-role",
 			comparator : roleComparator
 		},
-		hideNotInClanPlayers : false
+		hideNotInClanPlayers : true
 
 	}
 	return state;
