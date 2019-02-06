@@ -26,10 +26,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         <label style="margin-top:13px">
                             <input type="checkbox" ng-model="hideLessThanEnabled">
                             Hide players with less than 6 wars
+                        </label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label style="margin-top:13px">
+                            <input ng-model="hideNotInClanPlayers" type="checkbox">
+                            Hide players not in Clan
                         </label>
                     </div>
                 </div>
@@ -90,7 +96,7 @@
                         </thead>
                         <tbody>
                         <tr ng-if="stats.playerWarStats.length > 0 "
-                            ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator | moreWarsThan:hideLessThanEnabled:5">
+                            ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator | moreWarsThan:hideLessThanEnabled:5 | playerInClan:hideNotInClanPlayers">
 
                             <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="/player/{{s.tag}}/war" ng-click="next()">
                                 <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>

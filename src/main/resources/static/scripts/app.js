@@ -427,6 +427,7 @@ app.factory('warStatsState',  function(roleComparator) {
 			orderBy : "-score",
 		},
 		hideLessThanEnabled: false,
+		hideNotInClanPlayers: false
 	}
 	return state;
 
@@ -445,6 +446,7 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
     }
 
     $scope.hideLessThanEnabled = warStatsState.hideLessThanEnabled;
+    $scope.hideNotInClanPlayers = warStatsState.hideNotInClanPlayers;
 
 
    	$scope.selectedItem = (function() {
