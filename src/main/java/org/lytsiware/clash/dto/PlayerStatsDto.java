@@ -14,10 +14,10 @@ public class PlayerStatsDto {
 
 	LocalDate joinedAt;
 
-	List<StatsDto> statsDto;
+	List<DonationRequestStatsDto> statsDto;
 
 
-	public PlayerStatsDto(String name, String tag, List<StatsDto> statsDto, LocalDate joinedAt) {
+	public PlayerStatsDto(String name, String tag, List<DonationRequestStatsDto> statsDto, LocalDate joinedAt) {
 		super();
 		this.name = name;
 		this.tag = tag;
@@ -42,11 +42,11 @@ public class PlayerStatsDto {
 		this.tag = tag;
 	}
 
-	public List<StatsDto> getStatsDto() {
+	public List<DonationRequestStatsDto> getStatsDto() {
 		return statsDto;
 	}
 
-	public void setStatsDto(List<StatsDto> statsDto) {
+	public void setStatsDto(List<DonationRequestStatsDto> statsDto) {
 		this.statsDto = statsDto;
 	}
 
@@ -59,13 +59,13 @@ public class PlayerStatsDto {
 	}
 
 	public static PlayerStatsDto toPlayerStatsDto(List<PlayerWeeklyStats> playerStats, LocalDate joinedAt) {
-		List<StatsDto> statsDto = new ArrayList<>();
+		List<DonationRequestStatsDto> statsDto = new ArrayList<>();
 		PlayerStatsDto playerStatsDto = null;
 		for (PlayerWeeklyStats pws :playerStats ) {
 			if (playerStatsDto == null) {
 				playerStatsDto = new PlayerStatsDto(pws.getPlayer().getName(), pws.getPlayer().getTag(), statsDto, joinedAt);
 			}
-			StatsDto stat = new StatsDto(pws.getWeek(), Week.fromWeek(pws.getWeek()).getStartDate(),
+			DonationRequestStatsDto stat = new DonationRequestStatsDto(pws.getWeek(), Week.fromWeek(pws.getWeek()).getStartDate(),
                     Week.fromWeek(pws.getWeek()).getEndDate(), pws.getChestContribution(), pws.getCardDonation(), pws.getCardsReceived());
             statsDto.add(stat);
 		}

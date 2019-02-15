@@ -16,15 +16,15 @@ public class ClansWarGlobalStatsDto implements Serializable {
 	private double avgWins;
 	private int avgClanScore;
 
-	List<PlayerWarBiWeeklyStatsDto> playerWarStats = new ArrayList<>();
+	List<PlayerWarStatsDto> playerWarStats = new ArrayList<>();
 
 	public ClansWarGlobalStatsDto(List<PlayerAggregationWarStats> playerAggregationWarStats) {
-		this.playerWarStats = playerAggregationWarStats.stream().map(PlayerWarBiWeeklyStatsDto::new).collect(Collectors.toList());
-		int totalGamesGranted = playerWarStats.stream().mapToInt(PlayerWarBiWeeklyStatsDto::getGamesGranted).sum();
+		this.playerWarStats = playerAggregationWarStats.stream().map(PlayerWarStatsDto::new).collect(Collectors.toList());
+		int totalGamesGranted = playerWarStats.stream().mapToInt(PlayerWarStatsDto::getGamesGranted).sum();
 		if (totalGamesGranted != 0) {
-			avgWins = playerWarStats.stream().mapToInt(PlayerWarBiWeeklyStatsDto::getCrownsWon).sum() / (double) totalGamesGranted;
+			avgWins = playerWarStats.stream().mapToInt(PlayerWarStatsDto::getCrownsWon).sum() / (double) totalGamesGranted;
 		}
-		int totalWarsParticipated = playerWarStats.stream().mapToInt(PlayerWarBiWeeklyStatsDto::getWarsParticipated).sum();
+		int totalWarsParticipated = playerWarStats.stream().mapToInt(PlayerWarStatsDto::getWarsParticipated).sum();
 		if (totalGamesGranted != 0) {
 			avgCards = (int) playerWarStats.stream().mapToDouble(pws -> pws.getAverageCardsWon() * pws.getWarsParticipated()).sum() / totalWarsParticipated;
 		}

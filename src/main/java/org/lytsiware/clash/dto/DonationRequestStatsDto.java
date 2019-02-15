@@ -3,7 +3,7 @@ package org.lytsiware.clash.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class StatsDto implements Serializable {
+public class DonationRequestStatsDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class StatsDto implements Serializable {
     private Integer cardsReceived;
 
 
-    public StatsDto(int week, LocalDate startDate, LocalDate endDate, Integer chestContribution, Integer cardDonation, Integer cardsReceived) {
+    public DonationRequestStatsDto(int week, LocalDate startDate, LocalDate endDate, Integer chestContribution, Integer cardDonation, Integer cardsReceived) {
         super();
         this.week = week;
         this.startDate = startDate;

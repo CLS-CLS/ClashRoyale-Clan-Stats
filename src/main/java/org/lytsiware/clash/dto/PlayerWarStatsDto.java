@@ -6,7 +6,7 @@ import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 import java.io.Serializable;
 
 @Data
-public class PlayerWarBiWeeklyStatsDto implements Serializable {
+public class PlayerWarStatsDto implements Serializable {
     private String name;
     private String tag;
     private int numberOfWars;
@@ -20,7 +20,7 @@ public class PlayerWarBiWeeklyStatsDto implements Serializable {
     private Integer score;
     private boolean inClan;
 
-    public PlayerWarBiWeeklyStatsDto(PlayerAggregationWarStats playerAggrWarStats) {
+    public PlayerWarStatsDto(PlayerAggregationWarStats playerAggrWarStats) {
         name = playerAggrWarStats.getPlayer().getName();
         tag = playerAggrWarStats.getPlayer().getTag();
         numberOfWars = playerAggrWarStats.getWarsEligibleForParticipation();

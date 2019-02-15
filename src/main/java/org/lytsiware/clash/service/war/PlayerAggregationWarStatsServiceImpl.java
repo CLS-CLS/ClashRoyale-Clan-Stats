@@ -88,18 +88,22 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
         }
 
         List<PlayerAggregationWarStats> result = new ArrayList<>();
+
         for (Player player : players) {
             List<PlayerWarStat> latestPlayersStats = playerWarStatsRepository.findFirstNthParticipatedWarStats(player.getTag(),
                     latestLeagueStartDate, leagueSpan);
 
             int averageCardsWon = (int) latestPlayersStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
                     .average().orElse(0);
-            double winRatio = (double) latestPlayersStats.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum() /
-                    (double) latestPlayersStats.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
+            int gamesGranted = latestPlayersStats.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
+
+            double winRatio = (gamesGranted > 0 ?
+                    (double) latestPlayersStats.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum() / (double) gamesGranted
+                    : 0);
 
             PlayerAggregationWarStats partialPlayerStat = partialCalculatedStats.stream().filter(playerAggregationWarStat -> playerAggregationWarStat.getPlayer().equals(player)).findFirst().get();
 
-            int score = (int) ((0.50 + 0.50 * winRatio) * averageCardsWon * (partialPlayerStat.getWarsParticipated() / (double)partialPlayerStat.getWarsEligibleForParticipation()));
+            int score = (int) ((0.50 + 0.50 * winRatio) * averageCardsWon * (partialPlayerStat.getWarsParticipated() / (double) partialPlayerStat.getWarsEligibleForParticipation()));
 
             result.add(PlayerAggregationWarStats.builder().player(player)
                     .date(warLeague.getStartDate())

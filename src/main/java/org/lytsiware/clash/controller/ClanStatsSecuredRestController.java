@@ -40,10 +40,6 @@ public class ClanStatsSecuredRestController {
     @Autowired
     private WarUploadService warUploadService;
 
-    //    @GetMapping("/clanchestscore/{deltaWeek}")
-    public void calculateAndSaveClanchestScore (@PathVariable("deltaWeek") Integer deltaWeek) {
-        aggregationService.calculateAndUpdateClanChestScore(Week.now().minusWeeks(deltaWeek));
-    }
 
     @PostMapping(value = "/newPlayers/update/{deltaWeek}")
     public List<PlayerOverallStats> keepOrDiscardNewPlayerStats(@PathVariable(required = false) Integer deltaWeek, @RequestBody List<NewPlayersUpdateDto> updateDto) {
