@@ -2,8 +2,8 @@ package org.lytsiware.clash.service.job;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.ZoneIdConfiguration;
-import org.lytsiware.clash.domain.job.WeekJobRepository;
-import org.lytsiware.clash.domain.job.WeeklyJob;
+import org.lytsiware.clash.domain.job.Job;
+import org.lytsiware.clash.domain.job.JobRepository;
 import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.job.scheduledname.ScheduledName;
 import org.lytsiware.clash.utils.TestableLocalDateTime;
@@ -31,14 +31,14 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
 
     private Logger logger = LoggerFactory.getLogger(StatsRoyalChestContrJobImpl.class);
 
-    private WeekJobRepository weeklyJobRepository;
+    private JobRepository weeklyJobRepository;
 
     private AggregationService aggregationService;
 
     private PropertyResolver propertyResolver;
 
     @Autowired
-    public StatsRoyalChestContrJobImpl(WeekJobRepository weeklyJobRepository, AggregationService aggregationService, PropertyResolver propertyResolver) {
+    public StatsRoyalChestContrJobImpl(JobRepository weeklyJobRepository, AggregationService aggregationService, PropertyResolver propertyResolver) {
         this.weeklyJobRepository = weeklyJobRepository;
         this.aggregationService = aggregationService;
         this.propertyResolver = propertyResolver;
@@ -54,7 +54,7 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
             logger.info("Job Triggered at {}", LocalDateTime.now());
             Week week = Week.now().previous();
             aggregationService.calculateAndSaveAvgs(week);
-            weeklyJobRepository.save(new WeeklyJob(StatsRoyaleWeekendJobImpl.class.getSimpleName(), LocalDateTime.now()));
+            weeklyJobRepository.save(new Job(StatsRoyaleWeekendJobImpl.class.getSimpleName(), LocalDateTime.now()));
         } catch (Exception e) {
             logger.error("oops", e);
             throw e;
@@ -66,7 +66,7 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
         logger.info("Checking if scheduler should run");
         boolean result = false;
 
-        WeeklyJob latestRun = weeklyJobRepository.loadLatest(StatsRoyaleWeekendJobImpl.class.getSimpleName());
+        Job latestRun = weeklyJobRepository.findById(StatsRoyaleWeekendJobImpl.class.getSimpleName()).orElse(null);
 
         //first time the changes are applied, that is why there is no latestRun. Do not run the scheduler
         if (latestRun == null) {

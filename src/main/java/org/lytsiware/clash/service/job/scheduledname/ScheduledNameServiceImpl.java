@@ -1,6 +1,8 @@
 package org.lytsiware.clash.service.job.scheduledname;
 
 import org.lytsiware.clash.ZoneIdConfiguration;
+import org.lytsiware.clash.domain.job.Job;
+import org.lytsiware.clash.domain.job.JobRepository;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +14,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -32,15 +36,18 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
     private PropertyResolver propertyResolver;
 
+    private JobRepository jobRepository;
     private ApplicationContext applicationContext;
 
     private Logger logger = LoggerFactory.getLogger(ScheduledNameServiceImpl.class);
 
     private Map<String, ScheduledNameContext> scheduledMethods = new HashMap<>();
 
+
     @Autowired
-    public ScheduledNameServiceImpl(PropertyResolver propertyResolver, ApplicationContext applicationContext) {
+    public ScheduledNameServiceImpl(PropertyResolver propertyResolver, JobRepository jobRepository, ApplicationContext applicationContext) {
         this.propertyResolver = propertyResolver;
+        this.jobRepository = jobRepository;
         this.applicationContext = applicationContext;
     }
 
@@ -54,17 +61,17 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
     }
 
     @Override
-    public List<Map<String, String>> getScheduledNames() {
+    public List<Map<String, String>> getScheduledInfo() {
         Function<Map.Entry<String, ScheduledNameContext>, Map<String, String>> createMap = scheduledNameContextEntry -> {
             Map<String, String> map = new LinkedHashMap<>();
             map.put("name", scheduledNameContextEntry.getKey());
 
-            ZonedDateTime lastRun = scheduledNameContextEntry.getValue().getLastRun();
+            LocalDateTime lastRun = getLastRun(scheduledNameContextEntry.getKey());
             map.put("last run ", lastRun != null ? lastRun.format(DATE_TIME_FORMATER) : "no record");
 
             String cronExpression = propertyResolver.resolvePlaceholders(scheduledNameContextEntry.getValue().getMethod().getAnnotation(Scheduled.class).cron());
 
-            ZonedDateTime nextExecutionLocalDateTime = Utils.getNextExecutionDate(cronExpression, ZonedDateTime.now(ZoneIdConfiguration.zoneId()));
+            ZonedDateTime nextExecutionLocalDateTime = Utils.getNextExecutionDate(cronExpression, ZonedDateTime.now(ZoneId.systemDefault()));
 
             int minutesRemaining = (int) ChronoUnit.MINUTES.between(LocalDateTime.now(ZoneIdConfiguration.zoneId()), nextExecutionLocalDateTime);
             int daysRemaining = minutesRemaining / 1440;
@@ -74,6 +81,7 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
             return map;
         };
+
         List<Map<String, String>> result = scheduledMethods.entrySet().stream().map(e -> createMap.apply(e)).collect(Collectors.toList());
         Map<String, String> serverTime = new HashMap<>();
         serverTime.put("Server Time now: ", LocalDateTime.now().format(DATE_TIME_FORMATER) + " " + ZoneIdConfiguration.zoneId());
@@ -99,13 +107,16 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
     }
 
     @Override
+    @Transactional
     public void markTime(String name) {
-        scheduledMethods.get(name).setLastRun(ZonedDateTime.now());
+        Job executedJob = jobRepository.findById(name).orElse(new Job(name, null));
+        executedJob.setLatestExecution(LocalDateTime.now());
+        jobRepository.save(executedJob);
     }
 
     @Override
-    public ZonedDateTime getLastRun(String name) {
-        return scheduledMethods.get(name).getLastRun();
+    public LocalDateTime getLastRun(String name) {
+        return jobRepository.findById(name).map(Job::getLatestExecution).orElse(null);
     }
 
     @PostConstruct
@@ -141,7 +152,6 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
     static class ScheduledNameContext {
         final Class<?> clazz;
         final Method method;
-        ZonedDateTime lastRun;
 
         ScheduledNameContext(Class<?> clazz, Method method) {
             this.clazz = clazz;
@@ -156,13 +166,6 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
             return method;
         }
 
-        public ZonedDateTime getLastRun() {
-            return lastRun;
-        }
-
-        public void setLastRun(ZonedDateTime lastRun) {
-            this.lastRun = lastRun;
-        }
 
         Object invoke(ApplicationContext applicationContext) {
             try {

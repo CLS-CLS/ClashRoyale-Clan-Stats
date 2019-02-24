@@ -57,7 +57,7 @@ public class ClanStatsSecuredRestController {
 
     @GetMapping("/scheduler")
     public List<Map<String, String>> getRegisteredSchedulers() {
-        return scheduledNameService.getScheduledNames();
+        return scheduledNameService.getScheduledInfo();
     }
 
 
