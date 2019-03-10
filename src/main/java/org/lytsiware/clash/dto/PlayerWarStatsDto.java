@@ -28,7 +28,7 @@ public class PlayerWarStatsDto implements Serializable {
         averageCardsWon = playerAggrWarStats.getAvgCards();
         crownsWon = playerAggrWarStats.getGamesWon();
         gamesNotPlayed = playerAggrWarStats.getGamesNotPlayed();
-        crownsLost = playerAggrWarStats.getGamesGranted() - playerAggrWarStats.getGamesWon();
+        crownsLost = playerAggrWarStats.getGamesGranted() - playerAggrWarStats.getGamesWon() - playerAggrWarStats.getGamesNotPlayed();
         winRatio = playerAggrWarStats.getAvgWins();
         score = playerAggrWarStats.getScore();
         inClan = playerAggrWarStats.getPlayer().getInClan();
