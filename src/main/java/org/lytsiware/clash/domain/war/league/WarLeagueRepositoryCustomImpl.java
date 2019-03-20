@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 @Repository
@@ -42,6 +43,12 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
         return em.createQuery("select l from WarLeague l where l.startDate >= :date order by l.startDate ASC", WarLeague.class)
                 .setMaxResults(n)
                 .setParameter("date", date).getResultList();
+    }
+
+    @Override
+    public Optional<WarLeague> findLatestRecordedWarLeague() {
+        return em.createQuery("select l from WarLeague l order by l.startDate DESC", WarLeague.class)
+                .setMaxResults(1).getResultList().stream().findFirst();
     }
 
     @Override

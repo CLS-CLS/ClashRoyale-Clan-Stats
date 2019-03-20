@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.converter.InputDtoPlayerWarStatConverter;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
+import org.lytsiware.clash.domain.war.league.WarLeague;
+import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
@@ -49,6 +51,9 @@ public class WarStatsRestController {
 
     @Autowired
     WarInputServiceImpl warInputService;
+
+    @Autowired
+    WarLeagueRepository warLeagueRepository;
 
 
     @PostMapping(value = "/tagFile")
@@ -100,7 +105,8 @@ public class WarStatsRestController {
 
         List<PlayerAggregationWarStats> playerAggregationWarStats = playerAggregationWarStatsService.findLatestWarAggregationStatsForWeek(Week.now().minusWeeks(deltaWeek));
 
-        return new ClansWarGlobalStatsDto(playerAggregationWarStats);
+        return new ClansWarGlobalStatsDto(playerAggregationWarStats,
+                warLeagueRepository.findLatestRecordedWarLeague().map(WarLeague::getStartDate).orElse(null));
 
     }
 

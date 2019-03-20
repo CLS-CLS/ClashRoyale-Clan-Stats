@@ -5,6 +5,7 @@ import lombok.Data;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,13 +13,15 @@ import java.util.stream.Collectors;
 @Data
 public class ClansWarGlobalStatsDto implements Serializable {
 
+	private LocalDate latestWarRecordedDate;
 	private int avgCards;
 	private double avgWins;
 	private int avgClanScore;
 
 	List<PlayerWarStatsDto> playerWarStats = new ArrayList<>();
 
-	public ClansWarGlobalStatsDto(List<PlayerAggregationWarStats> playerAggregationWarStats) {
+	public ClansWarGlobalStatsDto(List<PlayerAggregationWarStats> playerAggregationWarStats, LocalDate latestWarRecordedDate) {
+		this.latestWarRecordedDate = latestWarRecordedDate;
 		this.playerWarStats = playerAggregationWarStats.stream().map(PlayerWarStatsDto::new).collect(Collectors.toList());
 		int totalGamesGranted = playerWarStats.stream().mapToInt(PlayerWarStatsDto::getGamesGranted).sum();
 		if (totalGamesGranted != 0) {
