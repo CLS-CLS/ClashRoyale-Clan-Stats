@@ -1,6 +1,5 @@
 app.config([ "$locationProvider", "$routeProvider",
-	function config($locationProvider, $routeProvider) {
-
+	function config($locationProvider, $routeProvider, $httpProvider) {
 		$routeProvider
 			.when("/", {
 				templateUrl: "/views/clanRules.htm"
@@ -40,5 +39,8 @@ app.config([ "$locationProvider", "$routeProvider",
 
 		$locationProvider.html5Mode(true);
 
+//		$httpProvider.interceptors.push('authInterceptor');
+
 	} 
 ]);
+

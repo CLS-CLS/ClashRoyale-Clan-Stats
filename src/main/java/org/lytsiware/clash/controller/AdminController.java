@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
+import org.lytsiware.clash.security.IsAdmin;
 import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.integration.statsroyale.StatsRoyaleSiteServiceImpl;
 import org.lytsiware.clash.service.war.WarUploadService;
@@ -38,6 +39,7 @@ public class AdminController {
 
 
     @PostMapping("/uploadwarstats")
+    @IsAdmin
     @Transactional(propagation = Propagation.REQUIRED)
     public String uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
         log.info("START uploadWarStats");
@@ -67,6 +69,7 @@ public class AdminController {
 
     @RequestMapping("/calculateAvg/{deltaWeek}")
     @Transactional
+    @IsAdmin
     public String recalculateAvgs(@PathVariable(value = "deltaWeek") Integer deltaWeek) {
         if (deltaWeek < 0 || deltaWeek > 6) {
             return "/index/";

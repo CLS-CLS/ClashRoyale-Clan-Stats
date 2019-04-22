@@ -1,0 +1,100 @@
+<div ng-cloak>
+    <div class="inner-container col-xs-12">
+        <div ng-controller="adminController">
+            <div class="clan-stats-panel">
+               <loading-directive loading="loading"/>
+               <div class="row">
+                    <a href="/warStats/input">Input war stats</a>
+               </div>
+                <hr/>
+                <div class="row">
+                    <h3>Schedulers</h3>
+                </div>
+                <div class="row">
+                    <div ng-controller="scheduler">
+                        <div class="col-xs-4" ng-repeat="scheduler in schedulers">
+                            <div>{{$index + 1}}:</div>
+                            <div ng-repeat="(key, value) in scheduler">
+                                <div class="col-xs-offset-1"></div>
+                                <div class="col-xs-2" style="color:blue">{{key + ":"}} </div>
+                                <div class="col-xs-9">{{value}}</div>
+                                <button class="btn btn">Run now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="position:relative">
+
+                <div class="table-responsive halfscreen">
+                    <table class="halfscreen table table-striped war-table">
+                        <thead>
+                        <tr>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="name" filter-by="filter">Player</order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="warsParticipated" filter-by="filter">
+                                    <img style="display:inline" src="images/battle_mid.png"></order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="averageCardsWon" filter-by="filter">
+                                    <img style="display:inline" src="images/cards_mid.png">
+                                </order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="winRatio"
+                                                 filter-by="filter">Win Ratio</order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="score" filter-by="filter">
+                                    <img style="display:inline" src="images/score_mid.png">
+                                </order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="crownsWon" filter-by="filter">
+                                    <img style="display:inline" src="images/win_mid.png">
+                                </order-directive>
+                            </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="crownsLost" filter-by="filter"> <img style="display:inline"
+                                                                                               src="images/loose_mid.png"></order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="gamesNotPlayed" filter-by="filter"><img style="display:inline"
+                                                                                                  src="images/forfeit_mid.png"></order-directive></span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="stats.playerWarStats.length > 0 "
+                            ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator | moreWarsThan:hideLessThanEnabled:5 | playerInClan:hideNotInClanPlayers">
+
+                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="/player/{{s.tag}}/war" ng-click="next()">
+                                <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
+                            </a>
+                            </td>
+                            <td>{{s.warsParticipated}}/{{s.numberOfWars}}</td>
+                            <td>{{s.averageCardsWon | number:0}}</td>
+                            <td>{{s.winRatio | percentage:2}}</td>
+                            <td>{{s.score | number:0}}</td>
+                            <td>{{s.crownsWon}}</td>
+                            <td>{{s.crownsLost}}</td>
+                            <td>{{s.gamesNotPlayed}}</td>
+                        </tr>
+                        <tr ng-if="stats.playerWarStats.length == 0">
+                            <td colspan="12"><h2>No data for this period</h2></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span class="clan-stats-panel"> The  <img style="display:inline" src="images/score_mid.png"> is calculated based the win ratio, the average cards collected and the war participation </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,11 +12,11 @@ public class ClanStatsController {
 
     private Logger logger = LoggerFactory.getLogger(ClanStatsController.class);
 
-	@GetMapping("/")
-	public String initialPage(Model model) {
-		logger.info("main page request");
-		return "enter";
-	}
+    @GetMapping("/")
+    public String initialPage(Model model) {
+        logger.info("main page request");
+        return "enter";
+    }
 
     @GetMapping("/{path}")
     public String init(@PathVariable String path) {
@@ -37,18 +37,23 @@ public class ClanStatsController {
         return "main";
     }
 
-	@GetMapping("/scheduler")
-	public String scheduler() {
-		logger.info("request for warstats input");
-		return "main";
-	}
+    @GetMapping("/warstats/input")
+    public String warstatsInput() {
+        logger.info("request for warstats input");
+        return "main";
+    }
 
-	@GetMapping("/newplayers/**")
-	public String newplayers() {
-		logger.info("request for new players input");
-		return "main";
-	}
+    @GetMapping("/scheduler")
+    public String scheduler() {
+        logger.info("request for warstats input");
+        return "main";
+    }
 
+    @GetMapping("/newplayers/**")
+    public String newplayers() {
+        logger.info("request for new players input");
+        return "main";
+    }
 
 
 }

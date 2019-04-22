@@ -10,10 +10,12 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
+import org.lytsiware.clash.security.IsAdmin;
 import org.lytsiware.clash.service.war.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -68,6 +70,7 @@ public class WarStatsRestController {
     }
 
     @GetMapping(value = "/warstats/recalculate")
+    @IsAdmin
     public ResponseEntity recalculate(@RequestParam(required = false, defaultValue = "" + WarConstants.leagueSpan) int span,
                                       @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate from,
                                       @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate to) {
@@ -87,12 +90,14 @@ public class WarStatsRestController {
 
     @PostMapping("/uploadwarstats")
     @Transactional(propagation = Propagation.REQUIRED)
+    @IsAdmin
     public void uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
         log.info("START uploadWarStats");
         warUploadService.upload(files);
     }
 
     @GetMapping("/calculatewarstats")
+    @IsAdmin
     public void calculateWarStats() {
         log.info("START calculating missing war stats");
         playerAggregationWarStatsService.calculateMissingStats(null, null);
@@ -121,12 +126,14 @@ public class WarStatsRestController {
     }
 
     @GetMapping("/warstats/inputdata")
+    @IsAdmin
     public List<WarStatsInputDto> getWarStatsForInput(@RequestParam(required = false, defaultValue = "true") boolean includeNotParticipating) {
         return warInputService.getPlayerWarStatsForInput(includeNotParticipating);
     }
 
 
     @PostMapping("/warstats/inputdata")
+    @IsAdmin
     public ResponseEntity<Optional<String>> insertWarStats(@Valid @RequestBody WarStatsInputDto warStatsInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.ok(bindingResult.getAllErrors().stream().map(ObjectError::getCodes)

@@ -1,0 +1,9 @@
+CREATE TABLE USER_ENTITY (
+    ID BIGINT NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR NOT NULL,
+    role VARCHAR NOT NULL,
+    primary key (id)
+);
+
+CREATE INDEX USER_ENTITY_USERNAME_INDEX ON USER_ENTITY (username);

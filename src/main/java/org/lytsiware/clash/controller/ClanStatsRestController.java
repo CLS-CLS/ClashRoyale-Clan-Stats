@@ -44,10 +44,6 @@ public class ClanStatsRestController {
     private ClanChestScoreCalculationService clanChestScoreCalculationService;
 
     @Autowired
-    @SiteQualifier(SiteQualifier.Name.STATS_ROYALE)
-    private RefreshableSiteIntegrationService siteIntegrationService;
-
-    @Autowired
     private TemplateService templateService;
 
     @RequestMapping(value = "/{deltaWeek}", method = RequestMethod.GET)

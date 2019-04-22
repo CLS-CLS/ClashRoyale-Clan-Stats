@@ -9,6 +9,7 @@ import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
+import org.lytsiware.clash.security.IsAdmin;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

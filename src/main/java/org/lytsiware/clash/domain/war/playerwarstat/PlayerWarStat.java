@@ -36,6 +36,8 @@ public class PlayerWarStat {
     @Embedded
     private CollectionPhaseStats collectionPhaseStats;
 
+    private double score;
+
     @Column(nullable = false)
     @Builder.Default
     private boolean warEligible = true;

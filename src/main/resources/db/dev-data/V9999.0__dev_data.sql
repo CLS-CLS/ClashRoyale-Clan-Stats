@@ -1,6 +1,8 @@
 
 INSERT INTO job_execution (job_id, latest_execution) VALUES ('StatsRoyaleWeekendJobImpl', '1970-01-18 18:39:18');
 
+INSERT INTO user_entity (id, username, password, role) values (0, 'admin', '$2a$11$ZPOyl7z/B1UeyCO66v/kX.3a6t/c02V7IP3EWGIqncamV7mqG0X7q', 'ROLE_admin');
+
 INSERT INTO player (tag, name, role, in_clan) VALUES ('G09JUP2U', 'Obi1', 'Co-leader', true);
 INSERT INTO player (tag, name, role, in_clan) VALUES ('P00V88Y9', 'justcall7', 'Co-leader', true);
 INSERT INTO player (tag, name, role, in_clan) VALUES ('28VPVV8G', 'italiano', 'Member', true);

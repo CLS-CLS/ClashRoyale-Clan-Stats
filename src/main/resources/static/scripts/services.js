@@ -175,3 +175,15 @@ app.filter('moreWarsThan', function() {
 		return filtered;
 	}
 });
+
+app.service('authInterceptor', function($q) {
+    var service = this;
+
+    service.responseError = function(response) {
+        if (response.status == 401){
+            console.log("401 detected")
+//            window.location = "/login";
+        }
+        return $q.reject(response);
+    };
+})
