@@ -89,7 +89,7 @@ public class DeckShopSiteServiceImpl implements SiteIntegrationService<List<Play
         check("Arena", tableHeaders.get(1).text().equals("Arena"));
         check("player", tableHeaders.get(2).text().trim().equals("Player Tag"));
         check("Trophies", tableHeaders.get(4).getElementsContainingText("Trophies").size() != 0);
-        check("Contribution", tableHeaders.get(4).getElementsContainingText("Contribution").size() != 0);
+        check("Contribution", tableHeaders.get(4).getElementsContainingText("Cups").size() != 0);
         check("Donations", tableHeaders.get(5).text().equals("Donations Received"));
         return tables.get(0);
     }
