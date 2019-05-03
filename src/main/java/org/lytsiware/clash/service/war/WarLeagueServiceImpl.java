@@ -20,7 +20,7 @@ public class WarLeagueServiceImpl implements WarLeagueService {
     @Override
     public void calculateLeagueAvgs(WarLeague warLeague) {
         List<PlayerWarStat> statsList = new ArrayList<>(warLeague.getPlayerWarStats());
-        int cardAvg = (int) statsList.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon()).average().orElse(0);
+        int cardAvg = (int) statsList.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon()).filter(cardsWon -> cardsWon != 0).average().orElse(0);
         double winPercentage = (double) statsList.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum() /
                 Math.max(statsList.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum(), 1);
         warLeague.setTeamCardAvg(cardAvg);
@@ -38,7 +38,6 @@ public class WarLeagueServiceImpl implements WarLeagueService {
     public List<WarLeague> findFirstNthWarLeaguesAfterDate(LocalDate startDate, int leagueSpan) {
         return warLeagueRepository.findFirstNthWarLeaguesAfterDate(startDate, leagueSpan);
     }
-
 
 
 }

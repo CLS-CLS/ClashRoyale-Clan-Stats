@@ -408,12 +408,16 @@ app.factory('clanStatsState',  function(roleComparator) {
 			"values" : false,
 			"avgs": false
 		},
-		showPercentage: false,
+		showPercentage: {
+		    enabled: false
+		},
 		filter : {
 			orderBy : "-role",
 			comparator : roleComparator
 		},
-		hideNotInClanPlayers : true
+		hideNotInClanPlayers : {
+		    enabled: true
+		}
 
 	}
 	return state;
@@ -426,8 +430,12 @@ app.factory('warStatsState',  function(roleComparator) {
 		filter : {
 			orderBy : "-score",
 		},
-		hideLessThanEnabled: false,
-		hideNotInClanPlayers: false
+		hideLessThanEnabled: {
+		    enabled: false
+		},
+		hideNotInClanPlayers:{
+		    enabled: false
+		}
 	}
 	return state;
 
@@ -450,47 +458,34 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
 
 
    	$scope.selectedItem = (function() {
-   	    if ($routeParams.week == null) {
-   	        $routeParams.week = 0;
+   	    if ($routeParams.deltaWar == null) {
+   	        $routeParams.deltaWar = 0;
    	    }
-   		var week =  $routeParams.week -1 + 1;
-   		if (week > maxWeek) {
-   			return  maxWeek;
-   		}else if (week < 0) {
+   		var deltaWar =  $routeParams.deltaWar -1 + 1;
+   		if (deltaWar < 0) {
    			return 0;
    		}else  {
-   			return week;
+   			return deltaWar;
    		}
    	})();
 
-   	$scope.availableWeeks = (function(){
-        var array = [];
-        for (var i = 0; i <= maxWeek; i++) {
-           array.push(i);
-        }
-        return array;
-    })();
 
 
-    $scope.dropboxitemselected = function(item) {
+    $scope.onItemSelectedBlur = function(item) {
         $scope.selectedItem = item;
         $location.path("/warstats/" + $scope.selectedItem)
     }
 
     $scope.previousWeek = function() {
-        if ($scope.selectedItem <= minWeek) {
-            $scope.selectedItem = 1;
+        $scope.selectedItem = $scope.selectedItem - 1
+         if ($scope.selectedItem < 0) {
+            $scope.selectedItem = 0;
             return;
         }
-        $scope.selectedItem = $scope.selectedItem - 1
         $location.path("/warstats/" + $scope.selectedItem)
     }
 
     $scope.nextWeek = function() {
-        if ($scope.selectedItem >= maxWeek) {
-            $scope.selectedItem = maxWeek;
-            return;
-        }
         //sometimes 1 is considered a string and "+" is considered as string concatenator
         //subtracting 1 first makes the selectedItem a number
         $scope.selectedItem = ($scope.selectedItem - 1) + 2;
@@ -510,10 +505,10 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
 
     }
 
-    function getData(deltaWeek) {
+    function getData(deltaWar) {
         $scope.loading = true;
 
-        $http.get(baseUrl() + "/rest/warstats/" + deltaWeek).then(function(response) {
+        $http.get(baseUrl() + "/rest/warstats/" + deltaWar).then(function(response) {
             $scope.loading = false;
             $scope.stats = response.data;
         }, function(response) {
@@ -522,6 +517,70 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
 
     }
 })
+
+
+//app.controller("warStatsDailyController", function($scope, $http, $timeout, history, warStatsState){
+//
+//    $scope.stats = {
+//        playerWarStats : []
+//    }
+//
+//    $scope.filter = warStatsState.filter;
+//
+//
+//    $scope.hideNotInClanPlayers = warStatsState.hideNotInClanPlayers;
+//
+//   	$scope.selectedItem = 0;
+//
+//
+//    $scope.onItemSelectedBlur = function(item) {
+//        $scope.selectedItem = item;
+//        getData($scope.selectedItem);
+//    }
+//
+//    $scope.previousWeek = function() {
+//        $scope.selectedItem = $scope.selectedItem - 1
+//         if ($scope.selectedItem <= 0) {
+//            $scope.selectedItem = 1;
+//            return;
+//        }
+//        getData($scope.selectedItem);
+//
+//    }
+//
+//    $scope.nextWeek = function() {
+//        //sometimes 1 is considered a string and "+" is considered as string concatenator
+//        //subtracting 1 first makes the selectedItem a number
+//        $scope.selectedItem = ($scope.selectedItem - 1) + 2;
+//        getData($scope.selectedItem);
+//
+//    }
+//
+//    function init() {
+//        getData($scope.selectedItem);
+//    }
+//
+//    init();
+//
+//    $scope.triggerOrderDirective = function(event) {
+//        $timeout(function() {
+//            $(event.target).find("i").trigger('click');
+//        }, 0, false)
+//
+//    }
+//
+//    function getData(deltaWar) {
+//        $scope.loading = true;
+//
+//        $http.get(baseUrl() + "/rest/warstats/daily" + deltaWar).then(function(response) {
+//            $scope.loading = false;
+//            $scope.stats = response.data;
+//        }, function(response) {
+//            $scope.loading = false;
+//        })
+//
+//    }
+//})
 
 app.controller("clanStatsController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history, clanStatsState) {
 	
@@ -632,17 +691,7 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 	}
 
 	$scope.togglePercentage = function() {
-		if ($scope.state.showPercentage) {
-			$scope.state.showPercentage = false;
-		} else {
-			$scope.state.showPercentage = true;
-		}
-		
-		if ($scope.state.showPercentage) {
-			$scope.percentageButtonLbl = "View Absolute Values"
-		}else {
-			$scope.percentageButtonLbl = "View Percentage (%)"
-		}
+		$scope.state.showPercentage.enabled = !$scope.state.showPercentage.enabled;
 	}
 
 	

@@ -11,6 +11,8 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,6 +146,19 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
         }
         return playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.get(0).getStartDate(), WarConstants.leagueSpan);
     }
+
+    @Override
+    public List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWar(int deltaWar) {
+        log.info("START findLatestWarAggregationStatsForWar for deltawar {}", deltaWar);
+        List<WarLeague> warLeague = warLeagueRepository.findAll(PageRequest.of(deltaWar, 1, Sort.by(Sort.Direction.DESC, "startDate"))).getContent();
+        if (warLeague.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+        return playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.get(0).getStartDate(), WarConstants.leagueSpan);
+
+    }
+
+
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)

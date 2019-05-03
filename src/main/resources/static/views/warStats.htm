@@ -6,24 +6,15 @@
                     <div class="col-sm-12"> <label> Latest recorded war: </label><span> {{stats.latestWarRecordedDate}}</span></div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-4 col-md-3 col-xl-2 form-inline">
+                    <div class="col-xs-4 form-inline">
                         <div class="btn-group" role="group">
                             <div style="margin-top:13px">
-                                <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="previousWeek()"><i
+                                <button class="btn btn-default btn-lg" ng-click="previousWeek()" type="button"><i
                                         class='fa fa-fw fa-chevron-left'></i></button>
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-default btn-block dropdown-toggle btn-lg" type="button"
-                                            data-toggle="dropdown">
-                                        <span class="selected">{{selectedItem}}</span>
-                                        <span class="caret"></span></button>
-                                    <ul class="dropdown-menu" style="width:100%">
-
-                                        <li ng-repeat="i in availableWeeks">
-                                            <a ng-click="dropboxitemselected(i)">{{i}}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-
+                                <!--<input type="text" ng-model="selectedItem" class="btn btn-default btn-lg" numbers-only>-->
+                                <input autocomplete="off" class="form-input form-control war-input"
+                                       ng-blur="onItemSelectedBlur(selectedItem)" ng-model="selectedItem"
+                                       numbers-only type="text">
                                 <button type="button" class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i
                                         class='fa fa-fw fa-chevron-right'></i></button>
                             </div>
@@ -31,13 +22,13 @@
                     </div>
                     <div class="col-xs-4">
                         <label style="margin-top:13px">
-                            <input type="checkbox" ng-model="hideLessThanEnabled">
+                            <input ng-model="hideLessThanEnabled.enabled" type="checkbox">
                             Hide players with less than 6 wars
                         </label>
                     </div>
                     <div class="col-xs-4">
                         <label style="margin-top:13px">
-                            <input ng-model="hideNotInClanPlayers" type="checkbox">
+                            <input ng-model="hideNotInClanPlayers.enabled" type="checkbox">
                             Hide players not in Clan
                         </label>
                     </div>

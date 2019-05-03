@@ -37,4 +37,6 @@ public interface PlayerWarStatsService {
      * @return
      */
     Map<Player, PlayerInOut> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDateTime date, Integer faultTolleranceInMinutes);
+
+    List<PlayerWarStat> findLatestWarStatsForWar(Integer deltaWar);
 }

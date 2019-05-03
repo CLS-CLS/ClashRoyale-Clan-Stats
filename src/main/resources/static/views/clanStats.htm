@@ -31,12 +31,12 @@
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <button type="button" class="btn btn-primary btn-lg" ng-click="togglePercentage()">
-                            {{percentageButtonLbl}}
+                            {{state.showPercentage.enabled ? "View Absolute Values" : "View Percentage (%)" }}
                         </button>
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <label for="hidePlayers_cb">
-                            <input id="hidePlayers_cb" type="checkbox" ng-model="state.hideNotInClanPlayers">
+                            <input id="hidePlayers_cb" ng-model="state.hideNotInClanPlayers.enabled" type="checkbox">
                                 Hide players not in Clan
                             </input>
                         </label>

@@ -1,12 +1,10 @@
 package org.lytsiware.clash.dto;
 
 import lombok.Data;
-
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +16,7 @@ public class ClansWarGlobalStatsDto implements Serializable {
 	private double avgWins;
 	private int avgClanScore;
 
-	List<PlayerWarStatsDto> playerWarStats = new ArrayList<>();
+    List<PlayerWarStatsDto> playerWarStats;
 
 	public ClansWarGlobalStatsDto(List<PlayerAggregationWarStats> playerAggregationWarStats, LocalDate latestWarRecordedDate) {
 		this.latestWarRecordedDate = latestWarRecordedDate;
@@ -34,5 +32,38 @@ public class ClansWarGlobalStatsDto implements Serializable {
 		avgClanScore = playerAggregationWarStats.stream().mapToInt(playerWarStats -> playerWarStats.getScore() * playerWarStats.getWarsParticipated()).sum() / totalWarsParticipated;
 
 	}
+
+    @Data
+    static class PlayerWarStatsDto implements Serializable {
+        private String name;
+        private String tag;
+        private int numberOfWars;
+        private Integer averageCardsWon;
+        private int warsParticipated;
+        private Integer crownsWon;
+        private Integer crownsLost;
+        private int gamesGranted;
+        private Integer gamesNotPlayed;
+        private Double winRatio;
+        private Integer score;
+        private boolean inClan;
+
+        public PlayerWarStatsDto(PlayerAggregationWarStats playerAggrWarStats) {
+            name = playerAggrWarStats.getPlayer().getName();
+            tag = playerAggrWarStats.getPlayer().getTag();
+            numberOfWars = playerAggrWarStats.getWarsEligibleForParticipation();
+            warsParticipated = playerAggrWarStats.getWarsParticipated();
+            averageCardsWon = playerAggrWarStats.getAvgCards();
+            crownsWon = playerAggrWarStats.getGamesWon();
+            gamesNotPlayed = playerAggrWarStats.getGamesNotPlayed();
+            crownsLost = playerAggrWarStats.getGamesGranted() - playerAggrWarStats.getGamesWon() - playerAggrWarStats.getGamesNotPlayed();
+            winRatio = playerAggrWarStats.getAvgWins();
+            score = playerAggrWarStats.getScore();
+            inClan = playerAggrWarStats.getPlayer().getInClan();
+            gamesGranted = playerAggrWarStats.getGamesGranted();
+        }
+
+    }
+
 
 }

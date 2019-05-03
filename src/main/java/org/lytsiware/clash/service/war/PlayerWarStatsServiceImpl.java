@@ -20,6 +20,8 @@ import org.lytsiware.clash.service.clan.PlayerCheckInService;
 import org.lytsiware.clash.service.integration.statsroyale.StatsRoyaleDateParse;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -172,6 +174,16 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         Map<String, Player> allPlayers = playerRepository.loadAll();
 
         return checkedInPlayersNotParticipated.stream().collect(Collectors.toMap(allPlayers::get, allCheckedInPlayers::get));
+    }
+
+    @Override
+    public List<PlayerWarStat> findLatestWarStatsForWar(Integer deltaWar) {
+        log.info("START findLatestWarStatsForWar for deltawar {}", deltaWar);
+        List<WarLeague> warLeague = warLeagueRepository.findAll(PageRequest.of(deltaWar, 1, Sort.by(Sort.Direction.DESC, "startDate"))).getContent();
+        if (warLeague.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+        return playerWarStatsRepository.findAllByWarLeague(warLeague.get(0));
     }
 
 }

@@ -99,11 +99,27 @@ public class WarStatsRestController {
     }
 
 
-    @GetMapping("/warstats/{deltaWeek}")
-    public ClansWarGlobalStatsDto getWarStatsForWeeks(@PathVariable(value = "deltaWeek", required = false) Integer deltaWeek) {
-        log.info("START warStats deltaWeek = {}", deltaWeek);
+    @GetMapping("/warstats/{deltaWar}")
+    public ClansWarGlobalStatsDto getWarStatsForWeeks(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
+        log.info("START warStats deltaWeek = {}", deltaWar);
 
-        List<PlayerAggregationWarStats> playerAggregationWarStats = playerAggregationWarStatsService.findLatestWarAggregationStatsForWeek(Week.now().minusWeeks(deltaWeek));
+        deltaWar = (deltaWar == null ? 0 : deltaWar);
+
+        List<PlayerAggregationWarStats> playerAggregationWarStats = playerAggregationWarStatsService.findLatestWarAggregationStatsForWar(deltaWar);
+
+        return new ClansWarGlobalStatsDto(playerAggregationWarStats,
+                warLeagueRepository.findLatestRecordedWarLeague().map(WarLeague::getStartDate).orElse(null));
+
+    }
+
+    @GetMapping("/warstats/daily/{deltaWar}")
+    public ClansWarGlobalStatsDto getWarStatsForWar(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
+        log.info("START warStats deltaWeek = {}", deltaWar);
+
+        deltaWar = (deltaWar == null ? 0 : deltaWar);
+
+        List<PlayerAggregationWarStats> playerAggregationWarStats = playerAggregationWarStatsService.findLatestWarAggregationStatsForWar(deltaWar);
+        List<PlayerWarStat> playerWarStats = playerWarStatsService.findLatestWarStatsForWar(deltaWar);
 
         return new ClansWarGlobalStatsDto(playerAggregationWarStats,
                 warLeagueRepository.findLatestRecordedWarLeague().map(WarLeague::getStartDate).orElse(null));

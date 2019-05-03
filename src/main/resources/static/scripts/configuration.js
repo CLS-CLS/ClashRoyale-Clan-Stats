@@ -11,7 +11,7 @@ app.config([ "$locationProvider", "$routeProvider",
 		    .when("/warstats/input", {
 		        templateUrl: "/views/warStatsInput.htm"
 		    })
-		    .when("/warstats/:week?", {
+		    .when("/warstats/:deltaWar?", {
                 templateUrl: "views/warStats.htm"
             })
             .when("/upload" , {
