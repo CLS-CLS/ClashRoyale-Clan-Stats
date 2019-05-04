@@ -3,10 +3,9 @@ package org.lytsiware.clash.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.converter.InputDtoPlayerWarStatConverter;
-import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
-import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
+import org.lytsiware.clash.dto.ClanWarStatsDto;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
@@ -56,6 +55,10 @@ public class WarStatsRestController {
     WarLeagueRepository warLeagueRepository;
 
 
+    @Autowired
+    WarLeagueService warLeagueService;
+
+
     @PostMapping(value = "/tagFile")
     public void tagFile(@RequestParam("file") MultipartFile file, Model model, HttpServletResponse response) throws IOException {
         log.info("START tagFile");
@@ -100,35 +103,22 @@ public class WarStatsRestController {
 
 
     @GetMapping("/warstats/{deltaWar}")
-    public ClansWarGlobalStatsDto getWarStatsForWeeks(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
-        log.info("START warStats deltaWeek = {}", deltaWar);
-
-        deltaWar = (deltaWar == null ? 0 : deltaWar);
-
-        List<PlayerAggregationWarStats> playerAggregationWarStats = playerAggregationWarStatsService.findLatestWarAggregationStatsForWar(deltaWar);
-
-        return new ClansWarGlobalStatsDto(playerAggregationWarStats,
-                warLeagueRepository.findLatestRecordedWarLeague().map(WarLeague::getStartDate).orElse(null));
+    public ClansWarGlobalStatsDto getAggregatedWarStats(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
+        log.info("START getAggregatedWarStats deltaWeek = {}", deltaWar);
+        return playerAggregationWarStatsService.findLatestWarAggregationStatsForWar(deltaWar == null ? 0 : deltaWar);
 
     }
 
-    @GetMapping("/warstats/daily/{deltaWar}")
-    public ClansWarGlobalStatsDto getWarStatsForWar(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
-        log.info("START warStats deltaWeek = {}", deltaWar);
-
-        deltaWar = (deltaWar == null ? 0 : deltaWar);
-
-        List<PlayerAggregationWarStats> playerAggregationWarStats = playerAggregationWarStatsService.findLatestWarAggregationStatsForWar(deltaWar);
-        List<PlayerWarStat> playerWarStats = playerWarStatsService.findLatestWarStatsForWar(deltaWar);
-
-        return new ClansWarGlobalStatsDto(playerAggregationWarStats,
-                warLeagueRepository.findLatestRecordedWarLeague().map(WarLeague::getStartDate).orElse(null));
-
+    @GetMapping("/warstats/single/{deltaWar}")
+    public ClanWarStatsDto getSingleWarStats(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
+        log.info("START getSingleWarStats deltaWeek = {}", deltaWar);
+        return warLeagueService.findStatsForWarLeague(deltaWar == null ? 0 : deltaWar);
     }
 
     @PostMapping("warstats/playersNotParticipated/{date}")
-    public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm") LocalDateTime date,
-                                                                                  @RequestBody List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
+    public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(
+            @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm") LocalDateTime date,
+            @RequestBody List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
 
         return playerWarStatsService.findPlayersNotParticipatedInWar(WarStatsInputDto.builder().playerWarStats(participants).build(), date, null).keySet().stream()
                 .map(entry -> WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(entry.getTag(), entry.getName()))

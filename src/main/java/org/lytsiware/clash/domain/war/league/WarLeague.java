@@ -36,7 +36,11 @@ public class WarLeague {
 
     private Integer teamCardAvg;
 
+    private Integer teamTotalCards;
+
     private Double teamWinRatio;
+
+    private Integer teamScore;
 
 
     @Transient

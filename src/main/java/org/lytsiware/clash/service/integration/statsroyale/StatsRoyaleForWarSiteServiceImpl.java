@@ -125,7 +125,7 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
                     String cardsAsString = playerStat.select(".clanParticipants__row").stream()
                             .filter(element -> element.select(".clanParticipants__cardsIcon").size() == 1)
                             .findFirst()
-                            .orElseThrow(() -> new ParseException("Could not find cards for player" + name)).text();
+                            .orElseThrow(() -> new ParseException("Could not find totalCards for player" + name)).text();
 
                     int battles = Integer.valueOf(battlesAsString);
                     int wins = Integer.valueOf(winsAsString);

@@ -52,7 +52,27 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
     }
 
     @Override
+    public Optional<WarLeague> findNthWarLeague(int n) {
+        Optional<WarLeague> league = em.createQuery("select l from WarLeague l order by l.startDate DESC").setFirstResult(n)
+                .setMaxResults(1)
+                .getResultList().stream().findFirst();
+
+        if (!league.isPresent()) {
+            return Optional.empty();
+        }
+
+        WarLeague warLeagueWithPlayerStats = em.createQuery(
+                "select l from WarLeague l left join fetch l.playerWarStats where l.id = (:id)", WarLeague.class)
+                .setParameter("id", league.get().getId()).getSingleResult();
+
+        return Optional.of(warLeagueWithPlayerStats);
+
+
+    }
+
+    @Override
     public void persistAndFlush(WarLeague warLeague) throws EntityExistsException {
         em.persist(warLeague);
+        em.flush();
     }
 }

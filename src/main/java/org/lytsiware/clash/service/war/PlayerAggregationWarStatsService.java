@@ -2,6 +2,7 @@ package org.lytsiware.clash.service.war;
 
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
+import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +12,7 @@ public interface PlayerAggregationWarStatsService {
     void calculateStatsBetweenDates(LocalDate from, LocalDate to, int span);
 
     /**
-     * Calculates and persists the war statistics for each player, such as the total cards won , the average cards won , the win percentage etc.
+     * Calculates and persists the war statistics for each player, such as the total totalCards won , the average totalCards won , the win percentage etc.
      * The wars statistics are calculated based on specific leagues that are specified by the startDate and the leagueSpan
      *
      * @param latestLeagueStartDate the start date of the oldest league to take part in the calculation
@@ -28,7 +29,7 @@ public interface PlayerAggregationWarStatsService {
 
     List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWeek(Week week);
 
-    List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWar(int deltaWar);
+    ClansWarGlobalStatsDto findLatestWarAggregationStatsForWar(int deltaWar);
 
     void calculateMissingStats(LocalDate from, LocalDate to);
 

@@ -176,7 +176,8 @@
                         </thead>
                         <tbody>
 
-                        <tr ng-if="stats.length > 0 " ng-repeat="s in stats | orderBy: state.filter.orderBy: false : state.filter.comparator | playerInClan:state.hideNotInClanPlayers">
+                        <tr ng-if="stats.length > 0 "
+                            ng-repeat="s in stats | orderBy: state.filter.orderBy: false : state.filter.comparator | playerInClan:state.hideNotInClanPlayers.enabled">
 
                             <td style="font-family: 'Comic Sans MS', cursive, sans-serif;">
                                 <a ng-href="player/{{s.tag}}" ng-click="next()">
@@ -188,16 +189,16 @@
 
                             <td ng-show="state.selectableColumns['ccRank'].show">{{s.ccRank}}</td>
 
-                            <td ng-show="state.selectableColumns['cardDonation'].show && !state.showPercentage">
+                            <td ng-show="state.selectableColumns['cardDonation'].show && !state.showPercentage.enabled">
                                 {{s.cardDonation}}
                             </td>
-                            <td ng-show="state.selectableColumns['cardDonation'].show && !state.showPercentage">
+                            <td ng-show="state.selectableColumns['cardDonation'].show && !state.showPercentage.enabled">
                                 {{s.cardsReceived}}
                             </td>
-                            <td ng-show="state.selectableColumns['cardDonation'].show && state.showPercentage">
+                            <td ng-show="state.selectableColumns['cardDonation'].show && state.showPercentage.enabled">
                                 {{s.cardDonationPerc | percentage:1}}
                             </td>
-                            <td ng-show="state.selectableColumns['cardDonation'].show && state.showPercentage">
+                            <td ng-show="state.selectableColumns['cardDonation'].show && state.showPercentage.enabled">
                                 {{s.cardRequestPerc | percentage:1}}
                             </td>
                             <td ng-show="state.selectableColumns['donationRequestScore'].show">{{s.donationRequestScore}}</td>
@@ -206,24 +207,27 @@
 
                             <td ng-show="state.selectableColumns['avgCcRank'].show">{{s.avgCcRank}}</td>
 
-                            <td ng-show="state.selectableColumns['avgDonation'].show && !state.showPercentage"
+                            <td ng-show="state.selectableColumns['avgDonation'].show && !state.showPercentage.enabled"
                                 ng-style="avgContrColor(s.avgCardDonation, 'card')">
                                 {{s.avgCardDonation | number: 2}}
                             </td>
-                            <td ng-show="state.selectableColumns['avgDonation'].show && !state.showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">
+                            <td ng-show="state.selectableColumns['avgDonation'].show && !state.showPercentage.enabled"
+                                ng-style="avgContrColor(s.avgCardDonation, 'card')">
                                 {{s.avgCardsReceived | number: 2}}
                             </td>
-                            <td ng-show="state.selectableColumns['avgDonation'].show && state.showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">
+                            <td ng-show="state.selectableColumns['avgDonation'].show && state.showPercentage.enabled"
+                                ng-style="avgContrColor(s.avgCardDonation, 'card')">
                                 {{s.avgCardDonationPerc | percentage:1}}
                             </td>
-                            <td ng-show="state.selectableColumns['avgDonation'].show && state.showPercentage" ng-style="avgContrColor(s.avgCardDonation, 'card')">
+                            <td ng-show="state.selectableColumns['avgDonation'].show && state.showPercentage.enabled"
+                                ng-style="avgContrColor(s.avgCardDonation, 'card')">
                                 {{s.avgCardRequestPerc | percentage:1}}
                             </td>
-                            <td ng-show="state.selectableColumns['avgRequestDonationDiff'].show && !state.showPercentage"
+                            <td ng-show="state.selectableColumns['avgRequestDonationDiff'].show && !state.showPercentage.enabled"
                                 ng-style="avgRequestDonationDiffColor(s.avgRequestDonationDiff, s.avgCardDonation, s.avgCardsReceived)">
                                 {{s.avgRequestDonationDiff}}
                             </td>
-                            <td ng-show="state.selectableColumns['avgRequestDonationDiff'].show && state.showPercentage"
+                            <td ng-show="state.selectableColumns['avgRequestDonationDiff'].show && state.showPercentage.enabled"
                                 ng-style="avgRequestDonationDiffColor(s.avgRequestDonationDiff, s.avgCardDonation, s.avgCardsReceived)">
                                 {{s.avgRequestDonationDiffPerc}}
                             </td>

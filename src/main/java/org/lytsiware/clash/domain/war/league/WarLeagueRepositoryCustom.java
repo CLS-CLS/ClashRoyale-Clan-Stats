@@ -14,5 +14,7 @@ public interface WarLeagueRepositoryCustom {
 
     Optional<WarLeague> findLatestRecordedWarLeague();
 
+    Optional<WarLeague> findNthWarLeague(int n);
+
     void persistAndFlush(WarLeague warLeague);
 }

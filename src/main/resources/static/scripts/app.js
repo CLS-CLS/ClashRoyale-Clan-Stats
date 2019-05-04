@@ -390,6 +390,58 @@ app.controller("playerWarStatsController", function($scope, $http, $routeParams,
 
 })
 
+
+app.controller("playerWarStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
+
+	$scope.player;
+
+	$scope.colorfy = colorfy.colorfy
+
+	$scope.dataLoading = true;
+
+	$scope.back = function() {
+		history.back()
+	}
+
+    $scope.next = function(){
+        history.store();
+    }
+
+	$scope.hasBack = function() {
+		return history.hasBack();
+	}
+
+	function loadData() {
+		$scope.dataLoading = true;
+		$http.get(baseUrl() + "/rest/player/" + $routeParams.playertag +"/war").then(
+			function(response) {
+				$scope.player = response.data
+				$scope.player.stats.forEach(function(element, index){
+				    element.fightStatuses = [];
+				    for (var i = 0; i < element.gamesWon; i++) {
+				        element.fightStatuses.push("win");
+				    }
+                    for (var i = 0; i < element.gamesLost; i++) {
+                        element.fightStatuses.push("loose");
+                    }
+                    for (var i = 0; i < element.gamesNotPlayed; i++) {
+                        element.fightStatuses.push("forfeit");
+                    }
+				})
+
+				$timeout(function() {
+                    playerWarProgressChart(response.data)
+                })
+			}
+		).finally(function() {
+			$scope.dataLoading = false;
+		}, null)
+	}
+
+	loadData();
+
+})
+
 app.factory('clanStatsState',  function(roleComparator) {
 	var state = {
 		selectableColumns: { 
@@ -518,69 +570,67 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
     }
 })
 
+app.factory('singleWarStatState',  function(roleComparator) {
+	var state = {
+		filter : {
+			orderBy : "-score",
+		},
+	}
+	return state;
+});
 
-//app.controller("warStatsDailyController", function($scope, $http, $timeout, history, warStatsState){
-//
-//    $scope.stats = {
-//        playerWarStats : []
-//    }
-//
-//    $scope.filter = warStatsState.filter;
-//
-//
-//    $scope.hideNotInClanPlayers = warStatsState.hideNotInClanPlayers;
-//
-//   	$scope.selectedItem = 0;
-//
-//
-//    $scope.onItemSelectedBlur = function(item) {
-//        $scope.selectedItem = item;
-//        getData($scope.selectedItem);
-//    }
-//
-//    $scope.previousWeek = function() {
-//        $scope.selectedItem = $scope.selectedItem - 1
-//         if ($scope.selectedItem <= 0) {
-//            $scope.selectedItem = 1;
-//            return;
-//        }
-//        getData($scope.selectedItem);
-//
-//    }
-//
-//    $scope.nextWeek = function() {
-//        //sometimes 1 is considered a string and "+" is considered as string concatenator
-//        //subtracting 1 first makes the selectedItem a number
-//        $scope.selectedItem = ($scope.selectedItem - 1) + 2;
-//        getData($scope.selectedItem);
-//
-//    }
-//
-//    function init() {
-//        getData($scope.selectedItem);
-//    }
-//
-//    init();
-//
-//    $scope.triggerOrderDirective = function(event) {
-//        $timeout(function() {
-//            $(event.target).find("i").trigger('click');
-//        }, 0, false)
-//
-//    }
-//
-//    function getData(deltaWar) {
-//        $scope.loading = true;
-//
-//        $http.get(baseUrl() + "/rest/warstats/daily" + deltaWar).then(function(response) {
-//            $scope.loading = false;
-//            $scope.stats = response.data;
-//        }, function(response) {
-//            $scope.loading = false;
-//        })
-//
-//    }
-//})
+app.controller("singleWarStatController", function($scope, $http, $timeout, history, singleWarStatState){
+
+    $scope.stats = {
+        playerWarStats : []
+    }
+
+    $scope.filter = singleWarStatState.filter;
+
+   	$scope.selectedItem = 0;
+
+    $scope.onItemSelectedBlur = function(item) {
+        $scope.selectedItem = item;
+        getData($scope.selectedItem);
+    }
+
+    $scope.previousWeek = function() {
+        $scope.selectedItem = $scope.selectedItem - 1
+         if ($scope.selectedItem <= 0) {
+            $scope.selectedItem = 1;
+            return;
+        }
+        getData($scope.selectedItem);
+    }
+
+    $scope.nextWeek = function() {
+        $scope.selectedItem = ($scope.selectedItem - 1) + 2;
+        getData($scope.selectedItem);
+    }
+
+    function init() {
+        getData($scope.selectedItem);
+    }
+
+    init();
+
+    $scope.triggerOrderDirective = function(event) {
+        $timeout(function() {
+            $(event.target).find("i").trigger('click');
+        }, 0, false)
+
+    }
+
+    function getData(deltaWar) {
+        $scope.loading = true;
+        $http.get(baseUrl() + "/rest/warstats/single/" + deltaWar).then(function(response) {
+            $scope.loading = false;
+            $scope.stats = response.data;
+        }, function(response) {
+            $scope.loading = false;
+        })
+    }
+})
 
 app.controller("clanStatsController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, roleComparator, history, clanStatsState) {
 	
