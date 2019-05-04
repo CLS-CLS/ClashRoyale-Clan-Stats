@@ -1,5 +1,6 @@
 package org.lytsiware.clash.service.war;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class WarLeagueServiceImpl implements WarLeagueService {
 
     @Autowired
@@ -28,7 +30,7 @@ public class WarLeagueServiceImpl implements WarLeagueService {
         warLeague.setTeamCardAvg(cardAvg);
         warLeague.setTeamWinRatio(winPercentage);
         warLeague.setTeamTotalCards(statsList.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon()).sum());
-        warLeague.setTeamScore((int) (0.5 + 0.5 * winPercentage) * warLeague.getTeamTotalCards());
+        warLeague.setTeamScore((int) ((0.5 + 0.5 * winPercentage) * warLeague.getTeamTotalCards()));
     }
 
     @Override
