@@ -94,16 +94,18 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
                 if (StringUtils.isEmpty(deltaString)) {
                     deltaString = leagueGeneralStats.select(".clanWarHistory__deltaDown").text();
                 }
+                int totalTrophies = Integer.valueOf(leagueGeneralStats.select(".clanWarHistory__trophies").text());
+
                 int delta = Integer.valueOf(deltaString);
 
                 Elements playerStats = pastClanWar.nextElementSibling().select(".clanParticipants__rowContainer");
-
 
                 WarStatsInputDto warStatsInputDto = WarStatsInputDto.builder()
                         .leagueName(leagueFakeName)
                         .startDate(LocalDateTime.now())
                         .rank(rank)
                         .trophies(delta)
+                        .totalTrophies(totalTrophies)
                         .build();
                 warStatsInputDtos.add(warStatsInputDto);
 

@@ -36,6 +36,9 @@ public class WarStatsInputDto implements Serializable {
 
     private int trophies;
 
+    @Min(0)
+    private int totalTrophies;
+
     @Builder.Default
     @Valid
     private List<PlayerWarStatInputDto> playerWarStats = new ArrayList<>();

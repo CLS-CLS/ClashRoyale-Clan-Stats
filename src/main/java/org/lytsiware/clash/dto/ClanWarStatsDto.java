@@ -25,6 +25,7 @@ public class ClanWarStatsDto implements Serializable {
     private LocalDateTime startDate;
     private Integer rank;
     private Integer deltaTrophies;
+    private Integer totalTrophies;
 
     public ClanWarStatsDto(WarLeague warLeague) {
         this.playerWarStats = warLeague.getPlayerWarStats().stream()
@@ -41,6 +42,7 @@ public class ClanWarStatsDto implements Serializable {
         this.startDate = warLeague.getStartDate().atTime(warLeague.getTime());
         this.deltaTrophies = warLeague.getTrophies();
         this.rank = warLeague.getRank();
+        this.totalTrophies = warLeague.getTotalTrophies();
     }
 
     @Data

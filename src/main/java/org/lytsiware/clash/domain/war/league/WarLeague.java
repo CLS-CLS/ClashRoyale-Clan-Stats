@@ -42,6 +42,8 @@ public class WarLeague {
 
     private Integer teamScore;
 
+    private Integer totalTrophies;
+
 
     @Transient
     @Setter(AccessLevel.NONE)
