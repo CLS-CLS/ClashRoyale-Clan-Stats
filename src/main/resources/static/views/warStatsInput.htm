@@ -32,8 +32,8 @@
                 </ul>
                 <div class="tab-content" style="margin-top: 10px">
                     <loading-directive loading="loading"/>
-                    <div ng-repeat="stats in statsList" id="input{{$index}}"
-                         ng-class="$first? 'tab-pane fade in active' : 'tab-pane fade in' ">
+                    <div id="input{{$index}}" ng-class="$first? 'tab-pane fade in active' : 'tab-pane fade in' "
+                         ng-repeat="stats in statsList">
                         <form name="inputForm_{{$index}}" method="POST" novalidate ng-class="{'form-error':submitted}"
                               ng-submit="saveWar($event, $index)" autocomplete="off">
                             <div class="form-group">

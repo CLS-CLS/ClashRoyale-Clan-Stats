@@ -1,51 +1,69 @@
 <div ng-cloak>
     <div class="inner-container col-xs-12">
-        <div ng-controller="warStatsController">
-            <div class="row clan-header"><h1>Average War Statistics</h1></div>
-            <div class="clan-stats-panel">
-                <div class="row">
-                    <div class="col-sm-12"> <label> Latest recorded war: </label><span> {{stats.latestWarRecordedDate}}</span></div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-4 form-inline">
-                        <div class="btn-group" role="group">
-                            <div style="margin-top:13px">
-                                <button class="btn btn-default btn-lg" ng-click="previousWeek()" type="button"><i
-                                        class='fa fa-fw fa-chevron-left'></i></button>
-                                <!--<input type="text" ng-model="selectedItem" class="btn btn-default btn-lg" numbers-only>-->
-                                <input autocomplete="off" class="form-input form-control war-input"
-                                       ng-blur="onItemSelectedBlur(selectedItem)" ng-model="selectedItem"
-                                       numbers-only size="3" type="text">
-                                <button type="button" class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"><i
-                                        class='fa fa-fw fa-chevron-right'></i></button>
-                            </div>
+        <div class="tab-content clan-stats-panel" ng-controller="clanWarStatsTabController" style="margin-top: 10px">
+            <ul class="nav nav-pills">
+                <li class="active">
+                    <a data-toggle="pill" href="#averageWarStats" ng-click="activateTab($event)"><h4>Average War
+                        Statistics</h4></a>
+                </li>
+                <li>
+                    <a data-toggle="pill" href="#singleWarStats" ng-click="activateTab($event)"><h4>War League
+                        Statistics</h4></a>
+                </li>
+                <li>
+                    <a data-toggle="pill" href="#clanWarProgress" ng-click="activateTab($event)"><h4>Clans overall
+                        progress</h4></a>
+                </li>
+            </ul>
+
+            <div class="tab-pane fade in active" id="averageWarStats" ng-controller="warStatsController">
+                <div class="row clan-header"><h1>Average War Statistics</h1></div>
+                <div>
+                    <div class="row">
+                        <div class="col-sm-12"><label> Latest recorded war: </label><span> {{stats.latestWarRecordedDate}}</span>
                         </div>
                     </div>
-                    <div class="col-xs-4">
-                        <label style="margin-top:13px">
-                            <input ng-model="hideLessThanEnabled.enabled" type="checkbox">
-                            Hide players with less than 6 wars
-                        </label>
+                    <div class="row">
+                        <div class="col-xs-4 form-inline">
+                            <div class="btn-group" role="group">
+                                <div style="margin-top:13px">
+                                    <button class="btn btn-default btn-lg" ng-click="previousWeek()" type="button"><i
+                                            class='fa fa-fw fa-chevron-left'></i></button>
+                                    <!--<input type="text" ng-model="selectedItem" class="btn btn-default btn-lg" numbers-only>-->
+                                    <input autocomplete="off" class="form-input form-control war-input"
+                                           ng-blur="onItemSelectedBlur(selectedItem)" ng-model="selectedItem"
+                                           numbers-only size="3" type="text">
+                                    <button class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"
+                                            type="button"><i
+                                            class='fa fa-fw fa-chevron-right'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <label style="margin-top:13px">
+                                <input ng-model="hideLessThanEnabled.enabled" type="checkbox">
+                                Hide players with less than 6 wars
+                            </label>
+                        </div>
+                        <div class="col-xs-4">
+                            <label style="margin-top:13px">
+                                <input ng-model="hideNotInClanPlayers.enabled" type="checkbox">
+                                Hide players not in Clan
+                            </label>
+                        </div>
                     </div>
-                    <div class="col-xs-4">
-                        <label style="margin-top:13px">
-                            <input ng-model="hideNotInClanPlayers.enabled" type="checkbox">
-                            Hide players not in Clan
-                        </label>
+                    <div class="row">
+                        <div class="col-xs-4 col-md-3">
+                            <h3><label class="label">Collected cards per war: {{stats.avgCards}} </label></h3>
+                        </div>
+                        <div class="col-xs-4 col-md-3">
+                            <h3><label class="label">Global win ratio: {{stats.avgWins | percentage:2}}</label></h3>
+                        </div>
+                        <div class="col-xs-4 col-md-3">
+                            <h3><label class="label">Global avg score: {{stats.avgClanScore}}</label></h3>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-4 col-md-3">
-                        <h3><label class="label">Collected cards per war: {{stats.avgCards}} </label></h3>
-                    </div>
-                    <div class="col-xs-4 col-md-3">
-                        <h3><label class="label">Global win ratio: {{stats.avgWins | percentage:2}}</label></h3>
-                    </div>
-                    <div class="col-xs-4 col-md-3">
-                        <h3><label class="label">Global avg score: {{stats.avgClanScore}}</label></h3>
-                    </div>
-                </div>
-            </div>
             <div style="position:relative">
                 <loading-directive loading="loading"/>
                 <div class="table-responsive halfscreen">
@@ -113,17 +131,15 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <span class="clan-stats-panel"> The  <img style="display:inline" src="images/score_mid.png"> is calculated based the win ratio, the average cards collected and the war participation </span>
+                        <span> The  <img src="images/score_mid.png" style="display:inline"> is calculated based the win ratio, the average cards collected and the war participation </span>
                     </div>
                 </div>
             </div>
-        </div>
-
-
-        <div ng-controller="singleWarStatController">
-            <div class="row clan-header"><h1>War League Statistics</h1></div>
-            <div class="clan-stats-panel">
-                <div class="row">
+            </div>
+            <div class="tab-pane fade in" id="singleWarStats" ng-controller="singleWarStatController">
+                <div class="row clan-header"><h1>War League Statistics</h1></div>
+                <div>
+                    <div class="row">
                     <div class="col-xs-4 form-inline">
                         <div class="btn-group" role="group">
                             <div style="margin-top:13px">
@@ -134,13 +150,12 @@
                                        ng-blur="onItemSelectedBlur(selectedItem)" ng-model="selectedItem"
                                        numbers-only size="3" type="text">
                                 <button class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()" type="button">
-                                    <i
-                                            class='fa fa-fw fa-chevron-right'></i></button>
+                                    <i class='fa fa-fw fa-chevron-right'></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                    <div class="row">
                     <div class="col-xs-4 col-md-3">
                         <h3><label class="label">League: {{stats.startDate | date : "dd-MM-yyyy HH:mm"}} </label></h3>
                     </div>
@@ -148,14 +163,14 @@
                         <h3><label class="label">Rank: {{stats.rank}}</label></h3>
                     </div>
                     <div class="col-xs-4 col-md-3">
-                        <h3><label class="label">Trophies change: {{stats.deltaTrophies}}</label></h3>
+                        <h3><label class="label">Trophy change: {{stats.deltaTrophies}}</label></h3>
                     </div>
                     <div class="col-xs-4 col-md-3">
                         <h3><label class="label">Trophies: {{stats.totalTrophies}}</label></h3>
                     </div>
                 </div>
-                <hr/>
-                <div class="row">
+                    <hr/>
+                    <div class="row">
                     <div class="col-xs-4 col-md-3">
                         <h3><label class="label">Collected cards: {{stats.totalCards}} </label></h3>
                     </div>
@@ -169,8 +184,8 @@
                         <h3><label class="label">Score: {{stats.clanScore}}</label></h3>
                     </div>
                 </div>
-            </div>
-            <div style="position:relative">
+                </div>
+                <div style="position:relative">
                 <loading-directive loading="loading"/>
                 <div class="table-responsive halfscreen">
                     <table class="halfscreen table table-striped war-table" style="width: inherit !important">
@@ -220,13 +235,16 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <span class="clan-stats-panel"> The  <img src="images/score_mid.png" style="display:inline"> is calculated based the final battle result and the cards collected</span>
+                        <span> The  <img src="images/score_mid.png" style="display:inline"> is calculated based the final battle result and the cards collected</span>
                     </div>
                 </div>
             </div>
-            <div class="row clan-header"><h1>Clan Progress Graph</h1></div>
-            <div class="row">
-                <div class="col-md-12" id="clan_war_chart"></div>
+            </div>
+            <div class="tab-pane fade in" id="clanWarProgress" ng-controller="clanWarProgressControler">
+                <div class="row clan-header"><h1>Clan Progress Graph</h1></div>
+                <div class="row">
+                    <div class="col-md-12" id="clan_war_chart"></div>
+                </div>
             </div>
         </div>
     </div>

@@ -279,6 +279,12 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 
 })
 
+app.controller("clanWarStatsTabController", function($scope) {
+    $scope.activateTab = function (event, tabId) {
+        event.preventDefault();
+    }
+})
+
 app.controller("warStatsInputController", function($scope, $http){
     $scope.activateTab = function(event, tabId) {
         event.preventDefault();
@@ -338,58 +344,6 @@ app.controller("warStatsInputController", function($scope, $http){
 
     loadData();
 })
-
-app.controller("playerWarStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
-
-	$scope.player;
-
-	$scope.colorfy = colorfy.colorfy
-
-	$scope.dataLoading = true;
-
-	$scope.back = function() {
-		history.back()
-	}
-
-    $scope.next = function(){
-        history.store();
-    }
-
-	$scope.hasBack = function() {
-		return history.hasBack();
-	}
-
-	function loadData() {
-		$scope.dataLoading = true;
-		$http.get(baseUrl() + "/rest/player/" + $routeParams.playertag +"/war").then(
-			function(response) {
-				$scope.player = response.data
-				$scope.player.stats.forEach(function(element, index){
-				    element.fightStatuses = [];
-				    for (var i = 0; i < element.gamesWon; i++) {
-				        element.fightStatuses.push("win");
-				    }
-                    for (var i = 0; i < element.gamesLost; i++) {
-                        element.fightStatuses.push("loose");
-                    }
-                    for (var i = 0; i < element.gamesNotPlayed; i++) {
-                        element.fightStatuses.push("forfeit");
-                    }
-				})
-
-				$timeout(function() {
-                    playerWarProgressChart(response.data)
-                })
-			}
-		).finally(function() {
-			$scope.dataLoading = false;
-		}, null)
-	}
-
-	loadData();
-
-})
-
 
 app.controller("playerWarStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
 
@@ -579,6 +533,20 @@ app.factory('singleWarStatState',  function(roleComparator) {
 	return state;
 });
 
+app.controller("clanWarProgressControler", function($http, $timeout){
+    loadClanChartData();
+
+    function loadClanChartData() {
+        $http.get(baseUrl() + "/rest/warstats/warleague").then(
+            function(response) {
+                $timeout(function() {
+                    clanWarProgressChart(response.data)
+                })
+            }
+        )
+    }
+})
+
 app.controller("singleWarStatController", function($scope, $http, $timeout, history, singleWarStatState){
 
     $scope.stats = {
@@ -596,8 +564,8 @@ app.controller("singleWarStatController", function($scope, $http, $timeout, hist
 
     $scope.previousWeek = function() {
         $scope.selectedItem = $scope.selectedItem - 1
-         if ($scope.selectedItem <= 0) {
-            $scope.selectedItem = 1;
+         if ($scope.selectedItem < 0) {
+            $scope.selectedItem = 0;
             return;
         }
         getData($scope.selectedItem);
@@ -610,7 +578,6 @@ app.controller("singleWarStatController", function($scope, $http, $timeout, hist
 
     function init() {
         getData($scope.selectedItem);
-        loadClanChartData();
     }
 
     init();
@@ -630,16 +597,6 @@ app.controller("singleWarStatController", function($scope, $http, $timeout, hist
         }, function(response) {
             $scope.loading = false;
         })
-    }
-
-    function loadClanChartData() {
-        $http.get(baseUrl() + "/rest/warstats/warleague").then(
-            function(response) {
-                $timeout(function() {
-                    clanWarProgressChart(response.data)
-                })
-            }
-        )
     }
 })
 
