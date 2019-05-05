@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -24,9 +26,11 @@ public class RecalculateAvgs implements CommandLineRunner {
     @Override
     public void run(String... args) {
         List<WarLeague> leagues = warLeagueRepository.findAll();
+        leagues.sort(Comparator.comparing(WarLeague::getStartDate, LocalDate::compareTo));
+        leagues.get(0).setTotalTrophies(leagues.get(0).getTrophies());
 
-        for (WarLeague warLeague : leagues) {
-            warLeagueService.calculateLeagueAvgs(warLeague);
+        for (int i = 1; i < leagues.size(); i++) {
+            leagues.get(i).setTotalTrophies(leagues.get(i - 1).getTotalTrophies() + leagues.get(i).getTrophies());
         }
 
         warLeagueRepository.saveAll(leagues);
