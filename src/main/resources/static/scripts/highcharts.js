@@ -339,7 +339,6 @@ function clanWarProgressChart(data) {
             title: {
                 text: 'Average Collected Cards'
             },
-            alignTicks: true,
             tickInterval: 400,
             gridLineWidth :0,
             min: 0
@@ -384,6 +383,7 @@ function clanWarProgressChart(data) {
         series: [{
             name: 'Average Collected Cards',
             data: teamCardAvgs,
+            visible:false,
             yAxis: 0
         },
         {
