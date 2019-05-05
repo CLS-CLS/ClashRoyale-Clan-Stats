@@ -339,18 +339,17 @@ function clanWarProgressChart(data) {
             title: {
                 text: 'Average Collected Cards'
             },
-            alignTicks: false,
-            tickInterval: 100,
+            alignTicks: true,
+            tickInterval: 400,
+            gridLineWidth :0,
             min: 0
         },
         {
             title: {
                 text: 'Total Trophies'
             },
-            tickInterval: 300,
+            tickInterval: 400,
             tickLength: 0,
-//            opposite: true,
-//            gridLineWidth :0,
             min: 0
         },
         {
@@ -359,6 +358,7 @@ function clanWarProgressChart(data) {
             },
             tickInterval: 5000,
             tickLength: 0,
+            opposite: true,
             min: 0
         }
         ],
@@ -375,8 +375,8 @@ function clanWarProgressChart(data) {
         },
         plotOptions: {
             series: {
-                label: {
-                    connectorAllowed: false
+                marker: {
+                    enabled: false
                 },
                 pointStart: 0
             }
