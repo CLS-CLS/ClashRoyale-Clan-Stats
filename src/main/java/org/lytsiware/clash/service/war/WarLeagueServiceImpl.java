@@ -5,6 +5,7 @@ import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.ClanWarStatsDto;
+import org.lytsiware.clash.dto.WarLeagueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -40,9 +42,10 @@ public class WarLeagueServiceImpl implements WarLeagueService {
         return warLeague;
     }
 
+
     @Override
-    public List<WarLeague> findFirstNthWarLeaguesAfterDate(LocalDate startDate, int n) {
-        return warLeagueRepository.findFirstNthWarLeaguesAfterDate(startDate, n);
+    public List<WarLeagueDto> findFirstNthWarLeagueBeforeDate(LocalDate startDate, int n) {
+        return warLeagueRepository.findFirstNthWarLeaguesBeforeDate(startDate, n).stream().map(WarLeagueDto::new).collect(Collectors.toList());
     }
 
     @Override

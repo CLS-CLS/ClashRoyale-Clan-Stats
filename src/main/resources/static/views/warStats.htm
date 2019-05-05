@@ -1,6 +1,7 @@
 <div ng-cloak>
     <div class="inner-container col-xs-12">
         <div ng-controller="warStatsController">
+            <div class="row clan-header"><h1>Average War Statistics</h1></div>
             <div class="clan-stats-panel">
                 <div class="row">
                     <div class="col-sm-12"> <label> Latest recorded war: </label><span> {{stats.latestWarRecordedDate}}</span></div>
@@ -120,6 +121,7 @@
 
 
         <div ng-controller="singleWarStatController">
+            <div class="row clan-header"><h1>War League Statistics</h1></div>
             <div class="clan-stats-panel">
                 <div class="row">
                     <div class="col-xs-4 form-inline">
@@ -221,6 +223,10 @@
                         <span class="clan-stats-panel"> The  <img src="images/score_mid.png" style="display:inline"> is calculated based the final battle result and the cards collected</span>
                     </div>
                 </div>
+            </div>
+            <div class="row clan-header"><h1>Clan Progress Graph</h1></div>
+            <div class="row">
+                <div class="col-md-12" id="clan_war_chart"></div>
             </div>
         </div>
     </div>

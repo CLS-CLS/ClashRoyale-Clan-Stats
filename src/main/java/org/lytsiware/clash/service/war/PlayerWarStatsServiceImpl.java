@@ -129,7 +129,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     @Override
     public void updateWarStatsForAffectedLeagues(List<WarLeague> warLeagues) {
         List<WarLeague> affectedLeagues = warLeagues.stream()
-                .flatMap(warLeague -> warLeagueService.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan).stream())
+                .flatMap(warLeague -> warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan).stream())
                 .distinct().collect(Collectors.toList());
 
         for (WarLeague affectedLeague : affectedLeagues) {

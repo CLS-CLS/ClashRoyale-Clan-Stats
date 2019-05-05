@@ -66,8 +66,6 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
                 .setParameter("id", league.get().getId()).getSingleResult();
 
         return Optional.of(warLeagueWithPlayerStats);
-
-
     }
 
     @Override

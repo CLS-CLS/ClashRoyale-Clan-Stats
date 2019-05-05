@@ -8,6 +8,7 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.ClanWarStatsDto;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
+import org.lytsiware.clash.dto.WarLeagueDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
 import org.lytsiware.clash.service.war.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,6 +150,11 @@ public class WarStatsRestController {
 
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("warstats/warleague")
+    public List<WarLeagueDto> getLatestWarLeagues() {
+        return warLeagueService.findFirstNthWarLeagueBeforeDate(LocalDate.now().plusDays(1), 100);
     }
 
 }

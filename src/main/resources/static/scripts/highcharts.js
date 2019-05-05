@@ -261,7 +261,8 @@ function playerWarProgressChart(data) {
             tickInterval: 200,
             tickLength: 0,
             opposite: true,
-            gridLineWidth :0
+            gridLineWidth :0,
+            min: 0
         }],
         xAxis: {
             title: {
@@ -306,7 +307,110 @@ function playerWarProgressChart(data) {
                 }
             }]
         }
+    });
+}
 
+
+function clanWarProgressChart(data) {
+    var leagueDates = []
+    var teamCardAvgs = [];
+    var totalCards = [];
+    var totalTrophies = [];
+
+    data.forEach(function(value, index) {
+        leagueDates.unshift(value.startDate);
+        teamCardAvgs.unshift(value.teamCardAvg);
+        totalCards.unshift(value.teamTotalCards);
+        totalTrophies.unshift(value.totalTrophies );
+    })
+
+
+    Highcharts.chart('clan_war_chart', {
+        title: {
+            text: 'Clan War Progress'
+        },
+        chart: {
+            height: 600
+        },
+        tooltip: {
+            valueDecimals: 2
+        },
+        yAxis: [{
+            title: {
+                text: 'Average Collected Cards'
+            },
+            alignTicks: false,
+            tickInterval: 100,
+            min: 0
+        },
+        {
+            title: {
+                text: 'Total Trophies'
+            },
+            tickInterval: 300,
+            tickLength: 0,
+//            opposite: true,
+//            gridLineWidth :0,
+            min: 0
+        },
+        {
+            title: {
+                text: 'Total Cards'
+            },
+            tickInterval: 5000,
+            tickLength: 0,
+            min: 0
+        }
+        ],
+        xAxis: {
+            title: {
+                text: 'War League'
+            },
+            tickInterval: 10,
+            type: 'category',
+            categories: leagueDates,
+            labels: {
+                rotation: 70
+            }
+        },
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart: 0
+            }
+        },
+        series: [{
+            name: 'Average Collected Cards',
+            data: teamCardAvgs,
+            yAxis: 0
+        },
+        {
+            name: 'Total trophies',
+            data: totalTrophies,
+            yAxis: 1
+        },
+        {
+            name: 'Total Cards',
+            data: totalCards,
+            yAxis: 2
+        }
+        ],
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
     });
 }
 

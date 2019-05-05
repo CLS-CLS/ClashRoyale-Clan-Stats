@@ -610,6 +610,7 @@ app.controller("singleWarStatController", function($scope, $http, $timeout, hist
 
     function init() {
         getData($scope.selectedItem);
+        loadClanChartData();
     }
 
     init();
@@ -629,6 +630,16 @@ app.controller("singleWarStatController", function($scope, $http, $timeout, hist
         }, function(response) {
             $scope.loading = false;
         })
+    }
+
+    function loadClanChartData() {
+        $http.get(baseUrl() + "/rest/warstats/warleague").then(
+            function(response) {
+                $timeout(function() {
+                    clanWarProgressChart(response.data)
+                })
+            }
+        )
     }
 })
 
