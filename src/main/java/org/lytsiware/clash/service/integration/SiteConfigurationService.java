@@ -1,10 +1,14 @@
 package org.lytsiware.clash.service.integration;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
+@Getter
 public class SiteConfigurationService {
 
     @Value("${clientDataUrl}")
@@ -19,30 +23,11 @@ public class SiteConfigurationService {
     @Value("${statsRoyaleWarUrl}")
     private String statsRoyeleWarUrl;
 
-    public SiteConfigurationService(){
+    @Value("${clashRestUrl}")
+    private Resource clashRestUrl;
+
+    public SiteConfigurationService() {
 
     }
 
-    public SiteConfigurationService(Resource dataResource, String refreshUrl, Resource deckshopClanUrlResource, String statsRoyeleWarUrl) {
-        this.dataResource = dataResource;
-        this.refreshUrl = refreshUrl;
-        this.deckshopClanUrlResource = deckshopClanUrlResource;
-        this.statsRoyeleWarUrl = statsRoyeleWarUrl;
-    }
-
-    public Resource getDataResource() {
-        return dataResource;
-    }
-
-    public String getRefreshUrl() {
-        return refreshUrl;
-    }
-
-    public Resource getDeckshopClanUrlResource() {
-        return deckshopClanUrlResource;
-    }
-
-    public String getStatsRoyeleWarUrl() {
-        return statsRoyeleWarUrl;
-    }
 }

@@ -6,7 +6,7 @@ import org.springframework.core.io.FileSystemResource;
 
 public class DeckShopSiteServiceImplTest {
 
-    DeckShopSiteServiceImpl deckShopSiteService = new DeckShopSiteServiceImpl(new SiteConfigurationService(null, null, new FileSystemResource("src/test/resources/deckshop.html"), null));
+    DeckShopSiteServiceImpl deckShopSiteService = new DeckShopSiteServiceImpl(new SiteConfigurationService(null, null, new FileSystemResource("src/test/resources/deckshop.html"), null, null));
 
     @Test
     public void retrieveData() throws Exception {

@@ -166,11 +166,6 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
     }
 
 
-    public static void main(String[] args) {
-//        List<WarStatsInputDto> warLeagues = new StatsRoyaleForWarSiteServiceImpl(new SiteConfigurationService(null, null, null, "file:///c:/users/christos/desktop/warStats.htm")).retrieveData();
-        new StatsRoyaleForWarSiteServiceImpl(new SiteConfigurationService(null, "https://statsroyale.com/clan/20G0YGP/refresh", null, null)).refresh();
-    }
-
     @Override
     public boolean refresh() {
         try {

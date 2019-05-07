@@ -2,21 +2,16 @@ package org.lytsiware.clash.controller;
 
 import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
 import org.lytsiware.clash.dto.NewPlayersDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
 import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.TemplateService;
-import org.lytsiware.clash.service.calculation.CalculationContext;
 import org.lytsiware.clash.service.calculation.chestscore.ClanChestScoreCalculationService;
 import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService;
-import org.lytsiware.clash.service.integration.SiteConfigurationService;
 import org.lytsiware.clash.service.integration.SiteQualifier;
-import org.lytsiware.clash.service.integration.statsroyale.StatsRoyaleSiteServiceImpl;
-import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -108,21 +102,5 @@ public class ClanStatsRestController {
     public List<ClanWeeklyStatsDto> getClanChestScore() {
         return aggregationService.getClanChestScore(Week.now().minusWeeks(24), Week.now().previous());
     }
-
-    @GetMapping(value = "clan/{clanTag}/score")
-    public HashMap<String, Double> getClanXCrownScore(@PathVariable String clanTag) {
-        List<PlayerWeeklyStats> playerWeeklyStats = new StatsRoyaleSiteServiceImpl(new SiteConfigurationService(Utils.createStatsRoyaleForClanTag(clanTag), "", null, null)).retrieveData(false);
-        CalculationContext calculationContext = clanChestScoreCalculationService.calculateChestScore(playerWeeklyStats);
-        Double deviationScore = calculationContext.get(CalculationContext.PLAYER_DEVIATION_PERC, Double.class);
-        Double crownScore = calculationContext.get(CalculationContext.CROWN_SCORE_PERC, Double.class);
-        Double finalScore = calculationContext.get(CalculationContext.FINAL_DEVIATION, Double.class);
-
-        HashMap<String, Double> results = new HashMap<>();
-        results.put("Final Score", finalScore);
-        results.put("Crown Score", crownScore);
-        results.put("Deviation Score", deviationScore);
-        return results;
-    }
-
 
 }
