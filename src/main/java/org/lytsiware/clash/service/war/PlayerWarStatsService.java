@@ -2,7 +2,6 @@ package org.lytsiware.clash.service.war;
 
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerInOut;
-import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
@@ -14,15 +13,9 @@ import java.util.Map;
 
 public interface PlayerWarStatsService {
 
-    List<PlayerWarStat> persistPlayerWarStats(List<PlayerWarStat> playerWarStats);
+    PlaywerWarStatsWithAvgsDto getLatestPlayerWarStatsUntil(String tag, LocalDate untilDate);
 
-    PlaywerWarStatsWithAvgsDto getPlayerWarStatsForWeek(String tag, LocalDate untilDate);
-
-    WarLeague saveWarStatsWithMissingParticipants(List<PlayerWarStat> statsList);
-
-    void updateWarStatsForAffectedLeagues(List<WarLeague> warLeagues);
-
-    void savePlayerWarStats(List<PlayerWarStat> statsList);
+    void saveWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList);
 
     /**
      * Finds the players that could have participated in the war but they did not.
@@ -38,5 +31,5 @@ public interface PlayerWarStatsService {
      */
     Map<Player, PlayerInOut> findPlayersNotParticipatedInWar(WarStatsInputDto playersInWar, LocalDateTime date, Integer faultTolleranceInMinutes);
 
-    List<PlayerWarStat> findLatestWarStatsForWar(Integer deltaWar);
+    List<PlayerWarStat> findWarStatsForWar(Integer deltaWar);
 }

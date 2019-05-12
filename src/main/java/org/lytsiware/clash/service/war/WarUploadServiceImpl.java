@@ -28,12 +28,15 @@ public class WarUploadServiceImpl implements WarUploadService {
     private PlayerWarStatsService playerWarStatsService;
     private WarLeagueService warLeagueService;
     private PlayerRepository playerRepository;
+    private PlayerAggregationWarStatsService playerAggregationWarStatsService;
 
     @Autowired
-    public WarUploadServiceImpl(PlayerWarStatsService playerWarStatsService, WarLeagueService warLeagueService, PlayerRepository playerRepository) {
+    public WarUploadServiceImpl(PlayerWarStatsService playerWarStatsService, WarLeagueService warLeagueService,
+                                PlayerRepository playerRepository, PlayerAggregationWarStatsService playerAggregationWarStatsService) {
         this.playerWarStatsService = playerWarStatsService;
         this.warLeagueService = warLeagueService;
         this.playerRepository = playerRepository;
+        this.playerAggregationWarStatsService = playerAggregationWarStatsService;
     }
 
 
@@ -90,11 +93,9 @@ public class WarUploadServiceImpl implements WarUploadService {
             }
 
             warLeagueService.calculateLeagueAvgsAndSave(statsList.get(0).getWarLeague());
-            warLeagues.add(playerWarStatsService.saveWarStatsWithMissingParticipants(statsList));
+            warLeagues.add(statsList.get(0).getWarLeague());
+            playerWarStatsService.saveWarStatsAndUpdateStatistics(statsList);
         }
-
-        playerWarStatsService.updateWarStatsForAffectedLeagues(warLeagues);
-
     }
 
 
