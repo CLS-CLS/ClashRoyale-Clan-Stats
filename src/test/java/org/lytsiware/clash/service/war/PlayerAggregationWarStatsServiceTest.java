@@ -73,7 +73,7 @@ public class PlayerAggregationWarStatsServiceTest extends AbstractSpringBootTest
                 + pws.getWarPhaseStats().getGamesWon()));
 
 
-        List<PlayerAggregationWarStats> result = playerAggregationWarStatsService.calculateStats(LocalDate.now(), 5, true);
+        List<PlayerAggregationWarStats> result = playerAggregationWarStatsService.calculateStats(LocalDate.now(), 5);
         result.forEach(aggr -> System.out.println(aggr.getPlayer().getName() + ", " + aggr.getDate().format(DateTimeFormatter.ofPattern("dd-MM")) + aggr.getAvgCards()));
 
         PlayerAggregationWarStats player0AggrStat = findByPlayer(result, "player0");

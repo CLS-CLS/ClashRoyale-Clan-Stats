@@ -1,19 +1,15 @@
 package org.lytsiware.clash.service.war;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerInOut;
 import org.lytsiware.clash.domain.player.PlayerRepository;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
-import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
-import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
 import org.lytsiware.clash.service.clan.PlayerCheckInService;
@@ -39,46 +35,39 @@ import java.util.stream.Collectors;
 public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
     public static final int WAR_DURATION = 2;
+    @Autowired
     private PlayerWarStatsRepository playerWarStatsRepository;
-    private WarLeagueService warLeagueService;
-    private WarLeagueRepository warLeagueRepository;
-    private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
-    private PlayerAggregationWarStatsService playerAggregationWarStatsService;
-    private WarInputServiceImpl warInputService;
-    private StatsRoyaleDateParse statsRoyaleDateParse;
-    private PlayerCheckInService playerCheckInService;
-    private PlayerRepository playerRepository;
-    private Clock clock;
 
     @Autowired
-    public PlayerWarStatsServiceImpl(PlayerWarStatsRepository playerWarStatsRepository,
-                                     WarLeagueService warLeagueService,
-                                     WarLeagueRepository warLeagueRepository,
-                                     PlayerWeeklyStatsRepository playerWeeklyStatsRepository,
-                                     PlayerAggregationWarStatsService playerAggregationWarStatsService,
-                                     PlayerCheckInService playerCheckInService,
-                                     PlayerRepository playerRepository,
-                                     Clock clock) {
-        this.playerWarStatsRepository = playerWarStatsRepository;
-        this.warLeagueService = warLeagueService;
-        this.warLeagueRepository = warLeagueRepository;
-        this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
-        this.playerAggregationWarStatsService = playerAggregationWarStatsService;
-        this.playerCheckInService = playerCheckInService;
-        this.playerRepository = playerRepository;
-        this.clock = clock;
-    }
+    private WarLeagueService warLeagueService;
+
+    @Autowired
+    private WarLeagueRepository warLeagueRepository;
+
+    @Autowired
+    private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
+
+    @Autowired
+    private PlayerAggregationWarStatsService playerAggregationWarStatsService;
+
+    @Autowired
+    private WarInputServiceImpl warInputService;
+
+    @Autowired
+    private StatsRoyaleDateParse statsRoyaleDateParse;
+
+    @Autowired
+    private PlayerCheckInService playerCheckInService;
+
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    @Autowired
+    private Clock clock;
+
 
     @Override
-    public List<PlayerWarStat> persistPlayerWarStats(List<PlayerWarStat> playerWarStats) {
-        List<PlayerWarStat> persisted = playerWarStatsRepository.saveAll(playerWarStats);
-        playerWarStatsRepository.flush();
-        return persisted;
-    }
-
-
-    @Override
-    public PlaywerWarStatsWithAvgsDto getPlayerWarStatsForWeek(String tag, LocalDate untilDate) {
+    public PlaywerWarStatsWithAvgsDto getLatestPlayerWarStatsUntil(String tag, LocalDate untilDate) {
 
         Map<LocalDate, PlayerWarStat> playerWarStats = playerWarStatsRepository.findFirst40ByPlayerTagAndWarLeagueStartDateLessThanEqualOrderByWarLeagueStartDateDesc(tag, untilDate)
                 .stream().collect(Utils.collectToMap(pws -> pws.getWarLeague().getStartDate(), Function.identity()));
@@ -92,54 +81,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
 
     @Override
-    public WarLeague saveWarStatsWithMissingParticipants(List<PlayerWarStat> statsList) {
-
-        WarLeague warLeague = statsList.get(0).getWarLeague();
-        Set<String> playersInClan = playerWeeklyStatsRepository.findByWeek(Week.fromDate(warLeague.getStartDate()))
-                .stream().map(PlayerWeeklyStats::getPlayer).map(Player::getTag).collect(Collectors.toSet());
-
-        for (PlayerWarStat pws : statsList) {
-            playersInClan.remove(pws.getPlayer().getTag());
-        }
-
-
-        for (String playerTag : playersInClan) {
-            PlayerWarStat notParticipatingPWS = PlayerWarStat.builder()
-                    .player(new Player(playerTag, null, null, true))
-                    .warPhaseStats(WarPhaseStats.builder()
-                            .gamesGranted(0)
-                            .gamesLost(0)
-                            .gamesWon(0)
-                            .build())
-                    .collectionPhaseStats(CollectionPhaseStats.builder()
-                            .cardsWon(0)
-                            .gamesPlayed(0)
-                            .build())
-                    .build();
-            notParticipatingPWS.setWarLeague(warLeague);
-            statsList.add(notParticipatingPWS);
-        }
-
-
-        persistPlayerWarStats(statsList);
-
-        return warLeague;
-    }
-
-    @Override
-    public void updateWarStatsForAffectedLeagues(List<WarLeague> warLeagues) {
-        List<WarLeague> affectedLeagues = warLeagues.stream()
-                .flatMap(warLeague -> warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan).stream())
-                .distinct().collect(Collectors.toList());
-
-        for (WarLeague affectedLeague : affectedLeagues) {
-            playerAggregationWarStatsService.calculateAndUpdateStats(affectedLeague.getStartDate(), WarConstants.leagueSpan, true);
-        }
-
-    }
-
-    @Override
-    public void savePlayerWarStats(List<PlayerWarStat> statsList) throws EntityExistsException {
+    public void saveWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList) throws EntityExistsException {
         WarLeague warLeague = statsList.get(0).getWarLeague();
 
         if (warLeagueRepository.findByStartDate(warLeague.getStartDate()).isPresent()) {
@@ -147,8 +89,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         }
 
         warLeagueService.calculateLeagueAvgsAndSave(warLeague);
-        persistPlayerWarStats(statsList);
-        updateWarStatsForAffectedLeagues(Collections.singletonList(warLeague));
+        playerWarStatsRepository.saveAll(statsList);
+        playerWarStatsRepository.flush();
+        playerAggregationWarStatsService.recalculateAndUpdateWarStatsForLeagues(Collections.singletonList(warLeague));
     }
 
 
@@ -177,8 +120,8 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     }
 
     @Override
-    public List<PlayerWarStat> findLatestWarStatsForWar(Integer deltaWar) {
-        log.info("START findLatestWarStatsForWar for deltawar {}", deltaWar);
+    public List<PlayerWarStat> findWarStatsForWar(Integer deltaWar) {
+        log.info("START findWarStatsForWar for deltawar {}", deltaWar);
         List<WarLeague> warLeague = warLeagueRepository.findAll(PageRequest.of(deltaWar, 1, Sort.by(Sort.Direction.DESC, "startDate"))).getContent();
         if (warLeague.isEmpty()) {
             return Collections.EMPTY_LIST;

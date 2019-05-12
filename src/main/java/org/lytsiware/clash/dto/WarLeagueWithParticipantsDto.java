@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Data
-public class ClanWarStatsDto implements Serializable {
+public class WarLeagueWithParticipantsDto implements Serializable {
 
     List<PlayerWarStatsDto> playerWarStats;
     private int totalCards;
@@ -27,7 +27,7 @@ public class ClanWarStatsDto implements Serializable {
     private Integer deltaTrophies;
     private Integer totalTrophies;
 
-    public ClanWarStatsDto(WarLeague warLeague) {
+    public WarLeagueWithParticipantsDto(WarLeague warLeague) {
         this.playerWarStats = warLeague.getPlayerWarStats().stream()
                 .filter(playerWarStat -> playerWarStat.getCollectionPhaseStats().getCardsWon() > 0)
                 .map(PlayerWarStatsDto::new)

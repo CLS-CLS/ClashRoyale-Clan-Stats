@@ -1,7 +1,6 @@
 package org.lytsiware.clash.service.war;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
@@ -34,30 +33,34 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     @Autowired
     PlayerWarStatsRepository playerWarStatsRepository;
 
-
     @Override
-    public void calculateStatsBetweenDates(LocalDate from, LocalDate to, int span) {
-        List<WarLeague> warLeagues = warLeagueRepository.findByStartDateBetween(from, to);
-        for (WarLeague warLeague : warLeagues) {
-            calculateAndUpdateStats(warLeague.getStartDate(), span, true);
+    public void recalculateAndUpdateWarStatsForLeagues(List<WarLeague> warLeagues) {
+        List<WarLeague> affectedLeagues = warLeagues.stream()
+                .flatMap(warLeague -> warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan).stream())
+                .distinct().collect(Collectors.toList());
+
+        for (WarLeague affectedLeague : affectedLeagues) {
+            calculateAndUpdateStats(affectedLeague.getStartDate(), WarConstants.leagueSpan);
         }
     }
 
 
     @Override
-    public List<PlayerAggregationWarStats> calculateStats(LocalDate latestLeagueStartDate, int leagueSpan, boolean strict) {
+    public void calculateStatsBetweenDates(LocalDate from, LocalDate to, int span) {
+        List<WarLeague> warLeagues = warLeagueRepository.findByStartDateBetween(from, to);
+        for (WarLeague warLeague : warLeagues) {
+            calculateAndUpdateStats(warLeague.getStartDate(), span);
+        }
+    }
+
+
+    @Override
+    public List<PlayerAggregationWarStats> calculateStats(LocalDate latestLeagueStartDate, int leagueSpan) {
 
         List<WarLeague> warLeagues = warLeagueRepository.findFirstNthWarLeaguesBeforeDate(latestLeagueStartDate, leagueSpan);
 
-        if (strict) {
-            if (warLeagues.isEmpty() || !warLeagues.get(0).getStartDate().equals(latestLeagueStartDate)) {
-                throw new IllegalArgumentException("Strict mode enabled but no league with the provided start date exists");
-            }
-        } else {
-            if (!warLeagues.isEmpty() && !latestLeagueStartDate.equals(warLeagues.get(0).getStartDate())) {
-                log.warn("The provided date {} does not correspond to the closest league date {}", latestLeagueStartDate, warLeagues.get(0).getStartDate());
-                latestLeagueStartDate = warLeagues.get(0).getStartDate();
-            }
+        if (warLeagues.isEmpty() || !warLeagues.get(0).getStartDate().equals(latestLeagueStartDate)) {
+            throw new IllegalArgumentException("Strict mode enabled but no league with the provided start date exists");
         }
 
         List<PlayerAggregationWarStats> partialCalculatedStats = calculateStats(warLeagues, latestLeagueStartDate, leagueSpan);
@@ -65,6 +68,88 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
         List<PlayerAggregationWarStats> avgCalculatedStats = calculateAvgsStatsAndScore(latestLeagueStartDate, leagueSpan, players, partialCalculatedStats);
         merge(avgCalculatedStats, partialCalculatedStats);
         return partialCalculatedStats;
+    }
+
+
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<PlayerAggregationWarStats> calculateAndUpdateStats(LocalDate startDate, int leagueSpan) {
+        List<PlayerAggregationWarStats> aggregationStatsToUpdate = calculateStats(startDate, leagueSpan);
+
+        Map<PlayerAggregationWarStats, Long> aggregationWarStatsInDb = playerAggregationWarStatsRepository.findByDateAndLeagueSpan(startDate, leagueSpan)
+                .stream().collect(Collectors.toMap(Function.identity(), PlayerAggregationWarStats::getId));
+
+        for (PlayerAggregationWarStats aggregationWarStatToUpdate : aggregationStatsToUpdate) {
+            aggregationWarStatToUpdate.setId(aggregationWarStatsInDb.get(aggregationWarStatToUpdate));
+        }
+
+        Iterable<PlayerAggregationWarStats> iterable = playerAggregationWarStatsRepository.saveAll(aggregationStatsToUpdate);
+        List<PlayerAggregationWarStats> saved = new ArrayList<>();
+        iterable.forEach(saved::add);
+        return saved;
+    }
+
+
+    @Override
+    public ClansWarGlobalStatsDto findLatestWarAggregationStatsForWar(int deltaWar) {
+        log.info("START findLatestWarAggregationStatsForWar for deltawar {}", deltaWar);
+        LocalDate latestRecordedDate = warLeagueRepository.findLatestRecordedWarLeague().map(WarLeague::getStartDate).orElse(null);
+
+        return warLeagueRepository.findNthWarLeague(deltaWar)
+                .map(warLeague1 -> playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague1.getStartDate(), WarConstants.leagueSpan))
+                .map(playerAggregationWarStats -> new ClansWarGlobalStatsDto(playerAggregationWarStats, latestRecordedDate)).orElse(null);
+
+    }
+
+
+    @Override
+    public List<PlayerAggregationWarStats> findWarStatsForPlayer(String tag, int leagueSpan, LocalDate untilDate) {
+        return playerAggregationWarStatsRepository.findFirst40ByPlayerTagAndLeagueSpanAndDateLessThanEqualOrderByDateDesc(tag, leagueSpan, untilDate);
+    }
+
+
+    private List<PlayerAggregationWarStats> calculateStats(List<WarLeague> warLeagues, LocalDate date, int leagueSpan) {
+
+        // bug : calculate stats only for the players that have warstats in the latest league , otherwise players that have left the clan
+        // will have aggregation stats. So find we find the current players and we filter out the rest (that the appear because of previous leagues)
+        Set<Player> currentPlayers = warLeagues.stream().findFirst().get().getPlayerWarStats().stream().map(PlayerWarStat::getPlayer).collect(Collectors.toSet());
+
+        Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
+                .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
+                .filter(playerWarStat -> currentPlayers.contains(playerWarStat.getPlayer()))
+                .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
+
+        List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
+
+        for (List<PlayerWarStat> playerWarStats : warStatsPerPlayer.values()) {
+
+            int numberOfWars = playerWarStats.stream().map(PlayerWarStat::getWarLeague).collect(Collectors.toSet()).size();
+            List<PlayerWarStat> participatedWars = playerWarStats.stream()
+                    .filter(pws -> pws.getCollectionPhaseStats().getCardsWon() != 0).collect(Collectors.toList());
+            int numberOfWarsParticipated = participatedWars.size();
+            int gamesGranted = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
+            int totalCards = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
+                    .filter(i -> i != 0).sum();
+            int wins = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum();
+            int gamesNotPlayed = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
+            int crownsLost = gamesNotPlayed + participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesLost()).sum();
+
+            PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
+                    .date(date)
+                    .gamesGranted(gamesGranted)
+                    .gamesNotPlayed(gamesNotPlayed)
+                    .gamesWon(wins)
+                    .leagueSpan(leagueSpan)
+                    .player(playerWarStats.get(0).getPlayer())
+                    .totalCards(totalCards)
+                    .warsEligibleForParticipation(numberOfWars)
+                    .warsParticipated(numberOfWarsParticipated).build();
+
+            playerAggregationWarStats.add(playerAggregationWarStat);
+        }
+
+        return playerAggregationWarStats;
     }
 
     private void merge(List<PlayerAggregationWarStats> info, List<PlayerAggregationWarStats> to) {
@@ -117,114 +202,5 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
         return result;
     }
 
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED)
-    public List<PlayerAggregationWarStats> calculateAndUpdateStats(LocalDate startDate, int leagueSpan, boolean strict) {
-        List<PlayerAggregationWarStats> aggregationStatsToUpdate = calculateStats(startDate, leagueSpan, strict);
-
-        Map<PlayerAggregationWarStats, Long> aggregationWarStatsInDb = playerAggregationWarStatsRepository.findByDateAndLeagueSpan(startDate, leagueSpan)
-                .stream().collect(Collectors.toMap(Function.identity(), PlayerAggregationWarStats::getId));
-
-        for (PlayerAggregationWarStats aggregationWarStatToUpdate : aggregationStatsToUpdate) {
-            aggregationWarStatToUpdate.setId(aggregationWarStatsInDb.get(aggregationWarStatToUpdate));
-        }
-
-        Iterable<PlayerAggregationWarStats> iterable = playerAggregationWarStatsRepository.saveAll(aggregationStatsToUpdate);
-        List<PlayerAggregationWarStats> saved = new ArrayList<>();
-        iterable.forEach(saved::add);
-        return saved;
-    }
-
-    @Override
-    public List<PlayerAggregationWarStats> findLatestWarAggregationStatsForWeek(Week week) {
-        log.info("START findLatestWarAggregationStatsForWeek for week {}", week);
-        List<WarLeague> warLeague = warLeagueRepository.findFirstNthWarLeaguesBeforeDate(week.getEndDate(), 1);
-        if (warLeague.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-        return playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.get(0).getStartDate(), WarConstants.leagueSpan);
-    }
-
-    @Override
-    public ClansWarGlobalStatsDto findLatestWarAggregationStatsForWar(int deltaWar) {
-        log.info("START findLatestWarAggregationStatsForWar for deltawar {}", deltaWar);
-        LocalDate latestRecordedDate = warLeagueRepository.findLatestRecordedWarLeague().map(WarLeague::getStartDate).orElse(null);
-
-        return warLeagueRepository.findNthWarLeague(deltaWar)
-                .map(warLeague1 -> playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague1.getStartDate(), WarConstants.leagueSpan))
-                .map(playerAggregationWarStats -> new ClansWarGlobalStatsDto(playerAggregationWarStats, latestRecordedDate)).orElse(null);
-
-    }
-
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void calculateMissingStats(LocalDate from, LocalDate to) {
-        List<LocalDate> leagueStartDates = warLeagueRepository.findAll().stream().map(WarLeague::getStartDate).collect(Collectors.toList());
-        if (from != null) {
-            leagueStartDates = leagueStartDates.stream().filter(date -> date.isAfter(from)).collect(Collectors.toList());
-        }
-
-        if (to != null) {
-            leagueStartDates = leagueStartDates.stream().filter(date -> date.isBefore(to)).collect(Collectors.toList());
-        }
-
-        for (LocalDate startDate : leagueStartDates) {
-            if (playerAggregationWarStatsRepository.findByDateAndLeagueSpan(startDate, WarConstants.leagueSpan).isEmpty()) {
-                log.info("Calculating missing war stats for date {}", startDate);
-                calculateAndUpdateStats(startDate, WarConstants.leagueSpan, true);
-            }
-        }
-    }
-
-    @Override
-    public List<PlayerAggregationWarStats> findWarStatsForPlayer(String tag, int leagueSpan, LocalDate untilDate) {
-        return playerAggregationWarStatsRepository.findFirst40ByPlayerTagAndLeagueSpanAndDateLessThanEqualOrderByDateDesc(tag, leagueSpan, untilDate);
-    }
-
-
-    private List<PlayerAggregationWarStats> calculateStats(List<WarLeague> warLeagues, LocalDate date, int leagueSpan) {
-
-        // bug : calculate stats only for the players that have warstats in the latest league , otherwise players that have left the clan
-        // will have aggregation stats. So find we find the current players and we filter out the rest (that the appear because of previous leagues)
-        Set<Player> currentPlayers = warLeagues.stream().findFirst().get().getPlayerWarStats().stream().map(PlayerWarStat::getPlayer).collect(Collectors.toSet());
-
-        Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
-                .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
-                .filter(playerWarStat -> currentPlayers.contains(playerWarStat.getPlayer()))
-                .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
-
-        List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
-
-        for (List<PlayerWarStat> playerWarStats : warStatsPerPlayer.values()) {
-
-            int numberOfWars = playerWarStats.stream().map(PlayerWarStat::getWarLeague).collect(Collectors.toSet()).size();
-            List<PlayerWarStat> participatedWars = playerWarStats.stream()
-                    .filter(pws -> pws.getCollectionPhaseStats().getCardsWon() != 0).collect(Collectors.toList());
-            int numberOfWarsParticipated = participatedWars.size();
-            int gamesGranted = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
-            int totalCards = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
-                    .filter(i -> i != 0).sum();
-            int wins = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum();
-            int gamesNotPlayed = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
-            int crownsLost = gamesNotPlayed + participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesLost()).sum();
-
-            PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
-                    .date(date)
-                    .gamesGranted(gamesGranted)
-                    .gamesNotPlayed(gamesNotPlayed)
-                    .gamesWon(wins)
-                    .leagueSpan(leagueSpan)
-                    .player(playerWarStats.get(0).getPlayer())
-                    .totalCards(totalCards)
-                    .warsEligibleForParticipation(numberOfWars)
-                    .warsParticipated(numberOfWarsParticipated).build();
-
-            playerAggregationWarStats.add(playerAggregationWarStat);
-        }
-
-        return playerAggregationWarStats;
-    }
 
 }

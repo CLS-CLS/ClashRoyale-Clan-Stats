@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
-import org.lytsiware.clash.dto.ClanWarStatsDto;
 import org.lytsiware.clash.dto.WarLeagueDto;
+import org.lytsiware.clash.dto.WarLeagueWithParticipantsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +49,9 @@ public class WarLeagueServiceImpl implements WarLeagueService {
     }
 
     @Override
-    public ClanWarStatsDto findStatsForWarLeague(int deltaWar) {
+    public WarLeagueWithParticipantsDto findStatsForWarLeague(int deltaWar) {
         Optional<WarLeague> result = warLeagueRepository.findNthWarLeague(deltaWar);
-        return result.map(ClanWarStatsDto::new).orElse(null);
+        return result.map(WarLeagueWithParticipantsDto::new).orElse(null);
     }
 
 

@@ -5,10 +5,10 @@ import org.lytsiware.clash.Week;
 import org.lytsiware.clash.converter.InputDtoPlayerWarStatConverter;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
-import org.lytsiware.clash.dto.ClanWarStatsDto;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.dto.WarLeagueDto;
+import org.lytsiware.clash.dto.WarLeagueWithParticipantsDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
 import org.lytsiware.clash.service.war.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +86,7 @@ public class WarStatsRestController {
 
     @GetMapping(value = "/player/{tag}/war")
     public PlaywerWarStatsWithAvgsDto playerWarStats(@PathVariable("tag") String tag) {
-        return playerWarStatsService.getPlayerWarStatsForWeek(tag, Week.now().getEndDate());
+        return playerWarStatsService.getLatestPlayerWarStatsUntil(tag, Week.now().getEndDate());
     }
 
     @PostMapping("/uploadwarstats")
@@ -94,12 +94,6 @@ public class WarStatsRestController {
     public void uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
         log.info("START uploadWarStats");
         warUploadService.upload(files);
-    }
-
-    @GetMapping("/calculatewarstats")
-    public void calculateWarStats() {
-        log.info("START calculating missing war stats");
-        playerAggregationWarStatsService.calculateMissingStats(null, null);
     }
 
 
@@ -111,7 +105,7 @@ public class WarStatsRestController {
     }
 
     @GetMapping("/warstats/single/{deltaWar}")
-    public ClanWarStatsDto getSingleWarStats(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
+    public WarLeagueWithParticipantsDto getSingleWarStats(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
         log.info("START getSingleWarStats deltaWeek = {}", deltaWar);
         return warLeagueService.findStatsForWarLeague(deltaWar == null ? 0 : deltaWar);
     }
@@ -143,7 +137,7 @@ public class WarStatsRestController {
 
         List<PlayerWarStat> statsList = InputDtoPlayerWarStatConverter.toPlayerWarStat(warStatsInputDto);
         try {
-            playerWarStatsService.savePlayerWarStats(statsList);
+            playerWarStatsService.saveWarStatsAndUpdateStatistics(statsList);
         } catch (EntityExistsException ex) {
             return ResponseEntity.ok(Optional.of("League Already exists"));
         }
