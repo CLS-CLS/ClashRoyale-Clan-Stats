@@ -67,6 +67,11 @@ public class WarLeague {
 
     }
 
+    public void clearPlayerWarStats() {
+        playerWarStats.stream().forEach(playerWarStat -> playerWarStat.setWarLeague(null));
+        playerWarStats.clear();
+    }
+
     public void addPlayerWarStats(PlayerWarStat playerWarStat) {
         this.playerWarStats.add(playerWarStat);
     }

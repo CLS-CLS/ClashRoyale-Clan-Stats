@@ -32,6 +32,7 @@ public class InputDtoPlayerWarStatConverter {
                             .gamesGranted(playerStats.getGamesGranted())
                             .build())
                     .collectionPhaseStats(CollectionPhaseStats.builder()
+                            .gamesPlayed(playerStats.getCollectionBattlesPlayed())
                             .cardsWon(playerStats.getCards())
                             .build())
                     .player(new Player(playerStats.getTag(), playerStats.getName(), null, null))

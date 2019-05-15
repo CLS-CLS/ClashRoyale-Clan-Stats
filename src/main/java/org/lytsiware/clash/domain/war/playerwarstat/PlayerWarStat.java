@@ -43,7 +43,9 @@ public class PlayerWarStat {
 
     public void setWarLeague(WarLeague warLeague) {
         this.warLeague = warLeague;
-        warLeague.addPlayerWarStats(this);
+        if (warLeague != null) {
+            warLeague.addPlayerWarStats(this);
+        }
     }
 
 

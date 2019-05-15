@@ -78,6 +78,9 @@ public class WarStatsInputDto implements Serializable {
         @PositiveOrZero
         private Integer cards;
 
+        @ZeroToThree
+        private Integer collectionBattlesPlayed;
+
         public PlayerWarStatInputDto(PlayerWarStat warStat, boolean delete) {
             this.delete = delete;
             this.name = warStat.getPlayer().getName();
@@ -87,10 +90,11 @@ public class WarStatsInputDto implements Serializable {
             this.gamesLost = warStat.getWarPhaseStats().getGamesLost();
             this.gamesNotPlayed = warStat.getWarPhaseStats().getGamesNotPlayed();
             this.cards = warStat.getCollectionPhaseStats().getCardsWon();
+            this.collectionBattlesPlayed = warStat.getCollectionPhaseStats().getGamesPlayed();
         }
 
         public static PlayerWarStatInputDto zeroFieldPlayerWarStatInputDto(String tag, String name) {
-            return PlayerWarStatInputDto.builder().tag(tag).name(name).gamesNotPlayed(0).gamesLost(0).gamesGranted(0).gamesWon(0).cards(0).build();
+            return PlayerWarStatInputDto.builder().tag(tag).name(name).gamesNotPlayed(0).gamesLost(0).gamesGranted(0).gamesWon(0).cards(0).collectionBattlesPlayed(0).build();
         }
     }
 

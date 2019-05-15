@@ -4,8 +4,6 @@ import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Transient;
-import java.util.Optional;
 
 @Embeddable
 @Getter
@@ -15,9 +13,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CollectionPhaseStats {
 
-
-    @Transient
-    @Setter(AccessLevel.NONE)
+    @Column(name = "COLLECTION_GAMES_PLAYED")
     private Integer gamesPlayed;
 
     @Column(name = "COLLECTION_GAMES_WON")
@@ -29,7 +25,4 @@ public class CollectionPhaseStats {
     @Column(nullable = false)
     private Integer cardsWon;
 
-    public Integer getGamesPlayed() {
-        return Optional.ofNullable(gamesWon).orElse(0) + Optional.ofNullable(gamesLost).orElse(0);
-    }
 }

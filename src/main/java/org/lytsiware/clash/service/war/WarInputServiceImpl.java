@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerInOut;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
+import org.lytsiware.clash.domain.war.league.WarLeague;
+import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
 import org.lytsiware.clash.service.integration.SiteIntegrationService;
-import org.lytsiware.clash.service.integration.SiteQualifier;
 import org.lytsiware.clash.service.integration.statsroyale.StatsRoyaleDateParse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,30 +21,20 @@ import java.util.*;
 @Service
 @Slf4j
 public class WarInputServiceImpl implements WarInputService {
-
+    @Autowired
     private SiteIntegrationService<List<WarStatsInputDto>> siteIntegrationService;
-
+    @Autowired
     private Clock clock;
-
+    @Autowired
     private StatsRoyaleDateParse statsRoyaleDateParse;
-
+    @Autowired
     private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
-
+    @Autowired
     private PlayerWarStatsService playerWarStatsService;
 
-
     @Autowired
-    public WarInputServiceImpl(@SiteQualifier(SiteQualifier.Name.STATS_ROYALE_WAR) SiteIntegrationService<List<WarStatsInputDto>> siteIntegrationService,
-                               StatsRoyaleDateParse statsRoyaleDateParse,
-                               PlayerWeeklyStatsRepository playerWeeklyStatsRepository,
-                               PlayerWarStatsService playerWarStatsService,
-                               Clock clock) {
-        this.siteIntegrationService = siteIntegrationService;
-        this.statsRoyaleDateParse = statsRoyaleDateParse;
-        this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
-        this.playerWarStatsService = playerWarStatsService;
-        this.clock = clock;
-    }
+    private WarLeagueRepository warLeagueRepository;
+
 
     @Override
     public List<WarStatsInputDto> getWarStatsFromSite() {
@@ -89,9 +81,16 @@ public class WarInputServiceImpl implements WarInputService {
         return notParticipatedInputDtoList;
     }
 
-
+    /**
+     * Normalizes the data as following
+     * <ul><li>Sorts the data per games won</li>
+     * <li>if a player has earned collection day cards but has no wins or looses add +1 to games not played</li>
+     * <li>if the stats from the site shows that the player has more collection cards won than the ones stored in the db (if any) add +1 to collection battles played</li>
+     * </ul>
+     *
+     * @param siteAllWarLeagueStats
+     */
     private void normalizeWarInputData(List<WarStatsInputDto> siteAllWarLeagueStats) {
-
         for (WarStatsInputDto siteWarLeagueStat : siteAllWarLeagueStats) {
             siteWarLeagueStat.getPlayerWarStats().stream().filter(player -> player.getGamesGranted() == 0).forEach(
                     player -> {
@@ -103,6 +102,18 @@ public class WarInputServiceImpl implements WarInputService {
                     .thenComparing(WarStatsInputDto.PlayerWarStatInputDto::getGamesLost)
                     .thenComparing(WarStatsInputDto.PlayerWarStatInputDto::getGamesNotPlayed)
                     .thenComparing(WarStatsInputDto.PlayerWarStatInputDto::getCards).reversed());
+
+            Set<PlayerWarStat> playerWarStats = warLeagueRepository.findByStartDate(siteWarLeagueStat.getStartDate().toLocalDate())
+                    .map(WarLeague::getPlayerWarStats).orElse(new HashSet<>());
+            for (PlayerWarStat pwsDb : playerWarStats) {
+                siteWarLeagueStat.getPlayerWarStats().stream()
+                        // find player
+                        .filter(playerWarStatInputDto -> playerWarStatInputDto.getTag().equals(pwsDb.getPlayer().getTag()))
+                        // check the ones that the input shows that they have won more cards that was stored in the db
+                        .filter(playerWarStatInputDto -> playerWarStatInputDto.getCards() > pwsDb.getCollectionPhaseStats().getCardsWon())
+                        // add one more collection battle (there is no way they could have more cards if they did not player another battle)
+                        .findFirst().ifPresent(playerWarStatInputDto -> playerWarStatInputDto.setCollectionBattlesPlayed(pwsDb.getCollectionPhaseStats().getGamesPlayed() + 1));
+            }
         }
     }
 }

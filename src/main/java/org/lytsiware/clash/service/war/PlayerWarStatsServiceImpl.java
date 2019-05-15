@@ -85,13 +85,20 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         WarLeague warLeague = statsList.get(0).getWarLeague();
 
         if (warLeagueRepository.findByStartDate(warLeague.getStartDate()).isPresent()) {
-            throw new EntityExistsException("League with start date " + warLeague.getStartDate() + " already exists ");
+            updateWarStatsAndUpdateStatistics(statsList);
         }
 
         warLeagueService.calculateLeagueAvgsAndSave(warLeague);
         playerWarStatsRepository.saveAll(statsList);
         playerWarStatsRepository.flush();
         playerAggregationWarStatsService.recalculateAndUpdateWarStatsForLeagues(Collections.singletonList(warLeague));
+    }
+
+    private void updateWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList) {
+        WarLeague warLeague = warLeagueRepository.findByStartDate(statsList.get(0).getWarLeague().getStartDate()).get();
+        playerWarStatsRepository.deleteAll(warLeague.getPlayerWarStats());
+        warLeague.clearPlayerWarStats();
+        statsList.forEach(playerWarStat -> playerWarStat.setWarLeague(warLeague));
     }
 
 

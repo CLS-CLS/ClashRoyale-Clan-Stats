@@ -35,7 +35,10 @@ public class CurrentWarDto {
         WAR_DAY,
 
         @JsonProperty("collectionDay")
-        COLLECTION_DAY
+        COLLECTION_DAY,
+
+        @JsonProperty("notInWar")
+        NOT_IN_WAR
     }
 
     @Data

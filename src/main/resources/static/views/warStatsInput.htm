@@ -84,6 +84,7 @@
                                         <thead>
                                         <tr>
                                             <th>Player</th>
+                                            <th>"Collection Battles</th>
                                             <th><img style="display:inline" src="images/cards_mid.png"></th>
                                             <th><img style="display:inline" src="images/battle_mid.png"></th>
                                             <th><img style="display:inline" src="images/win_mid.png"></th>
@@ -97,6 +98,14 @@
                                             <td style="display:none"><input type="hidden" name="tag" required
                                                                             ng-model="s.tag" class="form-input"/></td>
                                             <td>{{s.name}}</td>
+                                            <td><input autocomplete="off" class="form-input form-control war-input"
+                                                       max="3"
+                                                       min="0"
+                                                       name="collection_battles_{{$index}}"
+                                                       ng-model="s.collectionBattlesPlayed"
+                                                       ng-style="hasError('collection_battles', $parent.$index, $index) > 0 ? {'border': '1px solid red'}:''"
+                                                       required
+                                                       type="number"/></td>
                                             <td>{{s.cards}}</td>
                                             <td><input type="number" autocomplete="off" name="battles_{{$index}}"
                                                        ng-model="s.gamesGranted"
