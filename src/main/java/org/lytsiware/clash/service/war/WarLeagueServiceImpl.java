@@ -33,6 +33,8 @@ public class WarLeagueServiceImpl implements WarLeagueService {
         warLeague.setTeamWinRatio(winPercentage);
         warLeague.setTeamTotalCards(statsList.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon()).sum());
         warLeague.setTeamScore((int) ((0.5 + 0.5 * winPercentage) * warLeague.getTeamTotalCards()));
+        warLeagueRepository.findFirstNthWarLeaguesBeforeDate(warLeague.getStartDate(), 1).stream()
+                .findFirst().map(WarLeague::getTotalTrophies).map(tt -> tt + warLeague.getTrophies()).ifPresent(warLeague::setTotalTrophies);
     }
 
     @Override
