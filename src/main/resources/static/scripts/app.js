@@ -447,13 +447,15 @@ app.factory('warStatsState',  function(roleComparator) {
 
 });
 
-app.controller("warStatsController", function($scope, $http, $routeParams, $location, $timeout, history, warStatsState){
+app.controller("warStatsController", function($scope, $http, $routeParams, $location, $timeout, history, warStatsState, colorfy){
 
     $scope.stats = {
         playerWarStats : []
     }
 
     $scope.filter = warStatsState.filter;
+
+    $scope.colorfy = colorfy.colorfy;
 
     $scope.next = function(){
         history.store();
@@ -547,13 +549,15 @@ app.controller("clanWarProgressControler", function($http, $timeout){
     }
 })
 
-app.controller("singleWarStatController", function($scope, $http, $timeout, history, singleWarStatState){
+app.controller("singleWarStatController", function($scope, $http, $timeout, history, singleWarStatState, colorfy){
 
     $scope.stats = {
         playerWarStats : []
     }
 
     $scope.filter = singleWarStatState.filter;
+
+    $scope.colorfy = colorfy.colorfy;
 
    	$scope.selectedItem = 0;
 

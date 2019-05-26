@@ -1,6 +1,7 @@
 package org.lytsiware.clash.service.job;
 
 import org.lytsiware.clash.Week;
+import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.service.clan.PlayerCheckInService;
 import org.lytsiware.clash.service.clan.UpdateStatsServiceImpl;
@@ -18,13 +19,14 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Profile("statsRoyale")
 @Transactional(Transactional.TxType.REQUIRED)
 public class StatsRoyaleWeekendJobImpl {
 
-    private final PlayerCheckInService playerInOutServiceImpl;
+    private final PlayerCheckInService playerInOutService;
     private Logger logger = LoggerFactory.getLogger(StatsRoyaleWeekendJobImpl.class);
 
     private SiteIntegrationService<List<PlayerWeeklyStats>> statsRoyaleSiteService;
@@ -40,7 +42,7 @@ public class StatsRoyaleWeekendJobImpl {
         this.statsRoyaleSiteService = statsRoyaleSiteService;
         this.deckShopSiteService = deckShopSiteService;
         this.updateStatsService = updateStatsService;
-        this.playerInOutServiceImpl = playerInOutServiceImpl;
+        this.playerInOutService = playerInOutServiceImpl;
     }
 
 
@@ -58,7 +60,8 @@ public class StatsRoyaleWeekendJobImpl {
                 logger.error("Exception while retrieving stats from deckshop", ex);
             }
             updateStatsService.updatePlayerWeeklyStats(stats, Week.now(), true);
-            playerInOutServiceImpl.markPlayersInClan(stats);
+            List<Player> currentPlayers = stats.stream().map(PlayerWeeklyStats::getPlayer).collect(Collectors.toList());
+            playerInOutService.markPlayersInClan(currentPlayers);
         } catch (Exception e) {
             logger.error("oops", e);
             throw e;

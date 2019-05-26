@@ -2,6 +2,8 @@ package org.lytsiware.clash.service.war;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.player.PlayerCheckInCheckOutRepository;
+import org.lytsiware.clash.domain.player.PlayerInOut;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
@@ -32,6 +34,9 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
 
     @Autowired
     PlayerWarStatsRepository playerWarStatsRepository;
+
+    @Autowired
+    PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
 
     @Override
     public void recalculateAndUpdateWarStatsForLeagues(List<WarLeague> warLeagues) {
@@ -69,7 +74,6 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
         merge(avgCalculatedStats, partialCalculatedStats);
         return partialCalculatedStats;
     }
-
 
 
     @Override
@@ -111,13 +115,12 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
 
     private List<PlayerAggregationWarStats> calculateStats(List<WarLeague> warLeagues, LocalDate date, int leagueSpan) {
 
-        // bug : calculate stats only for the players that have warstats in the latest league , otherwise players that have left the clan
-        // will have aggregation stats. So find we find the current players and we filter out the rest (that the appear because of previous leagues)
-        Set<Player> currentPlayers = warLeagues.stream().findFirst().get().getPlayerWarStats().stream().map(PlayerWarStat::getPlayer).collect(Collectors.toSet());
+        // players that have left the clan will have aggregation stats if we don't filter them out
+        Set<String> playersInClanAtDate = playerCheckInCheckOutRepository.findPlayersInClanAtDate(date.atStartOfDay()).stream().map(PlayerInOut::getTag).collect(Collectors.toSet());
 
         Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
                 .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
-                .filter(playerWarStat -> currentPlayers.contains(playerWarStat.getPlayer()))
+                .filter(playerWarStat -> playersInClanAtDate.contains(playerWarStat.getPlayer().getTag()))
                 .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
 
         List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
@@ -128,12 +131,13 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             List<PlayerWarStat> participatedWars = playerWarStats.stream()
                     .filter(pws -> pws.getCollectionPhaseStats().getCardsWon() != 0).collect(Collectors.toList());
             int numberOfWarsParticipated = participatedWars.size();
-            int gamesGranted = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
+            int gamesGranted = participatedWars.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
             int totalCards = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
                     .filter(i -> i != 0).sum();
-            int wins = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum();
-            int gamesNotPlayed = participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
-            int crownsLost = gamesNotPlayed + participatedWars.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesLost()).sum();
+            int wins = participatedWars.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum();
+            int gamesNotPlayed = participatedWars.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
+            int crownsLost = gamesNotPlayed + participatedWars.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesLost()).sum();
+            int collectionGamesMissed = participatedWars.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getGamesNotPlayed()).sum();
 
             PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
                     .date(date)
@@ -144,6 +148,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
                     .player(playerWarStats.get(0).getPlayer())
                     .totalCards(totalCards)
                     .warsEligibleForParticipation(numberOfWars)
+                    .collectionGamesMissed(collectionGamesMissed)
                     .warsParticipated(numberOfWarsParticipated).build();
 
             playerAggregationWarStats.add(playerAggregationWarStat);
@@ -181,10 +186,10 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
 
             int averageCardsWon = (int) latestPlayersStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
                     .average().orElse(0);
-            int gamesGranted = latestPlayersStats.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
+            int gamesGranted = latestPlayersStats.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesGranted()).sum();
 
             double winRatio = (gamesGranted > 0 ?
-                    (double) latestPlayersStats.stream().mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum() / (double) gamesGranted
+                    (double) latestPlayersStats.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum() / (double) gamesGranted
                     : 0);
 
             PlayerAggregationWarStats partialPlayerStat = partialCalculatedStats.stream().filter(playerAggregationWarStat -> playerAggregationWarStat.getPlayer().equals(player)).findFirst().get();

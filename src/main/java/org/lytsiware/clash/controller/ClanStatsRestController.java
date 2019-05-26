@@ -13,6 +13,7 @@ import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService;
 import org.lytsiware.clash.service.integration.SiteQualifier;
 import org.lytsiware.clash.service.integration.clashapi.ClashRoyaleRestIntegrationService;
+import org.lytsiware.clash.service.job.ClashRoyaleWarJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,12 @@ public class ClanStatsRestController {
     @Autowired
     ClashRoyaleRestIntegrationService clashRoyaleRestIngegrationService;
 
+    @Autowired
+    ClashRoyaleWarJob clashRoyaleWarJob;
+
     @RequestMapping("/fixie")
     public void fixie() {
-        clashRoyaleRestIngegrationService.getDataFromSite();
+        clashRoyaleWarJob.run();
     }
 
     @Autowired

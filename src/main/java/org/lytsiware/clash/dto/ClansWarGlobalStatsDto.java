@@ -47,6 +47,7 @@ public class ClansWarGlobalStatsDto implements Serializable {
         private Double winRatio;
         private Integer score;
         private boolean inClan;
+        private Integer collectionGamesMissed;
 
         public PlayerWarStatsDto(PlayerAggregationWarStats playerAggrWarStats) {
             name = playerAggrWarStats.getPlayer().getName();
@@ -61,6 +62,7 @@ public class ClansWarGlobalStatsDto implements Serializable {
             score = playerAggrWarStats.getScore();
             inClan = playerAggrWarStats.getPlayer().getInClan();
             gamesGranted = playerAggrWarStats.getGamesGranted();
+            collectionGamesMissed = playerAggrWarStats.getCollectionGamesMissed();
         }
 
     }

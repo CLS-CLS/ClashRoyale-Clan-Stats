@@ -1,20 +1,35 @@
 package org.lytsiware.clash.service.job;
 
 
+import lombok.extern.slf4j.Slf4j;
+import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.service.integration.clashapi.ClashRoyaleRestIntegrationService;
+import org.lytsiware.clash.service.integration.clashapi.CurrentWarDto;
+import org.lytsiware.clash.service.job.scheduledname.AbstractSelfScheduledJob;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
+import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-public class ClashRoyaleWarJob {
+@Slf4j
+@Transactional
+public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
 
     @Autowired
     ClashRoyaleRestIntegrationService clashRoyaleRestIntegrationService;
@@ -28,39 +43,77 @@ public class ClashRoyaleWarJob {
     @Autowired
     PlayerWarStatsService playerWarStatsService;
 
-    public void clashRoyaleJob() {
-        WarLeague warLeague = clashRoyaleRestIntegrationService.getWarLeagueStatsForCurrentWar();
+    @Autowired
+    PlayerRepository playerRepository;
+
+    @Scheduled(fixedRate = 1000 * 60 * 60 * 48)
+    public void runPeriodically() {
+        fixedScheduler();
+    }
+
+
+    /**
+     * inserts data for the already recorded players. Players not yet recorded will be omitted as by the time
+     * the method is called again the scheduler the method responsible to record the players will have already run and the new
+     * players will now be in the database.
+     */
+    @Override
+    @Retryable(backoff = @Backoff(delay = 1000 * 60 * 60))
+    public Date run() {
+        CurrentWarDto dto = clashRoyaleRestIntegrationService.getDataFromSite();
+        WarLeague warLeague = clashRoyaleRestIntegrationService.createWarLeagueFromData(dto);
         Optional<WarLeague> warLeagueDb = warLeagueRepository.findByStartDate(warLeague.getStartDate());
+        Map<String, Player> recordedPlayers = playerRepository.loadAll();
         if (warLeagueDb.isPresent()) {
             updateData(warLeagueDb.get(), warLeague);
         } else {
             insertData(warLeague);
         }
+
+        if (dto.getState() == CurrentWarDto.State.COLLECTION_DAY) {
+            return Utils.convertToDate(dto.getEndDate().plusMinutes(30));
+        } else if (dto.getState() == CurrentWarDto.State.WAR_DAY) {
+            return Utils.convertToDate(dto.getEndDate().plusDays(1));
+        } else {
+            return new Date();
+        }
+
     }
 
     private void updateData(WarLeague warLeagueDb, WarLeague warLeague) {
-        for (PlayerWarStat pws : warLeague.getPlayerWarStats()) {
-            updateCollectionsPlayed(warLeagueDb.getPlayerWarStats(), pws, warLeagueDb);
+
+        for (PlayerWarStat pwsDb : warLeagueDb.getPlayerWarStats()) {
+            Optional<PlayerWarStat> sitePlayerWarStat = warLeague.getPlayerWarStats().stream()
+                    .filter(pws -> pws.getPlayer().getTag().equals(pwsDb.getPlayer().getTag())).findFirst();
+            if (sitePlayerWarStat.isPresent()) {
+                pwsDb.getCollectionPhaseStats().setCardsWon(sitePlayerWarStat.get().getCollectionPhaseStats().getCardsWon());
+                pwsDb.getCollectionPhaseStats().setGamesPlayed(sitePlayerWarStat.get().getCollectionPhaseStats().getGamesPlayed());
+            }
         }
         playerWarStatsRepository.saveAll(warLeagueDb.getPlayerWarStats());
     }
 
-    private void updateCollectionsPlayed(Set<PlayerWarStat> playerWarStats, PlayerWarStat pws, WarLeague warLeagueDb) {
-        Optional<PlayerWarStat> pwsDb = playerWarStats.stream()
-                .filter(playerWarStat -> playerWarStat.getPlayer().getTag().equals(pws.getPlayer().getTag()))
-                .findFirst();
-        if (pwsDb.isPresent()) {
-            pwsDb.get().getCollectionPhaseStats().setGamesPlayed(pws.getCollectionPhaseStats().getGamesPlayed());
-            pwsDb.get().getCollectionPhaseStats().setCardsWon(pws.getCollectionPhaseStats().getCardsWon());
-        } else {
-            pws.setWarLeague(warLeagueDb);
-            playerWarStatsRepository.save(pws);
-        }
 
-    }
-
+    /**
+     * inserts data for the already recorded players. Players not yet recorded will be omitted. This is OJ as by the time
+     * the method is called again the scheduler who is responsible to record the players will have already run and the new
+     * players will now be in the database.
+     */
     private void insertData(WarLeague warLeague) {
+        Map<String, Player> recordedPlayers = playerRepository.loadAll();
+
         warLeagueRepository.save(warLeague);
-        playerWarStatsRepository.saveAll(warLeague.getPlayerWarStats());
+        List<PlayerWarStat> playerWarStatsToRecord = warLeague.getPlayerWarStats().stream()
+                .filter(playerWarStat -> {
+                    boolean exists = recordedPlayers.containsKey(playerWarStat.getPlayer().getTag());
+                    if (!exists) {
+                        log.info("Stats for Player {} are omitted as he is not yet recorded ", playerWarStat.getPlayer());
+                    }
+                    return exists;
+                })
+                .collect(Collectors.toList());
+        playerWarStatsRepository.saveAll(playerWarStatsToRecord);
     }
+
+
 }

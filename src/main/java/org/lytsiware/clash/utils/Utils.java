@@ -115,6 +115,10 @@ public class Utils {
         return Date.from(localDateTime.toInstant());
     }
 
+    public static Date convertToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
     public static ZonedDateTime getNextExecutionDate(String cronExpression, ZonedDateTime latestExecutionZonedDate) {
         CronTrigger cronTrigger = new CronTrigger(cronExpression, TimeZone.getTimeZone(ZoneIdConfiguration.zoneId()));
         Date lastExecutionAsDate = Utils.convertToDate(latestExecutionZonedDate, ZoneIdConfiguration.zoneId());

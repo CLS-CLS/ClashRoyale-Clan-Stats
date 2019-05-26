@@ -33,14 +33,18 @@ public class WarLeagueServiceImpl implements WarLeagueService {
         warLeague.setTeamWinRatio(winPercentage);
         warLeague.setTeamTotalCards(statsList.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon()).sum());
         warLeague.setTeamScore((int) ((0.5 + 0.5 * winPercentage) * warLeague.getTeamTotalCards()));
-        warLeagueRepository.findFirstNthWarLeaguesBeforeDate(warLeague.getStartDate(), 1).stream()
+        //also returns the league to be persisted (before means "<=" in the custom query)
+        //But for this case we want the leagues before this one (this one is excluded, so we make sure
+        // 1. we return two leagues and 2. we filter out this one in case it exists)
+        warLeagueRepository.findFirstNthWarLeaguesBeforeDate(warLeague.getStartDate(), 2).stream()
+                .filter(streamedWarLeague -> !streamedWarLeague.getStartDate().isEqual(warLeague.getStartDate()))
                 .findFirst().map(WarLeague::getTotalTrophies).map(tt -> tt + warLeague.getTrophies()).ifPresent(warLeague::setTotalTrophies);
     }
 
     @Override
     public WarLeague calculateLeagueAvgsAndSave(WarLeague warLeague) throws EntityExistsException {
         calculateLeagueAvgs(warLeague);
-        warLeagueRepository.persistAndFlush(warLeague);
+        warLeagueRepository.save(warLeague);
         return warLeague;
     }
 

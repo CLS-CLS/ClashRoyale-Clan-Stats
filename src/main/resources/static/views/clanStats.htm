@@ -212,7 +212,7 @@
                                 {{s.avgCardDonation | number: 2}}
                             </td>
                             <td ng-show="state.selectableColumns['avgDonation'].show && !state.showPercentage.enabled"
-                                ng-style="avgContrColor(s.avgCardDonation, 'card')">
+                                ng-style="avgContrColor(s.avgCardsReceived, 'card')">
                                 {{s.avgCardsReceived | number: 2}}
                             </td>
                             <td ng-show="state.selectableColumns['avgDonation'].show && state.showPercentage.enabled"
@@ -220,7 +220,7 @@
                                 {{s.avgCardDonationPerc | percentage:1}}
                             </td>
                             <td ng-show="state.selectableColumns['avgDonation'].show && state.showPercentage.enabled"
-                                ng-style="avgContrColor(s.avgCardDonation, 'card')">
+                                ng-style="avgContrColor(s.avgCardsReceived, 'card')">
                                 {{s.avgCardRequestPerc | percentage:1}}
                             </td>
                             <td ng-show="state.selectableColumns['avgRequestDonationDiff'].show && !state.showPercentage.enabled"

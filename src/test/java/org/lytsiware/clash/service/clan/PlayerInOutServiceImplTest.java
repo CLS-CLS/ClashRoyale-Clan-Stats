@@ -2,9 +2,7 @@ package org.lytsiware.clash.service.clan;
 
 import org.junit.Test;
 import org.lytsiware.clash.AbstractSpringBootTest;
-import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.*;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,12 +104,12 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
 
     @Test
     public void markPlayersInClan() {
-        List<PlayerWeeklyStats> currentPlayers = new ArrayList<>();
+        List<Player> currentPlayers = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
             Player p = new Player("tag" + i, "", "");
             em.persist(p);
-            currentPlayers.add(PlayerWeeklyStats.builder().withPlayer(p).withWeek(Week.now().getWeek()).build());
+            currentPlayers.add(p);
         }
 
         LocalDate twoDaysAgo = LocalDate.now().minusDays(2);

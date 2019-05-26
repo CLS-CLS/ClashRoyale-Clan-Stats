@@ -77,7 +77,7 @@ public class WarLeague {
     }
 
     public LocalDate getEndDate() {
-        return getStartDate().plusDays(WarConstants.leagueDays - 1);
+        return getStartDate().plusDays(WarConstants.WAR_DURATION - 1);
     }
 
     @Override

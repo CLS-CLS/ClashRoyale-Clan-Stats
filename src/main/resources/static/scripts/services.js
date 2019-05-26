@@ -4,6 +4,7 @@ app.service("colorfy", function() {
 		var boundaryCard = 200;
 		var wowChest = 60;
 		var wowCard = 600;
+		var collectionGames = 3;
 
 		var boundary = 0;
 		var wow = 100000;
@@ -19,6 +20,13 @@ app.service("colorfy", function() {
 			wow = wowCard;
 		}
 
+		if (type == "collectionGames") {
+            if (number < collectionGames) {
+                style.color = 'red';
+            }
+            return style;
+        }
+
 		if (boundary == 0) {
 			style.color = "black"
 			return style;
@@ -33,6 +41,7 @@ app.service("colorfy", function() {
 		if (number >= wow) {
 			style["font-weight"] = 'bold'
 		}
+
 
 		return style;
 	}

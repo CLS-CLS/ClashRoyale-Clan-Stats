@@ -1,5 +1,6 @@
 package org.lytsiware.clash.service.integration.clashapi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Application;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.league.WarLeague;
@@ -8,6 +9,7 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.service.integration.SiteConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,11 +30,14 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class ClashRoyaleRestIntegrationService {
 
     Proxy proxy;
-    String bearer =  //"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjA4ZjUzYzRlLWVmYjEtNDQxYy1iYzYyLTQ0Njc4YjQ1Mjg4ZSIsImlhdCI6MTU1NzI1NDY4NSwic3ViIjoiZGV2ZWxvcGVyLzlmYjlkNTExLTI5ZjgtODcwNC02YmM2LWMwZDZmODM5YWE5MCIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI5OS44MC4xODMuMTE3IiwiOTkuODEuMTM1LjMyIl0sInR5cGUiOiJjbGllbnQifV19.8CWIVewGPTXRYppyI6M21-NzSICGNmdRooPpGeHm-YRb3S4UAOtR0PYeTh5Gxhl1oThLUrhUgRMnelDuVQudcw";
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImJhZDQ4MWIwLTJkYmUtNDZkNC1iMDA2LWEwYWI0MTZkODQ4MiIsImlhdCI6MTU1NzU3MzU1MSwic3ViIjoiZGV2ZWxvcGVyLzlmYjlkNTExLTI5ZjgtODcwNC02YmM2LWMwZDZmODM5YWE5MCIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIzNy42LjExNC4zNiJdLCJ0eXBlIjoiY2xpZW50In1dfQ.XGzDji74vSwPit7Z56agB5Jd1kabkimPO7uDB3G_ug3rpiw6Y7WYFZKWpLfA4js9Y2FeXHtQ5UN_Z4q-Czm8yQ";
+
+    @Value("${BEARER}")
+    String bearer;
+
     private SiteConfigurationService siteConfigurationService;
 
 
@@ -66,9 +71,6 @@ public class ClashRoyaleRestIntegrationService {
         System.out.println(service.getDataFromSite());
     }
 
-    public WarLeague getWarLeagueStatsForCurrentWar() {
-        return createWarLeagueFromData(getDataFromSite());
-    }
 
     private String createConnection() {
         URL url;
@@ -107,7 +109,9 @@ public class ClashRoyaleRestIntegrationService {
                     .build();
             ParameterizedTypeReference<Map<String, Object>> type = new ParameterizedTypeReference<Map<String, Object>>() {
             };
-            return restTemplate.exchange(requestEntity, CurrentWarDto.class).getBody();
+            CurrentWarDto result = restTemplate.exchange(requestEntity, CurrentWarDto.class).getBody();
+            log.info("{}", result);
+            return result;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -123,9 +127,10 @@ public class ClashRoyaleRestIntegrationService {
 
     private PlayerWarStat createWarStatsDto(CurrentWarDto.Participant participant) {
         return PlayerWarStat.builder()
-                .player(new Player(participant.getTag(), null, null))
+                .player(new Player(participant.getTag(), participant.getName(), null))
                 .collectionPhaseStats(CollectionPhaseStats.builder()
                         .gamesPlayed(participant.getCollectionDayBattlesPlayed())
+                        .cardsWon(participant.getCardsEarned())
                         .build())
                 .build();
     }

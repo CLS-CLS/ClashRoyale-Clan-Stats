@@ -43,11 +43,11 @@ public class PlayerCheckInCheckOutRepositoryTest {
         entityManager.flush();
         entityManager.clear();
 
-        List<PlayerInOut> checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now().atStartOfDay());
+        List<PlayerInOut> checkedIn = playerCheckInCheckOutRepository.findPlayersInClanAtDate(LocalDate.now().atStartOfDay());
         assertEquals(1, checkedIn.size());
-        checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now().minusDays(3).atStartOfDay());
+        checkedIn = playerCheckInCheckOutRepository.findPlayersInClanAtDate(LocalDate.now().minusDays(3).atStartOfDay());
         assertEquals(2, checkedIn.size());
-        checkedIn = playerCheckInCheckOutRepository.findCheckedInAtDate(LocalDate.now().minusDays(7).atStartOfDay());
+        checkedIn = playerCheckInCheckOutRepository.findPlayersInClanAtDate(LocalDate.now().minusDays(7).atStartOfDay());
         assertEquals(0, checkedIn.size());
     }
 

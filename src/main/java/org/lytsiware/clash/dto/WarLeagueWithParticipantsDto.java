@@ -55,6 +55,7 @@ public class WarLeagueWithParticipantsDto implements Serializable {
         private String tag;
         private int score;
         private List<String> fightStatus = new ArrayList<>();
+        private int collectionGamesPlayed;
 
         public PlayerWarStatsDto(PlayerWarStat playerWarStat) {
             this.cards = playerWarStat.getCollectionPhaseStats().getCardsWon();
@@ -65,6 +66,7 @@ public class WarLeagueWithParticipantsDto implements Serializable {
             this.tag = playerWarStat.getPlayer().getTag();
             double winRatio = playerWarStat.getWarPhaseStats().getGamesWon() / playerWarStat.getWarPhaseStats().getGamesGranted();
             this.score = (int) (playerWarStat.getCollectionPhaseStats().getCardsWon() * (0.5 + 0.5 * winRatio));
+            this.collectionGamesPlayed = playerWarStat.getCollectionPhaseStats().getGamesPlayed();
             IntStream.range(0, wins).forEach(i -> fightStatus.add("win"));
             IntStream.range(0, looses).forEach(i -> fightStatus.add("loose"));
             IntStream.range(0, forfeits).forEach(i -> fightStatus.add("forfeit"));

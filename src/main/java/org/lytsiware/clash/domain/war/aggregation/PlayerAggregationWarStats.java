@@ -38,6 +38,7 @@ public class PlayerAggregationWarStats {
     Integer warsParticipated;
     Integer warsEligibleForParticipation;
     Integer score;
+    Integer collectionGamesMissed;
 
     @Override
     public boolean equals(Object o) {
@@ -58,4 +59,6 @@ public class PlayerAggregationWarStats {
         result = 31 * result + leagueSpan.hashCode();
         return result;
     }
+
+
 }

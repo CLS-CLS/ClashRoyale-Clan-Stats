@@ -3,7 +3,6 @@ package org.lytsiware.clash.service.clan;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.*;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -71,8 +70,7 @@ public class PlayerCheckInService {
     }
 
     @Transactional
-    public void markPlayersInClan(List<PlayerWeeklyStats> currentPlayersStats) {
-        List<Player> currentPlayers = currentPlayersStats.stream().map(PlayerWeeklyStats::getPlayer).collect(Collectors.toList());
+    public void markPlayersInClan(List<Player> currentPlayers) {
         Map<String, PlayerInOut> playersInOutByTag = playerCheckInCheckOutRepository.findAll().stream().collect(Collectors.toMap(PlayerInOut::getTag, Function.identity()));
 
         Map<String, Player> checkoutPlayers = playerRepository.loadAll();
@@ -104,6 +102,6 @@ public class PlayerCheckInService {
     }
 
     public List<PlayerInOut> findCheckedInPlayersAtDate(LocalDateTime date) {
-        return playerCheckInCheckOutRepository.findCheckedInAtDate(date);
+        return playerCheckInCheckOutRepository.findPlayersInClanAtDate(date);
     }
 }

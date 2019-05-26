@@ -25,4 +25,12 @@ public class CollectionPhaseStats {
     @Column(nullable = false)
     private Integer cardsWon;
 
+    public int getGamesNotPlayed() {
+        return (gamesPlayed == null || gamesPlayed == 0) ? 0 : 3 - gamesPlayed;
+    }
+
+    //backwards compatibility getter for when no stats were stored for collection games played
+    public int getGamesPlayed() {
+        return (gamesPlayed == null || gamesPlayed == 0) ? 3 : gamesPlayed;
+    }
 }

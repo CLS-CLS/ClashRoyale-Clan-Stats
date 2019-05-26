@@ -114,10 +114,10 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
                             .reduce((first, second) -> second).orElseThrow(() -> new ParseException("Could not parse player's tag"));
                     String name = playerStat.select(".clanParticipants__row").get(1).select("a").text();
 
-                    String battlesAsString = playerStat.select(".clanParticipants__row").stream()
+                    String[] battlesAsString = playerStat.select(".clanParticipants__row").stream()
                             .filter(element -> element.select(".clanParticipants__battleIcon").size() == 1)
                             .findFirst()
-                            .orElseThrow(() -> new ParseException("Could not find battles for player" + name)).text();
+                            .orElseThrow(() -> new ParseException("Could not find battles for player" + name)).text().split("/");
 
                     String winsAsString = playerStat.select(".clanParticipants__row").stream()
                             .filter(element -> element.select(".clanParticipants__winIcon").size() == 1)
@@ -129,7 +129,8 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
                             .findFirst()
                             .orElseThrow(() -> new ParseException("Could not find totalCards for player" + name)).text();
 
-                    int battles = Integer.valueOf(battlesAsString);
+                    int battlesPlayed = Integer.valueOf(battlesAsString[0]);
+                    int battlesGranted = Integer.valueOf(battlesAsString[1]);
                     int wins = Integer.valueOf(winsAsString);
                     int cards = Integer.valueOf(cardsAsString);
 
@@ -138,10 +139,10 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
                                     .name(name)
                                     .tag(tag)
                                     .cards(cards)
-                                    .gamesGranted(battles)
+                                    .gamesGranted(battlesGranted)
                                     .gamesWon(wins)
-                                    .gamesLost(battles - wins)
-                                    .gamesNotPlayed(0).build());
+                                    .gamesLost(battlesPlayed - wins)
+                                    .gamesNotPlayed(battlesGranted - battlesPlayed).build());
                 }
             }
 

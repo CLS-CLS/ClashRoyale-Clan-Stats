@@ -6,6 +6,7 @@ import org.lytsiware.clash.domain.player.PlayerInOut;
 import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
+import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
@@ -51,6 +52,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     private PlayerAggregationWarStatsService playerAggregationWarStatsService;
 
     @Autowired
+    private PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
+
+    @Autowired
     private WarInputServiceImpl warInputService;
 
     @Autowired
@@ -70,7 +74,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     public PlaywerWarStatsWithAvgsDto getLatestPlayerWarStatsUntil(String tag, LocalDate untilDate) {
 
         Map<LocalDate, PlayerWarStat> playerWarStats = playerWarStatsRepository.findFirst40ByPlayerTagAndWarLeagueStartDateLessThanEqualOrderByWarLeagueStartDateDesc(tag, untilDate)
-                .stream().collect(Utils.collectToMap(pws -> pws.getWarLeague().getStartDate(), Function.identity()));
+                .stream()
+                .filter(playerWarStat -> playerWarStat.getWarPhaseStats() != null) //filter out incomplete data )
+                .collect(Utils.collectToMap(pws -> pws.getWarLeague().getStartDate(), Function.identity()));
 
         Map<LocalDate, PlayerAggregationWarStats> playerAggrWarStats = playerAggregationWarStatsService.findWarStatsForPlayer(tag, WarConstants.leagueSpan, untilDate)
                 .stream().collect(Utils.collectToMap(PlayerAggregationWarStats::getDate, Function.identity()));
@@ -83,22 +89,29 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     @Override
     public void saveWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList) throws EntityExistsException {
         WarLeague warLeague = statsList.get(0).getWarLeague();
-
-        if (warLeagueRepository.findByStartDate(warLeague.getStartDate()).isPresent()) {
-            updateWarStatsAndUpdateStatistics(statsList);
+        WarLeague warLeagueDb = warLeagueRepository.findByStartDate(warLeague.getStartDate()).orElse(null);
+        if (warLeagueDb != null) {
+            updateWarStatsAndUpdateStatistics(warLeagueDb, warLeague, statsList);
+            warLeague = warLeagueDb;
         }
-
-        warLeagueService.calculateLeagueAvgsAndSave(warLeague);
+        //TODO check transient
+        Map<String, Player> playersDb = playerRepository.loadAll();
+        statsList.stream().map(PlayerWarStat::getPlayer).filter(player -> !playersDb.containsKey(player.getTag())).forEach(player -> log.info("TRANSIENT PLAYER {}", player));
         playerWarStatsRepository.saveAll(statsList);
         playerWarStatsRepository.flush();
+        warLeagueService.calculateLeagueAvgsAndSave(warLeague);
         playerAggregationWarStatsService.recalculateAndUpdateWarStatsForLeagues(Collections.singletonList(warLeague));
     }
 
-    private void updateWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList) {
-        WarLeague warLeague = warLeagueRepository.findByStartDate(statsList.get(0).getWarLeague().getStartDate()).get();
-        playerWarStatsRepository.deleteAll(warLeague.getPlayerWarStats());
-        warLeague.clearPlayerWarStats();
-        statsList.forEach(playerWarStat -> playerWarStat.setWarLeague(warLeague));
+    private void updateWarStatsAndUpdateStatistics(WarLeague warLeagueDb, WarLeague warLeague, List<PlayerWarStat> statsList) {
+        warLeagueDb.setRank(warLeague.getRank());
+        warLeagueDb.setTrophies(warLeague.getTrophies());
+        playerWarStatsRepository.deleteAll(warLeagueDb.getPlayerWarStats());
+        playerAggregationWarStatsRepository.deleteInBatch(playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.getStartDate(),
+                WarConstants.leagueSpan));
+        warLeagueDb.clearPlayerWarStats();
+        statsList.forEach(playerWarStat -> playerWarStat.setWarLeague(warLeagueDb));
+        playerWarStatsRepository.flush();
     }
 
 

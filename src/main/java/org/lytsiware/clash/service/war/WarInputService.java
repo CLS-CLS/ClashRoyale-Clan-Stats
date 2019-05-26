@@ -8,6 +8,8 @@ public interface WarInputService {
 
     List<WarStatsInputDto> getWarStatsFromSite();
 
+    void updateOrSaveWarStats();
+
     List<WarStatsInputDto> getPlayerWarStatsForInput(boolean includeNotParticipating);
 
 

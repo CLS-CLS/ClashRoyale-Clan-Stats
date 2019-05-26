@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
@@ -24,7 +26,7 @@ import java.util.Arrays;
 @EnableRetry
 @EnableJpaRepositories(basePackages = "org.lytsiware.clash.domain")
 public class Application {
-	
+
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
@@ -39,9 +41,17 @@ public class Application {
         }
 
 
-        @Value("${FIXIE_URL:http://fixie:tzdVUBEc2WIdrqC@olympic.usefixie.com:80}")
+        @Value("${FIXIE_URL}")
         private String fixieUrl;
 
+
+        @Bean
+        public TaskScheduler taskScheduler() {
+            ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+            taskScheduler.setPoolSize(1);
+            return taskScheduler;
+
+        }
 
         @Bean
         @Qualifier("fixie")
@@ -65,20 +75,5 @@ public class Application {
         public String getFixieUrl() {
             return fixieUrl;
         }
-
-//        private void printAddress(String fixieHost, int fixiePort) {
-//            byte[] addr = new InetSocketAddress(fixieHost, fixiePort).getAddress().getAddress();
-//            String ipAddr = "";
-//            for (int i = 0; i < addr.length; i++) {
-//                if (i > 0) {
-//                    ipAddr += ".";
-//                }
-//                ipAddr += addr[i] & 0xFF;
-//            }
-//
-//            System.out.println("IP Address: " + ipAddr);
-//        }
-
-
     }
 }

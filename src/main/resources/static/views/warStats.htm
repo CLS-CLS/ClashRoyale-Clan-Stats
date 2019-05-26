@@ -98,12 +98,19 @@
                             </span>
                             </th>
                             <th><span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="crownsLost" filter-by="filter"> <img style="display:inline"
-                                                                                               src="images/loose_mid.png"></order-directive></span>
+                                <order-directive bind-to="crownsLost" filter-by="filter">
+                                    <img src="images/loose_mid.png" style="display:inline">
+                                </order-directive></span>
                             </th>
                             <th><span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="gamesNotPlayed" filter-by="filter"><img style="display:inline"
-                                                                                                  src="images/forfeit_mid.png"></order-directive></span>
+                                <order-directive bind-to="gamesNotPlayed" filter-by="filter">
+                                    <img src="images/forfeit_mid.png" style="display:inline">
+                                </order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="collectionGamesMissed" filter-by="filter">
+                                    <img src="images/c_forfeit_mid.png" style="display:inline">
+                                </order-directive></span>
                             </th>
                         </tr>
                         </thead>
@@ -122,6 +129,7 @@
                             <td>{{s.crownsWon}}</td>
                             <td>{{s.crownsLost}}</td>
                             <td>{{s.gamesNotPlayed}}</td>
+                            <td>{{s.collectionGamesMissed}}</td>
                         </tr>
                         <tr ng-if="stats.playerWarStats.length == 0">
                             <td colspan="12"><h2>No data for this period</h2></td>
@@ -204,6 +212,7 @@
                                     </order-directive>
                                 </span>
                             </th>
+                            <th><span>Collection Games Played</span></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -226,6 +235,9 @@
                                 </span>
                             </td>
                             <td>{{s.cards | number:0}}</td>
+                            <td ng-style="colorfy(s.collectionGamesPlayed, 'collectionGames')">
+                                {{s.collectionGamesPlayed}}
+                            </td>
                         </tr>
                         <tr ng-if="stats.playerWarStats.length == 0">
                             <td colspan="12"><h2>No data for this period</h2></td>
