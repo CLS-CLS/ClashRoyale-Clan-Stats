@@ -1,7 +1,6 @@
 package org.lytsiware.clash.service.integration.clashapi;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lytsiware.clash.Application;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -33,10 +31,10 @@ import java.util.Map;
 @Slf4j
 public class ClashRoyaleRestIntegrationService {
 
-    Proxy proxy;
-
     @Value("${BEARER}")
     String bearer;
+
+    Proxy proxy;
 
     private SiteConfigurationService siteConfigurationService;
 
@@ -45,32 +43,6 @@ public class ClashRoyaleRestIntegrationService {
         this.siteConfigurationService = siteConfigurationService;
         this.proxy = proxy;
     }
-
-    public static void main2(String[] args) throws Exception {
-        SiteConfigurationService siteConfigurationService = new SiteConfigurationService(null, null, null, null,
-                new UrlResource("https://api.clashroyale.com/v1/clans/%23PLVV88G2/currentwar"));
-
-        Application.Config config = new Application.Config() {
-            @Override
-            public String getFixieUrl() {
-                return "http://fixie:tzdVUBEc2WIdrqC@olympic.usefixie.com:80";
-            }
-        };
-
-        ClashRoyaleRestIntegrationService service = new ClashRoyaleRestIntegrationService(siteConfigurationService, config.fixieProxy());
-        service.getDataFromSite();
-    }
-
-    public static void main(String[] args) throws Exception {
-        SiteConfigurationService siteConfigurationService = new SiteConfigurationService(null, null, null, null,
-                new UrlResource("https://api.clashroyale.com/v1/clans/%23PLVV88G2/currentwar"));
-
-
-        ClashRoyaleRestIntegrationService service = new ClashRoyaleRestIntegrationService(siteConfigurationService, Proxy.NO_PROXY);
-
-        System.out.println(service.getDataFromSite());
-    }
-
 
     private String createConnection() {
         URL url;

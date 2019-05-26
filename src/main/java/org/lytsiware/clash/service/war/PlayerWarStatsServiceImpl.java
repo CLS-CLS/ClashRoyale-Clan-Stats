@@ -97,9 +97,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         //TODO check transient
         Map<String, Player> playersDb = playerRepository.loadAll();
         statsList.stream().map(PlayerWarStat::getPlayer).filter(player -> !playersDb.containsKey(player.getTag())).forEach(player -> log.info("TRANSIENT PLAYER {}", player));
+        warLeagueService.calculateLeagueAvgsAndSave(warLeague);
         playerWarStatsRepository.saveAll(statsList);
         playerWarStatsRepository.flush();
-        warLeagueService.calculateLeagueAvgsAndSave(warLeague);
         playerAggregationWarStatsService.recalculateAndUpdateWarStatsForLeagues(Collections.singletonList(warLeague));
     }
 
