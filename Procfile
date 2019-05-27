@@ -1,1 +1,1 @@
-web:  java -Dserver.port=$PORT -jar target/*.jar --spring.profiles.active=heroku
+web:  java -Djdk.http.auth.tunneling.disabledSchemes="" -Dserver.port=$PORT -jar target/*.jar --spring.profiles.active=heroku
