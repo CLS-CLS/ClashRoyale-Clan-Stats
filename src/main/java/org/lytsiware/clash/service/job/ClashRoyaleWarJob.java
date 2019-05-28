@@ -11,6 +11,7 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.service.integration.clashapi.ClashRoyaleRestIntegrationService;
 import org.lytsiware.clash.service.integration.clashapi.CurrentWarDto;
 import org.lytsiware.clash.service.job.scheduledname.AbstractSelfScheduledJob;
+import org.lytsiware.clash.service.job.scheduledname.ScheduledName;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,10 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     @Autowired
     PlayerRepository playerRepository;
 
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 48)
+    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)
+    @ScheduledName("ClashRoyaleWarJob")
     public void runPeriodically() {
+        log.info("Clash Royale War Job Triggered by Fixed Scheduler");
         fixedScheduler();
     }
 
@@ -60,6 +63,7 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     @Override
     @Retryable(backoff = @Backoff(delay = 1000 * 60 * 60))
     public Date run() {
+        log.info("Run ClashRoyaleJob");
         CurrentWarDto dto = clashRoyaleRestIntegrationService.getDataFromSite();
         WarLeague warLeague = clashRoyaleRestIntegrationService.createWarLeagueFromData(dto);
         Optional<WarLeague> warLeagueDb = warLeagueRepository.findByStartDate(warLeague.getStartDate());
@@ -69,14 +73,16 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
         } else {
             insertData(warLeague);
         }
-
+        Date date = null;
         if (dto.getState() == CurrentWarDto.State.COLLECTION_DAY) {
-            return Utils.convertToDate(dto.getEndDate().plusMinutes(30));
+            date = Utils.convertToDate(dto.getEndDate().plusMinutes(30));
         } else if (dto.getState() == CurrentWarDto.State.WAR_DAY) {
-            return Utils.convertToDate(dto.getEndDate().plusDays(1));
+            date = Utils.convertToDate(dto.getEndDate().plusDays(1));
         } else {
-            return new Date();
+            date = new Date();
         }
+        log.info("Next Self Scheduler Execution at {}", date);
+        return date;
 
     }
 

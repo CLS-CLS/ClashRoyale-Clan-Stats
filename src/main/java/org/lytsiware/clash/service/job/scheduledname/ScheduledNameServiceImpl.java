@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
@@ -70,6 +71,9 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
             map.put("last run ", lastRun != null ? lastRun.format(DATE_TIME_FORMATER) : "no record");
 
             String cronExpression = propertyResolver.resolvePlaceholders(scheduledNameContextEntry.getValue().getMethod().getAnnotation(Scheduled.class).cron());
+            if (cronExpression == null || StringUtils.isEmpty(cronExpression)) {
+                return map;
+            }
 
             ZonedDateTime nextExecutionLocalDateTime = Utils.getNextExecutionDate(cronExpression, ZonedDateTime.now(ZoneId.systemDefault()));
 

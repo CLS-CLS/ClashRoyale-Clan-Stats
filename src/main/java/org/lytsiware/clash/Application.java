@@ -57,6 +57,9 @@ public class Application {
         @Qualifier("fixie")
         public Proxy fixieProxy() {
             String[] fixieValues = getFixieUrl().split("[/(:\\/@)/]+");
+            if (fixieValues.length < 4) {
+                return Proxy.NO_PROXY;
+            }
             String fixieUser = fixieValues[1];
             String fixiePassword = fixieValues[2];
             String fixieHost = fixieValues[3];
