@@ -67,7 +67,6 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
         CurrentWarDto dto = clashRoyaleRestIntegrationService.getDataFromSite();
         WarLeague warLeague = clashRoyaleRestIntegrationService.createWarLeagueFromData(dto);
         Optional<WarLeague> warLeagueDb = warLeagueRepository.findByStartDate(warLeague.getStartDate());
-        Map<String, Player> recordedPlayers = playerRepository.loadAll();
         if (warLeagueDb.isPresent()) {
             updateData(warLeagueDb.get(), warLeague);
         } else {
@@ -77,7 +76,7 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
         if (dto.getState() == CurrentWarDto.State.COLLECTION_DAY) {
             date = Utils.convertToDate(dto.getEndDate().plusMinutes(30));
         } else if (dto.getState() == CurrentWarDto.State.WAR_DAY) {
-            date = Utils.convertToDate(dto.getEndDate().plusDays(1));
+            date = Utils.convertToDate(dto.getEndDate().plusDays(2));
         } else {
             date = new Date();
         }
@@ -87,16 +86,29 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     }
 
     private void updateData(WarLeague warLeagueDb, WarLeague warLeague) {
+        Map<String, Player> recordedPlayers = playerRepository.loadAll();
 
-        for (PlayerWarStat pwsDb : warLeagueDb.getPlayerWarStats()) {
-            Optional<PlayerWarStat> sitePlayerWarStat = warLeague.getPlayerWarStats().stream()
-                    .filter(pws -> pws.getPlayer().getTag().equals(pwsDb.getPlayer().getTag())).findFirst();
-            if (sitePlayerWarStat.isPresent()) {
-                pwsDb.getCollectionPhaseStats().setCardsWon(sitePlayerWarStat.get().getCollectionPhaseStats().getCardsWon());
-                pwsDb.getCollectionPhaseStats().setGamesPlayed(sitePlayerWarStat.get().getCollectionPhaseStats().getGamesPlayed());
+        List<PlayerWarStat> playerWarStatsToRecord = warLeague.getPlayerWarStats().stream()
+                .filter(playerWarStat -> {
+                    boolean exists = recordedPlayers.containsKey(playerWarStat.getPlayer().getTag());
+                    if (!exists) {
+                        log.info("Stats for Player {} are omitted as he is not yet recorded ", playerWarStat.getPlayer());
+                    }
+                    return exists;
+                })
+                .collect(Collectors.toList());
+        for (PlayerWarStat playerWarStat : playerWarStatsToRecord) {
+            Optional<PlayerWarStat> playerWarStatDb = warLeagueDb.getPlayerWarStats().stream()
+                    .filter(pwsDB -> pwsDB.getPlayer().getTag().equals(playerWarStat.getPlayer().getTag())).findFirst();
+            if (playerWarStatDb.isPresent()) {
+                playerWarStatDb.get().getCollectionPhaseStats().setCardsWon(playerWarStat.getCollectionPhaseStats().getCardsWon());
+                playerWarStatDb.get().getCollectionPhaseStats().setGamesPlayed(playerWarStat.getCollectionPhaseStats().getGamesPlayed());
+                playerWarStatsRepository.save(playerWarStatDb.get());
+            } else {
+                playerWarStat.setWarLeague(warLeagueDb);
+                playerWarStatsRepository.save(playerWarStat);
             }
         }
-        playerWarStatsRepository.saveAll(warLeagueDb.getPlayerWarStats());
     }
 
 
