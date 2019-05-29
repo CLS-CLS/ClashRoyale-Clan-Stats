@@ -110,7 +110,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
         playerAggregationWarStatsRepository.deleteInBatch(playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.getStartDate(),
                 WarConstants.leagueSpan));
         warLeagueDb.clearPlayerWarStats();
+        playerWarStatsRepository.flush();
         statsList.forEach(playerWarStat -> playerWarStat.setWarLeague(warLeagueDb));
+        playerWarStatsRepository.saveAll(statsList);
         playerWarStatsRepository.flush();
     }
 
