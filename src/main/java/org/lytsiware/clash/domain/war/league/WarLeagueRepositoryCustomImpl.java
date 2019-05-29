@@ -51,9 +51,19 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
                 .setMaxResults(1).getResultList().stream().findFirst();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Normally a flag with the completion status should exist, but for now we just consider active
+     * the warLeague that has aggregation stat
+     *
+     * @param n
+     * @return
+     */
+
     @Override
     public Optional<WarLeague> findNthWarLeague(int n) {
-        Optional<WarLeague> league = em.createQuery("select l from WarLeague l order by l.startDate DESC").setFirstResult(n)
+        Optional<WarLeague> league = em.createQuery("select l from WarLeague l where l.rank is not null order by l.startDate DESC").setFirstResult(n)
                 .setMaxResults(1)
                 .getResultList().stream().findFirst();
 

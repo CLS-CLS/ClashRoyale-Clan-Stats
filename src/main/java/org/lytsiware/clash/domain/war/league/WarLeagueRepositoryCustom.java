@@ -14,6 +14,10 @@ public interface WarLeagueRepositoryCustom {
 
     Optional<WarLeague> findLatestRecordedWarLeague();
 
+    /**
+     * Finds the Nth active war League. A WarLeague is active when has it's stats fully updated
+     * (aka a warLeague with incomplete stats is not considered active).
+     */
     Optional<WarLeague> findNthWarLeague(int n);
 
     void persistAndFlush(WarLeague warLeague);
