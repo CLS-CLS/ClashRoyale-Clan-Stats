@@ -21,9 +21,7 @@ import javax.validation.Valid;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -81,11 +79,27 @@ public class ClashRoyaleRestIntegrationService {
                     .build();
             ParameterizedTypeReference<Map<String, Object>> type = new ParameterizedTypeReference<Map<String, Object>>() {
             };
+            preRequest(restTemplate);
             CurrentWarDto result = restTemplate.exchange(requestEntity, CurrentWarDto.class).getBody();
             log.info("{}", result);
             return result;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    //Does an http request before the https because basic proxy authentication is disabled in jvm by default causing a 407 error.
+    //Bt doing an http request before the issue is resolved!!
+    //More over the workaround to enable in during initialization does not work 100% because when heroku restarts the dyno this param
+    //is not passed
+    private void preRequest(RestTemplate restTemplate) {
+        try {
+            RequestEntity<Void> requestEntity = RequestEntity.get(new URI("http://www.google.oom"))
+                    .header("accept", "application/json")
+                    .build();
+            restTemplate.exchange(requestEntity, String.class).getBody();
+        } catch (URISyntaxException e) {
+            log.error("PRE REQUEST FAILED DUE TO  {}", e);
         }
     }
 
