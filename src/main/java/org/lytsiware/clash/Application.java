@@ -35,11 +35,15 @@ public class Application {
 
     @Configuration
     public static class Config {
+
+
         @Bean
         public Clock clock() {
             return Clock.systemDefaultZone();
         }
 
+        @Value("${QUOTAGUARDSTATIC_URL}")
+        private String quotaGuardUrl;
 
         @Value("${FIXIE_URL}")
         private String fixieUrl;
@@ -56,19 +60,29 @@ public class Application {
         @Bean
         @Qualifier("fixie")
         public Proxy fixieProxy() {
-            String[] fixieValues = getFixieUrl().split("[/(:\\/@)/]+");
-            if (fixieValues.length < 4) {
+            return createProxy(getFixieUrl());
+        }
+
+        @Bean
+        @Qualifier("quotaGuard")
+        public Proxy quotaGuardProxy() {
+            return createProxy(getQuotaGuardUrl());
+        }
+
+        private Proxy createProxy(String url) {
+            String[] urlValues = url.split("[/(:\\/@)/]+");
+            if (urlValues.length < 4) {
                 return Proxy.NO_PROXY;
             }
-            String fixieUser = fixieValues[1];
-            String fixiePassword = fixieValues[2];
-            String fixieHost = fixieValues[3];
-            int fixiePort = Integer.parseInt(fixieValues[4]);
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(fixieHost, fixiePort));
+            String user = urlValues[1];
+            String password = urlValues[2];
+            String host = urlValues[3];
+            int port = Integer.parseInt(urlValues[4]);
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
 
             Authenticator authenticator = new Authenticator() {
                 public PasswordAuthentication getPasswordAuthentication() {
-                    return (new PasswordAuthentication(fixieUser, fixiePassword.toCharArray()));
+                    return (new PasswordAuthentication(user, password.toCharArray()));
                 }
             };
             Authenticator.setDefault(authenticator);
@@ -77,6 +91,10 @@ public class Application {
 
         public String getFixieUrl() {
             return fixieUrl;
+        }
+
+        public String getQuotaGuardUrl() {
+            return quotaGuardUrl;
         }
     }
 }

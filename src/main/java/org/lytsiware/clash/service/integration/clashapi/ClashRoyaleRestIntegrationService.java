@@ -6,6 +6,7 @@ import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.service.integration.SiteConfigurationService;
+import org.lytsiware.clash.utils.ContentLengthHttpInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +22,10 @@ import javax.validation.Valid;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
+import java.net.Proxy;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -37,7 +41,7 @@ public class ClashRoyaleRestIntegrationService {
     private SiteConfigurationService siteConfigurationService;
 
 
-    ClashRoyaleRestIntegrationService(SiteConfigurationService siteConfigurationService, @Autowired @Qualifier("fixie") Proxy proxy) {
+    ClashRoyaleRestIntegrationService(SiteConfigurationService siteConfigurationService, @Autowired @Qualifier("quotaGuard") Proxy proxy) {
         this.siteConfigurationService = siteConfigurationService;
         this.proxy = proxy;
     }
@@ -66,7 +70,9 @@ public class ClashRoyaleRestIntegrationService {
             clientRequestFactory.setProxy(proxy);
             restTemplate.setRequestFactory(clientRequestFactory);
         };
-        RestTemplate restTemplate = new RestTemplateBuilder(proxyCustomizer).build();
+        RestTemplate restTemplate = new RestTemplateBuilder(proxyCustomizer)
+                .interceptors(new ContentLengthHttpInterceptor())
+                .build();
         return restTemplate;
     }
 
@@ -94,11 +100,10 @@ public class ClashRoyaleRestIntegrationService {
     //is not passed
     private void preRequest(RestTemplate restTemplate) {
         try {
-            RequestEntity<Void> requestEntity = RequestEntity.get(new URI("http://www.google.oom"))
-                    .header("accept", "application/json")
+            RequestEntity<Void> requestEntity = RequestEntity.get(new URI("http://godwokens.herokuapp.com/views/clanRules.htm"))
                     .build();
             restTemplate.exchange(requestEntity, String.class).getBody();
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             log.error("PRE REQUEST FAILED DUE TO  {}", e);
         }
     }

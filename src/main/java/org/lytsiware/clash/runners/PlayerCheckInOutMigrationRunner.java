@@ -7,7 +7,7 @@ import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.service.ClanStatsService;
 import org.lytsiware.clash.service.clan.PlayerCheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
-public class PlayerCheckInOutMigrationRunner { //implements CommandLineRunner {
+//@Component
+public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
 
     @Autowired
     ClanStatsService clanStatsService;

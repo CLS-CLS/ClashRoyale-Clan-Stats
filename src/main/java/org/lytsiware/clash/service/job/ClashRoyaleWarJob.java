@@ -11,7 +11,6 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.service.integration.clashapi.ClashRoyaleRestIntegrationService;
 import org.lytsiware.clash.service.integration.clashapi.CurrentWarDto;
 import org.lytsiware.clash.service.job.scheduledname.AbstractSelfScheduledJob;
-import org.lytsiware.clash.service.job.scheduledname.ScheduledName;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +46,15 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     @Autowired
     PlayerRepository playerRepository;
 
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)
-    @ScheduledName("ClashRoyaleWarJob")
+    @Scheduled(fixedRate = 1000 * 60 * 60 * 12)
     public void runPeriodically() {
-        log.info("Clash Royale War Job Triggered by Fixed Scheduler");
         fixedScheduler();
     }
 
 
     /**
      * inserts data for the already recorded players. Players not yet recorded will be omitted as by the time
-     * the method is called again the scheduler the method responsible to record the players will have already run and the new
+     * the method is called again the scheduler responsible to record the players will have already run and the new
      * players will now be in the database.
      */
     @Override

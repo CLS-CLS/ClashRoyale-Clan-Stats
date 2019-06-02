@@ -49,8 +49,11 @@ public abstract class AbstractSelfScheduledJob {
 
     private void executeAndReschedule() {
         Date date = run();
+        log.info("Task will run again at : {} ", date);
+        if (date == null) {
+            return;
+        }
         synchronized (monitor) {
-            log.info("Task will run again at : {} ", date);
             trigger.setNextExecutionTime(date);
             scheduledFuture = taskScheduler.schedule(() -> executeAndReschedule(), trigger);
         }
