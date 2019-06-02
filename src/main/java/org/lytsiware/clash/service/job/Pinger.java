@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.net.HttpURLConnection;
@@ -21,7 +20,7 @@ public class Pinger {
     @Value("${ping.url}")
     private Resource urlToPing;
 
-    @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 25 * 60 * 1000)
+    //    @Scheduled(initialDelayString = "${pinger.initialDelay}", fixedRate = 25 * 60 * 1000)
     @Retryable(maxAttempts = 10, backoff = @Backoff(1000 * 30))
     public void ping() {
         try {

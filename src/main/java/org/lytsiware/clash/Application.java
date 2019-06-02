@@ -61,7 +61,6 @@ public class Application {
             String user = userInfo.substring(0, userInfo.indexOf(':'));
             String password = userInfo.substring(userInfo.indexOf(':') + 1);
 
-            URLConnection conn = null;
             System.setProperty("http.proxyHost", proxyUrl.getHost());
             System.setProperty("http.proxyPort", Integer.toString(proxyUrl.getPort()));
 
