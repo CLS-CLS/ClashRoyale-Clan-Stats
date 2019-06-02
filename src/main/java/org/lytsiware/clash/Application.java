@@ -1,7 +1,6 @@
 package org.lytsiware.clash;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,10 +13,8 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-import java.net.Authenticator;
-import java.net.InetSocketAddress;
-import java.net.PasswordAuthentication;
-import java.net.Proxy;
+import javax.annotation.PostConstruct;
+import java.net.*;
 import java.time.Clock;
 import java.util.Arrays;
 
@@ -44,9 +41,6 @@ public class Application {
             return Clock.systemDefaultZone();
         }
 
-        @Value("${QUOTAGUARDSTATIC_URL}")
-        private String quotaGuardUrl;
-
         @Value("${FIXIE_URL}")
         private String fixieUrl;
 
@@ -59,17 +53,36 @@ public class Application {
 
         }
 
+
+        @PostConstruct
+        public void initProxySettings() throws MalformedURLException {
+            URL proxyUrl = new URL(System.getenv("QUOTAGUARDSTATIC_URL"));
+            String userInfo = proxyUrl.getUserInfo();
+            String user = userInfo.substring(0, userInfo.indexOf(':'));
+            String password = userInfo.substring(userInfo.indexOf(':') + 1);
+
+            URLConnection conn = null;
+            System.setProperty("http.proxyHost", proxyUrl.getHost());
+            System.setProperty("http.proxyPort", Integer.toString(proxyUrl.getPort()));
+
+            Authenticator.setDefault(new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(user, password.toCharArray());
+                }
+            });
+        }
+
         @Bean
 //        @Qualifier("fixie")
         public Proxy fixieProxy() {
             return createProxy(getFixieUrl());
         }
 
-        @Bean
-        @Qualifier("quotaGuard")
-        public Proxy quotaGuardProxy() {
-            return createProxy(getQuotaGuardUrl());
-        }
+//        @Bean
+//        @Qualifier("quotaGuard")
+//        public Proxy quotaGuardProxy() {
+//            return createProxy(getQuotaGuardUrl());
+//        }
 
         private Proxy createProxy(String url) {
             String[] urlValues = url.split("[/(:\\/@)/]+");
@@ -96,8 +109,5 @@ public class Application {
             return fixieUrl;
         }
 
-        public String getQuotaGuardUrl() {
-            return quotaGuardUrl;
-        }
     }
 }
