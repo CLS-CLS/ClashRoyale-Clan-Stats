@@ -1,5 +1,6 @@
 package org.lytsiware.clash;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 @EnableScheduling
 @EnableRetry
 @EnableJpaRepositories(basePackages = "org.lytsiware.clash.domain")
+@Slf4j
 public class Application {
 
 
@@ -58,7 +60,7 @@ public class Application {
         }
 
         @Bean
-        @Qualifier("fixie")
+//        @Qualifier("fixie")
         public Proxy fixieProxy() {
             return createProxy(getFixieUrl());
         }
@@ -78,6 +80,7 @@ public class Application {
             String password = urlValues[2];
             String host = urlValues[3];
             int port = Integer.parseInt(urlValues[4]);
+            log.info("Creating QuotaGuard proxy with host {} : ", host);
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
 
             Authenticator authenticator = new Authenticator() {
