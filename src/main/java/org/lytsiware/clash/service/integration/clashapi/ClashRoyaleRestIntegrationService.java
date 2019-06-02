@@ -40,8 +40,8 @@ public class ClashRoyaleRestIntegrationService {
 
     private SiteConfigurationService siteConfigurationService;
 
-
-    ClashRoyaleRestIntegrationService(SiteConfigurationService siteConfigurationService, @Autowired @Qualifier("quotaGuard") Proxy proxy) {
+    @Autowired
+    ClashRoyaleRestIntegrationService(SiteConfigurationService siteConfigurationService, @Qualifier("quotaGuard") Proxy proxy) {
         this.siteConfigurationService = siteConfigurationService;
         this.proxy = proxy;
     }
