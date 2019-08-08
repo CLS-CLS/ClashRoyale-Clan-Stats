@@ -116,4 +116,10 @@ public class ClanStatsRestController {
         return aggregationService.getClanChestScore(Week.now().minusWeeks(24), Week.now().previous());
     }
 
+    @GetMapping(value = "/players")
+    public List<PlayerInOutDto> listPlayers() {
+        return clanStatsService.listPlayers();
+    }
+
+
 }

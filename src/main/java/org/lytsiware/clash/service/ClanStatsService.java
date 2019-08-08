@@ -1,6 +1,7 @@
 package org.lytsiware.clash.service;
 
 import org.lytsiware.clash.Week;
+import org.lytsiware.clash.controller.PlayerInOutDto;
 import org.lytsiware.clash.dto.NewPlayersDto;
 import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
@@ -30,4 +31,5 @@ public interface ClanStatsService {
 	 */
 	PlayerStatsDto retrievePlayerStats(String tag, Week from, Week to);
 
+    List<PlayerInOutDto> listPlayers();
 }

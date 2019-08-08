@@ -1,7 +1,10 @@
 package org.lytsiware.clash.service.clan;
 
 import org.lytsiware.clash.Week;
+import org.lytsiware.clash.controller.PlayerInOutDto;
 import org.lytsiware.clash.domain.player.Player;
+import org.lytsiware.clash.domain.player.PlayerInOut;
+import org.lytsiware.clash.domain.player.PlayerRepository;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.dto.NewPlayersDto;
@@ -17,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +38,16 @@ public class ClanStatsServiceImpl implements ClanStatsService {
     private AggregationService aggregationService;
 
     private PlayerCheckInService playerCheckInService;
+    private PlayerRepository playerRepository;
+
 
     @Autowired
-    public ClanStatsServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository, AggregationService aggregationService, PlayerCheckInService playerCheckInService) {
+    public ClanStatsServiceImpl(PlayerWeeklyStatsRepository playerWeeklyStatsRepository, AggregationService aggregationService,
+                                PlayerCheckInService playerCheckInService, PlayerRepository playerRepository) {
         this.playerWeeklyStatsRepository = playerWeeklyStatsRepository;
         this.aggregationService = aggregationService;
         this.playerCheckInService = playerCheckInService;
+        this.playerRepository = playerRepository;
     }
 
     @Override
@@ -125,4 +131,25 @@ public class ClanStatsServiceImpl implements ClanStatsService {
 
     }
 
+    @Override
+    public List<PlayerInOutDto> listPlayers() {
+        Map<String, Player> allPlayers = playerRepository.loadAll();
+        List<PlayerInOutDto> resultList = new ArrayList<>();
+
+        for (Player player : allPlayers.values()) {
+            List<PlayerInOut> cico = playerCheckInService.findAllCheckInCheckOut(player.getTag());
+            PlayerInOutDto result = PlayerInOutDto.builder()
+                    .name(player.getName())
+                    .tag(player.getTag())
+                    .inAndOuts(cico.stream()
+                            .map(inOut -> PlayerInOutDto.InOutDto
+                                    .builder()
+                                    .joinedAt(inOut.getCheckIn())
+                                    .leftAt(inOut.getCheckOut())
+                                    .build())
+                            .collect(Collectors.toList())).build();
+            resultList.add(result);
+        }
+        return resultList;
+    }
 }

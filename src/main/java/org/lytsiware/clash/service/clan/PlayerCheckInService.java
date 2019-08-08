@@ -21,13 +21,13 @@ import java.util.stream.Stream;
 public class PlayerCheckInService {
 
     @Autowired
-    PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
+    private PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
 
     @Autowired
-    PlayerInOutHistoryRepository playerInOutHistoryRepository;
+    private PlayerInOutHistoryRepository playerInOutHistoryRepository;
 
     @Autowired
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void checkoutPlayer(String tag) {
@@ -91,17 +91,25 @@ public class PlayerCheckInService {
                 checkoutPlayers.values().stream()).collect(Collectors.toList()));
     }
 
-    public LocalDateTime getFirstCheckInForPlayer(String tag){
+    public LocalDateTime getFirstCheckInForPlayer(String tag) {
         List<PlayerInOutHistory> historyResult = playerInOutHistoryRepository.findByTagOrderByCheckInDesc(tag);
         if (historyResult.isEmpty()) {
             Optional<PlayerInOut> currentResult = playerCheckInCheckOutRepository.findByTag(tag);
             return currentResult.get().getCheckIn();
-        }else {
+        } else {
             return historyResult.get(0).getCheckIn();
         }
     }
 
     public List<PlayerInOut> findCheckedInPlayersAtDate(LocalDateTime date) {
         return playerCheckInCheckOutRepository.findPlayersInClanAtDate(date);
+    }
+
+    public List<PlayerInOut> findAllCheckInCheckOut(String tag) {
+        List<PlayerInOut> historic = playerInOutHistoryRepository.findByTagOrderByCheckInDesc(tag)
+                .stream().map(h -> new PlayerInOut(tag, h.getCheckIn(), h.getCheckOut())).collect(Collectors.toList());
+        playerCheckInCheckOutRepository.findByTag(tag).ifPresent(c -> historic.add(0, c));
+        return historic;
+
     }
 }
