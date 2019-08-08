@@ -69,7 +69,7 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
         } else {
             insertData(warLeague);
         }
-        Date date = null;
+        Date date;
         if (dto.getState() == CurrentWarDto.State.COLLECTION_DAY) {
             date = Utils.convertToDate(dto.getEndDate().plusMinutes(30));
         } else if (dto.getState() == CurrentWarDto.State.WAR_DAY) {

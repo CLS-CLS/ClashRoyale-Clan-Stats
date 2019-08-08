@@ -1,6 +1,7 @@
 package org.lytsiware.clash;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,8 +14,10 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-import javax.annotation.PostConstruct;
-import java.net.*;
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
 import java.time.Clock;
 import java.util.Arrays;
 
@@ -54,8 +57,8 @@ public class Application {
         }
 
 
-        @PostConstruct
-        public void initProxySettings() throws MalformedURLException {
+//        @PostConstruct
+//        public void initProxySettings() throws MalformedURLException {
 //            URL proxyUrl = new URL(System.getenv("QUOTAGUARDSTATIC_URL"));
 //            String userInfo = proxyUrl.getUserInfo();
 //            String user = userInfo.substring(0, userInfo.indexOf(':'));
@@ -69,10 +72,10 @@ public class Application {
 //                    return new PasswordAuthentication(user, password.toCharArray());
 //                }
 //            });
-        }
+//        }
 
         @Bean
-//        @Qualifier("fixie")
+        @Qualifier("fixie")
         public Proxy fixieProxy() {
             return createProxy(getFixieUrl());
         }
@@ -86,13 +89,14 @@ public class Application {
         private Proxy createProxy(String url) {
             String[] urlValues = url.split("[/(:\\/@)/]+");
             if (urlValues.length < 4) {
+                log.warn("proxy url {} is not correct - Defaulting to NO_PROXY", url);
                 return Proxy.NO_PROXY;
             }
             String user = urlValues[1];
             String password = urlValues[2];
             String host = urlValues[3];
             int port = Integer.parseInt(urlValues[4]);
-            log.info("Creating QuotaGuard proxy with host {} : ", host);
+            log.info("Creating proxy with host {} : ", host);
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
 
             Authenticator authenticator = new Authenticator() {

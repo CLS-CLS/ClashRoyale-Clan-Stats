@@ -9,6 +9,7 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.service.integration.SiteConfigurationService;
 import org.lytsiware.clash.utils.ContentLengthHttpInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.time.LocalDateTime;
 
@@ -26,6 +28,10 @@ public class ClashRoyaleRestIntegrationService {
 
     @Value("${BEARER}")
     String bearer;
+
+    @Autowired
+    @Qualifier("fixie")
+    Proxy proxy;
 
     private SiteConfigurationService siteConfigurationService;
 
@@ -62,7 +68,7 @@ public class ClashRoyaleRestIntegrationService {
     public CurrentWarDto getDataFromSite() {
         try {
             URL url = siteConfigurationService.getClashRestUrl().getURL();
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection(proxy);
             conn.setRequestProperty("Authorization", bearer);
             conn.setRequestProperty("accept", "application/json");
             ObjectMapper objectMapper = new ObjectMapper();
