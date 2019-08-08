@@ -35,7 +35,8 @@ public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrat
 
     Logger logger = LoggerFactory.getLogger(StatsRoyaleSiteServiceImpl.class);
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    ObjectMapper objectMapper;
 
 
     @Value("${clanTag:PG2000PL}")

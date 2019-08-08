@@ -1,5 +1,7 @@
 package org.lytsiware.clash;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +39,15 @@ public class Application {
 
     @Configuration
     public static class Config {
+
+        @Bean
+        public ObjectMapper objectMapper() {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.findAndRegisterModules();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return objectMapper;
+
+        }
 
 
         @Bean
