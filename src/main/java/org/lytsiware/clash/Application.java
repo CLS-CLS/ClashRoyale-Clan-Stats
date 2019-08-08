@@ -56,19 +56,19 @@ public class Application {
 
         @PostConstruct
         public void initProxySettings() throws MalformedURLException {
-            URL proxyUrl = new URL(System.getenv("QUOTAGUARDSTATIC_URL"));
-            String userInfo = proxyUrl.getUserInfo();
-            String user = userInfo.substring(0, userInfo.indexOf(':'));
-            String password = userInfo.substring(userInfo.indexOf(':') + 1);
-
-            System.setProperty("http.proxyHost", proxyUrl.getHost());
-            System.setProperty("http.proxyPort", Integer.toString(proxyUrl.getPort()));
-
-            Authenticator.setDefault(new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(user, password.toCharArray());
-                }
-            });
+//            URL proxyUrl = new URL(System.getenv("QUOTAGUARDSTATIC_URL"));
+//            String userInfo = proxyUrl.getUserInfo();
+//            String user = userInfo.substring(0, userInfo.indexOf(':'));
+//            String password = userInfo.substring(userInfo.indexOf(':') + 1);
+//
+//            System.setProperty("http.proxyHost", proxyUrl.getHost());
+//            System.setProperty("http.proxyPort", Integer.toString(proxyUrl.getPort()));
+//
+//            Authenticator.setDefault(new Authenticator() {
+//                protected PasswordAuthentication getPasswordAuthentication() {
+//                    return new PasswordAuthentication(user, password.toCharArray());
+//                }
+//            });
         }
 
         @Bean

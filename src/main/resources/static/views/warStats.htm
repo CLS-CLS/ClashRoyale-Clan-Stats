@@ -17,6 +17,13 @@
             </ul>
 
             <div class="tab-pane fade in active" id="averageWarStats" ng-controller="warStatsController">
+                <div class="col-xs-1 col-md-1">
+                    <!-- Trigger the modal with a button -->
+                    <button class="btn btn-default dropdown-toggle btn-lg" data-target="#columnSelectModal"
+                            data-toggle="modal" type="button">
+                        <span class="glyphicon glyphicon-cog"></span> <span class="caret"></span>
+                    </button>
+                </div>
                 <div class="row clan-header"><h1>Average War Statistics</h1></div>
                 <div>
                     <div class="row">
@@ -64,7 +71,7 @@
                         </div>
                     </div>
                 </div>
-            <div style="position:relative">
+                <div style="position:relative">
                 <loading-directive loading="loading"/>
                 <div class="table-responsive halfscreen">
                     <table class="halfscreen table table-striped war-table">
@@ -73,44 +80,59 @@
                             <th><span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="name" filter-by="filter">Player</order-directive></span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th ng-show="state.selectableColumns['warsParticipated'].show"><span
+                                    ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="warsParticipated" filter-by="filter">
                                     <img style="display:inline" src="images/battle_mid.png"></order-directive></span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th ng-show="state.selectableColumns['averageCardsWon'].show"><span
+                                    ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="averageCardsWon" filter-by="filter">
                                     <img style="display:inline" src="images/cards_mid.png">
                                 </order-directive></span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th ng-show="state.selectableColumns['winRatio'].show"><span
+                                    ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="winRatio"
                                                  filter-by="filter">Win Ratio</order-directive></span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th ng-show="state.selectableColumns['score'].show"><span
+                                    ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="score" filter-by="filter">
                                     <img style="display:inline" src="images/score_mid.png">
                                 </order-directive></span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th ng-show="state.selectableColumns['crownsWon'].show"><span
+                                    ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="crownsWon" filter-by="filter">
                                     <img style="display:inline" src="images/win_mid.png">
                                 </order-directive>
                             </span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th ng-show="state.selectableColumns['crownsLost'].show"><span
+                                    ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="crownsLost" filter-by="filter">
                                     <img src="images/loose_mid.png" style="display:inline">
                                 </order-directive></span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th ng-show="state.selectableColumns['gamesNotPlayed'].show"><span
+                                    ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="gamesNotPlayed" filter-by="filter">
                                     <img src="images/forfeit_mid.png" style="display:inline">
                                 </order-directive></span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th ng-show="state.selectableColumns['collectionGamesMissed'].show"><span
+                                    ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="collectionGamesMissed" filter-by="filter">
                                     <img src="images/c_forfeit_mid.png" style="display:inline">
                                 </order-directive></span>
+                            </th>
+                            <th ng-show="state.selectableColumns['totalGamesMissed'].show">
+                                <span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="totalGamesMissed" filter-by="filter">
+                                        Total Games Missed
+                                    </order-directive>
+                                </span>
                             </th>
                         </tr>
                         </thead>
@@ -122,14 +144,21 @@
                                 <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                             </a>
                             </td>
-                            <td>{{s.warsParticipated}}/{{s.numberOfWars}}</td>
-                            <td>{{s.averageCardsWon | number:0}}</td>
-                            <td>{{s.winRatio | percentage:2}}</td>
-                            <td>{{s.score | number:0}}</td>
-                            <td>{{s.crownsWon}}</td>
-                            <td>{{s.crownsLost}}</td>
-                            <td>{{s.gamesNotPlayed}}</td>
-                            <td>{{s.collectionGamesMissed}}</td>
+                            <td ng-show="state.selectableColumns['warsParticipated'].show">
+                                {{s.warsParticipated}}/{{s.numberOfWars}}
+                            </td>
+                            <td ng-show="state.selectableColumns['averageCardsWon'].show">{{s.averageCardsWon |
+                                number:0}}
+                            </td>
+                            <td ng-show="state.selectableColumns['winRatio'].show">{{s.winRatio | percentage:2}}</td>
+                            <td ng-show="state.selectableColumns['score'].show">{{s.score | number:0}}</td>
+                            <td ng-show="state.selectableColumns['crownsWon'].show">{{s.crownsWon}}</td>
+                            <td ng-show="state.selectableColumns['crownsLost'].show">{{s.crownsLost}}</td>
+                            <td ng-show="state.selectableColumns['gamesNotPlayed'].show">{{s.gamesNotPlayed}}</td>
+                            <td ng-show="state.selectableColumns['collectionGamesMissed'].show">
+                                {{s.collectionGamesMissed}}
+                            </td>
+                            <td ng-show="state.selectableColumns['totalGamesMissed'].show">{{s.totalGamesMissed}}</td>
                         </tr>
                         <tr ng-if="stats.playerWarStats.length == 0">
                             <td colspan="12"><h2>No data for this period</h2></td>
@@ -143,6 +172,37 @@
                     </div>
                 </div>
             </div>
+                <!-- Modal -->
+                <div class="modal fade" id="columnSelectModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button class="close" data-dismiss="modal" type="button">&times;</button>
+                                <h4 class="modal-title">Columns to show</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"
+                                                ng-repeat="(key, val) in state.selectableColumns">
+                                                <label for="{{key}}"><input id="{{key}}"
+                                                                            ng-model="state.selectableColumns[key].show"
+                                                                            type="checkbox"/>&nbsp;{{val.name}}</label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <div class="tab-pane fade in" id="singleWarStats" ng-controller="singleWarStatController">
                 <div class="row clan-header"><h1>War League Statistics</h1></div>

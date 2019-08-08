@@ -433,6 +433,17 @@ app.factory('clanStatsState',  function(roleComparator) {
 
 app.factory('warStatsState',  function(roleComparator) {
 	var state = {
+        selectableColumns: {
+            "averageCardsWon": {name: "Average Cards Won", show: true},
+            "warsParticipated": {name: "Wars Participated", show: true},
+            "winRatio": {name: "Win ratio", show: true},
+            "score": {name: "Score", show: true},
+            "crownsWon": {name: "Games Won", show: true},
+            "crownsLost": {name: "Games Lost", show: false},
+            "gamesNotPlayed": {name: "Games not played", show: true},
+            "collectionGamesMissed": {name: "Collection Games Missed", show: true},
+            "totalGamesMissed": {name: "Total Games Missed", show: true}
+        },
 		filter : {
 			orderBy : "-score",
 		},
@@ -454,6 +465,8 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
     }
 
     $scope.filter = warStatsState.filter;
+
+    $scope.state = warStatsState;
 
     $scope.colorfy = colorfy.colorfy;
 

@@ -149,6 +149,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
                     .totalCards(totalCards)
                     .warsEligibleForParticipation(numberOfWars)
                     .collectionGamesMissed(collectionGamesMissed)
+                    .totalGamesMissed(collectionGamesMissed + gamesNotPlayed)
                     .warsParticipated(numberOfWarsParticipated).build();
 
             playerAggregationWarStats.add(playerAggregationWarStat);
@@ -194,7 +195,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
 
             PlayerAggregationWarStats partialPlayerStat = partialCalculatedStats.stream().filter(playerAggregationWarStat -> playerAggregationWarStat.getPlayer().equals(player)).findFirst().get();
 
-            int score = (int) ((0.50 + 0.50 * winRatio) * averageCardsWon * (partialPlayerStat.getWarsParticipated() / (double) partialPlayerStat.getWarsEligibleForParticipation()));
+            int score = (int) ((0.50 + 0.50 * winRatio) * averageCardsWon);
 
             result.add(PlayerAggregationWarStats.builder().player(player)
                     .date(warLeague.getStartDate())

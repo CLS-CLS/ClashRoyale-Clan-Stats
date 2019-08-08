@@ -39,6 +39,7 @@ public class PlayerAggregationWarStats {
     Integer warsEligibleForParticipation;
     Integer score;
     Integer collectionGamesMissed;
+    Integer totalGamesMissed;
 
     @Override
     public boolean equals(Object o) {
