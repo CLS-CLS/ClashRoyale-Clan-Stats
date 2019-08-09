@@ -44,23 +44,6 @@ public class ClashRoyaleRestIntegrationService {
         this.siteConfigurationService = siteConfigurationService;
     }
 
-//    private String createConnection() {
-//        URL url;
-//        try {
-//            url = siteConfigurationService.getClashRestUrl().getURL();
-//            URLConnection connection = url.openConnection(proxy);
-//            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-//                StringBuilder sb = new StringBuilder();
-//                String inputLine;
-//                while ((inputLine = br.readLine()) != null) {
-//                    sb.append(inputLine).append("\n");
-//                }
-//                return sb.toString();
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     public RestTemplate createRestTemplate() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
@@ -74,21 +57,11 @@ public class ClashRoyaleRestIntegrationService {
 
     public CurrentWarDto getDataFromSite() {
         try {
-//            URL url = siteConfigurationService.getClashRestUrl().getURL();
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection(proxy);
-//            conn.setRequestProperty("Authorization", bearer);
-//            conn.setRequestProperty("accept", "application/json");
-//            CurrentWarDto currentWarDto = objectMapper.readValue(conn.getInputStream(), CurrentWarDto.class);
-//            log.info("{}", currentWarDto);
-//            return currentWarDto;
-
             RestTemplate restTemplate = createRestTemplate();
             RequestEntity<Void> requestEntity = RequestEntity.get(siteConfigurationService.getClashRestUrl().getURI())
                     .header("Authorization", bearer)
                     .header("accept", "application/json")
                     .build();
-//            ParameterizedTypeReference<Map<String, Object>> type = new ParameterizedTypeReference<Map<String, Object>>() {
-//            };
             preRequest(restTemplate);
             CurrentWarDto result = restTemplate.exchange(requestEntity, CurrentWarDto.class).getBody();
             log.info("{}", result);
