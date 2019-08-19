@@ -9,8 +9,6 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.service.integration.SiteConfigurationService;
 import org.lytsiware.clash.utils.ContentLengthHttpInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -19,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.Proxy;
 import java.net.URI;
 import java.time.LocalDateTime;
 
@@ -27,12 +24,8 @@ import java.time.LocalDateTime;
 @Slf4j
 public class ClashRoyaleRestIntegrationService {
 
-    @Value("${BEARER}")
-    String bearer;
-
     @Autowired
-    @Qualifier("fixie")
-    Proxy proxy;
+    private ProxyAndBearerHolder proxyAndBearerHolder;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -47,7 +40,7 @@ public class ClashRoyaleRestIntegrationService {
 
     public RestTemplate createRestTemplate() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setProxy(proxy);
+        requestFactory.setProxy(proxyAndBearerHolder.getProxy());
         RestTemplate restTemplate = new RestTemplateBuilder()
                 .requestFactory(() -> requestFactory)
                 .interceptors(new ContentLengthHttpInterceptor())
@@ -59,7 +52,7 @@ public class ClashRoyaleRestIntegrationService {
         try {
             RestTemplate restTemplate = createRestTemplate();
             RequestEntity<Void> requestEntity = RequestEntity.get(siteConfigurationService.getClashRestUrl().getURI())
-                    .header("Authorization", bearer)
+                    .header("Authorization", proxyAndBearerHolder.getBearer())
                     .header("accept", "application/json")
                     .build();
             preRequest(restTemplate);
