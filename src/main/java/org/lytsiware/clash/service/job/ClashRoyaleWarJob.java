@@ -47,6 +47,7 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     PlayerRepository playerRepository;
 
     @Scheduled(fixedRate = 1000 * 60 * 60 * 12)
+    @Retryable(backoff = @Backoff(delay = 1000 * 60 * 60), maxAttempts = 2)
     public void runPeriodically() {
         fixedScheduler();
     }
@@ -58,7 +59,6 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
      * players will now be in the database.
      */
     @Override
-    @Retryable(backoff = @Backoff(delay = 1000 * 60 * 60))
     public Date run() {
         log.info("Run ClashRoyaleJob");
         CurrentWarDto dto = clashRoyaleRestIntegrationService.getDataFromSite();

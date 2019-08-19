@@ -3,6 +3,7 @@ package org.lytsiware.clash;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import javax.annotation.PostConstruct;
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
@@ -40,9 +42,11 @@ public class Application {
     @Configuration
     public static class Config {
 
-        @Bean
-        public ObjectMapper objectMapper() {
-            ObjectMapper objectMapper = new ObjectMapper();
+        @Autowired
+        ObjectMapper objectMapper;
+
+        @PostConstruct
+        public ObjectMapper configureSpringObjectMapper() {
             objectMapper.findAndRegisterModules();
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return objectMapper;
