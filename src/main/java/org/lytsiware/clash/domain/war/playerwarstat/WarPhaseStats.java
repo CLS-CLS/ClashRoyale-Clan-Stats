@@ -27,7 +27,7 @@ public class WarPhaseStats {
     }
 
     public Integer getGamesNotPlayed() {
-        return Optional.ofNullable(gamesGranted).orElse(0) - getGamesPlayed();
+        return hasParticipated() ? gamesGranted - getGamesPlayed() : null;
     }
 
     public boolean hasParticipated() {

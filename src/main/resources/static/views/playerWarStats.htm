@@ -26,6 +26,7 @@
                                 <th rowspan="2">League</th>
                                 <th rowspan="2"><img style="display:inline" src="images/cards_mid.png"></th>
                                 <th rowspan="2">Battles</th>
+                                <th rowspan="2">Col. Games Missed</th>
                                 <th colspan="2"> Player Average </th>
                                 <th colspan="2"> League Average </th>
                             </tr>
@@ -46,6 +47,9 @@
                                     <img ng-if="fightStatus == 'loose'" style="display:inline" src="images/loose_mid.png">
                                     <img ng-if="fightStatus == 'forfeit'" style="display:inline" src="images/forfeit_mid.png">
                                 </span></td>
+                                <td ng-style="colorfy(s.collectionGamesNotPlayed, 'collectionGames')">
+                                    {{s.collectionGamesNotPlayed}}
+                                </td>
                                 <td>{{s.avgCards | number:2}}</td>
                                 <td>{{s.avgWins | percentage:2}}</td>
                                 <td>{{s.avgLeagueCards | number:2}}</td>

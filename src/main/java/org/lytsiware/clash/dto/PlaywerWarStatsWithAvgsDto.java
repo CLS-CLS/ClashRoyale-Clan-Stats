@@ -48,6 +48,8 @@ public class PlaywerWarStatsWithAvgsDto implements Serializable {
                     .gamesWon(pws.getWarPhaseStats().getGamesWon())
                     .gamesLost(pws.getWarPhaseStats().getGamesLost())
                     .gamesNotPlayed(pws.getWarPhaseStats().getGamesNotPlayed())
+                    //TODO even if player has not participated in war the games not played returned form the entity is 0 (we would like null)
+                    .collectionGamesNotPlayed(pws.getWarPhaseStats().getGamesGranted() > 0 ? pws.getCollectionPhaseStats().getGamesNotPlayed() : null)
                     .cards(pws.getCollectionPhaseStats().getCardsWon())
                     .avgCards(paws.getAvgCards())
                     .avgScore(paws.getScore())
@@ -72,6 +74,8 @@ public class PlaywerWarStatsWithAvgsDto implements Serializable {
         private Integer gamesLost;
         private Integer gamesNotPlayed;
         private Integer cards;
+
+        private Integer collectionGamesNotPlayed;
 
 
         //aggr
