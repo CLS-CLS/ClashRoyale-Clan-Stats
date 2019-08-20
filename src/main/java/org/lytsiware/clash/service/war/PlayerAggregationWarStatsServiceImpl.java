@@ -10,6 +10,7 @@ import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
+import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +136,8 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             int totalCards = playerWarStats.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getCardsWon())
                     .filter(i -> i != 0).sum();
             int wins = participatedWars.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesWon()).sum();
-            int gamesNotPlayed = participatedWars.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
+            int gamesNotPlayed = participatedWars.stream().filter(pws -> Optional.ofNullable(pws.getWarPhaseStats()).map(WarPhaseStats::getGamesNotPlayed).isPresent())
+                    .mapToInt(pws -> pws.getWarPhaseStats().getGamesNotPlayed()).sum();
             int crownsLost = gamesNotPlayed + participatedWars.stream().filter(pws -> pws.getWarPhaseStats() != null).mapToInt(pws -> pws.getWarPhaseStats().getGamesLost()).sum();
             int collectionGamesMissed = participatedWars.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getGamesNotPlayed()).sum();
 

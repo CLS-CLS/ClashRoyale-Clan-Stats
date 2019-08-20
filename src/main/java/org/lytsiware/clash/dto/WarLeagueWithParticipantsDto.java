@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -61,7 +62,7 @@ public class WarLeagueWithParticipantsDto implements Serializable {
             this.cards = playerWarStat.getCollectionPhaseStats().getCardsWon();
             this.wins = playerWarStat.getWarPhaseStats().getGamesWon();
             this.looses = playerWarStat.getWarPhaseStats().getGamesLost();
-            this.forfeits = playerWarStat.getWarPhaseStats().getGamesNotPlayed();
+            this.forfeits = Optional.ofNullable(playerWarStat.getWarPhaseStats().getGamesNotPlayed()).orElse(0);
             this.name = playerWarStat.getPlayer().getName();
             this.tag = playerWarStat.getPlayer().getTag();
             double winRatio = playerWarStat.getWarPhaseStats().getGamesWon() / playerWarStat.getWarPhaseStats().getGamesGranted();
