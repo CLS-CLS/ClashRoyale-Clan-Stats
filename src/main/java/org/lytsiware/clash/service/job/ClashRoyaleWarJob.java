@@ -14,8 +14,6 @@ import org.lytsiware.clash.service.job.scheduledname.AbstractSelfScheduledJob;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +45,6 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     PlayerRepository playerRepository;
 
     @Scheduled(fixedRate = 1000 * 60 * 60 * 12)
-    @Retryable(backoff = @Backoff(delay = 1000 * 60 * 60), maxAttempts = 2)
     public void runPeriodically() {
         fixedScheduler();
     }
@@ -62,8 +59,15 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     public Date run() {
         log.info("Run ClashRoyaleJob");
         CurrentWarDto dto = clashRoyaleRestIntegrationService.getDataFromSite();
-        WarLeague warLeague = clashRoyaleRestIntegrationService.createWarLeagueFromData(dto);
-        Optional<WarLeague> warLeagueDb = warLeagueRepository.findByStartDate(warLeague.getStartDate());
+        WarLeague warLeague = clashRoyaleRestIntegrationService.createWarLeagueFromData(dto).orElse(null);
+
+        if (warLeague == null) {
+            return null;
+        }
+
+        Optional<WarLeague> warLeagueDb = (warLeague.getStartDate() != null ?
+                warLeagueRepository.findByStartDate(warLeague.getStartDate()) : Optional.empty());
+
         if (warLeagueDb.isPresent()) {
             updateData(warLeagueDb.get(), warLeague);
         } else {

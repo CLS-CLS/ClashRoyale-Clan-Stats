@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -81,12 +82,15 @@ public class ClashRoyaleRestIntegrationService {
         }
     }
 
-    public WarLeague createWarLeagueFromData(@Valid CurrentWarDto warDto) {
+    public Optional<WarLeague> createWarLeagueFromData(@Valid CurrentWarDto warDto) {
         LocalDateTime warStartDate = calculateStartDate(warDto);
+        if (warStartDate == null) {
+            return Optional.empty();
+        }
         WarLeague warLeague = new WarLeague(warStartDate);
         warLeague.setName(warStartDate.toString());
         warDto.getParticipants().stream().map(this::createWarStatsDto).forEach(playerWarStat -> playerWarStat.setWarLeague(warLeague));
-        return warLeague;
+        return Optional.of(warLeague);
     }
 
     private PlayerWarStat createWarStatsDto(CurrentWarDto.Participant participant) {
@@ -102,8 +106,8 @@ public class ClashRoyaleRestIntegrationService {
     private LocalDateTime calculateStartDate(CurrentWarDto warDto) {
         if (warDto.getState() == CurrentWarDto.State.COLLECTION_DAY) {
             return warDto.getCollectionEndTime().minusDays(1);
-        } else {
+        } else if (warDto.getState() == CurrentWarDto.State.WAR_DAY) {
             return warDto.getWarEndTime().minusDays(2);
-        }
+        } else return null;
     }
 }

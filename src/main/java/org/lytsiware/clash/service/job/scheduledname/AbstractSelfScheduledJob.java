@@ -32,10 +32,13 @@ public abstract class AbstractSelfScheduledJob {
      * Upon succesfull completion any previously self scheduled job is cancelled
      */
     public void fixedScheduler() {
+        log.info("Fixed Scheduler");
         ScheduledFuture<?> previousSelfScheduledFuture = scheduledFuture;
-        executeAndReschedule();
-        if (previousSelfScheduledFuture != null) {
+        boolean success = executeAndReschedule();
+        if (success && previousSelfScheduledFuture != null) {
             previousSelfScheduledFuture.cancel(false);
+        } else {
+            throw new RuntimeException("Fixed Scheduler failed");
         }
     }
 
@@ -47,16 +50,22 @@ public abstract class AbstractSelfScheduledJob {
     protected abstract Date run();
 
 
-    private void executeAndReschedule() {
-        Date date = run();
-        log.info("Task will run again at : {} ", date);
-        if (date == null) {
-            return;
+    private boolean executeAndReschedule() {
+        try {
+            Date date = run();
+            log.info("Task will run again at : {} ", date);
+            if (date == null) {
+                return true;
+            }
+            synchronized (monitor) {
+                trigger.setNextExecutionTime(date);
+                scheduledFuture = taskScheduler.schedule(() -> executeAndReschedule(), trigger);
+            }
+            return true;
+        } catch (Exception ex) {
+            log.warn("Error while rescheduling ", ex);
         }
-        synchronized (monitor) {
-            trigger.setNextExecutionTime(date);
-            scheduledFuture = taskScheduler.schedule(() -> executeAndReschedule(), trigger);
-        }
+        return false;
     }
 
 
