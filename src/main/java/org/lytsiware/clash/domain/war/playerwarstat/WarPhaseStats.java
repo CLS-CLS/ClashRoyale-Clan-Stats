@@ -31,7 +31,7 @@ public class WarPhaseStats {
     }
 
     public boolean hasParticipated() {
-        return Optional.of(gamesWon).orElse(0) + Optional.ofNullable(gamesLost).orElse(0) > 0;
+        return gamesGranted > 0;
     }
 
 
