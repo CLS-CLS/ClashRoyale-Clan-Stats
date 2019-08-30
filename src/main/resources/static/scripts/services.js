@@ -31,6 +31,16 @@ app.service("colorfy", function() {
             return style;
         }
 
+        if (type == "collectionGamesPlayed") {
+            if (number < 3) {
+                style.color = 'red';
+            }
+            if (number == 1) {
+                style["font-weight"] = 'bold'
+            }
+            return style;
+        }
+
 		if (boundary == 0) {
 			style.color = "black"
 			return style;
