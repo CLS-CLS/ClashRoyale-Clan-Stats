@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Component
+//@Component
 @Slf4j
 public class UpdateWarScoreRunner implements CommandLineRunner {
 

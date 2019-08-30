@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.domain.player.*;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
-import org.lytsiware.clash.service.ClanStatsService;
-import org.lytsiware.clash.service.clan.PlayerCheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
@@ -19,14 +17,9 @@ import java.util.stream.Collectors;
 //@Component
 public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
 
-    @Autowired
-    ClanStatsService clanStatsService;
 
     @Autowired
     PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
-
-    @Autowired
-    PlayerCheckInService playerInOutService;
 
     @Autowired
     PlayerRepository playerRepository;
@@ -38,7 +31,7 @@ public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
     PlayerInOutHistoryRepository playerInOutHistoryRepository;
 
 
-    //    @Override
+    @Override
     public void run(String... args) throws Exception {
         Map<String, Player> allPlayers = playerRepository.loadAll();
 
