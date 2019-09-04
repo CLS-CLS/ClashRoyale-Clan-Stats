@@ -11,6 +11,7 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.service.integration.clashapi.ClashRoyaleRestIntegrationService;
 import org.lytsiware.clash.service.integration.clashapi.CurrentWarDto;
 import org.lytsiware.clash.service.job.scheduledname.AbstractSelfScheduledJob;
+import org.lytsiware.clash.service.job.scheduledname.ScheduledName;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,8 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     @Autowired
     PlayerRepository playerRepository;
 
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 12)
+    @Scheduled(cron = "0 0 9,21 * * *")
+    @ScheduledName("ClashRoyaleAPI_WarJob")
     public void runPeriodically() {
         fixedScheduler();
     }

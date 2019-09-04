@@ -33,10 +33,12 @@ public abstract class AbstractSelfScheduledJob {
      */
     public void fixedScheduler() {
         log.info("Fixed Scheduler");
-        ScheduledFuture<?> previousSelfScheduledFuture = scheduledFuture;
+
         boolean success = executeAndReschedule();
-        if (success && previousSelfScheduledFuture != null) {
-            previousSelfScheduledFuture.cancel(false);
+        if (success) {
+            if (scheduledFuture != null) {
+                scheduledFuture.cancel(false);
+            }
         } else {
             throw new RuntimeException("Fixed Scheduler failed");
         }
