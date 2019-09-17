@@ -114,7 +114,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
                 peek(player -> log.info("TRANSIENT PLAYER {}", player)).collect(Collectors.toList());
 
         for (Player transientPlayer : transientPlayers) {
-            playerCheckInService.checkinPlayer(transientPlayer.getTag(), warLeague.getStartDate().atTime(warLeague.getTime().minusHours(1)));
+            playerCheckInService.checkinPlayer(transientPlayer, warLeague.getStartDate().atTime(warLeague.getTime().minusHours(1)));
             playerCheckInService.checkoutPlayer(transientPlayer.getTag(), warLeague.getStartDate().atTime(warLeague.getTime().plusHours(12)));
         }
     }

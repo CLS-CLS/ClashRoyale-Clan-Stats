@@ -48,10 +48,14 @@ public class PlayerCheckInService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void checkinPlayer(String tag, @Nullable LocalDateTime checkInTime) {
+    public void checkinPlayer(Player player, @Nullable LocalDateTime checkInTime) {
+        Player playerDb = playerRepository.findByTag(player.getTag());
+        if (playerDb == null) {
+            playerRepository.saveOrUpdate(new Player(player.getTag(), player.getName(), "member"));
+        }
         checkInTime = (checkInTime == null ? LocalDateTime.now() : checkInTime);
-        PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
-        checkinPlayer(playerInOut, tag, checkInTime);
+        PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(player.getTag()).orElse(null);
+        checkinPlayer(playerInOut, player.getTag(), checkInTime);
     }
 
     private void checkinPlayer(PlayerInOut playerInOut, String tag, LocalDateTime checkInDate) {

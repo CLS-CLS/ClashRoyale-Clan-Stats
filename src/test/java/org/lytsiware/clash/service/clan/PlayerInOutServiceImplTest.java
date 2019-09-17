@@ -30,7 +30,7 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
 
 
     @Test
-    public void checkoutPlayer() throws Exception {
+    public void checkoutPlayer() {
         Player p1 = new Player("tag1", "Chris", "Member");
         em.persist(p1);
         PlayerInOut playerInOut = new PlayerInOut("tag1", LocalDate.now().minusDays(2).atStartOfDay());
@@ -56,7 +56,7 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         em.flush();
         em.clear();
 
-        playerInOutService.checkinPlayer("tag1", null);
+        playerInOutService.checkinPlayer(new Player("tag1", "tag1", "tag1"), null);
 
         playerInOut = playerCheckInCheckOutRepository.findByTag("tag1").get();
         assertEquals(LocalDate.now(), playerInOut.getCheckIn().toLocalDate());
@@ -74,7 +74,7 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         em.flush();
         em.clear();
 
-        playerInOutService.checkinPlayer("tag1", null);
+        playerInOutService.checkinPlayer(new Player("tag1", "tag1", "tag1"), null);
 
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag("tag1").get();
         assertEquals(LocalDate.now(), playerInOut.getCheckIn().toLocalDate());
