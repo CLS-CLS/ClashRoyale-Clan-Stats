@@ -127,11 +127,6 @@ public class WarStatsRestController {
     }
 
 
-    @PutMapping("/warstats")
-    public void dodoscoobydo() {
-        warInputService.updateOrSaveWarStats();
-    }
-
     @PostMapping("/warstats/inputdata")
     public ResponseEntity<Optional<String>> insertWarStats(@Valid @RequestBody WarStatsInputDto warStatsInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

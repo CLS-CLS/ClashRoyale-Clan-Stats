@@ -76,8 +76,8 @@ public class WarLeague {
         this.playerWarStats.add(playerWarStat);
     }
 
-    public LocalDate getEndDate() {
-        return getStartDate().plusDays(WarConstants.WAR_DURATION - 1);
+    public LocalDateTime getEndDate() {
+        return getStartDate().atTime(time).plusHours(WarConstants.WAR_DURATION * 24);
     }
 
     @Override

@@ -90,17 +90,33 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     public void saveWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList) throws EntityExistsException {
         WarLeague warLeague = statsList.get(0).getWarLeague();
         WarLeague warLeagueDb = warLeagueRepository.findByStartDate(warLeague.getStartDate()).orElse(null);
+        saveTransientPlayers(statsList, warLeague);
         if (warLeagueDb != null) {
             updateWarStatsAndUpdateStatistics(warLeagueDb, warLeague, statsList);
             warLeague = warLeagueDb;
         }
-        //TODO check transient
-        Map<String, Player> playersDb = playerRepository.loadAll();
-        statsList.stream().map(PlayerWarStat::getPlayer).filter(player -> !playersDb.containsKey(player.getTag())).forEach(player -> log.info("TRANSIENT PLAYER {}", player));
+
+
         warLeagueService.calculateLeagueAvgsAndSave(warLeague);
         playerWarStatsRepository.saveAll(statsList);
         playerWarStatsRepository.flush();
         playerAggregationWarStatsService.recalculateAndUpdateWarStatsForLeagues(Collections.singletonList(warLeague));
+    }
+
+    /**
+     * A player will not be recorded when transient when he has joined the clan before the war starts but has left the clan before the scheduler run.
+     * Hence we checkin the player just before the start date of the warLeague and checkout the player 12 hours later.
+     * * @param statsList
+     */
+    private void saveTransientPlayers(List<PlayerWarStat> statsList, WarLeague warLeague) {
+        Map<String, Player> playersDb = playerRepository.loadAll();
+        List<Player> transientPlayers = statsList.stream().map(PlayerWarStat::getPlayer).filter(player -> !playersDb.containsKey(player.getTag())).
+                peek(player -> log.info("TRANSIENT PLAYER {}", player)).collect(Collectors.toList());
+
+        for (Player transientPlayer : transientPlayers) {
+            playerCheckInService.checkinPlayer(transientPlayer.getTag(), warLeague.getStartDate().atTime(warLeague.getTime().minusHours(1)));
+            playerCheckInService.checkoutPlayer(transientPlayer.getTag(), warLeague.getStartDate().atTime(warLeague.getTime().plusHours(12)));
+        }
     }
 
     private void updateWarStatsAndUpdateStatistics(WarLeague warLeagueDb, WarLeague warLeague, List<PlayerWarStat> statsList) {

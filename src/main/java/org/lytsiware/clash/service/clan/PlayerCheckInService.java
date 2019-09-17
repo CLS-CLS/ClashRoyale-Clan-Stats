@@ -4,6 +4,7 @@ package org.lytsiware.clash.service.clan;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,28 +31,30 @@ public class PlayerCheckInService {
     private PlayerRepository playerRepository;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void checkoutPlayer(String tag) {
+    public void checkoutPlayer(String tag, @Nullable LocalDateTime checkoutOutDate) {
         log.info("Checking out player {}", tag);
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
-        checkoutPlayer(playerInOut);
+        checkoutPlayer(playerInOut, checkoutOutDate);
     }
 
-    private void checkoutPlayer(PlayerInOut playerInOut) {
+    private void checkoutPlayer(PlayerInOut playerInOut, LocalDateTime checkoutDate) {
+        checkoutDate = (checkoutDate == null ? LocalDateTime.now() : checkoutDate);
         if (playerInOut != null) {
             if (playerInOut.getCheckOut() == null) {
-                playerInOut.setCheckOut(LocalDateTime.now());
+                playerInOut.setCheckOut(checkoutDate);
                 playerCheckInCheckOutRepository.save(playerInOut);
             }
         }
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void checkinPlayer(String tag) {
+    public void checkinPlayer(String tag, @Nullable LocalDateTime checkInTime) {
+        checkInTime = (checkInTime == null ? LocalDateTime.now() : checkInTime);
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
-        checkinPlayer(playerInOut, tag);
+        checkinPlayer(playerInOut, tag, checkInTime);
     }
 
-    private void checkinPlayer(PlayerInOut playerInOut, String tag) {
+    private void checkinPlayer(PlayerInOut playerInOut, String tag, LocalDateTime checkInDate) {
         if (playerInOut != null) {
             if (playerInOut.getCheckOut() == null) {
                 log.info("Player {} already in clan", tag);
@@ -61,10 +64,10 @@ public class PlayerCheckInService {
             PlayerInOutHistory playerInOutHistory = PlayerInOutHistory.from(playerInOut);
             playerInOutHistoryRepository.save(playerInOutHistory);
 
-            playerInOut.setCheckIn(LocalDateTime.now());
+            playerInOut.setCheckIn(checkInDate);
             playerInOut.setCheckOut(null);
         } else {
-            playerInOut = new PlayerInOut(tag, LocalDateTime.now());
+            playerInOut = new PlayerInOut(tag, checkInDate);
         }
         playerCheckInCheckOutRepository.save(playerInOut);
     }
@@ -77,14 +80,14 @@ public class PlayerCheckInService {
 
         for (Player player : currentPlayers) {
             String playerTag = player.getTag();
-            checkinPlayer(playersInOutByTag.get(playerTag), playerTag);
+            checkinPlayer(playersInOutByTag.get(playerTag), playerTag, null);
             player.setInClan(true);
             checkoutPlayers.remove(player.getTag());
         }
 
         for (String checkoutPlayerTag : checkoutPlayers.keySet()) {
             checkoutPlayers.get(checkoutPlayerTag).setInClan(false);
-            checkoutPlayer(playersInOutByTag.get(checkoutPlayerTag));
+            checkoutPlayer(playersInOutByTag.get(checkoutPlayerTag), null);
         }
 
         playerRepository.saveOrUpdate(Stream.concat(currentPlayers.stream(),
