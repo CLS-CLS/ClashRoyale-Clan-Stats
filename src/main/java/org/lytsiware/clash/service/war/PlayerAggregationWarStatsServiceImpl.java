@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -69,7 +70,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             throw new IllegalArgumentException("Strict mode enabled but no league with the provided start date exists");
         }
 
-        List<PlayerAggregationWarStats> partialCalculatedStats = calculateStats(warLeagues, latestLeagueStartDate, leagueSpan);
+        List<PlayerAggregationWarStats> partialCalculatedStats = calculateStats(warLeagues, latestLeagueStartDate.atTime(warLeagues.get(0).getTime()), leagueSpan);
         Set<Player> players = partialCalculatedStats.stream().map(PlayerAggregationWarStats::getPlayer).collect(Collectors.toSet());
         List<PlayerAggregationWarStats> avgCalculatedStats = calculateAvgsStatsAndScore(latestLeagueStartDate, leagueSpan, players, partialCalculatedStats);
         merge(avgCalculatedStats, partialCalculatedStats);
@@ -114,10 +115,10 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     }
 
 
-    private List<PlayerAggregationWarStats> calculateStats(List<WarLeague> warLeagues, LocalDate date, int leagueSpan) {
+    private List<PlayerAggregationWarStats> calculateStats(List<WarLeague> warLeagues, LocalDateTime date, int leagueSpan) {
 
         // players that have left the clan will have aggregation stats if we don't filter them out
-        Set<String> playersInClanAtDate = playerCheckInCheckOutRepository.findPlayersInClanAtDate(date.atStartOfDay()).stream().map(PlayerInOut::getTag).collect(Collectors.toSet());
+        Set<String> playersInClanAtDate = playerCheckInCheckOutRepository.findPlayersInClanAtDate(date).stream().map(PlayerInOut::getTag).collect(Collectors.toSet());
 
         Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
                 .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
@@ -142,7 +143,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
             int collectionGamesMissed = participatedWars.stream().mapToInt(pws -> pws.getCollectionPhaseStats().getGamesNotPlayed()).sum();
 
             PlayerAggregationWarStats playerAggregationWarStat = PlayerAggregationWarStats.builder()
-                    .date(date)
+                    .date(date.toLocalDate())
                     .gamesGranted(gamesGranted)
                     .gamesNotPlayed(gamesNotPlayed)
                     .gamesWon(wins)
