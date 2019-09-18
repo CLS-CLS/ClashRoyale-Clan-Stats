@@ -58,7 +58,7 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="s in player.statsDto">
-								<td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{$index + 1}}</td>
+                                <td class="alternative-font">{{$index + 1}}</td>
 								<td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution}}</td>
 								<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
 								<td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardsReceived}}</td>

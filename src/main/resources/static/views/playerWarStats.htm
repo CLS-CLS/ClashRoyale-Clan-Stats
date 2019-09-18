@@ -40,7 +40,7 @@
                             </thead>
                             <tbody>
                             <tr ng-if="player.stats.length > 0 " ng-repeat="s in player.stats">
-                                <td style="font-family: 'Comic Sans MS', cursive, sans-serif;">{{s.leagueDate}}</td>
+                                <td class="alternative-font">{{s.leagueDate}}</td>
                                 <td>{{s.cards != 0 ? s.cards : null}}</td>
                                 <td><span ng-repeat="fightStatus in s.fightStatuses track by $index">
                                     <img ng-if="fightStatus == 'win'" style="display:inline" src="images/win_mid.png">

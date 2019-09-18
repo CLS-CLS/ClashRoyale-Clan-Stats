@@ -27,7 +27,7 @@
 }
 
 html {
-	background: url(../images/cover3.jpg) no-repeat center center fixed;
+	background: url(../images/cover1.jpg) no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -54,8 +54,12 @@ html.rules {
 
 
 .player-header {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Architects Daughter', 'monospace';
     color:red;
+}
+
+.alternative-font {
+    font-family: 'Architects Daughter', 'monospace';
 }
 
 .main-navbar {
@@ -150,13 +154,15 @@ td, th {
 
 .clan-header {
     text-align:center;
-    text-shadow: 2px 5px 6px #00000087, 0px 0px 40px #ef2121, -2px -1px 0px #ffffff;
+    text-shadow: 2px 5px 6px #000000bd, 0px 0px 40px #73737300, -2px -1px 0px #fff;
+    // text-shadow: 2px 5px 6px #00000087, 0px 0px 40px #ef2121, -2px -1px 0px #ffffff;
 }
 
 .jumbotron h1 {
-    color: #ff0000c4;
-    font-size: 7em;
+    color: #9191918a;
+    font-size: 9em;
     font-weight: bold;
+    font-family: 'Bangers','monospace'
 }
 
 table  {

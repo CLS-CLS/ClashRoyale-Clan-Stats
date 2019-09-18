@@ -140,7 +140,7 @@
                         <tr ng-if="stats.playerWarStats.length > 0 "
                             ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator | moreWarsThan:hideLessThanEnabled.enabled:5 | playerInClan:hideNotInClanPlayers.enabled">
 
-                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="/player/{{s.tag}}/war" ng-click="next()">
+                            <td class="alternative-font"><a ng-click="next()" ng-href="/player/{{s.tag}}/war">
                                 <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                             </a>
                             </td>
@@ -279,8 +279,8 @@
                         <tr ng-if="stats.playerWarStats.length > 0 "
                             ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator">
 
-                            <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-click="next()"
-                                                                                              ng-href="/player/{{s.tag}}/war">
+                            <td class="alternative-font"><a ng-click="next()"
+                                                            ng-href="/player/{{s.tag}}/war">
                                 <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                             </a>
                             </td>

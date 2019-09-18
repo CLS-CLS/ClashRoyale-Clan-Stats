@@ -20,7 +20,7 @@
 		                <tbody>
 		                
 		                <tr ng-if="stats.newPlayers.length > 0 " ng-repeat="s in stats.newPlayers">
-		                    <td style="font-family: 'Comic Sans MS', cursive, sans-serif;"><a ng-href="player/{{s.tag}}">{{s.name}}</a></td>
+                            <td class="alternative-font"><a ng-href="player/{{s.tag}}">{{s.name}}</a></td>
 		                    <td>{{s.role}}</td>
 		                    <td>{{s.chestContribution }}</td>
 		                    <td> <toggle ng-model="s.chestToggleValue" ng-change="changed()"
