@@ -34,10 +34,10 @@ public class PlayerCheckInService {
     public void checkoutPlayer(String tag, @Nullable LocalDateTime checkoutOutDate) {
         log.info("Checking out player {}", tag);
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
-        checkoutPlayer(playerInOut, checkoutOutDate);
+        doCheckoutPlayer(playerInOut, checkoutOutDate);
     }
 
-    private void checkoutPlayer(PlayerInOut playerInOut, LocalDateTime checkoutDate) {
+    private void doCheckoutPlayer(PlayerInOut playerInOut, LocalDateTime checkoutDate) {
         checkoutDate = (checkoutDate == null ? LocalDateTime.now() : checkoutDate);
         if (playerInOut != null) {
             if (playerInOut.getCheckOut() == null) {
@@ -53,18 +53,20 @@ public class PlayerCheckInService {
         if (playerDb == null) {
             playerRepository.saveOrUpdate(new Player(player.getTag(), player.getName(), "member"));
         }
-        checkInTime = (checkInTime == null ? LocalDateTime.now() : checkInTime);
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(player.getTag()).orElse(null);
-        checkinPlayer(playerInOut, player.getTag(), checkInTime);
+        doCheckinPlayer(playerInOut, player.getTag(), checkInTime);
     }
 
-    private void checkinPlayer(PlayerInOut playerInOut, String tag, LocalDateTime checkInDate) {
+    private void doCheckinPlayer(PlayerInOut playerInOut, String tag, LocalDateTime checkInDate) {
+        log.info("Check in player {}", tag);
+        if (checkInDate == null) {
+            checkInDate = LocalDateTime.now();
+        }
         if (playerInOut != null) {
             if (playerInOut.getCheckOut() == null) {
-                log.info("Player {} already in clan", tag);
+                log.info(" -- already in clan");
                 return;
             }
-
             PlayerInOutHistory playerInOutHistory = PlayerInOutHistory.from(playerInOut);
             playerInOutHistoryRepository.save(playerInOutHistory);
 
@@ -84,14 +86,14 @@ public class PlayerCheckInService {
 
         for (Player player : currentPlayers) {
             String playerTag = player.getTag();
-            checkinPlayer(playersInOutByTag.get(playerTag), playerTag, null);
+            doCheckinPlayer(playersInOutByTag.get(playerTag), playerTag, LocalDateTime.now());
             player.setInClan(true);
             checkoutPlayers.remove(player.getTag());
         }
 
         for (String checkoutPlayerTag : checkoutPlayers.keySet()) {
             checkoutPlayers.get(checkoutPlayerTag).setInClan(false);
-            checkoutPlayer(playersInOutByTag.get(checkoutPlayerTag), null);
+            doCheckoutPlayer(playersInOutByTag.get(checkoutPlayerTag), null);
         }
 
         playerRepository.saveOrUpdate(Stream.concat(currentPlayers.stream(),
