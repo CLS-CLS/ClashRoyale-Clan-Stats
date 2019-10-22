@@ -33,6 +33,9 @@ app.config([ "$locationProvider", "$routeProvider",
             .when("/clanrules", {
                 templateUrl : "views/clanRules.htm"
             })
+            .when("/roster", {
+                templateUrl: "views/checkins.htm"
+            })
             .when("/:week", {
                 templateUrl : "views/clanStats.htm"
             })
