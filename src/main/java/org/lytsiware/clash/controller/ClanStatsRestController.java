@@ -10,6 +10,7 @@ import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.TemplateService;
 import org.lytsiware.clash.service.calculation.chestscore.ClanChestScoreCalculationService;
 import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
+import org.lytsiware.clash.service.clan.PlayerCheckInService;
 import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService;
 import org.lytsiware.clash.service.integration.SiteQualifier;
 import org.lytsiware.clash.service.integration.clashapi.ClashRoyaleRestIntegrationService;
@@ -56,6 +57,9 @@ public class ClanStatsRestController {
 
     @Autowired
     private TemplateService templateService;
+
+    @Autowired
+    private PlayerCheckInService playerCheckInService;
 
     @RequestMapping(value = "/{deltaWeek}", method = RequestMethod.GET)
     public List<PlayerOverallStats> retrieveClanStats(@PathVariable(required = false) Integer deltaWeek) {
@@ -119,6 +123,11 @@ public class ClanStatsRestController {
     @GetMapping(value = "/players")
     public List<PlayerInOutDto> listPlayers() {
         return clanStatsService.listPlayers();
+    }
+
+    @GetMapping("/roster")
+    public List<PlayerCheckInService.CheckInCheckoutDataDto> roster(){
+        return playerCheckInService.getCheckinCheckoutData();
     }
 
 
