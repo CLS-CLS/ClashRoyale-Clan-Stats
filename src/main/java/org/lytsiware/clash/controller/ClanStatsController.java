@@ -2,6 +2,8 @@ package org.lytsiware.clash.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +14,11 @@ public class ClanStatsController {
 
     private Logger logger = LoggerFactory.getLogger(ClanStatsController.class);
 
-	@GetMapping("/")
-	public String initialPage(Model model) {
-		logger.info("main page request");
-		return "enter";
-	}
+    @GetMapping("/")
+    public String initialPage(Model model) {
+        logger.info("main page request");
+        return "enter";
+    }
 
     @GetMapping("/{path}")
     public String init(@PathVariable String path) {
@@ -37,18 +39,17 @@ public class ClanStatsController {
         return "main";
     }
 
-	@GetMapping("/scheduler")
-	public String scheduler() {
-		logger.info("request for warstats input");
-		return "main";
-	}
+    @GetMapping("/scheduler")
+    public String scheduler() {
+        logger.info("request for warstats input");
+        return "main";
+    }
 
-	@GetMapping("/newplayers/**")
-	public String newplayers() {
-		logger.info("request for new players input");
-		return "main";
-	}
-
+    @GetMapping("/newplayers/**")
+    public String newplayers() {
+        logger.info("request for new players input");
+        return "main";
+    }
 
 
 }
