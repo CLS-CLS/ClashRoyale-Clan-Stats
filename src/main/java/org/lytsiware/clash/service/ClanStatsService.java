@@ -30,6 +30,4 @@ public interface ClanStatsService {
 	 * Retrieves the player' s statistics between the provided weeks
 	 */
 	PlayerStatsDto retrievePlayerStats(String tag, Week from, Week to);
-
-    List<PlayerInOutDto> listPlayers();
 }

@@ -154,8 +154,8 @@ td, th {
 
 .clan-header {
     text-align:center;
-    text-shadow: 2px 5px 6px #000000bd, 0px 0px 40px #73737300, -2px -1px 0px #fff;
-    // text-shadow: 2px 5px 6px #00000087, 0px 0px 40px #ef2121, -2px -1px 0px #ffffff;
+    text-shadow: 4px 3px 6px #000000bd, -1px -1px 40px #5197ff, -1px -1px 0px #fff, 4px 5px 0px #000
+
 }
 
 .jumbotron h1 {

@@ -309,6 +309,8 @@ app.controller("warStatsInputController", function($scope, $http){
                 }
             },
             function(errorResponse) {
+                $("#errorModal").modal()
+                $scope.errors = errorResponse;
                 console.log(errorResponse)
             })
         }
@@ -335,6 +337,10 @@ app.controller("warStatsInputController", function($scope, $http){
         $http.get(baseUrl() + "/rest/warstats/inputdata").then(
             function(response) {
                 $scope.statsList = response.data
+            },
+            function(errorResponse) {
+                $("#errorModal").modal()
+                $scope.errors = errorResponse.data.message + "\r\n" + errorResponse.data.error
             }
         ).finally(function() {
             $scope.loading = false;
@@ -885,6 +891,46 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 		$scope.totalDonations = sumDonation;
 		$scope.chectLevel = calculateChestLvl(sumChest);
 	}
-
 })
+
+app.controller("checkinController", function($scope, $http, $timeout, $filter, $routeParams, $location, colorfy, history) {
+
+    $scope.loading = true;
+
+    $scope.hidePlayersNotInClan =  {
+        enabled: false
+    }
+
+    $scope.filter =  {
+        orderBy : "name"
+    }
+
+    $scope.updateModalStats = function(checkouts, name) {
+        $scope.modalStats = checkouts;
+        $scope.modalName = name;
+    }
+
+    getData();
+
+    $scope.triggerOrderDirective = function(event) {
+        $timeout(function() {
+            $(event.target).find("i").trigger('click');
+        }, 0, false)
+
+    }
+
+    function getData() {
+        $scope.loading = true;
+
+        $http.get(baseUrl() + "/rest/roster").then(function(response) {
+            $scope.loading = false;
+            $scope.stats = response.data;
+        }, function(errorResponse) {
+            alert(errorResponse)
+            $scope.loading = false;
+        })
+    }
+})
+
+
 

@@ -1,0 +1,108 @@
+<div ng-cloak>
+    <div class="inner-container col-xs-12">
+        <div ng-controller="checkinController">
+
+           <!-- Modal -->
+            <div class="modal fade" id="checkoutsModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 style="text-align:center" class="modal-title">{{modalName}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive halfscreen">
+                                <table style="background-color:white" class="table table-striped">
+                                    <thead>
+                                    <th>Joined</th>
+                                    <th>Left</th>
+                                    <th>Staying Days</th>
+                                    <th>Abandoned War</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="s in modalStats">
+                                        <td>{{s.checkIn | date: "dd/MM/yyyy"}}</td>
+                                        <td>{{s.checkOut | date: "dd/MM/yyyy"}}</td>
+                                        <td>{{s.stayingHours / 24 | number: 0}}</td>
+                                        <td>{{s.abandonedWar}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div style="position:relative">
+                <loading-directive loading="loading"/>
+                <div class="table-responsive halfscreen">
+                    <div class="col-xs-12">
+                        <label style="margin-top:13px">
+                            <input ng-model="hidePlayersNotInClan.enabled" type="checkbox">
+                            Hide players not in Clan
+                        </label>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                <span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="name" filter-by="filter">Player</order-directive>
+                                </span>
+                            </th>
+                            <th>
+                                <span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="firstJoined" filter-by="filter">First Joined </order-directive>
+                                </span>
+                            </th>
+                            <th>
+                                <span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="latestJoin" filter-by="filter">Latest Join</order-directive>
+                                </span>
+                            </th>
+                            <th>
+                                <span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="totalStayingHours" filter-by="filter">Total Staying Days</order-directive>
+                                </span>
+                            </th>
+                            <th>
+                                <span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="numberCheckouts" filter-by="filter">Number of Checkouts</order-directive>
+                                </span>
+                            </th>
+                            <th>
+                                <span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="abandonedWar" filter-by="filter">Abandoned War</order-directive>
+                                </span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-repeat="s in stats | orderBy: filter.orderBy: false | playerInClan:hidePlayersNotInClan.enabled">
+                            <td class="alternative-font">
+                                <a href="#" ng-click="$event.preventDefault();updateModalStats(s.checkInCheckouts, s.name)"  data-toggle="modal" data-target="#checkoutsModal">
+                                    <span ng-style="{color: s.inClan ? '': 'darkgrey'}">{{s.name}}</span>
+                                </a>
+                            </td>
+
+                            <td>{{s.firstJoined | date: "dd/MM/yyyy"}}</td>
+                            <td>{{s.latestJoin | date: "dd/MM/yyyy"}}</td>
+                            <td>{{s.totalStayingHours /24 | number: 0}}</td>
+                            <td>{{s.numberCheckouts}}</td>
+                            <td>{{s.abandonedWar}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
