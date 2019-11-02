@@ -14,7 +14,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="table-responsive halfscreen">
-                                <table class="table table-striped">
+                                <table style="background-color:white" class="table table-striped">
                                     <thead>
                                     <th>Joined</th>
                                     <th>Left</th>
@@ -43,6 +43,12 @@
             <div style="position:relative">
                 <loading-directive loading="loading"/>
                 <div class="table-responsive halfscreen">
+                    <div class="col-xs-12">
+                        <label style="margin-top:13px">
+                            <input ng-model="hidePlayersNotInClan.enabled" type="checkbox">
+                            Hide players not in Clan
+                        </label>
+                    </div>
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -53,22 +59,12 @@
                             </th>
                             <th>
                                 <span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="latestCheckin" filter-by="filter">Latest Join Date </order-directive>
+                                    <order-directive bind-to="firstJoined" filter-by="filter">First Joined </order-directive>
                                 </span>
                             </th>
                             <th>
                                 <span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="latestCheckout" filter-by="filter">Latest Left Date</order-directive>
-                                </span>
-                            </th>
-                            <th>
-                                <span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="latestPeriodStayingHours" filter-by="filter">Latest Period Staying Days</order-directive>
-                                </span>
-                            </th>
-                            <th>
-                                <span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="maxPeriodStayingHours" filter-by="filter">Max Staying Days</order-directive>
+                                    <order-directive bind-to="latestJoin" filter-by="filter">Latest Join</order-directive>
                                 </span>
                             </th>
                             <th>
@@ -81,23 +77,27 @@
                                     <order-directive bind-to="numberCheckouts" filter-by="filter">Number of Checkouts</order-directive>
                                 </span>
                             </th>
+                            <th>
+                                <span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="abandonedWar" filter-by="filter">Abandoned War</order-directive>
+                                </span>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
 
-                        <tr ng-repeat="s in stats | orderBy: filter.orderBy: false">
+                        <tr ng-repeat="s in stats | orderBy: filter.orderBy: false | playerInClan:hidePlayersNotInClan.enabled">
                             <td class="alternative-font">
                                 <a href="#" ng-click="$event.preventDefault();updateModalStats(s.checkInCheckouts, s.name)"  data-toggle="modal" data-target="#checkoutsModal">
-                                    <span ng-style="{color: s.latestCheckout == null ? '': 'darkgrey'}">{{s.name}}</span>
+                                    <span ng-style="{color: s.inClan ? '': 'darkgrey'}">{{s.name}}</span>
                                 </a>
                             </td>
 
-                            <td>{{s.latestCheckin | date: "dd/MM/yyyy"}}</td>
-                            <td>{{s.latestCheckout | date: "dd/MM/yyyy"}}</td>
-                            <td>{{s.latestPeriodStayingHours / 24 | number: 0}}</td>
-                            <td>{{s.maxPeriodStayingHours /24 | number: 0}}</td>
+                            <td>{{s.firstJoined | date: "dd/MM/yyyy"}}</td>
+                            <td>{{s.latestJoin | date: "dd/MM/yyyy"}}</td>
                             <td>{{s.totalStayingHours /24 | number: 0}}</td>
                             <td>{{s.numberCheckouts}}</td>
+                            <td>{{s.abandonedWar}}</td>
                         </tr>
                         </tbody>
                     </table>

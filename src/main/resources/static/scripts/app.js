@@ -897,6 +897,10 @@ app.controller("checkinController", function($scope, $http, $timeout, $filter, $
 
     $scope.loading = true;
 
+    $scope.hidePlayersNotInClan =  {
+        enabled: false
+    }
+
     $scope.filter =  {
         orderBy : "name"
     }

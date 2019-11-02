@@ -68,13 +68,13 @@ public class PlayerCheckInService {
                     return CheckInCheckoutDataDto.builder()
                             .tag(player.getTag())
                             .name(player.getName())
-                            .latestPeriodStayingHours(cicos.get(0).getStayingHours())
-                            .latestCheckin(cicos.get(0).getCheckIn())
-                            .latestCheckout(cicos.get(0).getCheckOut())
-                            .maxPeriodStayingHours(cicos.stream().map(CheckInCheckOutDto::getStayingHours).reduce(0, Integer::max))
+                            .firstJoined(cicos.get(cicos.size() - 1).getCheckIn())
+                            .latestJoin(cicos.get(0).getCheckIn())
                             .totalStayingHours(cicos.stream().mapToLong(CheckInCheckOutDto::getStayingHours).sum())
                             .numberCheckouts(cicos.get(0).getCheckOut() == null ? cicos.size() - 1 : cicos.size())
+                            .abandonedWar(cicos.stream().map(CheckInCheckOutDto::isAbandonedWar).reduce(Boolean::logicalOr).orElse(false))
                             .checkInCheckouts(cicos)
+                            .inClan(cicos.get(0).getCheckOut() == null)
                             .build();
                 }).collect(Collectors.toList());
     }
@@ -100,17 +100,14 @@ public class PlayerCheckInService {
     public static class CheckInCheckoutDataDto {
         private String tag;
         private String name;
-        private LocalDateTime latestCheckin;
-        private LocalDateTime latestCheckout;
-        private int latestPeriodStayingHours;
-        private int maxPeriodStayingHours;
+        private LocalDateTime firstJoined;
+        private LocalDateTime latestJoin;
         private long totalStayingHours;
         private List<CheckInCheckOutDto> checkInCheckouts;
         private int numberCheckouts;
+        private boolean abandonedWar;
+        private boolean inClan;
 
-        private boolean hasAbandonedWar() {
-            return checkInCheckouts.stream().map(CheckInCheckOutDto::isAbandonedWar).reduce(Boolean::logicalOr).orElse(false);
-        }
 
         @AllArgsConstructor
         @NoArgsConstructor
