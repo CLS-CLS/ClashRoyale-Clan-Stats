@@ -56,7 +56,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/rest/upload/**")
                 .authenticated()
                 .and().httpBasic()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .and().cors().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
 }
