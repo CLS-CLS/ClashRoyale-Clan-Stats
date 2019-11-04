@@ -905,9 +905,19 @@ app.controller("checkinController", function($scope, $http, $timeout, $filter, $
         orderBy : "name"
     }
 
-    $scope.updateModalStats = function(checkouts, name) {
+    $scope.dismissModal = function(){
+        $("#dismissButton").trigger('click')
+        $timeout(function(){
+            $location.path("/player/" + $scope.player.tag + "/war")
+        }, 1000, true)
+    }
+
+    $scope.updateModalStats = function(checkouts, name, tag) {
         $scope.modalStats = checkouts;
-        $scope.modalName = name;
+        $scope.player = {
+            name: name,
+            tag: tag
+        }
     }
 
     getData();

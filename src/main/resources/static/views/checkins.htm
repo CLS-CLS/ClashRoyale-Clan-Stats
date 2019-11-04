@@ -10,7 +10,9 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 style="text-align:center" class="modal-title">{{modalName}}</h4>
+                            <h3 style="text-align:center" class="modal-title">
+                                <a class="player-header" ng-href="#" ng-click="dismissModal(); next()"><span>{{player.name}}</span></a>
+                            </h3>
                         </div>
                         <div class="modal-body">
                             <div class="table-responsive halfscreen">
@@ -26,14 +28,14 @@
                                         <td>{{s.checkIn | date: "dd/MM/yyyy"}}</td>
                                         <td>{{s.checkOut | date: "dd/MM/yyyy"}}</td>
                                         <td>{{s.stayingHours / 24 | number: 0}}</td>
-                                        <td>{{s.abandonedWar}}</td>
+                                        <td>{{s.abandonedWar == true ? 'Yes' : 'No'}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button id="dismissButton" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </div>
 
@@ -88,7 +90,7 @@
 
                         <tr ng-repeat="s in stats | orderBy: filter.orderBy: false | playerInClan:hidePlayersNotInClan.enabled">
                             <td class="alternative-font">
-                                <a href="#" ng-click="$event.preventDefault();updateModalStats(s.checkInCheckouts, s.name)"  data-toggle="modal" data-target="#checkoutsModal">
+                                <a href="#" ng-click="$event.preventDefault();updateModalStats(s.checkInCheckouts, s.name, s.tag)"  data-toggle="modal" data-target="#checkoutsModal">
                                     <span ng-style="{color: s.inClan ? '': 'darkgrey'}">{{s.name}}</span>
                                 </a>
                             </td>
@@ -97,7 +99,7 @@
                             <td>{{s.latestJoin | date: "dd/MM/yyyy"}}</td>
                             <td>{{s.totalStayingHours /24 | number: 0}}</td>
                             <td>{{s.numberCheckouts}}</td>
-                            <td>{{s.abandonedWar}}</td>
+                            <td>{{s.abandonedWar == true ? 'Yes' : 'No'}}</td>
                         </tr>
                         </tbody>
                     </table>
