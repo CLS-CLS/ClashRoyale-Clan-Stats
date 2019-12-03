@@ -51,7 +51,7 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         LocalDate before2days = LocalDate.now().minusDays(2);
         Player p1 = new Player("tag1", "Chris", "Member");
         em.persist(p1);
-        PlayerInOut playerInOut = new PlayerInOut(null, "tag1", before4days.atStartOfDay(), before2days.atStartOfDay());
+        PlayerInOut playerInOut = new PlayerInOut(null, "tag1", before4days.atStartOfDay(), before2days.atStartOfDay(), false);
         em.persist(playerInOut);
         em.flush();
         em.clear();
@@ -89,7 +89,7 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         LocalDate before4days = LocalDate.now().minusDays(4);
         Player p1 = new Player("tag1", "Chris", "Member");
         em.persist(p1);
-        PlayerInOut playerInOut = new PlayerInOut(null, "tag1", before4days.atStartOfDay(), null);
+        PlayerInOut playerInOut = new PlayerInOut(null, "tag1", before4days.atStartOfDay(), null, false);
         em.persist(playerInOut);
         em.flush();
         em.clear();
@@ -116,11 +116,11 @@ public class PlayerInOutServiceImplTest extends AbstractSpringBootTest {
         LocalDate oneDayAgo = LocalDate.now().minusDays(1);
         Player p3 = new Player("tag3", "", "");
         em.persist(p3);
-        playerCheckInCheckOutRepository.save(new PlayerInOut(null, "tag3", twoDaysAgo.atStartOfDay(), null));
+        playerCheckInCheckOutRepository.save(new PlayerInOut(null, "tag3", twoDaysAgo.atStartOfDay(), null, false));
 
         Player p4 = new Player("tag4", "", "");
         em.persist(p4);
-        playerCheckInCheckOutRepository.save(new PlayerInOut(null, "tag4", twoDaysAgo.atStartOfDay(), oneDayAgo.atStartOfDay()));
+        playerCheckInCheckOutRepository.save(new PlayerInOut(null, "tag4", twoDaysAgo.atStartOfDay(), oneDayAgo.atStartOfDay(), false));
 
         playerInOutService.markPlayersInClan(currentPlayers);
         em.flush();

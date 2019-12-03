@@ -25,15 +25,18 @@ public class PlayerInOut {
 
     private LocalDateTime checkOut;
 
+    private boolean abandonedWar;
+
     public PlayerInOut(String tag, LocalDateTime checkIn) {
         this.tag = tag;
         this.checkIn = checkIn;
     }
 
-    public PlayerInOut(String tag, LocalDateTime checkIn, LocalDateTime checkOut) {
+    public PlayerInOut(String tag, LocalDateTime checkIn, LocalDateTime checkOut, boolean abandonedWar) {
         this.tag = tag;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        this.abandonedWar = abandonedWar;
     }
 
     @Override
@@ -52,5 +55,9 @@ public class PlayerInOut {
         int result = super.hashCode();
         result = 31 * result + tag.hashCode();
         return result;
+    }
+
+    public boolean hasAbandonedWar() {
+        return abandonedWar;
     }
 }

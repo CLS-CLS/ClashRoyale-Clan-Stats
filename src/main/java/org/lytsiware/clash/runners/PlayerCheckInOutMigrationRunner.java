@@ -42,7 +42,7 @@ public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
             for (String tag : allPlayers.keySet()) {
                 PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
                 if (playerInOut == null) {
-                    playerInOut = new PlayerInOut(null, tag, Week.ZERO_WEEK.atStartOfDay(), Week.ZERO_WEEK.atStartOfDay());
+                    playerInOut = new PlayerInOut(null, tag, Week.ZERO_WEEK.atStartOfDay(), Week.ZERO_WEEK.atStartOfDay(), false);
                     playerCheckInCheckOutRepository.save(playerInOut);
                 }
             }

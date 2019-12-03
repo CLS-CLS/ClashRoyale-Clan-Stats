@@ -4,8 +4,8 @@ package org.lytsiware.clash.service.clan;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.*;
-import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,82 +44,49 @@ public class PlayerCheckInService {
     @Autowired
     private WarLeagueRepository warLeagueRepository;
 
+    @Autowired
+    private PlayerWarStatsRepository playerWarStatsRepository;
+
+
     /**
      * returns all the checkin checkout dates of the players that have been in clan with extra information about
      * the total weeks that were in clan and the total weeks between the latest checkin / checkout (or the current date if
      * he is still in clan).
-     *
-     * @return
+
      */
     public List<CheckInCheckoutDataDto> getCheckinCheckoutData() {
-        return playerRepository.loadAll().values().stream()
-                .map(player -> {
-                    List<PlayerInOut> checkInCheckouts = this.findAllCheckInCheckOut(player.getTag());
+        Map<String, Player> players = playerRepository.loadAll();
+        return this.findAllCheckInCheckOut().entrySet().stream().map(entry -> {
 
-                    List<CheckInCheckoutDataDto.CheckInCheckOutDto> cicos = checkInCheckouts.stream()
-                            .map(cico -> CheckInCheckOutDto.builder()
-                                    .checkIn(cico.getCheckIn())
-                                    .checkOut(cico.getCheckOut())
-                                    .stayingHours((int) cico.getCheckIn().until(Optional.ofNullable(cico.getCheckOut()).orElse(LocalDateTime.now()), ChronoUnit.HOURS))
-                                    .abandonedWar(cico.getCheckOut() != null ? hasAbandonedWar(cico.getTag(), cico.getCheckIn(), cico.getCheckOut()) : false)
-                                    .build())
-                            .collect(Collectors.toList());
+            List<CheckInCheckoutDataDto.CheckInCheckOutDto> cicos = entry.getValue().stream()
+                    .map(cico -> CheckInCheckOutDto.builder()
+                            .checkIn(cico.getCheckIn())
+                            .checkOut(cico.getCheckOut())
+                            .stayingHours((int) cico.getCheckIn().until(Optional.ofNullable(cico.getCheckOut()).orElse(LocalDateTime.now()), ChronoUnit.HOURS))
+                            .abandonedWar(cico.hasAbandonedWar())
+                            .build())
+                    .collect(Collectors.toList());
 
-                    return CheckInCheckoutDataDto.builder()
-                            .tag(player.getTag())
-                            .name(player.getName())
-                            .firstJoined(cicos.get(cicos.size() - 1).getCheckIn())
-                            .latestJoin(cicos.get(0).getCheckIn())
-                            .totalStayingHours(cicos.stream().mapToLong(CheckInCheckOutDto::getStayingHours).sum())
-                            .numberCheckouts(cicos.get(0).getCheckOut() == null ? cicos.size() - 1 : cicos.size())
-                            .abandonedWar(cicos.stream().map(CheckInCheckOutDto::isAbandonedWar).reduce(Boolean::logicalOr).orElse(false))
-                            .checkInCheckouts(cicos)
-                            .inClan(cicos.get(0).getCheckOut() == null)
-                            .build();
-                }).collect(Collectors.toList());
+            return CheckInCheckoutDataDto.builder()
+                    .tag(entry.getKey())
+                    .name(players.get(entry.getKey()).getName())
+                    .firstJoined(cicos.get(cicos.size() - 1).getCheckIn())
+                    .latestJoin(cicos.get(0).getCheckIn())
+                    .totalStayingHours(cicos.stream().mapToLong(CheckInCheckOutDto::getStayingHours).sum())
+                    .numberCheckouts(cicos.get(0).getCheckOut() == null ? cicos.size() - 1 : cicos.size())
+                    .abandonedWar(cicos.stream().map(CheckInCheckOutDto::isAbandonedWar).reduce(Boolean::logicalOr).orElse(false))
+                    .checkInCheckouts(cicos)
+                    .inClan(cicos.get(0).getCheckOut() == null)
+                    .build();
+        }).collect(Collectors.toList());
     }
+
 
     private boolean hasAbandonedWar(String tag, LocalDateTime checkIn, LocalDateTime checkOut) {
-        return warLeagueRepository.findAllBetweenStartDateEagerFetchPlayerStats(checkOut.minusDays(2).toLocalDate(), checkOut.toLocalDate())
-                .stream()
-                .reduce((w1, w2) -> w1.getStartDate().isAfter(w2.getStartDate()) ? w1 : w2)
-                .filter(warLeague -> warLeague.getEndDate().isAfter(checkOut))
-                .map(WarLeague::getPlayerWarStats)
-                .orElse(new HashSet<>())
-                .stream()
-                .filter(playerWarStat -> playerWarStat.getPlayer().getTag().equals(tag))
-                .findAny()
+        return playerWarStatsRepository.findBetweenDatesForPlayer(tag, checkIn.toLocalDate(), checkOut.toLocalDate()).stream().findFirst()
+                .filter(playerWarStat -> playerWarStat.getWarLeague().getEndDate().isAfter(checkOut))
                 .map(playerWarStat -> playerWarStat.getWarPhaseStats().hasParticipated() && playerWarStat.getWarPhaseStats().getGamesNotPlayed() > 0)
                 .orElse(false);
-    }
-
-    @AllArgsConstructor
-    @Setter(AccessLevel.PROTECTED)
-    @Getter
-    @Builder
-    public static class CheckInCheckoutDataDto {
-        private String tag;
-        private String name;
-        private LocalDateTime firstJoined;
-        private LocalDateTime latestJoin;
-        private long totalStayingHours;
-        private List<CheckInCheckOutDto> checkInCheckouts;
-        private int numberCheckouts;
-        private boolean abandonedWar;
-        private boolean inClan;
-
-
-        @AllArgsConstructor
-        @NoArgsConstructor
-        @Builder
-        @Getter
-        @Setter(AccessLevel.PROTECTED)
-        public static class CheckInCheckOutDto {
-            private LocalDateTime checkIn;
-            private LocalDateTime checkOut;
-            private int stayingHours;
-            private boolean abandonedWar;
-        }
     }
 
 
@@ -135,6 +102,7 @@ public class PlayerCheckInService {
         if (playerInOut != null) {
             if (playerInOut.getCheckOut() == null) {
                 playerInOut.setCheckOut(checkoutDate);
+                playerInOut.setAbandonedWar(hasAbandonedWar(playerInOut.getTag(), playerInOut.getCheckIn(), playerInOut.getCheckOut()));
                 playerCheckInCheckOutRepository.save(playerInOut);
             }
         }
@@ -165,6 +133,7 @@ public class PlayerCheckInService {
 
             playerInOut.setCheckIn(checkInDate);
             playerInOut.setCheckOut(null);
+            playerInOut.setAbandonedWar(false);
         } else {
             playerInOut = new PlayerInOut(tag, checkInDate);
         }
@@ -209,9 +178,51 @@ public class PlayerCheckInService {
 
     public List<PlayerInOut> findAllCheckInCheckOut(String tag) {
         List<PlayerInOut> historic = playerInOutHistoryRepository.findByTagOrderByCheckInDesc(tag)
-                .stream().map(h -> new PlayerInOut(tag, h.getCheckIn(), h.getCheckOut())).collect(Collectors.toList());
+                .stream().map(h -> new PlayerInOut(tag, h.getCheckIn(), h.getCheckOut(), h.hasAbandonedWar())).collect(Collectors.toList());
         playerCheckInCheckOutRepository.findByTag(tag).ifPresent(c -> historic.add(0, c));
         return historic;
-
     }
+
+    public Map<String, List<PlayerInOut>> findAllCheckInCheckOut() {
+        return Stream.concat
+                (
+                        playerCheckInCheckOutRepository.findAll().stream(),
+                        playerInOutHistoryRepository.findAll().stream()
+                                .map(h -> new PlayerInOut(h.getTag(), h.getCheckIn(), h.getCheckOut(), h.hasAbandonedWar()))
+                )
+                .sorted(Comparator.comparing(PlayerInOut::getCheckIn).reversed())
+                .collect(Collectors.groupingBy(PlayerInOut::getTag));
+    }
+
+
+    @AllArgsConstructor
+    @Setter(AccessLevel.PROTECTED)
+    @Getter
+    @Builder
+    public static class CheckInCheckoutDataDto {
+        private String tag;
+        private String name;
+        private LocalDateTime firstJoined;
+        private LocalDateTime latestJoin;
+        private long totalStayingHours;
+        private List<CheckInCheckOutDto> checkInCheckouts;
+        private int numberCheckouts;
+        private boolean abandonedWar;
+        private boolean inClan;
+
+
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @Builder
+        @Getter
+        @Setter(AccessLevel.PROTECTED)
+        public static class CheckInCheckOutDto {
+            private LocalDateTime checkIn;
+            private LocalDateTime checkOut;
+            private int stayingHours;
+            private boolean abandonedWar;
+        }
+    }
+
+
 }

@@ -57,7 +57,7 @@ public class PlayerWarStatServiceTest extends AbstractSpringBootTest {
 
             //for each 3 players we checkout 30 mins after
             LocalDateTime checkout = (i % 3 == 0 ? localDateTime.plusMinutes(30 * (i + 1)) : null);
-            PlayerInOut pIO = new PlayerInOut(tag, localDateTime.plusMinutes(30 * i), checkout);
+            PlayerInOut pIO = new PlayerInOut(tag, localDateTime.plusMinutes(30 * i), checkout, false);
             em.persist(pIO);
         }
 

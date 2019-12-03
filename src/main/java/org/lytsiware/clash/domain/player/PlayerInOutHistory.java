@@ -25,16 +25,14 @@ public class PlayerInOutHistory {
 
     private LocalDateTime checkOut;
 
-    public PlayerInOutHistory(String tag, LocalDateTime checkIn) {
-        this.tag = tag;
-        this.checkIn = checkIn;
-    }
+    private boolean abandonedWar;
 
     public static PlayerInOutHistory from(PlayerInOut playerInOut) {
         return PlayerInOutHistory.builder()
                 .tag(playerInOut.getTag())
                 .checkIn(playerInOut.getCheckIn())
                 .checkOut(playerInOut.getCheckOut())
+                .abandonedWar(playerInOut.hasAbandonedWar())
                 .build();
     }
 
@@ -56,5 +54,9 @@ public class PlayerInOutHistory {
         result = 31 * result + tag.hashCode();
         result = 31 * result + checkIn.hashCode();
         return result;
+    }
+
+    public boolean hasAbandonedWar() {
+        return abandonedWar;
     }
 }

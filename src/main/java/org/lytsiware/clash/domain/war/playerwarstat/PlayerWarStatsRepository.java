@@ -29,4 +29,10 @@ public interface PlayerWarStatsRepository extends JpaRepository<PlayerWarStat, L
     List<PlayerWarStat> findFirstNthParticipatedWarStats(@Param("tag") String tag, @Param("startDate") LocalDate startDate, @Param("n") int n);
 
 
+    @Query("select pws from PlayerWarStat pws JOIN FETCH pws.warLeague where pws.player.tag = :tag " +
+            " and pws.warLeague.startDate between :fromDate and :toDate " +
+            " order by pws.warLeague.startDate desc")
+    List<PlayerWarStat> findBetweenDatesForPlayer(@Param("tag") String tag, @Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+
+
 }
