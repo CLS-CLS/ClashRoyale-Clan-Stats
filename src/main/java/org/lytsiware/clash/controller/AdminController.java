@@ -40,7 +40,7 @@ public class AdminController {
     @PostMapping("/uploadwarstats")
     @Transactional(propagation = Propagation.REQUIRED)
     public String uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
-        log.info("START uploadWarStats");
+        log.info("Controller: uploadWarStats");
         warUploadService.upload(files);
         return "redirect:/warstats/0";
     }
@@ -48,6 +48,7 @@ public class AdminController {
 
     //@RequestMapping("/check")
 	public String checkParsing(@RequestParam("refresh") Boolean refresh,  Model model) throws JsonProcessingException {
+        log.info("Controller: checkParsing");
 		refresh = (refresh != null? refresh : false);
 		List<PlayerWeeklyStats> clanStats = siteService.retrieveData(refresh);
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -58,6 +59,7 @@ public class AdminController {
 	
 	@RequestMapping("/safecheck")
 	public String checkParsingNoRefresh(Model model) throws JsonProcessingException {
+        log.info("Controller: checkParsingNoRefresh");
 		//TODO create check page
 		//TODO add security
 		return checkParsing(false, model);
@@ -68,6 +70,7 @@ public class AdminController {
     @RequestMapping("/calculateAvg/{deltaWeek}")
     @Transactional
     public String recalculateAvgs(@PathVariable(value = "deltaWeek") Integer deltaWeek) {
+        log.info("Controller: recalculateAvgs");
         if (deltaWeek < 0 || deltaWeek > 6) {
             return "/index/";
 		}

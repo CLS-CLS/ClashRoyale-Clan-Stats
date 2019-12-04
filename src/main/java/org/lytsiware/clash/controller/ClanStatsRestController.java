@@ -1,5 +1,6 @@
 package org.lytsiware.clash.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
@@ -15,8 +16,6 @@ import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService
 import org.lytsiware.clash.service.integration.SiteQualifier;
 import org.lytsiware.clash.service.integration.clashapi.ClashRoyaleRestIntegrationService;
 import org.lytsiware.clash.service.job.ClashRoyaleWarJob;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +26,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rest")
+@Slf4j
 public class ClanStatsRestController {
-
-    private static final Logger logger = LoggerFactory.getLogger(ClanStatsRestController.class);
 
     @Autowired
     ClashRoyaleRestIntegrationService clashRoyaleRestIngegrationService;
@@ -63,7 +61,7 @@ public class ClanStatsRestController {
 
     @RequestMapping(value = "/{deltaWeek}", method = RequestMethod.GET)
     public List<PlayerOverallStats> retrieveClanStats(@PathVariable(required = false) Integer deltaWeek) {
-        logger.info("START retrieveClanStats - week {}", deltaWeek);
+        log.info("Controller: retrieveClanStats - week {}", deltaWeek);
 
         if (deltaWeek < Constants.MIN_PAST_WEEK || deltaWeek > Constants.MAX_PAST_WEEK) {
             deltaWeek = Constants.DEFAULT_DELTA_WEEK;
@@ -75,14 +73,14 @@ public class ClanStatsRestController {
 
     @RequestMapping(value = "/player/{tag}", method = RequestMethod.GET)
     public PlayerStatsDto retrievePlayerStats(@PathVariable String tag) {
-        logger.info("START retrievePlayerStats - tag {}", tag);
+        log.info("Controller: retrievePlayerStats - tag {}", tag);
 
         return clanStatsService.retrievePlayerStats(tag, Week.now().minusWeeks(Constants.MAX_PAST_WEEK + 1), Week.now());
     }
 
     @GetMapping(value = "/generateTemplate")
     public void generateTemplate(HttpServletResponse response) throws IOException {
-        logger.info("START generateTemplate");
+        log.info("Controller: generateTemplate");
         response.getOutputStream().write(
                 templateService.generateTemplate().getBytes(Charset.forName("UTF-8")));
         response.setContentType("application/text");
@@ -93,6 +91,7 @@ public class ClanStatsRestController {
 
     @GetMapping(value = "/newPlayers/{deltaWeek}")
     public NewPlayersDto getNewPlayers(@PathVariable(required = false) Integer deltaWeek) {
+        log.info("Controller: retrieveClanStats - week {}", deltaWeek);
         if (deltaWeek == null) {
             deltaWeek = 0;
         }
@@ -102,7 +101,9 @@ public class ClanStatsRestController {
     }
 
     @GetMapping(value = "/newPlayers")
-    public NewPlayersDto getNewPlayersBetweenWeeks(@RequestParam Integer deltaFrom, @RequestParam(required = false, defaultValue = "0") Integer deltaTo) {
+    public NewPlayersDto getNewPlayersBetweenWeeks(@RequestParam Integer deltaFrom,
+                                                   @RequestParam(required = false, defaultValue = "0") Integer deltaTo) {
+        log.info("Controller: getNewPlayersBetweenWeeks");
         if (deltaTo >= deltaFrom) {
             throw new IllegalArgumentException("'from' week should be before 'to' week");
         }
@@ -112,17 +113,20 @@ public class ClanStatsRestController {
 
     @GetMapping(value = "/info/week")
     public Integer getWeekNumber() {
+        log.info("Controller: getWeekNumber");
         return Week.now().getWeek();
     }
 
     @GetMapping(value = "/clan/score")
     public List<ClanWeeklyStatsDto> getClanChestScore() {
+        log.info("Controller: getClanChestScore");
         return aggregationService.getClanChestScore(Week.now().minusWeeks(24), Week.now().previous());
     }
 
 
     @GetMapping("/roster")
-    public List<PlayerCheckInService.CheckInCheckoutDataDto> roster(){
+    public List<PlayerCheckInService.CheckInCheckoutDataDto> roster() {
+        log.info("Controller: CheckInCheckoutDataDto");
         return playerCheckInService.getCheckinCheckoutData();
     }
 

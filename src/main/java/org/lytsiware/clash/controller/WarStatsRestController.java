@@ -62,7 +62,7 @@ public class WarStatsRestController {
 
     @PostMapping(value = "/tagFile")
     public void tagFile(@RequestParam("file") MultipartFile file, Model model, HttpServletResponse response) throws IOException {
-        log.info("START tagFile");
+        log.info("Controller: tagFile");
         String replaced = warUploadService.replaceNameWithTag(file.getInputStream(), file.getOriginalFilename());
         response.getOutputStream().write(replaced.getBytes(StandardCharsets.UTF_8));
         response.setContentType("application/text");
@@ -75,7 +75,7 @@ public class WarStatsRestController {
     public ResponseEntity recalculate(@RequestParam(required = false, defaultValue = "" + WarConstants.leagueSpan) int span,
                                       @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate from,
                                       @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate to) {
-
+        log.info("Controller: recalculate");
         if (to == null) {
             to = LocalDate.now();
         }
@@ -86,27 +86,28 @@ public class WarStatsRestController {
 
     @GetMapping(value = "/player/{tag}/war")
     public PlaywerWarStatsWithAvgsDto playerWarStats(@PathVariable("tag") String tag) {
+        log.info("Controller: playerWarStats");
         return playerWarStatsService.getLatestPlayerWarStatsUntil(tag, Week.now().getEndDate());
     }
 
     @PostMapping("/uploadwarstats")
     @Transactional(propagation = Propagation.REQUIRED)
     public void uploadWarStats(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
-        log.info("START uploadWarStats");
+        log.info("Controller: uploadWarStats");
         warUploadService.upload(files);
     }
 
 
     @GetMapping("/warstats/{deltaWar}")
     public ClansWarGlobalStatsDto getAggregatedWarStats(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
-        log.info("START getAggregatedWarStats deltaWeek = {}", deltaWar);
+        log.info("Controller getAggregatedWarStats deltaWeek = {}", deltaWar);
         return playerAggregationWarStatsService.findLatestWarAggregationStatsForWar(deltaWar == null ? 0 : deltaWar);
 
     }
 
     @GetMapping("/warstats/single/{deltaWar}")
     public WarLeagueWithParticipantsDto getSingleWarStats(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
-        log.info("START getSingleWarStats deltaWeek = {}", deltaWar);
+        log.info("Controller: getSingleWarStats deltaWeek = {}", deltaWar);
         return warLeagueService.findStatsForWarLeague(deltaWar == null ? 0 : deltaWar);
     }
 
@@ -114,7 +115,7 @@ public class WarStatsRestController {
     public List<WarStatsInputDto.PlayerWarStatInputDto> getPlayersNotParticipated(
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm") LocalDateTime date,
             @RequestBody List<WarStatsInputDto.PlayerWarStatInputDto> participants) {
-
+        log.info("Controller: playersNotParticipated");
         return playerWarStatsService.findPlayersNotParticipatedInWar(WarStatsInputDto.builder().playerWarStats(participants).build(), date, null).keySet().stream()
                 .map(entry -> WarStatsInputDto.PlayerWarStatInputDto.zeroFieldPlayerWarStatInputDto(entry.getTag(), entry.getName()))
                 .collect(Collectors.toList());
@@ -123,12 +124,14 @@ public class WarStatsRestController {
 
     @GetMapping("/warstats/inputdata")
     public List<WarStatsInputDto> getWarStatsForInput(@RequestParam(required = false, defaultValue = "true") boolean includeNotParticipating) {
+        log.info("Controller: getWarStatsForInput");
         return warInputService.getPlayerWarStatsForInput(includeNotParticipating);
     }
 
 
     @PostMapping("/warstats/inputdata")
     public ResponseEntity<Optional<String>> insertWarStats(@Valid @RequestBody WarStatsInputDto warStatsInputDto, BindingResult bindingResult) {
+        log.info("Controller: insertWarStats");
         if (bindingResult.hasErrors()) {
             return ResponseEntity.ok(bindingResult.getAllErrors().stream().map(ObjectError::getCodes)
                     .filter(Objects::nonNull).filter(t -> t.length >= 1).map(t -> t[0])
@@ -148,6 +151,7 @@ public class WarStatsRestController {
 
     @GetMapping("warstats/warleague")
     public List<WarLeagueDto> getLatestWarLeagues() {
+        log.info("Controller: getLatestWarLeagues");
         return warLeagueService.findFirstNthWarLeagueBeforeDate(LocalDate.now().plusDays(1), 100);
     }
 
