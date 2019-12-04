@@ -56,26 +56,15 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
      * <p>
      * Normally a flag with the completion status should exist, but for now we just consider active
      * the warLeague that has aggregation stat
-     *
-     * @param n
-     * @return
      */
-
     @Override
     public Optional<WarLeague> findNthWarLeague(int n) {
-        Optional<WarLeague> league = em.createQuery("select l from WarLeague l where l.rank is not null order by l.startDate DESC").setFirstResult(n)
+        return em.createQuery(
+                "select l from WarLeague l left join fetch l.playerWarStats ws join fetch ws.player where " +
+                        " l.rank is not null order by l.startDate DESC", WarLeague.class)
+                .setFirstResult(n)
                 .setMaxResults(1)
                 .getResultList().stream().findFirst();
-
-        if (!league.isPresent()) {
-            return Optional.empty();
-        }
-
-        WarLeague warLeagueWithPlayerStats = em.createQuery(
-                "select l from WarLeague l left join fetch l.playerWarStats where l.id = (:id)", WarLeague.class)
-                .setParameter("id", league.get().getId()).getSingleResult();
-
-        return Optional.of(warLeagueWithPlayerStats);
     }
 
     @Override

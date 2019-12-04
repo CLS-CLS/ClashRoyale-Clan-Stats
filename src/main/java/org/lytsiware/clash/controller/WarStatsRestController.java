@@ -100,7 +100,7 @@ public class WarStatsRestController {
 
     @GetMapping("/warstats/{deltaWar}")
     public ClansWarGlobalStatsDto getAggregatedWarStats(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
-        log.info("Controller getAggregatedWarStats deltaWeek = {}", deltaWar);
+        log.info("Controller: getAggregatedWarStats deltaWeek = {}", deltaWar);
         return playerAggregationWarStatsService.findLatestWarAggregationStatsForWar(deltaWar == null ? 0 : deltaWar);
 
     }
