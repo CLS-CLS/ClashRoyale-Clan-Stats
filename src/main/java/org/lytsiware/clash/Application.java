@@ -12,16 +12,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import javax.annotation.PostConstruct;
 import java.time.Clock;
 import java.util.Arrays;
+import java.util.concurrent.Executor;
 
 @SpringBootApplication
-//@EnableCaching
 @EnableScheduling
+@EnableAsync
 @EnableRetry
 @EnableJpaRepositories(basePackages = "org.lytsiware.clash.domain")
 @Slf4j
@@ -35,6 +38,9 @@ public class Application {
 
     @Configuration
     public static class Config {
+
+        public static final String WAR_INPUT_EXECUTOR = "WAR_INPUT_EXECUTOR";
+
 
         @Autowired
         ObjectMapper objectMapper;
@@ -59,6 +65,19 @@ public class Application {
             taskScheduler.setPoolSize(1);
             return taskScheduler;
 
+        }
+
+        /**
+         * allow only one task to be executed, reject the others.
+         * Warstats input should only be done once per time
+         */
+        @Bean(name = Config.WAR_INPUT_EXECUTOR)
+        public Executor warStatInputExecutor() {
+            ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+            executor.setQueueCapacity(0);
+            executor.setCorePoolSize(1);
+            executor.setMaxPoolSize(1);
+            return executor;
         }
 
 

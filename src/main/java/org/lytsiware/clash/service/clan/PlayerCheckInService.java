@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.*;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
-import org.lytsiware.clash.service.war.PlayerWarStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -37,9 +36,6 @@ public class PlayerCheckInService {
 
     @Autowired
     private PlayerRepository playerRepository;
-
-    @Autowired
-    private PlayerWarStatsService warStatsService;
 
     @Autowired
     private WarLeagueRepository warLeagueRepository;

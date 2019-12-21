@@ -47,6 +47,11 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
                 .distinct().collect(Collectors.toList());
 
         for (WarLeague affectedLeague : affectedLeagues) {
+            //with the latest change a warleague is recorded even when the war is not yet finished. For these leagues we dont want
+            // to calculate aggregation stats. These leagues are distinguished by the fact that they dont have aggregation stats at all.
+            // We would like to have this fact unchanged
+            //TODO implement the above commnent, the issue is that the current league does not have aggragatoin stats also, but we
+            // want to calculate them... we need to distiguish betweeen the current league and the *rest* affected leagues
             calculateAndUpdateStats(affectedLeague.getStartDate(), WarConstants.leagueSpan);
         }
     }

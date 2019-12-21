@@ -22,7 +22,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -32,6 +31,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -130,23 +133,24 @@ public class WarStatsRestController {
 
 
     @PostMapping("/warstats/inputdata")
-    public ResponseEntity<Optional<String>> insertWarStats(@Valid @RequestBody WarStatsInputDto warStatsInputDto, BindingResult bindingResult) {
+    public ResponseEntity<String> insertWarStats(@Valid @RequestBody WarStatsInputDto warStatsInputDto, BindingResult bindingResult) {
         log.info("Controller: insertWarStats");
         if (bindingResult.hasErrors()) {
             return ResponseEntity.ok(bindingResult.getAllErrors().stream().map(ObjectError::getCodes)
                     .filter(Objects::nonNull).filter(t -> t.length >= 1).map(t -> t[0])
-                    .reduce((l, r) -> l + "\r\n" + r));
+                    .reduce((l, r) -> l + "\r\n" + r).orElse(""));
         }
 
         List<PlayerWarStat> statsList = InputDtoPlayerWarStatConverter.toPlayerWarStat(warStatsInputDto);
+        CompletableFuture<String> result = playerWarStatsService.saveWarStatsAndUpdateStatistics(statsList);
+
         try {
-            playerWarStatsService.saveWarStatsAndUpdateStatistics(statsList);
-        } catch (EntityExistsException ex) {
-            return ResponseEntity.ok(Optional.of("League Already exists"));
+            return ResponseEntity.ok(result.get(2, TimeUnit.SECONDS));
+        } catch (InterruptedException | ExecutionException e) {
+            return ResponseEntity.status(500).body(e.getMessage() + " cause: " + Optional.ofNullable(e.getCause()).map(Throwable::getMessage).orElse(""));
+        } catch (TimeoutException e) {
+            return ResponseEntity.ok().build();
         }
-
-
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("warstats/warleague")

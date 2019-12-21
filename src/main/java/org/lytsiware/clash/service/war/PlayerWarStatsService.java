@@ -10,12 +10,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public interface PlayerWarStatsService {
 
     PlaywerWarStatsWithAvgsDto getLatestPlayerWarStatsUntil(String tag, LocalDate untilDate);
 
-    void saveWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList);
+    CompletableFuture<String> saveWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList);
 
     /**
      * Finds the players that could have participated in the war but they did not.

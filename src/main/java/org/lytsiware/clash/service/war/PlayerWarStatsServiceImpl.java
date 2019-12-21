@@ -1,6 +1,8 @@
 package org.lytsiware.clash.service.war;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lytsiware.clash.Application;
+import org.lytsiware.clash.domain.LockService;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerInOut;
 import org.lytsiware.clash.domain.player.PlayerRepository;
@@ -19,6 +21,7 @@ import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +30,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -55,9 +59,6 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     private PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
 
     @Autowired
-    private WarInputServiceImpl warInputService;
-
-    @Autowired
     private StatsRoyaleDateParse statsRoyaleDateParse;
 
     @Autowired
@@ -68,6 +69,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
     @Autowired
     private Clock clock;
+
+    @Autowired
+    LockService lockService;
 
 
     @Override
@@ -87,21 +91,41 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
 
     @Override
-    public void saveWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList) throws EntityExistsException {
-        WarLeague warLeague = statsList.get(0).getWarLeague();
-        WarLeague warLeagueDb = warLeagueRepository.findByStartDate(warLeague.getStartDate()).orElse(null);
-        saveTransientPlayers(statsList, warLeague);
-        if (warLeagueDb != null) {
-            updateWarStatsAndUpdateStatistics(warLeagueDb, warLeague, statsList);
-            warLeague = warLeagueDb;
+    @Async(Application.Config.WAR_INPUT_EXECUTOR)
+    public CompletableFuture<String> saveWarStatsAndUpdateStatistics(List<PlayerWarStat> statsList) throws EntityExistsException {
+        try {
+            lock();
+            WarLeague warLeague = statsList.get(0).getWarLeague();
+            WarLeague warLeagueDb = warLeagueRepository.findByStartDate(warLeague.getStartDate()).orElse(null);
+            saveTransientPlayers(statsList, warLeague);
+            if (warLeagueDb != null) {
+                updateWarStatsAndUpdateStatistics(warLeagueDb, warLeague, statsList);
+                warLeague = warLeagueDb;
+            }
+
+
+            warLeagueService.calculateLeagueAvgsAndSave(warLeague);
+            playerWarStatsRepository.saveAll(statsList);
+            playerWarStatsRepository.flush();
+            playerAggregationWarStatsService.recalculateAndUpdateWarStatsForLeagues(Collections.singletonList(warLeague));
+            return CompletableFuture.completedFuture("");
+        } catch (Exception ex) {
+            return CompletableFuture.completedFuture(ex.getMessage());
+        } finally {
+            unlock();
         }
-
-
-        warLeagueService.calculateLeagueAvgsAndSave(warLeague);
-        playerWarStatsRepository.saveAll(statsList);
-        playerWarStatsRepository.flush();
-        playerAggregationWarStatsService.recalculateAndUpdateWarStatsForLeagues(Collections.singletonList(warLeague));
     }
+
+    private void unlock() {
+        lockService.unlock();
+    }
+
+    private void lock() {
+        if (!lockService.lock()) {
+            throw new RuntimeException("Could not lock");
+        }
+    }
+
 
     /**
      * A player will not be recorded when transient when he has joined the clan before the war starts but has left the clan before the scheduler run.
@@ -122,10 +146,10 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     private void updateWarStatsAndUpdateStatistics(WarLeague warLeagueDb, WarLeague warLeague, List<PlayerWarStat> statsList) {
         warLeagueDb.setRank(warLeague.getRank());
         warLeagueDb.setTrophies(warLeague.getTrophies());
-        playerWarStatsRepository.deleteAll(warLeagueDb.getPlayerWarStats());
+        playerWarStatsRepository.deleteInBatch(warLeagueDb.getPlayerWarStats());
         playerAggregationWarStatsRepository.deleteInBatch(playerAggregationWarStatsRepository.findByDateAndLeagueSpan(warLeague.getStartDate(),
                 WarConstants.leagueSpan));
-        warLeagueDb.clearPlayerWarStats();
+        warLeagueDb.getPlayerWarStats().clear();
         playerWarStatsRepository.flush();
         statsList.forEach(playerWarStat -> playerWarStat.setWarLeague(warLeagueDb));
         playerWarStatsRepository.saveAll(statsList);

@@ -310,7 +310,7 @@ app.controller("warStatsInputController", function($scope, $http){
             },
             function(errorResponse) {
                 $("#errorModal").modal()
-                $scope.errors = errorResponse;
+                $scope.errors = errorResponse.data;
                 console.log(errorResponse)
             })
         }
