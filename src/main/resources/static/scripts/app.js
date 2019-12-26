@@ -185,7 +185,37 @@ app.controller("newPlayersController", function($scope, $http, $routeParams) {
 	loadData();
 })
 
-app.controller("playerStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
+
+app.factory("playerTabCommonState", function() {
+    return {
+        rank: "",
+        name: "",
+        joinedAt: "",
+        tag: ""
+    };
+})
+
+app.controller("playerStatsTabController", function($scope, playerTabCommonState, history) {
+
+    $scope.activateTab = function (event, tabId) {
+        event.preventDefault();
+    }
+
+    $scope.back = function() {
+        history.back()
+    }
+
+    $scope.hasBack = function() {
+        return history.hasBack()
+    }
+
+    $scope.player = playerTabCommonState;
+
+})
+
+
+app.controller("playerStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history, playerTabCommonState) {
+    $scope.commonState = playerTabCommonState;
 
 	$scope.player;
 
@@ -212,7 +242,7 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 	$scope.hasBack = function() {
 		return history.hasBack();
 	}
-	
+
 	function loadData() {
 		$scope.dataLoading = true;
 
@@ -266,6 +296,11 @@ app.controller("playerStatsController", function($scope, $http, $routeParams, $t
 
 				$scope.player = response.data
 
+				//common tab data
+				$scope.commonState.name = response.data.name;
+				$scope.commonState.tag = response.data.tag;
+				$scope.commonState.joinedAt = response.data.joinedAt;
+
 				$timeout(function() {
                     playerProgressChart($scope.player.statsDto)
                 })
@@ -284,6 +319,8 @@ app.controller("clanWarStatsTabController", function($scope) {
         event.preventDefault();
     }
 })
+
+
 
 app.controller("warStatsInputController", function($scope, $http){
     $scope.activateTab = function(event, tabId) {
@@ -351,7 +388,9 @@ app.controller("warStatsInputController", function($scope, $http){
     loadData();
 })
 
-app.controller("playerWarStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history) {
+app.controller("playerWarStatsController", function($scope, $http, $routeParams, $timeout, colorfy, history, playerTabCommonState) {
+
+    $scope.commonState = playerTabCommonState;
 
 	$scope.player;
 
@@ -388,6 +427,8 @@ app.controller("playerWarStatsController", function($scope, $http, $routeParams,
                         element.fightStatuses.push("forfeit");
                     }
 				})
+
+				$scope.commonState.role = response.data.role;
 
 				$timeout(function() {
                     playerWarProgressChart(response.data)

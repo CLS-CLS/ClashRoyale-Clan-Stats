@@ -25,7 +25,7 @@ app.config([ "$locationProvider", "$routeProvider",
                 templateUrl: "views/chestCharts.htm"
             })
             .when("/player/:playertag/war", {
-                templateUrl: "views/playerWarStats.htm"
+                templateUrl: "views/playerStats.htm"
             })
             .when("/player/:playertag", {
                 templateUrl : "views/playerStats.htm"
