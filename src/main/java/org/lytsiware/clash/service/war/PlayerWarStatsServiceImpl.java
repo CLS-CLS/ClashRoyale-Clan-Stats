@@ -6,7 +6,6 @@ import org.lytsiware.clash.domain.LockService;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.player.PlayerInOut;
 import org.lytsiware.clash.domain.player.PlayerRepository;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
@@ -16,7 +15,6 @@ import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.dto.war.input.WarStatsInputDto;
 import org.lytsiware.clash.service.clan.PlayerCheckInService;
-import org.lytsiware.clash.service.integration.statsroyale.StatsRoyaleDateParse;
 import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,6 +37,7 @@ import java.util.stream.Collectors;
 public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
     public static final int WAR_DURATION = 2;
+
     @Autowired
     private PlayerWarStatsRepository playerWarStatsRepository;
 
@@ -50,16 +48,10 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     private WarLeagueRepository warLeagueRepository;
 
     @Autowired
-    private PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
-
-    @Autowired
     private PlayerAggregationWarStatsService playerAggregationWarStatsService;
 
     @Autowired
     private PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
-
-    @Autowired
-    private StatsRoyaleDateParse statsRoyaleDateParse;
 
     @Autowired
     private PlayerCheckInService playerCheckInService;
@@ -68,10 +60,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
     private PlayerRepository playerRepository;
 
     @Autowired
-    private Clock clock;
-
-    @Autowired
-    LockService lockService;
+    private LockService lockService;
 
 
     @Override
@@ -128,9 +117,9 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
 
     /**
-     * A player will not be recorded when transient when he has joined the clan before the war starts but has left the clan before the scheduler run.
-     * Hence we checkin the player just before the start date of the warLeague and checkout the player 12 hours later.
-     * * @param statsList
+     * A player will not be recorded when transient when he has joined the clan before the war starts but has left the
+     * clan before the scheduler run. Hence we checkin the player just before the start date of the warLeague and
+     * checkout the player 12 hours later.
      */
     private void saveTransientPlayers(List<PlayerWarStat> statsList, WarLeague warLeague) {
         Map<String, Player> playersDb = playerRepository.loadAll();
