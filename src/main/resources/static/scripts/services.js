@@ -198,3 +198,14 @@ app.filter('moreWarsThan', function() {
 		return filtered;
 	}
 });
+
+
+app.factory("playerTabCommonState", function() {
+    return {
+        rank: "",
+        name: "",
+        joinedAt: "",
+        tag: ""
+    };
+})
+
