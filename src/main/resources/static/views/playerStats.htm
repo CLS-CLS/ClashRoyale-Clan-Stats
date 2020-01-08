@@ -4,17 +4,17 @@
                 class="fa fa-fw fa-2x fa-arrow-left"></i> </span></button>
         <div class="tab-content clan-stats-panel" style="margin-top: 10px">
             <ul class="nav nav-pills">
-                <li class="active">
+                <li ng-class="{active: active('playerDonationStats')}">
                     <a data-toggle="pill" href="#playerDonationStats" ng-click="activateTab($event)">
                         <h4>Player Donation Stats</h4>
                     </a>
                 </li>
-                <li>
+                <li ng-class="{active: active('playerWarStats')}">
                     <a data-toggle="pill" href="#playerWarStats" ng-click="activateTab($event)">
                         <h4>Player War Stats</h4>
                     </a>
                 </li>
-                <li>
+                <li ng-class="{active: active('playerCheckins')}">
                     <a data-toggle="pill" href="#playerCheckins" ng-click="activateTab($event)">
                         <h4>Checkin(s)</h4>
                     </a>
@@ -32,7 +32,8 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade in active" id="playerDonationStats" ng-controller="playerStatsController">
+            <div id="playerDonationStats" ng-class="['tab-pane', 'fade', 'in', {active: active('playerDonationStats')}]"
+                 ng-controller="playerStatsController">
                 <div class="clan-stats-panel">
                     <loading-directive loading="dataLoading"/>
 
@@ -93,7 +94,8 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade in" id="playerWarStats" ng-controller="playerWarStatsController">
+            <div id="playerWarStats" ng-class="['tab-pane', 'fade', 'in', {active: active('playerWarStats')}]"
+                 ng-controller="playerWarStatsController">
                 <div class="clan-stats-panel">
                     <div style="position:relative">
                         <loading-directive loading="loading"/>

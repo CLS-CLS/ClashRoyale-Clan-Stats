@@ -13,7 +13,7 @@ app.controller("checkinController", function($scope, $http, $timeout, $filter, $
     $scope.dismissModal = function(){
         $("#dismissButton").trigger('click')
         $timeout(function(){
-            $location.path("/player/" + $scope.player.tag + "/war")
+            $location.url("/player/" + $scope.player.tag + "/war?tab=playerWarStats")
         }, 1000, true)
     }
 
