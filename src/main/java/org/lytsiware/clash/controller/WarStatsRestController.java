@@ -156,7 +156,7 @@ public class WarStatsRestController {
     @GetMapping("warstats/warleague")
     public List<WarLeagueDto> getLatestWarLeagues() {
         log.info("Controller: getLatestWarLeagues");
-        return warLeagueService.findFirstNthWarLeagueBeforeDate(LocalDate.now().plusDays(1), 100);
+        return warLeagueService.findFirstNthWarLeagueBeforeDate(LocalDate.now().plusDays(1), 1000);
     }
 
 }
