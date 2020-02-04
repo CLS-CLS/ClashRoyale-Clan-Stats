@@ -41,6 +41,26 @@ app.service("colorfy", function() {
             return style;
         }
 
+        if (type == "abandonedWarRatio" || type == "abandonedCollectionRatio") {
+            if (number > 0.07) {
+                style.color = 'red';
+            }
+            if (number > 0.15) {
+                style["font-weight"] = 'bold'
+            }
+            return style;
+        }
+
+         if (type == "participationRatio") {
+            if (number >= 0.9) {
+                style.color = 'green';
+            }
+            if (number < 0.6) {
+                style.color = 'red';
+            }
+            return style;
+        }
+
 		if (boundary == 0) {
 			style.color = "black"
 			return style;

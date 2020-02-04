@@ -5,6 +5,9 @@ app.config([ "$locationProvider", "$routeProvider",
 			.when("/", {
 				templateUrl: "/views/clanRules.htm"
 			})
+			.when("/globalStats", {
+                templateUrl: "/views/globalStats.htm"
+            })
 			.when("/scheduler", {
 				templateUrl: "/views/scheduler.htm"
 			})

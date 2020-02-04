@@ -1,0 +1,88 @@
+<div ng-cloak>
+    <div class="inner-container col-xs-12">
+        <div ng-controller="globalStatsController">
+            <div class="clan-stats-panel">
+            </div>
+            <div style="position:relative">
+                <loading-directive loading="loading"/>
+                <div class="table-responsive halfscreen">
+                    <div class="col-xs-12">
+                        <label for="hidePlayers_cb">
+                            <input id="hidePlayers_cb" ng-model="state.hideNotInClanPlayers.enabled" type="checkbox">
+                            Hide players not in Clan
+                            </input>
+                        </label>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="name" filter-by="state.filter">Player</order-directive>
+                                </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="tag" filter-by="state.filter">Tag</order-directive>
+                                </span>
+                            </th>
+
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="role" filter-by="state.filter" comparator="roleOrder">Role </order-directive>
+                                </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="eligibleGames" filter-by="state.filter">Eligible Games</order-directive>
+                                </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="playedWarGames"  filter-by="state.filter">War Games Played </order-directive>
+                                </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="participationRatio" filter-by="state.filter">Participation Ratio </order-directive>
+                                </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="abandonedWarGames"  filter-by="state.filter">Abandoned War Games</order-directive>
+                                </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="abandonedWarGamesRatio"  filter-by="state.filter">Abandoned War Games Ratio</order-directive>
+                                </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="abandonedCollectionGames"  filter-by="state.filter">Abandoned Collection Games</order-directive>
+                                </span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="abandonedCollectionGamesRatio"  filter-by="state.filter">Abandoned Collection Games Ratio</order-directive>
+                                </span>
+                            </th>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+
+                        <tr ng-if="stats.length > 0 "
+                            ng-repeat="s in stats | orderBy: state.filter.orderBy: false : state.filter.comparator | playerInClan:state.hideNotInClanPlayers.enabled">
+                            <td class="alternative-font">
+                                <a ng-click="next()" ng-href="player/{{s.tag}}?tab=playerWarStats">
+                                    <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
+                                </a>
+                            </td>
+                            <td>{{s.tag}}</td>
+                            <td>{{s.role}}</td>
+                            <td>{{s.eligibleGames}} </td>
+                            <td>{{s.playedWarGames}} </td>
+                            <td ng-style="colorfy(s.participationRatio, 'participationRatio')">{{s.participationRatio | percentage:2}} </td>
+                            <td>{{s.abandonedWarGames}} </td>
+                            <td ng-style="colorfy(s.abandonedWarGamesRatio, 'abandonedWarRatio')">{{s.abandonedWarGamesRatio  | percentage:2}}</td>
+                            <td>{{s.abandonedCollectionGames}} </td>
+                            <td ng-style="colorfy(s.abandonedCollectionGamesRatio, 'abandonedCollectionRatio')">{{s.abandonedCollectionGamesRatio | percentage:2}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
