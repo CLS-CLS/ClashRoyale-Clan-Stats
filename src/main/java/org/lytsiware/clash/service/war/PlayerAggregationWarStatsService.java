@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PlayerAggregationWarStatsService {
 
-    void recalculateAndUpdateWarStatsForLeagues(List<WarLeague> warLeagues);
+    void recalculateAndUpdateStats(WarLeague warLeagues);
 
     void calculateStatsBetweenDates(LocalDate from, LocalDate to, int span);
 

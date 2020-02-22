@@ -41,17 +41,19 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
     PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
 
     @Override
-    public void recalculateAndUpdateWarStatsForLeagues(List<WarLeague> warLeagues) {
-        List<WarLeague> affectedLeagues = warLeagues.stream()
-                .flatMap(warLeague -> warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan).stream())
-                .distinct().collect(Collectors.toList());
+    public void recalculateAndUpdateStats(WarLeague warLeague) {
+        List<WarLeague> affectedLeagues = warLeagueRepository.findFirstNthWarLeaguesAfterDate(warLeague.getStartDate(), WarConstants.leagueSpan).stream()
+                .distinct()
+                .collect(Collectors.toList());
 
+        //with the latest change a warleague is recorded even when the war is not yet finished. For these leagues we dont want
+        // to calculate aggregation stats. These leagues are distinguished by the fact that they dont have aggregation stats at all.
+        // We would like to have this fact unchanged
         for (WarLeague affectedLeague : affectedLeagues) {
-            //with the latest change a warleague is recorded even when the war is not yet finished. For these leagues we dont want
-            // to calculate aggregation stats. These leagues are distinguished by the fact that they dont have aggregation stats at all.
-            // We would like to have this fact unchanged
-            //TODO implement the above commnent, the issue is that the current league does not have aggragatoin stats also, but we
-            // want to calculate them... we need to distiguish betweeen the current league and the *rest* affected leagues
+            if (!warLeague.equals(affectedLeague) &&
+                    playerAggregationWarStatsRepository.findByDateAndLeagueSpan(affectedLeague.getStartDate(), WarConstants.leagueSpan).isEmpty()) {
+                break;
+            }
             calculateAndUpdateStats(affectedLeague.getStartDate(), WarConstants.leagueSpan);
         }
     }
@@ -124,6 +126,15 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
 
         // players that have left the clan will have aggregation stats if we don't filter them out
         Set<String> playersInClanAtDate = playerCheckInCheckOutRepository.findPlayersInClanAtDate(date).stream().map(PlayerInOut::getTag).collect(Collectors.toSet());
+
+        // still a player can join the clan after the war has begun and be able to join the war (though he will not appear in playerInClanAtDate). Also add those
+        // who joined the war
+        warLeagues.stream().findFirst().ifPresent(wl ->
+                playersInClanAtDate.addAll(wl.getPlayerWarStats().stream()
+                        .filter(ws -> ws.getCollectionPhaseStats().getGamesPlayed() > 0)
+                        .map((ws -> ws.getPlayer().getTag()))
+                        .collect(Collectors.toSet()))
+        );
 
         Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
                 .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())

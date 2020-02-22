@@ -96,7 +96,7 @@ public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
             warLeagueService.calculateLeagueAvgsAndSave(warLeague);
             playerWarStatsRepository.saveAll(statsList);
             playerWarStatsRepository.flush();
-            playerAggregationWarStatsService.recalculateAndUpdateWarStatsForLeagues(Collections.singletonList(warLeague));
+            playerAggregationWarStatsService.recalculateAndUpdateStats(warLeague);
             return CompletableFuture.completedFuture("");
         } catch (Exception ex) {
             return CompletableFuture.completedFuture(ex.getMessage());
