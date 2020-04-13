@@ -21,7 +21,8 @@ angular.module("App").controller("playerWarStatsController", function($scope, $h
 	}
 
 	function loadData() {
-		$scope.dataLoading = true;
+		$scope.loading = true;
+
 		$http.get(baseUrl() + "/rest/player/" + $routeParams.playertag +"/war").then(
 			function(response) {
 				$scope.player = response.data
@@ -45,7 +46,7 @@ angular.module("App").controller("playerWarStatsController", function($scope, $h
                 })
 			}
 		).finally(function() {
-			$scope.dataLoading = false;
+			$scope.loading = false;
 		}, null)
 	}
 

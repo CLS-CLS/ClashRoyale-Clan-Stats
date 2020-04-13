@@ -1,8 +1,8 @@
-package org.lytsiware.clash.service.calculation.chestscore;
+package org.lytsiware.clash.service.calculation.oldsite.chestscore;
 
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.service.calculation.CalculationContext;
+import org.lytsiware.clash.service.calculation.oldsite.CalculationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.lytsiware.clash.service.calculation.chestscore.ClanChestScoreCalculationServiceWithSubtraction.SubractCalculationContext;
+import static org.lytsiware.clash.service.calculation.oldsite.chestscore.ClanChestScoreCalculationServiceWithSubtraction.SubractCalculationContext;
 
 @Service
 public class ClanChestScoreCalculationServiceWithSubtraction implements ClanChestScoreCalculationService<SubractCalculationContext> {

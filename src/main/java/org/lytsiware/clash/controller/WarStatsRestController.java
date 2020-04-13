@@ -53,11 +53,10 @@ public class WarStatsRestController {
     PlayerWarStatsService playerWarStatsService;
 
     @Autowired
-    WarInputServiceImpl warInputService;
+    WarInputService warInputService;
 
     @Autowired
     WarLeagueRepository warLeagueRepository;
-
 
     @Autowired
     WarLeagueService warLeagueService;
@@ -71,19 +70,6 @@ public class WarStatsRestController {
         response.setContentType("application/text");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getOriginalFilename() + "\"");
         response.flushBuffer();
-
-    }
-
-    @GetMapping(value = "/warstats/recalculate")
-    public ResponseEntity recalculate(@RequestParam(required = false, defaultValue = "" + WarConstants.leagueSpan) int span,
-                                      @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate from,
-                                      @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate to) {
-        log.info("Controller: recalculate");
-        if (to == null) {
-            to = LocalDate.now();
-        }
-        playerAggregationWarStatsService.calculateStatsBetweenDates(from, to, span);
-        return ResponseEntity.ok().build();
 
     }
 
@@ -104,7 +90,7 @@ public class WarStatsRestController {
     @GetMapping("/warstats/{deltaWar}")
     public ClansWarGlobalStatsDto getAggregatedWarStats(@PathVariable(value = "deltaWar", required = false) Integer deltaWar) {
         log.info("Controller: getAggregatedWarStats deltaWeek = {}", deltaWar);
-        return playerAggregationWarStatsService.findLatestWarAggregationStatsForWar(deltaWar == null ? 0 : deltaWar);
+        return playerAggregationWarStatsService.getGlobalWarStats(deltaWar == null ? 0 : deltaWar);
 
     }
 
@@ -125,12 +111,26 @@ public class WarStatsRestController {
 
     }
 
+
+    @GetMapping("/warstats/recalculate")
+    public ResponseEntity<Void> recalculateLeagueWarStats(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate leagueDate,
+                                                          @RequestParam(defaultValue = "" + WarConstants.leagueSpan) int leagueSpan,
+                                                          @RequestParam(defaultValue = "false") boolean includeAffected) {
+        if (!includeAffected) {
+            warInputService.recalculateWarStatsNoAffected(leagueDate, leagueSpan);
+        } else {
+            warInputService.recalculateWarStatsIncludingAffected(leagueDate, leagueSpan);
+        }
+
+        return ResponseEntity.ok().build();
+
+    }
+
     @GetMapping("/warstats/inputdata")
     public List<WarStatsInputDto> getWarStatsForInput(@RequestParam(required = false, defaultValue = "true") boolean includeNotParticipating) {
         log.info("Controller: getWarStatsForInput");
         return warInputService.getPlayerWarStatsForInput(includeNotParticipating);
     }
-
 
     @PostMapping("/warstats/inputdata")
     public ResponseEntity<String> insertWarStats(@Valid @RequestBody WarStatsInputDto warStatsInputDto, BindingResult bindingResult) {
@@ -142,7 +142,7 @@ public class WarStatsRestController {
         }
 
         List<PlayerWarStat> statsList = InputDtoPlayerWarStatConverter.toPlayerWarStat(warStatsInputDto);
-        CompletableFuture<String> result = playerWarStatsService.saveWarStatsAndUpdateStatistics(statsList);
+        CompletableFuture<String> result = warInputService.saveWarStatsAndUpdateStatistics(statsList);
 
         try {
             return ResponseEntity.ok(result.get(2, TimeUnit.SECONDS));

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.lytsiware.clash.AbstractSpringBootTest;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
+import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
@@ -28,6 +29,9 @@ public class PlayerAggregationWarStatsServiceTest extends AbstractSpringBootTest
 
     @Autowired
     PlayerAggregationWarStatsService playerAggregationWarStatsService;
+
+    @Autowired
+    PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
 
     @Test
     public void calculateStats() throws Exception {
@@ -72,8 +76,9 @@ public class PlayerAggregationWarStatsServiceTest extends AbstractSpringBootTest
                 + pws.getCollectionPhaseStats().getCardsWon() + ", "
                 + pws.getWarPhaseStats().getGamesWon()));
 
-
-        List<PlayerAggregationWarStats> result = playerAggregationWarStatsService.calculateStats(LocalDate.now(), 5);
+        LocalDate leagueDate = LocalDate.now();
+        playerAggregationWarStatsService.calculateAndUpdateStats(leagueDate, 5);
+        List<PlayerAggregationWarStats> result = playerAggregationWarStatsRepository.findByDateAndLeagueSpan(leagueDate, 5);
         result.forEach(aggr -> System.out.println(aggr.getPlayer().getName() + ", " + aggr.getDate().format(DateTimeFormatter.ofPattern("dd-MM")) + aggr.getAvgCards()));
 
         PlayerAggregationWarStats player0AggrStat = findByPlayer(result, "player0");

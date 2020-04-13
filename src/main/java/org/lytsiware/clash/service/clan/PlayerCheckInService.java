@@ -48,7 +48,6 @@ public class PlayerCheckInService {
      * returns all the checkin checkout dates of the players that have been in clan with extra information about
      * the total weeks that were in clan and the total weeks between the latest checkin / checkout (or the current date if
      * he is still in clan).
-
      */
     public List<CheckInCheckoutDataDto> getCheckinCheckoutData() {
         Map<String, Player> players = playerRepository.loadAll();
@@ -104,14 +103,21 @@ public class PlayerCheckInService {
         }
     }
 
+    /**
+     * Checkins the player
+     *
+     * @return the attached entity player
+     */
     @Transactional(propagation = Propagation.REQUIRED)
-    public void checkinPlayer(Player player, @Nullable LocalDateTime checkInTime) {
+    public Player checkinPlayer(Player player, @Nullable LocalDateTime checkInTime) {
         Player playerDb = playerRepository.findByTag(player.getTag());
         if (playerDb == null) {
-            playerRepository.saveOrUpdate(new Player(player.getTag(), player.getName(), "member"));
+            playerDb = new Player(player.getTag(), player.getName(), "member");
+            playerRepository.persist(playerDb);
         }
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(player.getTag()).orElse(null);
         doCheckinPlayer(playerInOut, player.getTag(), checkInTime);
+        return playerDb;
     }
 
     private void doCheckinPlayer(PlayerInOut playerInOut, String tag, LocalDateTime checkInDate) {

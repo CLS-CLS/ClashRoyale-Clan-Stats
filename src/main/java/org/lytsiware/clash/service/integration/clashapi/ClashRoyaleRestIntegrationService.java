@@ -41,7 +41,7 @@ public class ClashRoyaleRestIntegrationService {
 
     public RestTemplate createRestTemplate() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        log.info("Using proxy with URL: {}", proxyAndBearerHolder.getProxy().address().toString());
+        log.info("Using proxy with URL: {}", proxyAndBearerHolder.getProxy().address());
         requestFactory.setProxy(proxyAndBearerHolder.getProxy());
         RestTemplate restTemplate = new RestTemplateBuilder()
                 .requestFactory(() -> requestFactory)

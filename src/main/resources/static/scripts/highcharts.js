@@ -166,8 +166,17 @@ function playerProgressChart(data) {
     var cardDonation = [];
 
     data.forEach(function(value, index) {
-        cardsReceived.unshift(value.cardsReceived)
-        cardDonation.unshift(value.cardDonation);
+
+        if (value.cardsReceived =="-") {
+         cardsReceived.unshift(null)
+        }else {
+            cardsReceived.unshift(value.cardsReceived)
+        }
+        if (value.cardDonation == "-") {
+         cardDonation.unshift(null);
+        } else {
+            cardDonation.unshift(value.cardDonation);
+        }
     })
 
 

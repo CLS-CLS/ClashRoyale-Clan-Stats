@@ -28,7 +28,10 @@ angular.module("App").controller("playerStatsController", function($scope, $http
 	}
 
 	function loadData() {
-		$scope.dataLoading = true;
+		$scope.commonState.name = '';
+        $scope.commonState.tag = '';
+        $scope.commonState.joinedAt = '';
+		$scope.loading = true;
 
 		var currentWeek = -1;
 
@@ -52,7 +55,10 @@ angular.module("App").controller("playerStatsController", function($scope, $http
 				// if there are weeks missing due to player not be part of the clan,
 				// fill them with N/A data in order to show these missing weeks
 				var completeStats = [];
-
+                if (!response.data || !response.data.statsDto){
+                    $scope.loading = false; //for some reason loading = false in final block does not work
+                    return
+                }
 				response.data.statsDto.forEach(function(value, index) {
 					while (currentWeek > value.week) {
 						completeStats.push(new emptyStats())
@@ -90,8 +96,10 @@ angular.module("App").controller("playerStatsController", function($scope, $http
                 })
 			}
 		).finally(function() {
-			$scope.dataLoading = false;
-		}, null)
+			$scope.loading = false;
+		}, function(){
+		    $scope.loading = false;
+		})
 	}
 
 	loadData();

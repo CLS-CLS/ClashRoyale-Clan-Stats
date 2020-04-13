@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface WarLeagueService {
 
-    void calculateLeagueAvgs(WarLeague warLeague);
-
+    /**
+     * Calculates the averages warleague stats and returns the persisted warleague
+     */
     WarLeague calculateLeagueAvgsAndSave(WarLeague warLeague);
 
     List<WarLeagueDto> findFirstNthWarLeagueBeforeDate(LocalDate startDate, int n);

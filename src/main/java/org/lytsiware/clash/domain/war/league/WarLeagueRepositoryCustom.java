@@ -10,6 +10,12 @@ public interface WarLeagueRepositoryCustom {
 
     List<WarLeague> findFirstNthWarLeaguesBeforeDate(LocalDate date, int n);
 
+    /**
+     * Returns the first n leagues before (including) the specified date, along with the player
+     * stats
+     */
+    List<WarLeague> findFirstNthWarLeaguesBeforeDateEager(LocalDate date, int n);
+
     List<WarLeague> findFirstNthWarLeaguesAfterDate(LocalDate date, int n);
 
     Optional<WarLeague> findLatestRecordedWarLeague();

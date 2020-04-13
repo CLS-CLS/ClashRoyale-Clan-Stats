@@ -18,5 +18,8 @@ public interface WarLeagueRepository extends JpaRepository<WarLeague, Long>, War
 
     Optional<WarLeague> findByStartDate(LocalDate date);
 
+    @Query("select l from WarLeague l join fetch l.playerWarStats ps join fetch ps.player p where l.startDate= :date ")
+    Optional<WarLeague> findByStartDateEager(LocalDate date);
+
 
 }

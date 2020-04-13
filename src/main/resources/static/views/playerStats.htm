@@ -21,7 +21,7 @@
                 </li>
             </ul>
             <div class="clan-stats-panel">
-                <loading-directive loading="dataLoading"/>
+                <loading-directive loading="loading"/>
                 <div class="text-center">
                     <div>
                         <div class="row"><h1 class="player-header">{{player.name}}</h1></div>
@@ -35,9 +35,9 @@
             <div id="playerDonationStats" ng-class="['tab-pane', 'fade', 'in', {active: active('playerDonationStats')}]"
                  ng-controller="playerStatsController">
                 <div class="clan-stats-panel">
-                    <loading-directive loading="dataLoading"/>
-
-                    <form class="form-horizontal">
+                    <loading-directive loading="loading"/>
+                    <div ng-if="player.statsDto && player.statsDto.length > 1">
+                        <form class="form-horizontal">
                         <div class="text-center">
                             <h4>Overall statistics for the last 12 weeks</h4>
                         </div>
@@ -67,38 +67,43 @@
                         </div>
                     </form>
 
-                    <hr/>
+                        <hr/>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th><span>Week #</span></th>
-                                    <th><span>Chest Contribution</span></th>
-                                    <th><span>Card Donation</span></th>
-                                    <th><span>Cards Received</span></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="s in player.statsDto">
-                                    <td class="alternative-font">{{$index + 1}}</td>
-                                    <td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution}}</td>
-                                    <td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
-                                    <td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardsReceived}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th><span>Week #</span></th>
+                                        <th><span>Chest Contribution</span></th>
+                                        <th><span>Card Donation</span></th>
+                                        <th><span>Cards Received</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="s in player.statsDto">
+                                        <td class="alternative-font">{{$index + 1}}</td>
+                                        <td ng-style="colorfy(s.chestContribution, 'chest')">{{s.chestContribution}}
+                                        </td>
+                                        <td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardDonation}}</td>
+                                        <td ng-style="colorfy(s.cardDonation, 'card')">{{s.cardsReceived}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-8" id="player_chart"></div>
                         </div>
-                        <div class="col-md-8" id="player_chart"></div>
+                    </div>
+                    <div ng-if="!player.statsDto">
+                        <div style="text-align:center"><h2>No data for this period</h2></div>
                     </div>
                 </div>
             </div>
             <div id="playerWarStats" ng-class="['tab-pane', 'fade', 'in', {active: active('playerWarStats')}]"
                  ng-controller="playerWarStatsController">
+                <loading-directive loading="loading"/>
                 <div class="clan-stats-panel">
                     <div style="position:relative">
-                        <loading-directive loading="loading"/>
                         * All the averages are calculated based on the last 14 war leagues
                         <div class="table-responsive halfscreen">
                             <table class="halfscreen table table-striped war-table">

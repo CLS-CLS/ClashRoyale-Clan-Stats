@@ -23,14 +23,14 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     private EntityManager em;
 
     @Override
-    public void saveOrUpdate(Player player) {
+    public void persist(Player player) {
         em.persist(player);
     }
 
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void saveOrUpdate(Collection<Player> players) {
-        logger.info("saveOrUpdate players");
+        logger.info("persist players");
         players.stream().forEach(em::merge);
     }
 

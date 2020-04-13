@@ -1,7 +1,7 @@
-package org.lytsiware.clash.service.calculation.donationscore;
+package org.lytsiware.clash.service.calculation.oldsite.donationscore;
 
 import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.service.calculation.CalculationContext;
+import org.lytsiware.clash.service.calculation.oldsite.CalculationContext;
 
 import java.util.List;
 

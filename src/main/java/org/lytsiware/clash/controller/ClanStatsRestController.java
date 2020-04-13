@@ -9,7 +9,7 @@ import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
 import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.TemplateService;
-import org.lytsiware.clash.service.calculation.chestscore.ClanChestScoreCalculationService;
+import org.lytsiware.clash.service.calculation.oldsite.chestscore.ClanChestScoreCalculationService;
 import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
 import org.lytsiware.clash.service.clan.PlayerCheckInService;
 import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService;
