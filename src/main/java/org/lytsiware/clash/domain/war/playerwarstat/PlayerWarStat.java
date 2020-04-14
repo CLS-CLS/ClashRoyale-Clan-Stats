@@ -5,6 +5,7 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 
 @Entity
@@ -61,5 +62,14 @@ public class PlayerWarStat {
             this.warLeague = warLeague;
             return this;
         }
+    }
+
+    public boolean hasParticipated() {
+        return Optional.of(collectionPhaseStats).map(CollectionPhaseStats::getCardsWon).orElse(0) > 0;
+    }
+
+    public boolean hasAbandonedWar() {
+        return hasParticipated() && (warPhaseStats == null ||
+                warPhaseStats.getGamesGranted() > 0 && warPhaseStats.getGamesNotPlayed() > 0);
     }
 }

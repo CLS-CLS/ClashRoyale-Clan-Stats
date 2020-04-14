@@ -80,7 +80,7 @@ public class PlayerCheckInService {
     private boolean hasAbandonedWar(String tag, LocalDateTime checkIn, LocalDateTime checkOut) {
         return playerWarStatsRepository.findBetweenDatesForPlayer(tag, checkIn.toLocalDate(), checkOut.toLocalDate()).stream().findFirst()
                 .filter(playerWarStat -> playerWarStat.getWarLeague().getEndDate().isAfter(checkOut))
-                .map(playerWarStat -> playerWarStat.getWarPhaseStats().hasParticipated() && playerWarStat.getWarPhaseStats().getGamesNotPlayed() > 0)
+                .map(playerWarStat -> playerWarStat.hasAbandonedWar())
                 .orElse(false);
     }
 
