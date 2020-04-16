@@ -7,6 +7,7 @@ import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.service.integration.SiteConfigurationService;
+import org.lytsiware.clash.service.integration.proxy.ProxyAndBearerHolder;
 import org.lytsiware.clash.utils.ContentLengthHttpInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;

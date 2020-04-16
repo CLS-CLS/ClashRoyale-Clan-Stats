@@ -104,9 +104,31 @@ public class PlayerCheckInService {
     }
 
     /**
-     * Checkins the player
+     * Helper method to check in players.
+     * Use this method to limit queries in the database instead of calling multiple times
+     * the {@link PlayerCheckInService#checkinPlayer(Player, LocalDateTime)}.
      *
-     * @return the attached entity player
+     * @return in all cases returns the attached entity players
+     * @implNote The method loads all players (and their checkins) at once instead of loading player by tag
+     */
+    public List<Player> checkinPlayers(List<Player> players, @Nullable LocalDateTime checkInTime) {
+        Map<String, Player> allPlayers = playerRepository.loadAll();
+        Map<String, PlayerInOut> allCheckins = playerCheckInCheckOutRepository.findAll().stream()
+                .collect(Collectors.toMap(PlayerInOut::getTag, Function.identity()));
+
+        List<Player> playersDb = players.stream().map(p ->
+                allPlayers.get(p) == null ? playerRepository.persist(p) : allPlayers.get(p))
+                .collect(Collectors.toList());
+
+        playersDb.stream().forEach(p -> doCheckinPlayer(allCheckins.get(p.getTag()), p.getTag(), checkInTime));
+        return playersDb;
+
+    }
+
+    /**
+     * Checks in the player if is needed to be checked in
+     *
+     * @return in all cases returns the attached entity player
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public Player checkinPlayer(Player player, @Nullable LocalDateTime checkInTime) {

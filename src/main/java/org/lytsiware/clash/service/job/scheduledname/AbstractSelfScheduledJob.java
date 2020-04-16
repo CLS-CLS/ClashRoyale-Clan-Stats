@@ -11,9 +11,12 @@ import java.util.concurrent.ScheduledFuture;
 
 /**
  * Runs a repeatable job which can alter the date of the next execution depending on the result of the current execution
- * The job to run should be implemented in the {@link #run()} method. The method should return the Date of the next execution.
+ * The job to run should be implemented in the {@link #run()} method. The method should return the Date of the next execution or null,
+ * in that case there will be no rescheduling.
  * The job should be manually started the first time. <p>If there is a scheduler that needs to also be triggered periodically, create
  * a method, annotate it with @Scheduled, and just call the {@link #fixedScheduler()}
+ * <p>Note that in case the next execution date is null, any future scheduled executions (i.e executions set externally by
+ * scheduled jobs) will not be cancelled. </p>
  */
 @Slf4j
 public abstract class AbstractSelfScheduledJob {
@@ -47,7 +50,7 @@ public abstract class AbstractSelfScheduledJob {
     /**
      * Implement this method with business logic that need te be run
      *
-     * @return The date of the next execution
+     * @return The date of the next execution. Can be null
      */
     protected abstract Date run();
 

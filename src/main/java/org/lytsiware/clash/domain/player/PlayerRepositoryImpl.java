@@ -23,8 +23,9 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     private EntityManager em;
 
     @Override
-    public void persist(Player player) {
+    public Player persist(Player player) {
         em.persist(player);
+        return player;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     @Override
     public Map<String, Player> loadAll() {
         logger.info("loadAll");
-        TypedQuery<Player> query =  em.createQuery("select p from Player p", Player.class);
+        TypedQuery<Player> query = em.createQuery("select p from Player p", Player.class);
         List<Player> result = query.getResultList();
         return result.stream().collect(Collectors.toMap(Player::getTag, Function.identity()));
 

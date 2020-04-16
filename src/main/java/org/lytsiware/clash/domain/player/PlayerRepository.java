@@ -5,7 +5,7 @@ import java.util.Map;
 
 
 public interface PlayerRepository {
-    void persist(Player player);
+    Player persist(Player player);
 
     void saveOrUpdate(Collection<Player> players);
 

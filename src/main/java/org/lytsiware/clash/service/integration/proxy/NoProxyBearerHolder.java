@@ -1,4 +1,4 @@
-package org.lytsiware.clash.service.integration.clashapi;
+package org.lytsiware.clash.service.integration.proxy;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;

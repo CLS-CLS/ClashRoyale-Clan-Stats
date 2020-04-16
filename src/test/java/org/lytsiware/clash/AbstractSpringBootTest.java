@@ -4,7 +4,7 @@ package org.lytsiware.clash;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.lytsiware.clash.service.integration.clashapi.ProxyAndBearerHolder;
+import org.lytsiware.clash.service.integration.proxy.ProxyAndBearerHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;

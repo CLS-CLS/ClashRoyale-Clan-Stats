@@ -1,4 +1,4 @@
-package org.lytsiware.clash.service.integration.clashapi;
+package org.lytsiware.clash.service.integration.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

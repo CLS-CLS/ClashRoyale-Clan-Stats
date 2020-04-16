@@ -1,4 +1,4 @@
-package org.lytsiware.clash.service.integration.clashapi;
+package org.lytsiware.clash.service.integration.proxy;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;

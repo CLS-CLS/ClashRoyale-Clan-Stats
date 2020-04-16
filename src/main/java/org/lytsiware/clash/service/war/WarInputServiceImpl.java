@@ -145,7 +145,7 @@ public class WarInputServiceImpl implements WarInputService {
              * Still he may participated in the war. We need to checkin the new player just before the start date of the warLeague and
              * checkout the player 12 hours later.
              */
-            Map<String, Player> players = saveTransientPlayers(statsList, warLeague);
+            Map<String, Player> players = checkInCheckoutGonePlayers(statsList, warLeague);
 
             if (warLeagueDb != null) {
                 clearPreviousLeagueStats(warLeagueDb);
@@ -172,12 +172,14 @@ public class WarInputServiceImpl implements WarInputService {
         }
     }
 
-    /**
-     * saves players that are not already in the db but are in the warleague
+    /*
+     * Checks in and checks out players that are participating in the war but they are not in the players tables
+     * (this may occur in case they joined clan, participated the war and left the clan before the scheduler that persists
+     * the players have run)
      *
      * @return all the recorded players
      */
-    private Map<String, Player> saveTransientPlayers(List<PlayerWarStat> statsList, WarLeague warLeague) {
+    private Map<String, Player> checkInCheckoutGonePlayers(List<PlayerWarStat> statsList, WarLeague warLeague) {
 
         Map<String, Player> playersDb = playerRepository.loadAll();
         List<Player> transientPlayers = statsList.stream().map(PlayerWarStat::getPlayer).filter(player -> !playersDb.containsKey(player.getTag())).
