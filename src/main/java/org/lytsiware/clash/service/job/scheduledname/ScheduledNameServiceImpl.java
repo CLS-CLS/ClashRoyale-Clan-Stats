@@ -1,6 +1,5 @@
 package org.lytsiware.clash.service.job.scheduledname;
 
-import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.Job;
 import org.lytsiware.clash.domain.job.JobRepository;
 import org.lytsiware.clash.utils.Utils;
@@ -77,7 +76,7 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
             ZonedDateTime nextExecutionLocalDateTime = Utils.getNextExecutionDate(cronExpression, ZonedDateTime.now(ZoneId.systemDefault()));
 
-            int minutesRemaining = (int) ChronoUnit.MINUTES.between(LocalDateTime.now(ZoneIdConfiguration.zoneId()), nextExecutionLocalDateTime);
+            int minutesRemaining = (int) ChronoUnit.MINUTES.between(LocalDateTime.now(ZoneId.systemDefault()), nextExecutionLocalDateTime);
             int daysRemaining = minutesRemaining / 1440;
             int hoursRemaining = (minutesRemaining % 1440) / 60;
             minutesRemaining = minutesRemaining % 60;
@@ -88,7 +87,7 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
 
         List<Map<String, String>> result = scheduledMethods.entrySet().stream().map(e -> createMap.apply(e)).collect(Collectors.toList());
         Map<String, String> serverTime = new HashMap<>();
-        serverTime.put("Server Time now: ", LocalDateTime.now().format(DATE_TIME_FORMATER) + " " + ZoneIdConfiguration.zoneId());
+        serverTime.put("Server Time now: ", LocalDateTime.now().format(DATE_TIME_FORMATER) + " " + ZoneId.systemDefault());
         result.add(serverTime);
         return result;
 

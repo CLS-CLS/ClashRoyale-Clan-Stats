@@ -1,12 +1,10 @@
 package org.lytsiware.clash.service.job;
 
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.job.Job;
 import org.lytsiware.clash.domain.job.JobRepository;
 import org.lytsiware.clash.service.AggregationService;
 import org.lytsiware.clash.service.job.scheduledname.ScheduledName;
-import org.lytsiware.clash.utils.TestableLocalDateTime;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Service
@@ -82,10 +81,10 @@ public class StatsRoyalChestContrJobImpl implements RunAtStartupJob {
             return false;
         }
 
-        ZonedDateTime nextExecutionDate = Utils.getNextExecutionDate(cronExpression, latestRun.getLatestExecution().atZone(ZoneIdConfiguration.zoneId()));
+        ZonedDateTime nextExecutionDate = Utils.getNextExecutionDate(cronExpression, latestRun.getLatestExecution().atZone(ZoneId.systemDefault()));
         logger.info("latest scheduler run was at {} ", latestRun.getLatestExecution());
         logger.info("next execution date is at {}", nextExecutionDate);
-        if (nextExecutionDate.isAfter(TestableLocalDateTime.getZonedDateTimeNow())) {
+        if (nextExecutionDate.isAfter(ZonedDateTime.now(ZoneId.systemDefault()))) {
             logger.info("Scheduler has already run");
             return false;
         }

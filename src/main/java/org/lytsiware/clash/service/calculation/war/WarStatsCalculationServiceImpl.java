@@ -4,14 +4,12 @@ import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
-import org.lytsiware.clash.utils.Utils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +22,7 @@ public class WarStatsCalculationServiceImpl implements WarStatsCalculationServic
         Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warCalculationContext.getWarLeagues().stream()
                 .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
                 .filter(playerWarStat -> warCalculationContext.getEligiblePlayers().contains(playerWarStat.getPlayer().getTag()))
-                .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
+                .collect(Collectors.groupingBy(PlayerWarStat::getPlayer));
 
         List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
 

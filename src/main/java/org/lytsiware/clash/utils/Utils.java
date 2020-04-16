@@ -1,6 +1,5 @@
 package org.lytsiware.clash.utils;
 
-import org.lytsiware.clash.ZoneIdConfiguration;
 import org.lytsiware.clash.domain.player.Player;
 import org.lytsiware.clash.domain.war.league.WarLeague;
 import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
@@ -49,33 +48,6 @@ public class Utils {
     }
 
 
-    public static <T, K, V> Collector<T, HashMap<K, List<V>>, HashMap<K, List<V>>> collectToMapOfLists(
-            Function<T, K> keyMapper, Function<T, V> valueMapper) {
-
-        BiConsumer<HashMap<K, List<V>>, T> accumulator = (t, u) -> {
-            K key = keyMapper.apply(u);
-            if (t.containsKey(key)) {
-                t.get(key).add(valueMapper.apply(u));
-            } else {
-                List<V> valueList = new ArrayList<>();
-                valueList.add(valueMapper.apply(u));
-                t.put(key, valueList);
-            }
-        };
-
-        BinaryOperator<HashMap<K, List<V>>> combiner = (t, u) -> {
-            for (K uKey : u.keySet()) {
-                if (t.containsKey(uKey)) {
-                    t.get(uKey).addAll(u.get(uKey));
-                } else {
-                    t.put(uKey, u.get(uKey));
-                }
-            }
-            return t;
-        };
-
-        return Collector.of(HashMap::new, accumulator, combiner);
-    }
 
     /**
      * Rounding double to fixed decimals
@@ -120,11 +92,11 @@ public class Utils {
     }
 
     public static ZonedDateTime getNextExecutionDate(String cronExpression, ZonedDateTime latestExecutionZonedDate) {
-        CronTrigger cronTrigger = new CronTrigger(cronExpression, TimeZone.getTimeZone(ZoneIdConfiguration.zoneId()));
-        Date lastExecutionAsDate = Utils.convertToDate(latestExecutionZonedDate, ZoneIdConfiguration.zoneId());
+        CronTrigger cronTrigger = new CronTrigger(cronExpression, TimeZone.getTimeZone(ZoneId.systemDefault()));
+        Date lastExecutionAsDate = Utils.convertToDate(latestExecutionZonedDate, ZoneId.systemDefault());
         Date nextExecutionAsDate = cronTrigger.nextExecutionTime(
                 new SimpleTriggerContext(lastExecutionAsDate, lastExecutionAsDate, lastExecutionAsDate));
-        return nextExecutionAsDate.toInstant().atZone(ZoneIdConfiguration.zoneId());
+        return nextExecutionAsDate.toInstant().atZone(ZoneId.systemDefault());
     }
 
     public static List<PlayerWarStat> parseCsv(InputStream inputStream, String fileName) {

@@ -14,7 +14,6 @@ import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
 import org.lytsiware.clash.dto.ClansWarGlobalStatsDto;
 import org.lytsiware.clash.service.calculation.war.WarCalculationContext;
 import org.lytsiware.clash.service.calculation.war.WarStatsCalculationService;
-import org.lytsiware.clash.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,7 +23,6 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +43,6 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
 
     @Autowired
     WarStatsCalculationService warStatsCalculationService;
-
 
 
     @Override
@@ -98,7 +95,7 @@ public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWa
         Map<Player, List<PlayerWarStat>> warStatsPerPlayer = warLeagues.stream()
                 .flatMap(warLeague -> warLeague.getPlayerWarStats().stream())
                 .filter(playerWarStat -> playersInClanAtDate.contains(playerWarStat.getPlayer().getTag()))
-                .collect(Utils.collectToMapOfLists(PlayerWarStat::getPlayer, Function.identity()));
+                .collect(Collectors.groupingBy(PlayerWarStat::getPlayer));
 
         List<PlayerAggregationWarStats> playerAggregationWarStats = new ArrayList<>();
 
