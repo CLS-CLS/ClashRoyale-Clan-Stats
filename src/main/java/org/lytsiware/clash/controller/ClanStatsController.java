@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ClanStatsController {
 
-    private Logger logger = LoggerFactory.getLogger(ClanStatsController.class);
+    private final Logger logger = LoggerFactory.getLogger(ClanStatsController.class);
 
     @GetMapping("/")
     public String initialPage(Model model) {
@@ -23,31 +23,5 @@ public class ClanStatsController {
         logger.info("request for path {}", path);
         return "main";
     }
-
-    @GetMapping("/player/**")
-    public String player() {
-        logger.info("request for player");
-        return "main";
-    }
-
-
-    @GetMapping("/warstats/**")
-    public String warstats() {
-        logger.info("request for warstats input");
-        return "main";
-    }
-
-    @GetMapping("/scheduler")
-    public String scheduler() {
-        logger.info("request for warstats input");
-        return "main";
-    }
-
-    @GetMapping("/newplayers/**")
-    public String newplayers() {
-        logger.info("request for new players input");
-        return "main";
-    }
-
 
 }
