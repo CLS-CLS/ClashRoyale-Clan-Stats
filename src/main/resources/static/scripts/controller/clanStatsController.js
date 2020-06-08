@@ -124,7 +124,7 @@ app.controller("clanStatsController", function($scope, $http, $timeout, $filter,
 	}
 
 	$scope.$watch('selectedItem', function(newValue, oldValue) {
-		$location.path("/" + newValue, false)
+		$location.path("/view/" + newValue, false)
 
 	})
 

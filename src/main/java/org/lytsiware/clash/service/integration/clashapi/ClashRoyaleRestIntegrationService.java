@@ -32,7 +32,7 @@ public class ClashRoyaleRestIntegrationService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private SiteConfigurationService siteConfigurationService;
+    private final SiteConfigurationService siteConfigurationService;
 
     @Autowired
     ClashRoyaleRestIntegrationService(SiteConfigurationService siteConfigurationService) {
@@ -75,7 +75,7 @@ public class ClashRoyaleRestIntegrationService {
      */
     private void preRequest(RestTemplate restTemplate) {
         try {
-            RequestEntity<Void> requestEntity = RequestEntity.get(new URI("http://godwokens.herokuapp.com/views/clanRules.htm"))
+            RequestEntity<Void> requestEntity = RequestEntity.get(new URI("http://godwokens.herokuapp.com/view/clanRules.htm"))
                     .build();
             restTemplate.exchange(requestEntity, String.class).getBody();
         } catch (Exception e) {

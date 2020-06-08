@@ -83,12 +83,12 @@
                             <th ng-show="state.selectableColumns['warsParticipated'].show"><span
                                     ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="warsParticipated" filter-by="filter">
-                                    <img style="display:inline" src="images/battle_mid.png"></order-directive></span>
+                                    <img style="display:inline" src="resource/images/battle_mid.png"></order-directive></span>
                             </th>
                             <th ng-show="state.selectableColumns['averageCardsWon'].show"><span
                                     ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="averageCardsWon" filter-by="filter">
-                                    <img style="display:inline" src="images/cards_mid.png">
+                                    <img style="display:inline" src="resource/images/cards_mid.png">
                                 </order-directive></span>
                             </th>
                             <th ng-show="state.selectableColumns['winRatio'].show"><span
@@ -99,32 +99,32 @@
                             <th ng-show="state.selectableColumns['score'].show"><span
                                     ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="score" filter-by="filter">
-                                    <img style="display:inline" src="images/score_mid.png">
+                                    <img style="display:inline" src="resource/images/score_mid.png">
                                 </order-directive></span>
                             </th>
                             <th ng-show="state.selectableColumns['crownsWon'].show"><span
                                     ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="crownsWon" filter-by="filter">
-                                    <img style="display:inline" src="images/win_mid.png">
+                                    <img style="display:inline" src="resource/images/win_mid.png">
                                 </order-directive>
                             </span>
                             </th>
                             <th ng-show="state.selectableColumns['crownsLost'].show"><span
                                     ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="crownsLost" filter-by="filter">
-                                    <img src="images/loose_mid.png" style="display:inline">
+                                    <img src="resource/images/loose_mid.png" style="display:inline">
                                 </order-directive></span>
                             </th>
                             <th ng-show="state.selectableColumns['gamesNotPlayed'].show"><span
                                     ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="gamesNotPlayed" filter-by="filter">
-                                    <img src="images/forfeit_mid.png" style="display:inline">
+                                    <img src="resource/images/forfeit_mid.png" style="display:inline">
                                 </order-directive></span>
                             </th>
                             <th ng-show="state.selectableColumns['collectionGamesMissed'].show"><span
                                     ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="collectionGamesMissed" filter-by="filter">
-                                    <img src="images/c_forfeit_mid.png" style="display:inline">
+                                    <img src="resource/images/c_forfeit_mid.png" style="display:inline">
                                 </order-directive></span>
                             </th>
                             <th ng-show="state.selectableColumns['totalGamesMissed'].show">
@@ -169,7 +169,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <span> The  <img src="images/score_mid.png" style="display:inline"> is calculated based the win ratio, the average cards collected and the war participation </span>
+                        <span> The  <img src="resource/images/score_mid.png" style="display:inline"> is calculated based the win ratio, the average cards collected and the war participation </span>
                     </div>
                 </div>
             </div>
@@ -264,12 +264,13 @@
                                 <order-directive bind-to="name" filter-by="filter">Player</order-directive></span>
                             </th>
                             <th><span ng-click=triggerOrderDirective($event)>
-                                <img src="images/battle_mid.png" style="display:inline"></order-directive></span>
+                                <img src="resource/images/battle_mid.png"
+                                     style="display:inline"></order-directive></span>
                             </th>
                             <th>
                                 <span ng-click=triggerOrderDirective($event)>
                                     <order-directive bind-to="cards" filter-by="filter">
-                                        <img src="images/cards_mid.png" style="display:inline">
+                                        <img src="resource/images/cards_mid.png" style="display:inline">
                                     </order-directive>
                                 </span>
                             </th>
@@ -287,11 +288,13 @@
                             </td>
                             <td>
                                 <span ng-repeat="fightStatus in s.fightStatus track by $index">
-                                    <img height="auto" ng-if="fightStatus == 'win'" src="images/win_mid.png"
+                                    <img height="auto" ng-if="fightStatus == 'win'" src="resource/images/win_mid.png"
                                          style="display:inline" width="25px">
-                                    <img height="auto" ng-if="fightStatus == 'loose'" src="images/loose_mid.png"
+                                    <img height="auto" ng-if="fightStatus == 'loose'"
+                                         src="resource/images/loose_mid.png"
                                          style="display:inline" width="25px">
-                                    <img height="auto" ng-if="fightStatus == 'forfeit'" src="images/forfeit_mid.png"
+                                    <img height="auto" ng-if="fightStatus == 'forfeit'"
+                                         src="resource/images/forfeit_mid.png"
                                          style="display:inline" width="25px">
                                 </span>
                             </td>
@@ -308,7 +311,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <span> The  <img src="images/score_mid.png" style="display:inline"> is calculated based the final battle result and the cards collected</span>
+                        <span> The  <img src="resource/images/score_mid.png" style="display:inline"> is calculated based the final battle result and the cards collected</span>
                     </div>
                 </div>
             </div>

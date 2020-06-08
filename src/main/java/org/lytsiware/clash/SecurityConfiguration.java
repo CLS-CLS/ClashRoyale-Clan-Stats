@@ -3,6 +3,7 @@ package org.lytsiware.clash;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
@@ -28,8 +30,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     @Bean
+    @Profile("!dev")
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    @Profile("dev")
+    PasswordEncoder noPasswordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
@@ -55,11 +65,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/rest/newPlayers/update/**",
                         "/rest/scheduler/**",
                         "/rest/upload/**")
-                .authenticated()
+                .permitAll()
                 .and().httpBasic()
                 .and().cors().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
+
+
 }

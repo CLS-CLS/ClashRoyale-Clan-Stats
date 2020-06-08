@@ -61,7 +61,7 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
 
     $scope.onItemSelectedBlur = function(item) {
         $scope.selectedItem = item;
-        $location.path("/warstats/" + $scope.selectedItem)
+        $location.path("/view/warstats/" + $scope.selectedItem)
     }
 
     $scope.previousWeek = function() {
@@ -70,14 +70,14 @@ app.controller("warStatsController", function($scope, $http, $routeParams, $loca
             $scope.selectedItem = 0;
             return;
         }
-        $location.path("/warstats/" + $scope.selectedItem)
+        $location.path("/view/warstats/" + $scope.selectedItem)
     }
 
     $scope.nextWeek = function() {
         //sometimes 1 is considered a string and "+" is considered as string concatenator
         //subtracting 1 first makes the selectedItem a number
         $scope.selectedItem = ($scope.selectedItem - 1) + 2;
-        $location.path("/warstats/" + $scope.selectedItem)
+        $location.path("/view/warstats/" + $scope.selectedItem)
     }
 
     function init() {

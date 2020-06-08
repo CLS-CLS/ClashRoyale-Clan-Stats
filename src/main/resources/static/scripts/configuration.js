@@ -3,46 +3,46 @@ app.config([ "$locationProvider", "$routeProvider",
 
 		$routeProvider
 			.when("/", {
-				templateUrl: "/views/clanRules.htm"
+				templateUrl: "resource/views/clanRules.htm"
 			})
-			.when("/globalStats", {
-                templateUrl: "/views/globalStats.htm"
+			.when("/view/globalStats", {
+                templateUrl: "resource/views/globalStats.htm"
             })
-			.when("/scheduler", {
-				templateUrl: "/views/scheduler.htm"
+			.when("/view/scheduler", {
+				templateUrl: "resource/views/scheduler.htm"
 			})
-		    .when("/warstats/input", {
-		        templateUrl: "/views/warStatsInput.htm"
+		    .when("/view/warstats/input", {
+		        templateUrl: "resource/views/warStatsInput.htm"
 		    })
-		    .when("/warstats/:deltaWar?", {
-                templateUrl: "views/warStats.htm"
+		    .when("/view/warstats/:deltaWar?", {
+                templateUrl: "resource/views/warStats.htm"
             })
-            .when("/upload" , {
+            .when("/view/upload" , {
                 templateUrl: "views/upload.htm",
-                controller: "uploadController"
+                controller: "resource/uploadController"
             })
-            .when("/newplayers/:deltaWeek?", {
-                templateUrl: "views/newPlayers.htm"
+            .when("/view/newplayers/:deltaWeek?", {
+                templateUrl: "resource/views/newPlayers.htm"
             })
-            .when("/clan/score", {
-                templateUrl: "views/chestCharts.htm"
+            .when("/view/clan/score", {
+                templateUrl: "resource/views/chestCharts.htm"
             })
-            .when("/player/:playertag/war", {
-                templateUrl: "views/playerStats.htm"
+            .when("/view/player/:playertag/war", {
+                templateUrl: "resource/views/playerStats.htm"
             })
-            .when("/player/:playertag", {
-                templateUrl : "views/playerStats.htm"
+            .when("/view/player/:playertag", {
+                templateUrl : "resource/views/playerStats.htm"
             })
-            .when("/clanrules", {
-                templateUrl : "views/clanRules.htm"
+            .when("/view/clanrules", {
+                templateUrl : "resource/views/clanRules.htm"
             })
-            .when("/roster", {
-                templateUrl: "views/checkins.htm"
+            .when("/view/roster", {
+                templateUrl: "resource/views/checkins.htm"
             })
-            .when("/:week", {
-                templateUrl : "views/clanStats.htm"
+            .when("/view/:week", {
+                templateUrl : "resource/views/clanStats.htm"
             })
-            .otherwise("/1")
+            .otherwise("/view/1")
 
 		$locationProvider.html5Mode(true);
 

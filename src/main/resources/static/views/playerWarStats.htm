@@ -6,7 +6,7 @@
             <div class="clan-stats-panel">
                 <div class="text-center">
                     <div>
-                        <h1><a class="player-header" ng-href="player/{{player.tag}}" ng-click="next()"><span>{{player.name}}</span></a>
+                        <h1><a class="player-header" ng-href="view/player/{{player.tag}}" ng-click="next()"><span>{{player.name}}</span></a>
                         </h1>
 
                     </div>
@@ -24,16 +24,16 @@
 
                             <tr>
                                 <th rowspan="2">League</th>
-                                <th rowspan="2"><img style="display:inline" src="images/cards_mid.png"></th>
+                                <th rowspan="2"><img style="display:inline" src="resource/images/cards_mid.png"></th>
                                 <th rowspan="2">Battles</th>
                                 <th rowspan="2">Col. Games Missed</th>
                                 <th colspan="2"> Player Average </th>
                                 <th colspan="2"> League Average </th>
                             </tr>
                             <tr>
-                                <th><img style="display:inline" src="images/cards_mid.png"></th>
+                                <th><img style="display:inline" src="resource/images/cards_mid.png"></th>
                                 <th>Win Ratio</th>
-                                <th><img style="display:inline" src="images/cards_mid.png"></th>
+                                <th><img style="display:inline" src="resource/images/cards_mid.png"></th>
                                 <th>Win Ratio</th>
 
                             </tr>
@@ -43,9 +43,12 @@
                                 <td class="alternative-font">{{s.leagueDate}}</td>
                                 <td>{{s.cards != 0 ? s.cards : null}}</td>
                                 <td><span ng-repeat="fightStatus in s.fightStatuses track by $index">
-                                    <img ng-if="fightStatus == 'win'" style="display:inline" src="images/win_mid.png">
-                                    <img ng-if="fightStatus == 'loose'" style="display:inline" src="images/loose_mid.png">
-                                    <img ng-if="fightStatus == 'forfeit'" style="display:inline" src="images/forfeit_mid.png">
+                                    <img ng-if="fightStatus == 'win'" style="display:inline"
+                                         src="resource/images/win_mid.png">
+                                    <img ng-if="fightStatus == 'loose'" style="display:inline"
+                                         src="resource/images/loose_mid.png">
+                                    <img ng-if="fightStatus == 'forfeit'" style="display:inline"
+                                         src="resource/images/forfeit_mid.png">
                                 </span></td>
                                 <td ng-style="colorfy(s.collectionGamesNotPlayed, 'collectionGames')">
                                     {{s.collectionGamesNotPlayed}}
