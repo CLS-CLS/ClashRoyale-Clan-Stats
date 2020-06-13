@@ -36,7 +36,8 @@ public abstract class AbstractSpringBootTest {
     public void initDb() {
         EntityManagerFactoryInfo info = (EntityManagerFactoryInfo) em.getEntityManagerFactory();
         DataSource datasource = info.getDataSource();
-        Flyway flyway = Flyway.configure().dataSource(datasource).load();
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(datasource);
         flyway.clean();
         flyway.migrate();
     }
