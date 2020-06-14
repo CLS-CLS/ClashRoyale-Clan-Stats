@@ -141,7 +141,9 @@
                                     <td ng-style="colorfy(s.collectionGamesNotPlayed, 'collectionGames')">
                                         {{s.collectionGamesNotPlayed}}
                                     </td>
-                                    <td>{{s.avgCards | number:2}}</td>
+                                    <td ng-style="s.avgCards <= s.avgLeagueCards ? {} : {'color':'green'}">{{s.avgCards
+                                        | number:2}}
+                                    </td>
                                     <td>{{s.avgWins | percentage:2}}</td>
                                     <td>{{s.avgLeagueCards | number:2}}</td>
                                     <td>{{s.avgLeagueWins | percentage:2}}</td>
