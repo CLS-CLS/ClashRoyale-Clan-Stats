@@ -16,45 +16,58 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th rowspan="3"><span ng-click=triggerOrderDirective($event)>
                                     <order-directive bind-to="name" filter-by="state.filter">Player</order-directive>
                                 </span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th rowspan="3"><span ng-click=triggerOrderDirective($event)>
                                     <order-directive bind-to="tag" filter-by="state.filter">Tag</order-directive>
                                 </span>
                             </th>
 
-                            <th><span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="role" filter-by="state.filter" comparator="roleOrder">Role </order-directive>
+                            <th rowspan="3"><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="role" filter-by="state.filter"
+                                                     comparator="roleOrder">Role </order-directive>
                                 </span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="eligibleGames" filter-by="state.filter">Eligible Games</order-directive>
+                            <th rowspan="3"><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="eligibleGames"
+                                                     filter-by="state.filter">Eligible Games</order-directive>
                                 </span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="playedWarGames"  filter-by="state.filter">War Games Played </order-directive>
+                            <th rowspan="3"><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="playedWarGames"
+                                                     filter-by="state.filter">War Games Played </order-directive>
                                 </span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
+                            <th rowspan="3"><span ng-click=triggerOrderDirective($event)>
                                     <order-directive bind-to="participationRatio" filter-by="state.filter">Participation Ratio </order-directive>
                                 </span>
                             </th>
+                            <th colspan="4">Abandoned</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Final Battles</th>
+                            <th colspan="2">Collection Games</th>
+                        </tr>
+                        <tr>
                             <th><span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="abandonedWarGames"  filter-by="state.filter">Abandoned War Games</order-directive>
+                                    <order-directive bind-to="abandonedWarGames"
+                                                     filter-by="state.filter">Total</order-directive>
                                 </span>
                             </th>
                             <th><span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="abandonedWarGamesRatio"  filter-by="state.filter">Abandoned War Games Ratio</order-directive>
+                                    <order-directive bind-to="abandonedWarGamesRatio"
+                                                     filter-by="state.filter">Ratio</order-directive>
                                 </span>
                             </th>
                             <th><span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="abandonedCollectionGames"  filter-by="state.filter">Abandoned Collection Games</order-directive>
+                                    <order-directive bind-to="abandonedCollectionGames"
+                                                     filter-by="state.filter">Total</order-directive>
                                 </span>
                             </th>
                             <th><span ng-click=triggerOrderDirective($event)>
-                                    <order-directive bind-to="abandonedCollectionGamesRatio"  filter-by="state.filter">Abandoned Collection Games Ratio</order-directive>
+                                    <order-directive bind-to="abandonedCollectionGamesRatio" filter-by="state.filter">Ratio</order-directive>
                                 </span>
                             </th>
                         </tr>
