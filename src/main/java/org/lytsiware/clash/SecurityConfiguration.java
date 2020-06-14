@@ -65,7 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/rest/newPlayers/update/**",
                         "/rest/scheduler/**",
                         "/rest/upload/**")
-                .permitAll()
+                .authenticated()
                 .and().httpBasic()
                 .and().cors().disable()
                 .csrf().disable()
