@@ -65,7 +65,7 @@
                         <tr ng-if="stats.length > 0 "
                             ng-repeat="s in stats | orderBy: state.filter.orderBy: false : state.filter.comparator | playerInClan:state.hideNotInClanPlayers.enabled">
                             <td class="alternative-font">
-                                <a ng-click="next()" ng-href="player/{{s.tag}}?tab=playerWarStats">
+                                <a ng-click="next()" ng-href="view/player/{{s.tag}}?tab=playerWarStats">
                                     <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                                 </a>
                             </td>

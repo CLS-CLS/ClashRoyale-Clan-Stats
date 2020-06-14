@@ -141,7 +141,7 @@
                             ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator | moreWarsThan:hideLessThanEnabled.enabled:5 | playerInClan:hideNotInClanPlayers.enabled">
 
                             <td class="alternative-font"><a ng-click="next()"
-                                                            ng-href="/player/{{s.tag}}/war?tab=playerWarStats">
+                                                            ng-href="/view/player/{{s.tag}}/war?tab=playerWarStats">
                                 <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                             </a>
                             </td>
@@ -282,7 +282,7 @@
                             ng-repeat="s in stats.playerWarStats | orderBy: filter.orderBy: false : filter.comparator">
 
                             <td class="alternative-font"><a ng-click="next()"
-                                                            ng-href="/player/{{s.tag}}/war">
+                                                            ng-href="view/player/{{s.tag}}/war">
                                 <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                             </a>
                             </td>
