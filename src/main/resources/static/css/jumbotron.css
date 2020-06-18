@@ -27,7 +27,7 @@
 }
 
 html {
-	background: url(../images/cover1.jpg) no-repeat center center fixed;
+	background: url('https://res.cloudinary.com/dmoqikv5o/image/upload/v1592488255/cover1_isltlm.jpg') no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;

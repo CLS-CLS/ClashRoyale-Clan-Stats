@@ -32,16 +32,16 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduledNameServiceImpl implements ScheduledNameService {
 
-    private static DateTimeFormatter DATE_TIME_FORMATER = DateTimeFormatter.ofPattern("dd-MM-YYYY HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATER = DateTimeFormatter.ofPattern("dd-MM-YYYY HH:mm:ss");
 
-    private PropertyResolver propertyResolver;
+    private final PropertyResolver propertyResolver;
 
-    private JobRepository jobRepository;
-    private ApplicationContext applicationContext;
+    private final JobRepository jobRepository;
+    private final ApplicationContext applicationContext;
 
-    private Logger logger = LoggerFactory.getLogger(ScheduledNameServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(ScheduledNameServiceImpl.class);
 
-    private Map<String, ScheduledNameContext> scheduledMethods = new HashMap<>();
+    private final Map<String, ScheduledNameContext> scheduledMethods = new HashMap<>();
 
 
     @Autowired
@@ -106,7 +106,12 @@ public class ScheduledNameServiceImpl implements ScheduledNameService {
         if (scheduledNameContext == null) {
             throw new IllegalArgumentException("No scheduler is registered under the name " + name);
         }
-        return scheduledNameContext.invoke(applicationContext);
+        try {
+            return scheduledNameContext.invoke(applicationContext);
+        } catch (Exception e) {
+            logger.error("Error invoking scheduler", e);
+            throw e;
+        }
     }
 
     @Override
