@@ -69,7 +69,7 @@ public class PlayerWarStat {
     }
 
     public boolean hasAbandonedWar() {
-        return hasParticipated() && (warPhaseStats == null ||
-                warPhaseStats.getGamesGranted() > 0 && warPhaseStats.getGamesNotPlayed() > 0);
+        return hasParticipated() && (warPhaseStats == null || (
+                warPhaseStats.getGamesGranted() > 0 && warPhaseStats.getGamesNotPlayed() > 0));
     }
 }

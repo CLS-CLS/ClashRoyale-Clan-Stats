@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.*;
 import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
+import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -78,16 +79,30 @@ public class PlayerCheckInService {
 
 
     private boolean hasAbandonedWar(String tag, LocalDateTime checkIn, LocalDateTime checkOut) {
-        return playerWarStatsRepository.findBetweenDatesForPlayer(tag, checkIn.toLocalDate(), checkOut.toLocalDate()).stream().findFirst()
-                .filter(playerWarStat -> playerWarStat.getWarLeague().getEndDate().isAfter(checkOut))
-                .map(playerWarStat -> playerWarStat.hasAbandonedWar())
-                .orElse(false);
+        log.info("Checking if player  {} has abandoned war at checkout date {}", tag, checkOut);
+
+        Optional<PlayerWarStat> latestWarStat = playerWarStatsRepository.findBetweenDatesForPlayer(tag, checkIn.toLocalDate(),
+                checkOut.toLocalDate()).stream().findFirst();
+
+        if (latestWarStat.isPresent()) {
+            log.info("Latest recorder war stat is {}", latestWarStat.get().getId());
+            latestWarStat = latestWarStat.filter(playerWarStat -> playerWarStat.getWarLeague().getEndDate().isAfter(checkOut));
+            if (latestWarStat.isPresent()) {
+                log.info("Player left before completion of war");
+                if (latestWarStat.get().hasAbandonedWar()) {
+                    log.info("and HAS ABANDONED WAR");
+                    return true;
+                }
+            }
+        }
+        return false;
+
     }
 
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void checkoutPlayer(String tag, @Nullable LocalDateTime checkoutOutDate) {
-        log.info("Checking out player {}", tag);
+        log.info("Checking out player {} at datetime {}", tag, checkoutOutDate);
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
         doCheckoutPlayer(playerInOut, checkoutOutDate);
     }
