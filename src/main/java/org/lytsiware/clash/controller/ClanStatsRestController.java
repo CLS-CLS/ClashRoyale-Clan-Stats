@@ -3,25 +3,24 @@ package org.lytsiware.clash.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Constants;
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.dto.ClanWeeklyStatsDto;
 import org.lytsiware.clash.dto.NewPlayersDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
 import org.lytsiware.clash.dto.PlayerStatsDto;
-import org.lytsiware.clash.service.AggregationService;
-import org.lytsiware.clash.service.TemplateService;
 import org.lytsiware.clash.service.calculation.oldsite.chestscore.ClanChestScoreCalculationService;
-import org.lytsiware.clash.service.clan.ClanStatsServiceImpl;
-import org.lytsiware.clash.service.clan.PlayerCheckInService;
+import org.lytsiware.clash.service.donations.DonationAggregationService;
+import org.lytsiware.clash.service.donations.DonationStatsServiceImpl;
+import org.lytsiware.clash.service.donations.PlayerCheckInService;
+import org.lytsiware.clash.service.donations.TemplateService;
 import org.lytsiware.clash.service.integration.RefreshableSiteIntegrationService;
 import org.lytsiware.clash.service.integration.SiteQualifier;
-import org.lytsiware.clash.service.integration.clashapi.ClashRoyaleRestIntegrationService;
-import org.lytsiware.clash.service.job.ClashRoyaleWarJob;
+import org.lytsiware.clash.service.war.integration.clashapi.ClashRoyaleRestIntegrationService;
+import org.lytsiware.clash.service.war.job.ClashRoyaleWarJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -41,10 +40,10 @@ public class ClanStatsRestController {
     }
 
     @Autowired
-    private ClanStatsServiceImpl clanStatsService;
+    private DonationStatsServiceImpl clanStatsService;
 
     @Autowired
-    private AggregationService aggregationService;
+    private DonationAggregationService donationAggregationService;
 
     @Autowired
     private ClanChestScoreCalculationService clanChestScoreCalculationService;
@@ -82,7 +81,7 @@ public class ClanStatsRestController {
     public void generateTemplate(HttpServletResponse response) throws IOException {
         log.info("Controller: generateTemplate");
         response.getOutputStream().write(
-                templateService.generateTemplate().getBytes(Charset.forName("UTF-8")));
+                templateService.generateTemplate().getBytes(StandardCharsets.UTF_8));
         response.setContentType("application/text");
         response.setHeader("Content-Disposition", "attachment; filename=\"template.txt\"");
         response.flushBuffer();
@@ -115,12 +114,6 @@ public class ClanStatsRestController {
     public Integer getWeekNumber() {
         log.info("Controller: getWeekNumber");
         return Week.now().getWeek();
-    }
-
-    @GetMapping(value = "/clan/score")
-    public List<ClanWeeklyStatsDto> getClanChestScore() {
-        log.info("Controller: getClanChestScore");
-        return aggregationService.getClanChestScore(Week.now().minusWeeks(24), Week.now().previous());
     }
 
 

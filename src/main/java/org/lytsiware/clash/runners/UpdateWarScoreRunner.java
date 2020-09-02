@@ -5,12 +5,10 @@ import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStats;
 import org.lytsiware.clash.domain.war.aggregation.PlayerAggregationWarStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-//@Component
 @Slf4j
 public class UpdateWarScoreRunner implements CommandLineRunner {
 

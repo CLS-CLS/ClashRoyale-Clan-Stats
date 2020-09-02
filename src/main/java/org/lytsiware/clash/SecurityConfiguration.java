@@ -59,9 +59,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(
                         "/view/warstats/input",
+                        "/view/scheduler",
                         "/rest/warstats/recalculate",
                         "/rest/warstats/inputdata/**",
-                        "/admin/**",
+                        "/view/admin/**",
                         "/rest/newPlayers/update/**",
                         "/rest/scheduler/**",
                         "/rest/upload/**")

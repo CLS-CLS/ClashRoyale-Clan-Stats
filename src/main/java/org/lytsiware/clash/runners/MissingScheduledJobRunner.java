@@ -11,6 +11,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -21,8 +22,8 @@ public class MissingScheduledJobRunner implements CommandLineRunner {
     @Value("${checkMissingScheduler}")
     private boolean checkMissingScheduler;
 
-    @Autowired
-    private List<RunAtStartupJob> jobs;
+    @Autowired(required = false)
+    private final List<RunAtStartupJob> jobs = new ArrayList<>();
 
     @Override
     @Transactional

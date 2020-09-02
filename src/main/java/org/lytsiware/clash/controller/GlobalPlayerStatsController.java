@@ -3,7 +3,7 @@ package org.lytsiware.clash.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.domain.player.GlobalPlayerStat;
-import org.lytsiware.clash.service.GlobalStatsService;
+import org.lytsiware.clash.service.gobalstats.GlobalStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

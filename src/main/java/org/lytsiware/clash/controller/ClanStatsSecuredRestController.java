@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.dto.NewPlayersUpdateDto;
 import org.lytsiware.clash.dto.PlayerOverallStats;
-import org.lytsiware.clash.service.AggregationService;
-import org.lytsiware.clash.service.ClanStatsService;
-import org.lytsiware.clash.service.UpdateStatService;
+import org.lytsiware.clash.service.donations.DonationAggregationService;
+import org.lytsiware.clash.service.donations.DonationStatsService;
+import org.lytsiware.clash.service.donations.UpdateStatService;
 import org.lytsiware.clash.service.job.scheduledname.ScheduledNameService;
 import org.lytsiware.clash.service.war.WarUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,13 @@ import java.util.Map;
 public class ClanStatsSecuredRestController {
 
     @Autowired
-    ClanStatsService clanStatsService;
+    DonationStatsService donationStatsService;
 
     @Autowired
     ScheduledNameService scheduledNameService;
 
     @Autowired
-    private AggregationService aggregationService;
+    private DonationAggregationService donationAggregationService;
 
     @Autowired
     private UpdateStatService updateService;
@@ -47,7 +47,7 @@ public class ClanStatsSecuredRestController {
             deltaWeek = 0;
         }
         Week week = Week.now().minusWeeks(deltaWeek);
-        return clanStatsService.resetStatsOfNewPlayers(week, updateDto);
+        return donationStatsService.resetStatsOfNewPlayers(week, updateDto);
     }
 
     @GetMapping("/scheduler/{name}")

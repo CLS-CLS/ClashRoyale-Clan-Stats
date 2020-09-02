@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-//@Component
 public class PlayerCheckInOutMigrationRunner implements CommandLineRunner {
 
 

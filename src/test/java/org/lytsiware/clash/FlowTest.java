@@ -5,9 +5,8 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.lytsiware.clash.controller.ClanStatsRestController;
 import org.lytsiware.clash.dto.PlayerOverallStats;
+import org.lytsiware.clash.service.donations.job.StatsRoyaleWeekendJobImpl;
 import org.lytsiware.clash.service.integration.SiteConfigurationService;
-import org.lytsiware.clash.service.job.StatsRoyalChestContrJobImpl;
-import org.lytsiware.clash.service.job.StatsRoyaleWeekendJobImpl;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -22,10 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @PrepareForTest(Week.class)
 @PowerMockIgnore("javax.management.*")
 public class FlowTest extends AbstractSpringBootTest {
-//    @BeforeClass
-//    public static void setErrorLogging() {
-//        LoggingSystem.get(AbstractSpringBootTest.class.getClassLoader()).setLogLevel(LoggingSystem.ROOT_LOGGER_NAME, LogLevel.INFO);
-//    }
 
     private static final Week WEEK_10 = Week.fromWeek(10);
     private static final Week WEEK_11 = Week.fromWeek(11);
@@ -33,8 +28,6 @@ public class FlowTest extends AbstractSpringBootTest {
     @MockBean
     private SiteConfigurationService siteConfigurationService;
 
-    @Autowired
-    private StatsRoyalChestContrJobImpl statsRoyalChestContrJob;
 
     @Autowired
     private StatsRoyaleWeekendJobImpl statsRoyaleWeekendJob;

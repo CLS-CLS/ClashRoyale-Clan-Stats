@@ -1,6 +1,7 @@
 package org.lytsiware.clash.service.integration.statsroyale;
 
 import org.junit.Test;
+import org.lytsiware.clash.service.war.integration.statsroyale.StatsRoyaleDateParse;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class StatsRoyaleDateParseTest {
 
 
-    private StatsRoyaleDateParse statsRoyaleDateParse = new StatsRoyaleDateParse();
+    private final StatsRoyaleDateParse statsRoyaleDateParse = new StatsRoyaleDateParse();
 
     @Test
     public void testDateParse() {

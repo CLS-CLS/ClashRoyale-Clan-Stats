@@ -1,7 +1,7 @@
 package org.lytsiware.clash.service.integration;
 
 import org.junit.Test;
-import org.lytsiware.clash.service.integration.deckshop.DeckShopSiteServiceImpl;
+import org.lytsiware.clash.service.donations.integration.DeckShopSiteServiceImpl;
 import org.springframework.core.io.FileSystemResource;
 
 public class DeckShopSiteServiceImplTest {
