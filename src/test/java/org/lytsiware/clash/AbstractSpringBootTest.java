@@ -4,7 +4,7 @@ package org.lytsiware.clash;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.lytsiware.clash.service.integration.proxy.ProxyAndBearerHolder;
+import org.lytsiware.clash.core.service.integration.proxy.ProxyAndBearerHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;

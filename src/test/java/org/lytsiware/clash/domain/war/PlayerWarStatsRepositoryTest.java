@@ -2,11 +2,11 @@ package org.lytsiware.clash.domain.war;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.war.league.WarLeague;
-import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
-import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
-import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
+import org.lytsiware.clash.core.domain.player.Player;
+import org.lytsiware.clash.war.domain.league.WarLeague;
+import org.lytsiware.clash.war.domain.playerwarstat.CollectionPhaseStats;
+import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStat;
+import org.lytsiware.clash.war.domain.playerwarstat.WarPhaseStats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;

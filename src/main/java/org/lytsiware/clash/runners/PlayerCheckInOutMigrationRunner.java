@@ -2,8 +2,8 @@ package org.lytsiware.clash.runners;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Week;
-import org.lytsiware.clash.domain.player.*;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
+import org.lytsiware.clash.core.domain.player.*;
+import org.lytsiware.clash.donation.domain.PlayerWeeklyStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 

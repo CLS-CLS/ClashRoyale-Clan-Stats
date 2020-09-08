@@ -1,10 +1,10 @@
 package org.lytsiware.clash.runners;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lytsiware.clash.domain.player.PlayerCheckInCheckOutRepository;
-import org.lytsiware.clash.domain.player.PlayerInOutHistoryRepository;
-import org.lytsiware.clash.domain.war.league.WarLeagueRepository;
-import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStatsRepository;
+import org.lytsiware.clash.core.domain.player.PlayerCheckInCheckOutRepository;
+import org.lytsiware.clash.core.domain.player.PlayerInOutHistoryRepository;
+import org.lytsiware.clash.war.domain.league.WarLeagueRepository;
+import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 

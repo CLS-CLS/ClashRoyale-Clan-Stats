@@ -1,10 +1,10 @@
 package org.lytsiware.clash.utils;
 
-import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.war.league.WarLeague;
-import org.lytsiware.clash.domain.war.playerwarstat.CollectionPhaseStats;
-import org.lytsiware.clash.domain.war.playerwarstat.PlayerWarStat;
-import org.lytsiware.clash.domain.war.playerwarstat.WarPhaseStats;
+import org.lytsiware.clash.core.domain.player.Player;
+import org.lytsiware.clash.war.domain.league.WarLeague;
+import org.lytsiware.clash.war.domain.playerwarstat.CollectionPhaseStats;
+import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStat;
+import org.lytsiware.clash.war.domain.playerwarstat.WarPhaseStats;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.scheduling.support.CronTrigger;

@@ -2,10 +2,10 @@ package org.lytsiware.clash;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.lytsiware.clash.controller.ClanStatsRestController;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
-import org.lytsiware.clash.dto.PlayerStatsDto;
+import org.lytsiware.clash.donation.controller.ClanStatsRestController;
+import org.lytsiware.clash.donation.domain.PlayerWeeklyStats;
+import org.lytsiware.clash.donation.domain.PlayerWeeklyStatsRepository;
+import org.lytsiware.clash.donation.dto.PlayerStatsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 import org.springframework.transaction.annotation.Transactional;

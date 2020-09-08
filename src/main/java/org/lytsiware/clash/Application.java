@@ -26,7 +26,7 @@ import java.util.concurrent.Executor;
 @EnableScheduling
 @EnableAsync
 @EnableRetry
-@EnableJpaRepositories(basePackages = "org.lytsiware.clash.domain")
+@EnableJpaRepositories
 @Slf4j
 public class Application {
 

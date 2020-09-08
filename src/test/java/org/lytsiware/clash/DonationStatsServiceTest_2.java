@@ -2,11 +2,11 @@ package org.lytsiware.clash;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lytsiware.clash.domain.player.Player;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStats;
-import org.lytsiware.clash.domain.playerweeklystats.PlayerWeeklyStatsRepository;
-import org.lytsiware.clash.service.donations.DonationStatsService;
-import org.lytsiware.clash.service.donations.UpdateStatService;
+import org.lytsiware.clash.core.domain.player.Player;
+import org.lytsiware.clash.donation.domain.PlayerWeeklyStats;
+import org.lytsiware.clash.donation.domain.PlayerWeeklyStatsRepository;
+import org.lytsiware.clash.donation.service.DonationStatsService;
+import org.lytsiware.clash.donation.service.UpdateStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 import org.springframework.transaction.annotation.Transactional;
