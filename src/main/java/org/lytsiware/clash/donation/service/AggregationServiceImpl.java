@@ -23,7 +23,6 @@ public class AggregationServiceImpl implements DonationAggregationService {
 
     private final PlayerWeeklyStatsRepository playerWeeklyStatsRepository;
 
-
     private final ClanWeeklyStatRepository clanWeeklyStatRepository;
 
     @Autowired

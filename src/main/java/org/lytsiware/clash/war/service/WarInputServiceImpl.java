@@ -1,6 +1,7 @@
 package org.lytsiware.clash.war.service;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.Application;
 import org.lytsiware.clash.core.domain.LockService;
@@ -18,7 +19,6 @@ import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.war.domain.playerwarstat.WarPhaseStats;
 import org.lytsiware.clash.war.dto.input.WarStatsInputDto;
 import org.lytsiware.clash.war.service.integration.statsroyale.StatsRoyaleDateParse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -34,39 +34,29 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class WarInputServiceImpl implements WarInputService {
-    @Autowired
-    private SiteIntegrationService<List<WarStatsInputDto>> siteIntegrationService;
+    private final SiteIntegrationService<List<WarStatsInputDto>> siteIntegrationService;
 
-    @Autowired
-    private StatsRoyaleDateParse statsRoyaleDateParse;
+    private final StatsRoyaleDateParse statsRoyaleDateParse;
 
-    @Autowired
-    private PlayerWarStatsService playerWarStatsService;
+    private final PlayerWarStatsService playerWarStatsService;
 
-    @Autowired
-    private WarLeagueRepository warLeagueRepository;
+    private final WarLeagueRepository warLeagueRepository;
 
-    @Autowired
-    private PlayerWarStatsRepository playerWarStatsRepository;
+    private final PlayerWarStatsRepository playerWarStatsRepository;
 
-    @Autowired
-    private WarLeagueService warLeagueService;
+    private final WarLeagueService warLeagueService;
 
-    @Autowired
-    private PlayerAggregationWarStatsService playerAggregationWarStatsService;
+    private final PlayerAggregationWarStatsService playerAggregationWarStatsService;
 
-    @Autowired
-    private LockService lockService;
-    ///////////////
-    @Autowired
-    private PlayerCheckInService playerCheckInService;
+    private final LockService lockService;
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerCheckInService playerCheckInService;
 
-    @Autowired
-    private PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
+    private final PlayerRepository playerRepository;
+
+    private final PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
 
 
     @Override

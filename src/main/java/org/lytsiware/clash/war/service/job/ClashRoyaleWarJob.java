@@ -1,6 +1,7 @@
 package org.lytsiware.clash.war.service.job;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.core.domain.player.Player;
 import org.lytsiware.clash.core.domain.player.PlayerRepository;
@@ -13,7 +14,7 @@ import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.war.service.PlayerWarStatsService;
 import org.lytsiware.clash.war.service.integration.clashapi.ClashRoyaleRestIntegrationService;
 import org.lytsiware.clash.war.service.integration.clashapi.CurrentWarDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,22 +27,20 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional
+@RequiredArgsConstructor
 public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
 
-    @Autowired
-    ClashRoyaleRestIntegrationService clashRoyaleRestIntegrationService;
+    private final ClashRoyaleRestIntegrationService clashRoyaleRestIntegrationService;
 
-    @Autowired
-    WarLeagueRepository warLeagueRepository;
+    private final WarLeagueRepository warLeagueRepository;
 
-    @Autowired
-    PlayerWarStatsRepository playerWarStatsRepository;
+    private final PlayerWarStatsRepository playerWarStatsRepository;
 
-    @Autowired
-    PlayerWarStatsService playerWarStatsService;
+    private final PlayerWarStatsService playerWarStatsService;
 
-    @Autowired
-    PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
+
+    private final TaskScheduler taskScheduler;
 
     //    @Scheduled(cron = "0 0 9,21 * * *")
 //    @ScheduledName("ClashRoyaleAPI_WarJob")
@@ -84,6 +83,11 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
         log.info("Next Self Scheduler Execution at {}", date);
         return date;
 
+    }
+
+    @Override
+    protected TaskScheduler getTaskScheduler() {
+        return taskScheduler;
     }
 
     private void updateData(WarLeague warLeagueDb, WarLeague warLeague) {

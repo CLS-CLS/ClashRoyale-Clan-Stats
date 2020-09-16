@@ -1,5 +1,6 @@
 package org.lytsiware.clash.war.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.core.domain.player.Player;
 import org.lytsiware.clash.core.domain.player.PlayerCheckInCheckOutRepository;
@@ -14,7 +15,6 @@ import org.lytsiware.clash.war.domain.league.WarLeagueRepository;
 import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.war.domain.playerwarstat.WarPhaseStats;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,22 +27,18 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PlayerAggregationWarStatsServiceImpl implements PlayerAggregationWarStatsService {
 
-    @Autowired
-    PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
+    private final PlayerAggregationWarStatsRepository playerAggregationWarStatsRepository;
 
-    @Autowired
-    WarLeagueRepository warLeagueRepository;
+    private final WarLeagueRepository warLeagueRepository;
 
-    @Autowired
-    PlayerWarStatsRepository playerWarStatsRepository;
+    private final PlayerWarStatsRepository playerWarStatsRepository;
 
-    @Autowired
-    PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
+    private final PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
 
-    @Autowired
-    WarStatsCalculationService warStatsCalculationService;
+    private final WarStatsCalculationService warStatsCalculationService;
 
 
     @Override

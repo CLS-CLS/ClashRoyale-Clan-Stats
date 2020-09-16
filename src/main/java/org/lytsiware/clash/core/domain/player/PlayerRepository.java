@@ -1,9 +1,12 @@
 package org.lytsiware.clash.core.domain.player;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.Collection;
 import java.util.Map;
 
 
+@Repository
 public interface PlayerRepository {
     Player persist(Player player);
 

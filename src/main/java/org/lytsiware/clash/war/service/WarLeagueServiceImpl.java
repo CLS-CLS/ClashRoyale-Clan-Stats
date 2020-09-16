@@ -1,5 +1,6 @@
 package org.lytsiware.clash.war.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.war.calculation.LeagueAvgsCalculationService;
 import org.lytsiware.clash.war.calculation.WarLeagueAvgCalculationContext;
@@ -7,7 +8,6 @@ import org.lytsiware.clash.war.domain.league.WarLeague;
 import org.lytsiware.clash.war.domain.league.WarLeagueRepository;
 import org.lytsiware.clash.war.dto.WarLeagueDto;
 import org.lytsiware.clash.war.dto.WarLeagueWithParticipantsDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
@@ -18,13 +18,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class WarLeagueServiceImpl implements WarLeagueService {
 
-    @Autowired
-    private WarLeagueRepository warLeagueRepository;
+    private final WarLeagueRepository warLeagueRepository;
 
-    @Autowired
-    LeagueAvgsCalculationService leagueAvgsCalculationService;
+    private final LeagueAvgsCalculationService leagueAvgsCalculationService;
 
 
     @Override

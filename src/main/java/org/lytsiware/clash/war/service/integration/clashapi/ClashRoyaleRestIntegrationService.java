@@ -1,6 +1,7 @@
 package org.lytsiware.clash.war.service.integration.clashapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.core.domain.player.Player;
 import org.lytsiware.clash.core.service.integration.SiteConfigurationService;
@@ -9,7 +10,6 @@ import org.lytsiware.clash.utils.ContentLengthHttpInterceptor;
 import org.lytsiware.clash.war.domain.league.WarLeague;
 import org.lytsiware.clash.war.domain.playerwarstat.CollectionPhaseStats;
 import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStat;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -24,20 +24,15 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ClashRoyaleRestIntegrationService {
 
-    @Autowired
-    private ProxyAndBearerHolder proxyAndBearerHolder;
+    private final ProxyAndBearerHolder proxyAndBearerHolder;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     private final SiteConfigurationService siteConfigurationService;
 
-    @Autowired
-    ClashRoyaleRestIntegrationService(SiteConfigurationService siteConfigurationService) {
-        this.siteConfigurationService = siteConfigurationService;
-    }
 
 
     public RestTemplate createRestTemplate() {

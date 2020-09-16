@@ -7,7 +7,6 @@ import org.lytsiware.clash.core.domain.player.*;
 import org.lytsiware.clash.war.domain.league.WarLeagueRepository;
 import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStatsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -27,22 +26,18 @@ import static org.lytsiware.clash.donation.service.PlayerCheckInService.CheckInC
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PlayerCheckInService {
 
-    @Autowired
-    private PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
+    private final PlayerCheckInCheckOutRepository playerCheckInCheckOutRepository;
 
-    @Autowired
-    private PlayerInOutHistoryRepository playerInOutHistoryRepository;
+    private final PlayerInOutHistoryRepository playerInOutHistoryRepository;
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
 
-    @Autowired
-    private WarLeagueRepository warLeagueRepository;
+    private final WarLeagueRepository warLeagueRepository;
 
-    @Autowired
-    private PlayerWarStatsRepository playerWarStatsRepository;
+    private final PlayerWarStatsRepository playerWarStatsRepository;
 
 
     /**

@@ -2,6 +2,7 @@ package org.lytsiware.clash.war.service.integration.statsroyale;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -13,7 +14,6 @@ import org.lytsiware.clash.donation.service.integration.StatsRoyaleSiteServiceIm
 import org.lytsiware.clash.war.dto.input.WarStatsInputDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.UrlResource;
@@ -32,24 +32,17 @@ import java.util.Map;
 @Service
 @Profile("statsRoyale")
 @SiteQualifier(SiteQualifier.Name.STATS_ROYALE_WAR)
+@RequiredArgsConstructor
 public class StatsRoyaleForWarSiteServiceImpl implements RefreshableSiteIntegrationService<List<WarStatsInputDto>> {
 
     Logger logger = LoggerFactory.getLogger(StatsRoyaleSiteServiceImpl.class);
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-
     @Value("${clanTag:PG2000PL}")
     private String clanTag;
 
+    private final ObjectMapper objectMapper;
+
     private final SiteConfigurationService siteConfigurationService;
-
-    @Autowired
-    public StatsRoyaleForWarSiteServiceImpl(SiteConfigurationService siteConfigurationService) {
-        this.siteConfigurationService = siteConfigurationService;
-    }
-
 
     @Override
     public List<WarStatsInputDto> retrieveData() {

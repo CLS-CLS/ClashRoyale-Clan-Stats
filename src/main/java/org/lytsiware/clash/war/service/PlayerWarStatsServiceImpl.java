@@ -1,5 +1,6 @@
 package org.lytsiware.clash.war.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.core.domain.player.Player;
 import org.lytsiware.clash.core.domain.player.PlayerInOut;
@@ -13,7 +14,6 @@ import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStat;
 import org.lytsiware.clash.war.domain.playerwarstat.PlayerWarStatsRepository;
 import org.lytsiware.clash.war.dto.PlaywerWarStatsWithAvgsDto;
 import org.lytsiware.clash.war.dto.input.WarStatsInputDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -28,25 +28,21 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class PlayerWarStatsServiceImpl implements PlayerWarStatsService {
 
     public static final int WAR_DURATION = 2;
 
-    @Autowired
-    private PlayerWarStatsRepository playerWarStatsRepository;
+    private final PlayerWarStatsRepository playerWarStatsRepository;
 
-    @Autowired
-    private WarLeagueRepository warLeagueRepository;
+    private final WarLeagueRepository warLeagueRepository;
 
-    @Autowired
-    private PlayerAggregationWarStatsService playerAggregationWarStatsService;
+    private final PlayerAggregationWarStatsService playerAggregationWarStatsService;
 
 
-    @Autowired
-    private PlayerCheckInService playerCheckInService;
+    private final PlayerCheckInService playerCheckInService;
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
 
 
     @Override

@@ -1,7 +1,7 @@
 package org.lytsiware.clash.core.service.job.scheduledname;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
@@ -19,10 +19,9 @@ import java.util.concurrent.ScheduledFuture;
  * scheduled jobs) will not be cancelled. </p>
  */
 @Slf4j
+@RequiredArgsConstructor
 public abstract class AbstractSelfScheduledJob {
 
-    @Autowired
-    protected TaskScheduler taskScheduler;
 
     private final CustomTrigger trigger = new CustomTrigger();
 
@@ -54,6 +53,8 @@ public abstract class AbstractSelfScheduledJob {
      */
     protected abstract Date run();
 
+    protected abstract TaskScheduler getTaskScheduler();
+
 
     private boolean executeAndReschedule() {
         try {
@@ -64,7 +65,7 @@ public abstract class AbstractSelfScheduledJob {
             }
             synchronized (monitor) {
                 trigger.setNextExecutionTime(date);
-                scheduledFuture = taskScheduler.schedule(() -> executeAndReschedule(), trigger);
+                scheduledFuture = getTaskScheduler().schedule(() -> executeAndReschedule(), trigger);
             }
             return true;
         } catch (Exception ex) {
