@@ -16,7 +16,7 @@ import java.sql.Statement;
 import java.util.List;
 
 @Transactional
-public class ClanStatsControllerTest extends AbstractSpringBootTest {
+public class RiverRaceClanStatsControllerTest extends AbstractSpringBootTest {
 
     @Autowired
     PlayerWeeklyStatsRepository pwsRepo;

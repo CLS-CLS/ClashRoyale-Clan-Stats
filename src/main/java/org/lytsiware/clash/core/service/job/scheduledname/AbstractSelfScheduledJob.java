@@ -29,6 +29,8 @@ public abstract class AbstractSelfScheduledJob {
 
     private ScheduledFuture<?> scheduledFuture;
 
+    private final TaskScheduler taskScheduler;
+
     /**
      * runs the business logic and reschedules the job according to the result of the the business logic execution.
      * Upon succesfull completion any previously self scheduled job is cancelled
@@ -53,9 +55,6 @@ public abstract class AbstractSelfScheduledJob {
      */
     protected abstract Date run();
 
-    protected abstract TaskScheduler getTaskScheduler();
-
-
     private boolean executeAndReschedule() {
         try {
             Date date = run();
@@ -65,7 +64,7 @@ public abstract class AbstractSelfScheduledJob {
             }
             synchronized (monitor) {
                 trigger.setNextExecutionTime(date);
-                scheduledFuture = getTaskScheduler().schedule(() -> executeAndReschedule(), trigger);
+                scheduledFuture = taskScheduler.schedule(() -> executeAndReschedule(), trigger);
             }
             return true;
         } catch (Exception ex) {

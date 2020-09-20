@@ -1,0 +1,96 @@
+{
+  "state": "full",
+  "clan": {
+    "tag": "#PG2000PL",
+    "name": "Godwokens",
+    "badgeId": 16000106,
+    "fame": 55317,
+    "repairPoints": 3967,
+    "finishTime": "20200917T033049.000Z",
+    "participants": [
+      {
+        "tag": "#PQPCP8RGU",
+        "name": "Θα σε γεμίσω εε",
+        "fame": 720,
+        "repairPoints": 102
+      },
+      {
+        "tag": "#PURJQ8RYY",
+        "name": "Faze_Γιωργος",
+        "fame": 756,
+        "repairPoints": 0
+      }
+    ],
+    "clanScore": 1500
+  },
+  "clans": [
+    {
+      "tag": "#8QLYUR9V",
+      "name": "Ray Sports",
+      "badgeId": 16000058,
+      "fame": 16594,
+      "repairPoints": 0,
+      "participants": [
+        {
+          "tag": "#YR8R8UL0",
+          "name": "BIEL_SUB 0",
+          "fame": 0,
+          "repairPoints": 0
+        },
+        {
+          "tag": "#GVQVY0R",
+          "name": "EXTERMINADOR",
+          "fame": 0,
+          "repairPoints": 0
+        }
+      ],
+      "clanScore": 1500
+    },
+    {
+      "tag": "#LLGJ0Q",
+      "name": "MONSTER.INC",
+      "badgeId": 16000154,
+      "fame": 24969,
+      "repairPoints": 0,
+      "participants": [
+        {
+          "tag": "#L8L2YLJLL",
+          "name": "Coffee JeLLy",
+          "fame": 0,
+          "repairPoints": 0
+        },
+        {
+          "tag": "#P2VQY2JG8",
+          "name": "Kenneth♤",
+          "fame": 0,
+          "repairPoints": 0
+        }
+      ],
+      "clanScore": 1500
+    },
+    {
+      "tag": "#PG2000PL",
+      "name": "Godwokens",
+      "badgeId": 16000106,
+      "fame": 55317,
+      "repairPoints": 3967,
+      "finishTime": "20200917T033049.000Z",
+      "participants": [
+        {
+          "tag": "#PC2JPCGY",
+          "name": "nikos",
+          "fame": 0,
+          "repairPoints": 0
+        },
+        {
+          "tag": "#8J9VRUQJ",
+          "name": "Ramzzs",
+          "fame": 0,
+          "repairPoints": 0
+        }
+      ],
+      "clanScore": 1500
+    }
+  ],
+  "sectionIndex": 2
+}

@@ -103,14 +103,15 @@ public class PlayerCheckInService {
     }
 
     private void doCheckoutPlayer(PlayerInOut playerInOut, LocalDateTime checkoutDate) {
-        checkoutDate = (checkoutDate == null ? LocalDateTime.now() : checkoutDate);
-        if (playerInOut != null) {
-            if (playerInOut.getCheckOut() == null) {
-                playerInOut.setCheckOut(checkoutDate);
-                playerInOut.setAbandonedWar(hasAbandonedWar(playerInOut.getTag(), playerInOut.getCheckIn(), playerInOut.getCheckOut()));
-                playerCheckInCheckOutRepository.save(playerInOut);
-            }
-        }
+        //WAR IS OVER
+//        checkoutDate = (checkoutDate == null ? LocalDateTime.now() : checkoutDate);
+//        if (playerInOut != null) {
+//            if (playerInOut.getCheckOut() == null) {
+//                playerInOut.setCheckOut(checkoutDate);
+//                playerInOut.setAbandonedWar(hasAbandonedWar(playerInOut.getTag(), playerInOut.getCheckIn(), playerInOut.getCheckOut()));
+//                playerCheckInCheckOutRepository.save(playerInOut);
+//            }
+//        }
     }
 
     /**

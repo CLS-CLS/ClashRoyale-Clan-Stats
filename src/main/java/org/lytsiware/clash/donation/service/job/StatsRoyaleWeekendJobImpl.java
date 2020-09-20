@@ -47,7 +47,7 @@ public class StatsRoyaleWeekendJobImpl {
 
 
     @Scheduled(cron = "${cron.midweek}")
-    @ScheduledName("midweekRunner")
+    @ScheduledName(name = "midweekRunner")
     public void midweek() {
         try {
             logger.info("Job Triggered at {}", LocalDateTime.now());
@@ -69,7 +69,7 @@ public class StatsRoyaleWeekendJobImpl {
     }
 
     @Scheduled(cron = "${cron.sundayRunner}")
-    @ScheduledName("sundayRunner")
+    @ScheduledName(name = "sundayRunner")
     @Retryable(maxAttempts = 2)
     public void sundayRunner() {
         logger.info("Sunday Runner triggered");

@@ -5,15 +5,13 @@ import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.callback.FlywayCallback;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.jpa.EntityManagerFactoryDependsOnPostProcessor;
-import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
-import org.springframework.boot.autoconfigure.flyway.FlywayProperties;
+import org.springframework.boot.autoconfigure.flyway.*;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.jdbc.JdbcOperationsDependsOnPostProcessor;
@@ -27,7 +25,6 @@ import org.springframework.boot.jdbc.SchemaManagement;
 import org.springframework.boot.jdbc.SchemaManagementProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.io.ResourceLoader;
@@ -59,9 +56,9 @@ import java.util.function.Supplier;
 @Configuration
 @ConditionalOnClass(Flyway.class)
 @ConditionalOnBean(DataSource.class)
-@ConditionalOnProperty(prefix = "spring.flyway", name = "enabled", havingValue = "false")
+@ConditionalOnProperty(prefix = "spring.flyway", name = "enabled", havingValue = "true")
 @AutoConfigureAfter({DataSourceAutoConfiguration.class, JdbcTemplateAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-@Profile("!test")
+@AutoConfigureBefore(FlywayAutoConfiguration.class)
 public class OldFlywaySupportFlywayAutoConfiguration {
 
     @Bean

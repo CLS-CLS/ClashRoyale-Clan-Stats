@@ -1,0 +1,102 @@
+{
+  "items": [
+    {
+      "seasonId": 64,
+      "sectionIndex": 2,
+      "createdDate": "20200914T100026.000Z",
+      "standings": [
+        {
+          "rank": 1,
+          "trophyChange": 10,
+          "clan": {
+            "tag": "#PG2000PL",
+            "name": "Godwokens",
+            "badgeId": 16000106,
+            "fame": 50000,
+            "repairPoints": 7957,
+            "finishTime": "20200910T064345.000Z",
+            "participants": [
+              {
+                "tag": "#PURJQ8RYY",
+                "name": "Faze_Γιωργος",
+                "fame": 1523,
+                "repairPoints": 0
+              },
+              {
+                "tag": "#PQPCP8RGU",
+                "name": "Θα σε γεμίσω εε",
+                "fame": 4091,
+                "repairPoints": 0
+              }
+            ],
+            "clanScore": 1500
+          }
+        },
+        {
+          "rank": 4,
+          "trophyChange": -10,
+          "clan": {
+            "tag": "#LLGJ0Q",
+            "name": "MONSTER.INC",
+            "badgeId": 16000154,
+            "fame": 50000,
+            "repairPoints": 7876,
+            "finishTime": "20200914T003805.000Z",
+            "participants": [
+              {
+                "tag": "#PGUGQUUVV",
+                "name": "D_CaRtOoNz",
+                "fame": 77,
+                "repairPoints": 0
+              },
+              {
+                "tag": "#2GCYL8VL",
+                "name": "kielle™",
+                "fame": 0,
+                "repairPoints": 0
+              }
+            ],
+            "clanScore": 1500
+          }
+        },
+        {
+          "rank": 5,
+          "trophyChange": -20,
+          "clan": {
+            "tag": "#8QLYUR9V",
+            "name": "Ray Sports",
+            "badgeId": 16000058,
+            "fame": 31493,
+            "repairPoints": 4001,
+            "participants": [
+              {
+                "tag": "#LC98C0C9",
+                "name": "Márcio 2",
+                "fame": 0,
+                "repairPoints": 0
+              },
+              {
+                "tag": "#8QGVL9PJ8",
+                "name": "Nova l Fabrício",
+                "fame": 0,
+                "repairPoints": 0
+              },
+              {
+                "tag": "#2Y08PVLC0",
+                "name": "Michelrlopes",
+                "fame": 0,
+                "repairPoints": 0
+              }
+            ],
+            "clanScore": 1500
+          }
+        }
+      ]
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "after": "eyJwb3MiOjF9"
+    }
+  }
+}

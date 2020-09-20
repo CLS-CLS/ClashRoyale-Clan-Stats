@@ -1,7 +1,6 @@
 package org.lytsiware.clash.war.service.job;
 
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.core.domain.player.Player;
 import org.lytsiware.clash.core.domain.player.PlayerRepository;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional
-@RequiredArgsConstructor
 public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
 
     private final ClashRoyaleRestIntegrationService clashRoyaleRestIntegrationService;
@@ -41,6 +39,19 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
     private final PlayerRepository playerRepository;
 
     private final TaskScheduler taskScheduler;
+
+    public ClashRoyaleWarJob(TaskScheduler taskScheduler, ClashRoyaleRestIntegrationService clashRoyaleRestIntegrationService,
+                             WarLeagueRepository warLeagueRepository, PlayerWarStatsRepository playerWarStatsRepository,
+                             PlayerWarStatsService playerWarStatsService, PlayerRepository playerRepository, TaskScheduler taskScheduler1) {
+        super(taskScheduler);
+        this.clashRoyaleRestIntegrationService = clashRoyaleRestIntegrationService;
+        this.warLeagueRepository = warLeagueRepository;
+        this.playerWarStatsRepository = playerWarStatsRepository;
+        this.playerWarStatsService = playerWarStatsService;
+        this.playerRepository = playerRepository;
+        this.taskScheduler = taskScheduler1;
+    }
+
 
     //    @Scheduled(cron = "0 0 9,21 * * *")
 //    @ScheduledName("ClashRoyaleAPI_WarJob")
@@ -85,10 +96,6 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
 
     }
 
-    @Override
-    protected TaskScheduler getTaskScheduler() {
-        return taskScheduler;
-    }
 
     private void updateData(WarLeague warLeagueDb, WarLeague warLeague) {
         Map<String, Player> recordedPlayers = playerRepository.loadAll();

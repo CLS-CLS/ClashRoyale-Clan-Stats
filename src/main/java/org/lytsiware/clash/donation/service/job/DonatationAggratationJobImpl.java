@@ -4,9 +4,9 @@ package org.lytsiware.clash.donation.service.job;
 import org.lytsiware.clash.Week;
 import org.lytsiware.clash.core.domain.job.Job;
 import org.lytsiware.clash.core.domain.job.JobRepository;
-import org.lytsiware.clash.donation.service.DonationAggregationService;
 import org.lytsiware.clash.core.service.job.RunAtStartupJob;
 import org.lytsiware.clash.core.service.job.scheduledname.ScheduledName;
+import org.lytsiware.clash.donation.service.DonationAggregationService;
 import org.lytsiware.clash.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +30,13 @@ public class DonatationAggratationJobImpl implements RunAtStartupJob {
 
     public static final String CRON_MONDAY = "cron.monday";
 
-    private Logger logger = LoggerFactory.getLogger(DonatationAggratationJobImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(DonatationAggratationJobImpl.class);
 
-    private JobRepository weeklyJobRepository;
+    private final JobRepository weeklyJobRepository;
 
-    private DonationAggregationService aggregationService;
+    private final DonationAggregationService aggregationService;
 
-    private PropertyResolver propertyResolver;
+    private final PropertyResolver propertyResolver;
 
     @Autowired
     public DonatationAggratationJobImpl(JobRepository weeklyJobRepository, DonationAggregationService aggregationService, PropertyResolver propertyResolver) {
@@ -48,7 +48,7 @@ public class DonatationAggratationJobImpl implements RunAtStartupJob {
 
     @Override
     @Scheduled(cron = "${" + CRON_MONDAY + "}")
-    @ScheduledName("Mondays task")
+    @ScheduledName(name = "Mondays task")
     @Retryable(maxAttempts = 3, backoff = @Backoff(600000))
     public void run() {
         try {

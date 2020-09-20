@@ -24,7 +24,7 @@ public class ScheduledNameAspect {
     @Around("@annotation(org.lytsiware.clash.core.service.job.scheduledname.ScheduledName)")
     public void afterRunning(ProceedingJoinPoint joinPoint) throws Throwable {
         joinPoint.proceed();
-        String value = ((MethodSignature)joinPoint.getSignature()).getMethod().getAnnotation(ScheduledName.class).value();
+        String value = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(ScheduledName.class).name();
         logger.info("mark time for Scheduler {}", value );
         service.markTime(value);
     }

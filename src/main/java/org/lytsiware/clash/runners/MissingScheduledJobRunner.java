@@ -38,8 +38,9 @@ public class MissingScheduledJobRunner implements CommandLineRunner {
         }
         logger.info("Checking for missing schedulers");
         for (RunAtStartupJob job : jobs) {
+            logger.info("Checking status for scheduler {}", job.getClass().getName());
             if (job.shouldRun()) {
-                logger.info("Scheduler {} has not ran: Starting job now", job.getClass().getName());
+                logger.info("Scheduler {} has not ran: Starting job now", job.getClass().getSimpleName());
                 job.run();
             } else {
                 logger.info("Status OK");

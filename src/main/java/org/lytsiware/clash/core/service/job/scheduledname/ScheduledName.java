@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ScheduledName {
 
-    String value();
+    String name();
+
+    boolean missingScheduled() default false;
 
 }
