@@ -53,7 +53,11 @@ public class RiverRaceUpdateScheduler implements RunAtStartupJob {
     @Scheduled(cron = "${cron.riverrace}")
     public void run() {
         log.info("River race scheduler triggered .. check if should run");
-        if (shouldRun()) doRun();
+        if (shouldRun()) {
+            doRun();
+        } else {
+            log.info("Scheduler has run recently and currentRace is finished - not need to run");
+        }
     }
 
     /**

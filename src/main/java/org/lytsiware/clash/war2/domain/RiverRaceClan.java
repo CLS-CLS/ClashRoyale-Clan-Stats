@@ -28,7 +28,7 @@ public class RiverRaceClan {
     private LocalDateTime finishTime;
     private int rank;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "river_race_clan_fk")
     private List<RiverRaceParticipant> participants;
 }

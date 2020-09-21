@@ -128,10 +128,12 @@ public class PlayerCheckInService {
                 .collect(Collectors.toMap(PlayerInOut::getTag, Function.identity()));
 
         List<Player> playersDb = players.stream().map(p ->
-                allPlayers.get(p) == null ? playerRepository.persist(p) : allPlayers.get(p))
+                allPlayers.get(p.getTag()) == null ? playerRepository.persist(p) : allPlayers.get(p.getTag()))
                 .collect(Collectors.toList());
 
-        playersDb.stream().forEach(p -> doCheckinPlayer(allCheckins.get(p.getTag()), p.getTag(), checkInTime));
+        for (Player p : playersDb) {
+            doCheckinPlayer(allCheckins.get(p.getTag()), p.getTag(), checkInTime);
+        }
         return playersDb;
 
     }

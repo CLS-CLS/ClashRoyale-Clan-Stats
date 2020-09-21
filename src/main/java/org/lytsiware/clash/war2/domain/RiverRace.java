@@ -12,6 +12,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(name = "RiverRace.eager", subgraphs = @NamedSubgraph(name = "participant", attributeNodes = @NamedAttributeNode(value = "participants")),
+        attributeNodes = {@NamedAttributeNode(value = "clan", subgraph = "participant")}
+)
 @SequenceGenerator(name = "RiverRaceSequence", sequenceName = "RIVER_RACE_SEQUENCE")
 @Table(uniqueConstraints = @UniqueConstraint(name = "river_race_UC", columnNames = {"sectionIndex", "seasonId"}))
 public class RiverRace {

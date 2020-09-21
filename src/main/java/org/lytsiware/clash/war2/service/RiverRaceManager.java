@@ -20,9 +20,9 @@ public class RiverRaceManager {
     @Value("${clanTag}")
     private String clanTag;
 
-    public final RiverRaceInternalService riverRaceService;
-    public final RiverRaceRepository riverRaceRepository;
-    public final War2CRLIntegrationService integrationService;
+    private final RiverRaceInternalService riverRaceService;
+    private final RiverRaceRepository riverRaceRepository;
+    private final War2CRLIntegrationService integrationService;
 
     /**
      * Updates the riverrace by gathering data and deciding if the active riverrace should
@@ -33,10 +33,10 @@ public class RiverRaceManager {
         log.info("Updating river race");
         RiverRaceCurrentDto current = integrationService.getCurrentRiverRace();
         Optional<RiverRace> active = riverRaceRepository.activeRace();
-        boolean shouldFinalize = false;
 
         if (active.isPresent() && current.getSectionIndex() != active.get().getSectionIndex()) {
             riverRaceService.finalizeRace(clanTag);
+            active = Optional.empty();
         }
 
         return riverRaceService.doUpdateActiveRace(current, active.orElse(null));
