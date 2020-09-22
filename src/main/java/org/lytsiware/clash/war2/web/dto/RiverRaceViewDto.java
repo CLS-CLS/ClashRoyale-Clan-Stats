@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 public class RiverRaceViewDto {
 
+
     private int sectionIndex;
 
     private int seasonId;
@@ -50,6 +51,16 @@ public class RiverRaceViewDto {
         private int fame;
         private int repairPoints;
         private int activeFame;
+        private int score;
+        private Integer averageFame;
+        private Integer averageActiveFame;
+        private Integer averageRepairPoints;
+        private Integer averageScore;
+
+        public int getScore() {
+            return activeFame + repairPoints;
+        }
+
 
     }
 

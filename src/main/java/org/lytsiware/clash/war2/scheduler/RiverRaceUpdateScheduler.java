@@ -41,7 +41,7 @@ public class RiverRaceUpdateScheduler implements RunAtStartupJob {
                 log.info("job runs for first time - should run");
                 shouldRun = true;
             } else if (riverRace.getClan().getFinishTime() != null &&
-                    latestJob.getLatestExecution().plusDays(23).isBefore(LocalDateTime.now())) {
+                    latestJob.getLatestExecution().plusHours(23).isBefore(LocalDateTime.now())) {
                 log.info("Job has not run for at least 23 hours - should run");
                 shouldRun = true;
             }
