@@ -28,6 +28,29 @@ app.controller("riverRaceController", function($scope, $http, $routeParams, $loc
 
     $scope.filter = riverRaceState.filter;
 
+    $scope.otherClansFilter = [
+        {
+            filter: {
+                orderBy : "-score"
+            }
+        },
+        {
+            filter: {
+                orderBy : "-score"
+            }
+        },
+        {
+            filter: {
+                orderBy : "-score"
+            }
+        },
+        {
+            filter: {
+                orderBy : "-score"
+            }
+        }
+    ]
+
     $scope.state = riverRaceState;
 
     $scope.roleOrder = roleComparator

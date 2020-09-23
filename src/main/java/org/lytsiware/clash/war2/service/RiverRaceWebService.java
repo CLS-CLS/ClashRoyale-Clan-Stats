@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,6 +44,8 @@ public class RiverRaceWebService {
 
         RiverRaceViewDto riverRaceDto = RiverRaceWebMapper.INSTANCE.toRiverRaceViewDto(riverRaceRepository.getRiverRace(PageRequest.of(index, 1))
                 .stream().findFirst().orElse(null));
+
+        Collections.sort(riverRaceDto.getClans(), Comparator.comparing(c -> -c.getFame()));
 
         Map<String, Player> players = playerRepository.loadAll().entrySet().stream()
                 .filter(e -> e.getValue().getInClan()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
