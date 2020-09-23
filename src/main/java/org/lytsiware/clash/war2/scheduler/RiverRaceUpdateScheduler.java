@@ -32,11 +32,16 @@ public class RiverRaceUpdateScheduler implements RunAtStartupJob {
     public boolean shouldRun() {
         boolean shouldRun = false;
         RiverRace riverRace = riverRaceRepository.activeRace().orElse(null);
-        if (riverRace == null || riverRace.getClan().getFinishTime() == null) {
-            log.info("Clan has not finished yet - should run");
+        Job latestJob = jobRepository.findById(JOB_ID).orElse(null);
+        if (riverRace == null) {
+            log.info("River race does not exist - should run");
+            shouldRun = true;
+        } else if (riverRace.getClan().getFinishTime() == null
+                && latestJob.getLatestExecution().plusHours(2).isBefore(LocalDateTime.now())) {
+            log.info("River race does finished and job has to run for at least 2 hours - should run");
             shouldRun = true;
         } else {
-            Job latestJob = jobRepository.findById(JOB_ID).orElse(null);
+
             if (latestJob == null) {
                 log.info("job runs for first time - should run");
                 shouldRun = true;
