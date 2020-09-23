@@ -29,14 +29,16 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-4 col-md-3">
-                        <h3><label class="label">Fame: {{stats.fame}} </label></h3>
+                        <h3><label class="label" style="color:orange">Fame:</label> {{stats.clan.fame}} </h3>
                     </div>
                     <div class="col-xs-4 col-md-3">
-                        <h3><label class="label">Repair Points {{stats.repairPoints}}</label></h3>
+                        <h3><label class="label" style="color:cyan">Repair Points:</label>{{stats.clan.repairPoints}}
+                        </h3>
                     </div>
                     <div class="col-xs-4 col-md-3">
-                        <h3><label class="label">Rank : {{stats.rank}}</label></h3>
+                        <h3><label class="label">Rank:</label>{{stats.clan.rank == 0 ? "-" : stats.clan.rank}}</h3>
                     </div>
+
                 </div>
             </div>
             <div style="position:relative">
@@ -134,50 +136,62 @@
                 </div>
 
 
-                <table ng-repeat="t in stats.clans" class="halfscreen table table-striped war-table">
-                    <thead>
-                    <tr>
-                        <th>CLAN : {{t.name}}</th>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th>
+                <div class="tab-content clan-stats-panel" style="margin-top: 10px">
+                    <ul class="nav nav-pills">
+                        <li ng-class="{active: active(t.tag)}" ng-repeat="t in stats.clans">
+                            <a data-toggle="pill" ng-click="activateTab(t.tag)"><h4>{{t.name}}</h4></a>
+                        </li>
+                    </ul>
+                    <div ng-repeat="t in stats.clans" ng-class="['tab-pane', 'fade', 'in', {active: active(t.tag)}]"
+                         id="#{{t.tag}}">
+                        <table class="halfscreen table table-striped war-table" style="max-width:720px">
+                            <thead>
+                            <tr>
+                                <th colspan="5">CLAN : {{t.name}}</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>
                             <span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="name"
                                                  filter-by="otherClansFilter[$index].filter">Player</order-directive>
                             </span>
-                        </th>
-                        <th><span ng-click=triggerOrderDirective($event)>
+                                </th>
+                                <th><span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="fame" filter-by="otherClansFilter[$index].filter">
                                     <img style="display:inline"
                                          src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">
                                 </order-directive></span>
-                        </th>
-                        <th><span ng-click=triggerOrderDirective($event)>
+                                </th>
+                                <th><span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="repairPoints" filter-by="otherClansFilter[$index].filter">
                                     <img style="display:inline"
                                          src=" https://res.cloudinary.com/dmoqikv5o/image/upload/v1600844747/repair_wcwnol.png">
 
                                 </order-directive></span>
-                        </th>
-                        <th><span ng-click=triggerOrderDirective($event)>
+                                </th>
+                                <th><span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="otherClanScore" filter-by="otherClansFilter[$index].filter">
                                     <img style="display:inline"
                                          src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/score_mid_wwsrc9.png">
                                 </order-directive></span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="s in t.participants | orderBy: otherClansFilter[$index].filter.orderBy: false : otherClansFilter[$index].filter.comparator">
-                        <td>{{$index}}</td>
-                        <td>{{s.name}}</td>
-                        <td>{{s.fame}}</td>
-                        <td ng-style="colorfy(s.repairPoints, 'repairs')">{{s.repairPoints}}</td>
-                        <td ng-style="colorfy(s.otherClanScore, 'riverrace')">{{s.otherClanScore}}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="s in t.participants | orderBy: otherClansFilter[$index].filter.orderBy: false : otherClansFilter[$index].filter.comparator">
+                                <td>{{$index}}</td>
+                                <td>{{s.name}}</td>
+                                <td>{{s.fame}}</td>
+                                <td ng-style="colorfy(s.repairPoints, 'repairs')">{{s.repairPoints}}</td>
+                                <td ng-style="colorfy(s.otherClanScore, 'riverrace')">{{s.otherClanScore}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
             </div>
                 <div class="row">
                     <div class="col-xs-12">

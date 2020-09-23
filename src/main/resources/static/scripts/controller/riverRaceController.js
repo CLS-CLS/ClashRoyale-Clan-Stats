@@ -31,22 +31,22 @@ app.controller("riverRaceController", function($scope, $http, $routeParams, $loc
     $scope.otherClansFilter = [
         {
             filter: {
-                orderBy : "-score"
+                orderBy : "-otherClanScore"
             }
         },
         {
             filter: {
-                orderBy : "-score"
+                orderBy : "-otherClanScore"
             }
         },
         {
             filter: {
-                orderBy : "-score"
+                orderBy : "-otherClanScore"
             }
         },
         {
             filter: {
-                orderBy : "-score"
+                orderBy : "-otherClanScore"
             }
         }
     ]
@@ -60,6 +60,18 @@ app.controller("riverRaceController", function($scope, $http, $routeParams, $loc
     $scope.next = function(){
         history.store();
     }
+
+    $scope.activateTab = function (tabId) {
+        event.preventDefault();
+        $scope.activeTab = tabId;
+    }
+
+    $scope.active = function(tab) {
+        return tab == $scope.activeTab;
+    }
+
+    $scope.activeTab;
+
 
     $scope.hideNotInClanPlayers = riverRaceState.hideNotInClanPlayers;
 
