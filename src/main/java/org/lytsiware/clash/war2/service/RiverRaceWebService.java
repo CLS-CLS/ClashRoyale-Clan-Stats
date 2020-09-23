@@ -47,13 +47,19 @@ public class RiverRaceWebService {
                     .filter(aggr -> aggr.getTag().equals(participant.getTag()))
                     .findFirst()
                     .orElse(null);
-            participant.setAverageFame(s.getFame());
-            participant.setAverageActiveFame(s.getActiveFame());
-            participant.setAverageRepairPoints(s.getRepairPoints());
-            participant.setAverageScore(s.getScore());
+            if (s != null) {
+                participant.setAverageFame(s.getFame());
+                participant.setAverageActiveFame(s.getActiveFame());
+                participant.setAverageRepairPoints(s.getRepairPoints());
+                participant.setAverageScore(s.getScore());
+            }
             if (players.containsKey(participant.getTag())) {
-                participant.setRank(players.get(participant.getTag()).getRole());
-                participant.setName(players.get(participant.getTag()).getName());
+                Player player = players.get(participant.getTag());
+                participant.setRole(player.getRole() != null ? player.getRole() : "Member");
+                participant.setName(player.getName());
+                participant.setInClan(participant.isInClan());
+            } else {
+                participant.setRole("Member");
             }
         }
         return riverRaceDto;

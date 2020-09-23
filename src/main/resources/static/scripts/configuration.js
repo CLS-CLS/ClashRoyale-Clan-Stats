@@ -5,6 +5,9 @@ app.config([ "$locationProvider", "$routeProvider",
 			.when("/", {
 				templateUrl: "resource/views/clanRules.htm"
 			})
+			.when("/view/riverRace/:deltaWeek?", {
+			    templateUrl: "resource/views/riverRace.htm"
+			})
 			.when("/view/globalStats", {
                 templateUrl: "resource/views/globalStats.htm"
             })

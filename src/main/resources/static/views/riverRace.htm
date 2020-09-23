@@ -1,0 +1,138 @@
+<div ng-cloak>
+    <div class="inner-container col-xs-12">
+        <div ng-controller="riverRaceController">
+
+            <div class="row clan-header"><h1>River Race Statistics</h1></div>
+            <div>
+                <div class="row">
+                    <div class="col-xs-4 form-inline">
+                        <div class="btn-group" role="group">
+                            <div style="margin-top:13px">
+                                <button class="btn btn-default btn-lg" ng-click="previousWeek()" type="button"><i
+                                        class='fa fa-fw fa-chevron-left'></i></button>
+                                <!--<input type="text" ng-model="selectedItem" class="btn btn-default btn-lg" numbers-only>-->
+                                <input autocomplete="off" class="form-input form-control war-input"
+                                       ng-blur="onItemSelectedBlur(selectedItem)" ng-model="selectedItem"
+                                       numbers-only size="3" type="text">
+                                <button class="btn btn-primary btn-lg btn-default" ng-click="nextWeek()"
+                                        type="button"><i
+                                        class='fa fa-fw fa-chevron-right'></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <label style="margin-top:13px">
+                            <input ng-model="hideNotInClanPlayers.enabled" type="checkbox">
+                            Hide players not in Clan
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4 col-md-3">
+                        <h3><label class="label">Fame: {{stats.fame}} </label></h3>
+                    </div>
+                    <div class="col-xs-4 col-md-3">
+                        <h3><label class="label">Repair Points {{stats.repairPoints}}</label></h3>
+                    </div>
+                    <div class="col-xs-4 col-md-3">
+                        <h3><label class="label">Rank : {{stats.rank}}</label></h3>
+                    </div>
+                </div>
+            </div>
+            <div style="position:relative">
+                <loading-directive loading="loading"/>
+                <div class="table-responsive halfscreen">
+                    <table class="halfscreen table table-striped war-table">
+                        <thead>
+                        <tr>
+                            <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="name" filter-by="filter">Player</order-directive></span>
+                            </th>
+                            <th rowspan="2"><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="role" filter-by="filter"
+                                                 comparator="roleOrder">Role</order-directive></span>
+                            </th>
+                            <th colspan="4" style="border-right: 2px solid #1c1e22">Current</th>
+                            <th colspan="4">Average</th>
+                        </tr>
+                        <tr>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="activeFame" filter-by="filter">
+                                    <img style="display:inline"
+                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">
+                                </order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="repairPoints" filter-by="filter">
+                                    <img style="display:inline"
+                                         src=" https://res.cloudinary.com/dmoqikv5o/image/upload/v1600844747/repair_wcwnol.png">
+
+                                </order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="score" filter-by="filter">
+                                    <img style="display:inline"
+                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/score_mid_wwsrc9.png">
+                                </order-directive></span>
+                            </th>
+                            <th style="border-right: 2px solid #1c1e22"><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="averageFame"
+                                                 filter-by="filter">Gathered Fame</order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="averageActiveFame" filter-by="filter">
+                                    <img style="display:inline"
+                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">
+                                </order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="averageRepairPoints" filter-by="filter">
+                                   <img style="display:inline"
+                                        src=" https://res.cloudinary.com/dmoqikv5o/image/upload/v1600844747/repair_wcwnol.png">
+
+                                </order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="averageScore" filter-by="filter">
+                                    <img style="display:inline"
+                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/score_mid_wwsrc9.png">
+                                </order-directive></span>
+                            </th>
+                            <th><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="averageFame"
+                                                 filter-by="filter">Gathered Fame</order-directive></span>
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="s in stats.clan.participants | orderBy: filter.orderBy: false : filter.comparator | playerInClan:hideNotInClanPlayers.enabled">
+
+                            <td class="alternative-font"><a ng-click="next()"
+                                                            ng-href="/view/player/{{s.tag}}/war?tab=playerWarStats">
+                                <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
+                            </a>
+                            <td>{{s.role}}</td>
+                            <td>{{s.activeFame}}</td>
+                            <td>{{s.repairPoints}}</td>
+                            <td>{{s.score}}</td>
+                            <td>{{s.fame}}</td>
+                            <td>{{s.averageActiveFame}}</td>
+                            <td>{{s.averageRepairPoints}}</td>
+                            <td>{{s.averageScore}}</td>
+                            <td>{{s.averageFame}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span> The  <img
+                                src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/score_mid_wwsrc9.png"
+                                style="display:inline"> is calculated based the win ratio, the average cards collected and the war participation </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

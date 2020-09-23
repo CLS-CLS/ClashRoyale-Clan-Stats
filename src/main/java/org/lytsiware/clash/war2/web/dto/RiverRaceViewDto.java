@@ -47,7 +47,7 @@ public class RiverRaceViewDto {
     public static class ParticipantViewDto {
         private String tag;
         private String name;
-        private String rank;
+        private String role;
         private int fame;
         private int repairPoints;
         private int activeFame;
@@ -56,6 +56,7 @@ public class RiverRaceViewDto {
         private Integer averageActiveFame;
         private Integer averageRepairPoints;
         private Integer averageScore;
+        private boolean inClan;
 
         public int getScore() {
             return activeFame + repairPoints;
