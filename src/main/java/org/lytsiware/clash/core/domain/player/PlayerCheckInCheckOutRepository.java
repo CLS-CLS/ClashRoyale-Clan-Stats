@@ -14,4 +14,10 @@ public interface PlayerCheckInCheckOutRepository extends JpaRepository<PlayerInO
 
     @Query(value = "select p from PlayerInOut p where p.checkIn <= :date and (p.checkOut is null or p.checkOut > :date)")
     List<PlayerInOut> findPlayersInClanAtDate(@Param("date") LocalDateTime date);
+
+
+    @Query(value = "select p from PlayerInOut p where p.checkOut is null")
+    List<PlayerInOut> findPlayersInClan();
+
 }
+

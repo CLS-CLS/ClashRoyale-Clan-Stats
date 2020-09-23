@@ -12,13 +12,23 @@ app.service("colorfy", function() {
 
 		var style = {};
 
-		if (type == "chest") {
-			boundary = boundaryChest;
-			wow = wowChest;
+
+        if (type == 'riverrace') {
+		    if (number > 1500) {
+		        style.color = 'orange'
+		    } else if (number > 1000) {
+		        style.color = 'lime'
+		    } else if (number < 500) {
+		        style.color = 'red'
+		    }
+		    return style;
 		}
-		if (type == "card") {
-			boundary = boundaryCard;
-			wow = wowCard;
+
+		if (type == 'repairs') {
+		    if (number > 0) {
+		        style.color = 'cyan'
+		    }
+		    return style
 		}
 
 		if (type == "collectionGames") {
@@ -61,6 +71,16 @@ app.service("colorfy", function() {
             return style;
         }
 
+
+		if (type == "chest") {
+			boundary = boundaryChest;
+			wow = wowChest;
+		}
+		if (type == "card") {
+			boundary = boundaryCard;
+			wow = wowCard;
+		}
+
 		if (boundary == 0) {
 			style.color = "black"
 			return style;
@@ -75,6 +95,8 @@ app.service("colorfy", function() {
 		if (number >= wow) {
 			style["font-weight"] = 'bold'
 		}
+
+
 
 
 		return style;

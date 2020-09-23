@@ -57,6 +57,7 @@ public class RiverRaceViewDto {
         private Integer averageRepairPoints;
         private Integer averageScore;
         private boolean inClan;
+        private Integer daysInClan;
 
         public int getScore() {
             return activeFame + repairPoints;

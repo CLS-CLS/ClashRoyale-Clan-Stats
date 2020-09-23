@@ -39,6 +39,10 @@ public class PlayerCheckInService {
 
     private final PlayerWarStatsRepository playerWarStatsRepository;
 
+    public List<PlayerInOut> findInClan() {
+        return playerCheckInCheckOutRepository.findPlayersInClan();
+    }
+
 
     /**
      * returns all the checkin checkout dates of the players that have been in clan with extra information about
