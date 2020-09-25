@@ -25,7 +25,10 @@ public class RiverRace {
 
     private int sectionIndex;
     private int seasonId;
+
+    @Column(updatable = false)
     private LocalDateTime createdOn;
+
     private LocalDateTime superCellCreatedDate;
 
     @Builder.Default
@@ -41,5 +44,15 @@ public class RiverRace {
     @JoinColumn(name = "river_race_fk")
     @OrderBy("tag")
     private List<RiverRaceClan> clans;
+
+    @PrePersist
+    public void onCreate() {
+        createdOn = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        updatedOn = LocalDateTime.now();
+    }
 
 }

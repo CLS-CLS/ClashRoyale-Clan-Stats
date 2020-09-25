@@ -11,6 +11,7 @@ import org.lytsiware.clash.war2.transformation.RiverRaceInternalMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -53,6 +54,9 @@ public class RiverRaceInternalService {
         if (activeRace.getClan().getFinishTime() != null) {
             activeRace.setFinished(true);
         }
+        //some times the riverrace entity is not updated (only the clans) but we still want to
+        //set the updatedOn
+        activeRace.setUpdatedOn(LocalDateTime.now());
 
         return riverRaceClanRepository.saveAndFlush(activeRace);
     }

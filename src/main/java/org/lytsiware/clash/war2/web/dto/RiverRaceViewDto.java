@@ -23,6 +23,8 @@ public class RiverRaceViewDto {
 
     private List<ClanViewDto> clans;
 
+    private LocalDateTime updatedOn;
+
     @Data
     @Builder
     @NoArgsConstructor
@@ -38,6 +40,7 @@ public class RiverRaceViewDto {
         private LocalDateTime finishTime;
         private Integer rank;
         private List<ParticipantViewDto> participants;
+
     }
 
     @Data
