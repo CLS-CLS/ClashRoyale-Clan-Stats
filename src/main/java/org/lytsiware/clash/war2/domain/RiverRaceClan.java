@@ -19,7 +19,9 @@ public class RiverRaceClan {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RiverRaceClanSequence")
     private int id;
 
+    @Column(nullable = false)
     private String tag;
+
     private String name;
     private int trophies;
     private int trophyChange;
@@ -27,6 +29,7 @@ public class RiverRaceClan {
     private int repairPoints;
     private LocalDateTime finishTime;
     private int rank;
+    private boolean finished;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "river_race_clan_fk")

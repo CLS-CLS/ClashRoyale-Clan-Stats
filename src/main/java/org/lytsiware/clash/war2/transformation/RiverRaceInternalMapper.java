@@ -23,10 +23,10 @@ public interface RiverRaceInternalMapper {
 
     void update(RiverRaceCurrentDto dto, @MappingTarget RiverRace riverRace);
 
-    default void updateActiveFame(RiverRaceCurrentDto dto, RiverRace activeRace) {
-        Optional.ofNullable(dto.getClan().getParticipants())
+    default void updateActiveFame(ClanDto clanDto, RiverRaceClan riverRaceClan) {
+        Optional.ofNullable(clanDto.getParticipants())
                 .orElse(new ArrayList<>())
-                .forEach(participantDto -> Optional.ofNullable(activeRace.getClan())
+                .forEach(participantDto -> Optional.ofNullable(riverRaceClan)
                         .map(RiverRaceClan::getParticipants)
                         .orElse(new ArrayList<>())
                         .stream()

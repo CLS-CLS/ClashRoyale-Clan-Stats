@@ -66,7 +66,7 @@ public class RiverRaceMapperTest {
         RiverRaceCurrentDto dto = riverRaceDto();
         RiverRace entity = RiverRace.builder().build();
         RiverRaceInternalMapper.INSTANCE.update(dto, entity);
-        RiverRaceInternalMapper.INSTANCE.updateActiveFame(dto, entity);
+        RiverRaceInternalMapper.INSTANCE.updateActiveFame(dto.getClan(), entity.getClan());
 
         Assert.assertEquals(200, entity.getClan().getParticipants().get(1).getFame());
         Assert.assertEquals(200, entity.getClan().getParticipants().get(1).getActiveFame());

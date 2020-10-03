@@ -15,7 +15,7 @@ app.factory('riverRaceState',  function(roleComparator) {
 			orderBy : "-score",
 		},
 		hideNotInClanPlayers:{
-		    enabled: false
+		    enabled: true
 		}
 	}
 	return state;

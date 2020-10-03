@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lytsiware.clash.core.service.integration.proxy.ProxyAndBearerHolder;
 import org.lytsiware.clash.war2.domain.RiverRace;
+import org.lytsiware.clash.war2.domain.RiverRaceClan;
+import org.lytsiware.clash.war2.domain.RiverRaceParticipant;
 import org.lytsiware.clash.war2.repository.RiverRaceRepository;
 import org.lytsiware.clash.war2.service.integration.ExchangeHelperService;
 import org.lytsiware.clash.war2.service.integration.dto.RiverRaceCurrentDto;
@@ -76,7 +78,11 @@ public class RiverRaceServiceIT {
     public void testRiverRaceExcepionMissingSection() {
 
         //given
-        em.persist(RiverRace.builder().sectionIndex(1).active(true).build());
+        em.persist(RiverRace.builder().sectionIndex(1)
+                .active(true)
+                .clan(RiverRaceClan.builder().tag("asd").build())
+                .build());
+
         Mockito.when(exchangeHelperService.exchangeRiverRaceLog(any()))
                 .thenReturn(RiverRaceLogDto.builder()
                         .items(Collections.singletonList(RiverRaceLogDto.RiverRaceWeekDto.builder()
@@ -111,13 +117,18 @@ public class RiverRaceServiceIT {
 
         Assert.assertFalse(repository.activeRace().isPresent());
         Assert.assertFalse(previousRace.isActive());
-        Assert.assertTrue(previousRace.isFinished());
+        Assert.assertTrue(previousRace.getClan().isFinished());
         Assert.assertEquals(720, previousRace.getClan().getParticipants().get(0).getActiveFame());
         Assert.assertEquals(1523, previousRace.getClan().getParticipants().get(1).getFame());
         Assert.assertEquals(64, previousRace.getSeasonId());
         Assert.assertEquals(2, previousRace.getSectionIndex());
         Assert.assertEquals(1, previousRace.getClan().getRank());
         Assert.assertEquals(10, previousRace.getClan().getTrophyChange());
+
+        RiverRaceParticipant otherClanParticipant = previousRace.getClans().stream().flatMap(c -> c.getParticipants().stream()).filter(p -> p.getTag().equals("YR8R8UL0"))
+                .findFirst().orElseThrow(() -> new RuntimeException("participant not found"));
+        Assert.assertEquals(70, otherClanParticipant.getFame());
+        Assert.assertEquals(30, otherClanParticipant.getActiveFame());
 
 
     }
@@ -137,7 +148,7 @@ public class RiverRaceServiceIT {
         Assert.assertNotNull(activeRace);
         Assert.assertEquals(2, activeRace.getClans().size());
         Assert.assertTrue(activeRace.isActive());
-        Assert.assertTrue(activeRace.isFinished());
+        Assert.assertTrue(activeRace.getClan().isFinished());
         Assert.assertEquals(720, activeRace.getClan().getParticipants().get(0).getActiveFame());
         Assert.assertEquals(1000, activeRace.getClan().getParticipants().get(0).getFame());
     }
@@ -157,7 +168,7 @@ public class RiverRaceServiceIT {
         Assert.assertNotNull(activeRace);
         Assert.assertEquals(2, activeRace.getClans().size());
         Assert.assertTrue(activeRace.isActive());
-        Assert.assertTrue(activeRace.isFinished());
+        Assert.assertTrue(activeRace.getClan().isFinished());
         Assert.assertEquals(720, activeRace.getClan().getParticipants().get(0).getActiveFame());
         Assert.assertEquals(720, activeRace.getClan().getParticipants().get(0).getFame());
     }
@@ -174,7 +185,7 @@ public class RiverRaceServiceIT {
         Assert.assertNotNull(activeRace);
         Assert.assertEquals(2, activeRace.getClans().size());
         Assert.assertTrue(activeRace.isActive());
-        Assert.assertFalse(activeRace.isFinished());
+        Assert.assertFalse(activeRace.getClan().isFinished());
         Assert.assertEquals(705, activeRace.getClan().getParticipants().get(0).getActiveFame());
         Assert.assertEquals(705, activeRace.getClan().getParticipants().get(0).getFame());
     }

@@ -1,5 +1,5 @@
 <div ng-cloak>
-    <div class="inner-container col-xs-12">
+    <div class="inner-container col-xs-12 river-race-background">
         <div ng-controller="riverRaceController">
 
             <div class="row clan-header"><h1>River Race Statistics</h1></div>
@@ -85,7 +85,7 @@
                                 </order-directive></span>
                             </th>
                             <th style="border-right: 2px solid #1c1e22"><span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="averageFame"
+                                <order-directive bind-to="fame"
                                                  filter-by="filter">Gathered Fame</order-directive></span>
                             </th>
                             <th><span ng-click=triggerOrderDirective($event)>
@@ -118,7 +118,7 @@
                         <tr ng-repeat="s in stats.clan.participants | orderBy: filter.orderBy: false : filter.comparator | playerInClan:hideNotInClanPlayers.enabled">
                             <td>{{$index}}</td>
                             <td class="alternative-font">
-                                <a ng-click="next()" ng-href="/view/player/{{s.tag}}/war?tab=playerWarStats">
+                                <a ng-click="next()" ng-href="view/riverRace/player/{{s.tag}}">
                                     <span ng-style="{color: s.inClan === true ? '': 'darkgrey'}">{{s.name}}</span>
                                 </a>
                             </td>
@@ -154,10 +154,16 @@
                             <tr>
                                 <th></th>
                                 <th>
-                            <span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="name"
-                                                 filter-by="otherClansFilter[$index].filter">Player</order-directive>
-                            </span>
+                                    <span ng-click=triggerOrderDirective($event)>
+                                        <order-directive bind-to="name"
+                                                         filter-by="otherClansFilter[$index].filter">Player</order-directive>
+                                    </span>
+                                </th>
+                                <th><span ng-click=triggerOrderDirective($event)>
+                                    <order-directive bind-to="activeFame" filter-by="otherClansFilter[$index].filter">
+                                        <img style="display:inline"
+                                             src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">
+                                    </order-directive></span>
                                 </th>
                                 <th><span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="fame" filter-by="otherClansFilter[$index].filter">
@@ -184,9 +190,10 @@
                             <tr ng-repeat="s in t.participants | orderBy: otherClansFilter[$index].filter.orderBy: false : otherClansFilter[$index].filter.comparator">
                                 <td>{{$index}}</td>
                                 <td>{{s.name}}</td>
+                                <td>{{s.activeFame}}</td>
                                 <td>{{s.fame}}</td>
                                 <td ng-style="colorfy(s.repairPoints, 'repairs')">{{s.repairPoints}}</td>
-                                <td ng-style="colorfy(s.otherClanScore, 'riverrace')">{{s.otherClanScore}}</td>
+                                <td ng-style="colorfy(s.otherClanScore, 'riverrace')">{{s.score}}</td>
                             </tr>
                             </tbody>
                         </table>

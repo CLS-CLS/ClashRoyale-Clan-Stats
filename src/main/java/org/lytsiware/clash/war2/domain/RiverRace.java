@@ -35,7 +35,6 @@ public class RiverRace {
     private boolean active = true;
 
     private LocalDateTime updatedOn;
-    private boolean finished;
 
     @OneToOne(cascade = CascadeType.ALL)
     private RiverRaceClan clan;

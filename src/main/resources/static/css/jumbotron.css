@@ -28,6 +28,7 @@
 
 html {
 	background: url('https://res.cloudinary.com/dmoqikv5o/image/upload/v1592488255/cover1_isltlm.jpg') no-repeat center center fixed;
+	#background: url('../images/wp1815976-clash-royale-wallpapers.jpg') no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -63,7 +64,7 @@ html.rules {
 }
 
 .main-navbar {
-//	background:rgba(0, 0, 0, 0) url("../images/random_grey_variations2.png") repeat scroll 0% 0%;
+//	background:rgba(0, 0, 0, 0) url("classpath:images/random_grey_variations2.png") repeat scroll 0% 0%;
 //    border-bottom: solid #4d4451 2px !important;
 }
 
@@ -137,6 +138,9 @@ html.rules {
     table-layout: fixed;
 }
 
+
+
+
 .loading > i {
 	position:fixed;
 	left: 50%;
@@ -202,3 +206,9 @@ body {
 //    box-shadow: 6px 10px 32px 6px  rgba(41,78,89,0.55);
 }
 
+.navbar-default {
+background-image: -webkit-linear-gradient(#484e55, #3a3f44 60%, #313539);
+  background-image: -o-linear-gradient(#484e55, #3a3f44 60%, #313539);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#484e55), color-stop(60%, #3a3f44), to(#313539));
+  /* background-image: linear-gradient(#484e55, #3a3f44 60%, #313539); */
+}

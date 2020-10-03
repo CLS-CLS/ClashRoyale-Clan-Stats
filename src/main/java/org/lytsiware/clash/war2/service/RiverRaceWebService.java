@@ -5,10 +5,14 @@ import org.lytsiware.clash.core.domain.player.Player;
 import org.lytsiware.clash.core.domain.player.PlayerInOut;
 import org.lytsiware.clash.core.domain.player.PlayerRepository;
 import org.lytsiware.clash.donation.service.PlayerCheckInService;
+import org.lytsiware.clash.war2.domain.RiverRaceParticipant;
 import org.lytsiware.clash.war2.repository.AggratationRepository;
+import org.lytsiware.clash.war2.repository.RiverRaceParticipantRepository;
 import org.lytsiware.clash.war2.repository.RiverRaceRepository;
 import org.lytsiware.clash.war2.repository.dto.RiverRaceAggregateDto;
+import org.lytsiware.clash.war2.transformation.ParticipantMapper;
 import org.lytsiware.clash.war2.transformation.RiverRaceWebMapper;
+import org.lytsiware.clash.war2.web.dto.ParticipantDto;
 import org.lytsiware.clash.war2.web.dto.RiverRaceViewDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +41,7 @@ public class RiverRaceWebService {
     private final PlayerRepository playerRepository;
     private final AggratationRepository aggregationRepository;
     private final RiverRaceRepository riverRaceRepository;
+    private final RiverRaceParticipantRepository riverRaceParticipantRepository;
     private final PlayerCheckInService checkInService;
 
     public RiverRaceViewDto getRiverRace(int index) {
@@ -79,6 +84,11 @@ public class RiverRaceWebService {
             }
         }
         return riverRaceDto;
+    }
+
+    public List<ParticipantDto> getRiverRaceParticipant(String playerTag) {
+        List<RiverRaceParticipant> results = riverRaceParticipantRepository.findByTagOrderByRace(playerTag, clanTag);
+        return results.stream().map(ParticipantMapper.INSTANCE::toParticipantView).collect(Collectors.toList());
     }
 
 }

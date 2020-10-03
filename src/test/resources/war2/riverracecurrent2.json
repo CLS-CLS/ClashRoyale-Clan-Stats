@@ -30,12 +30,13 @@
       "badgeId": 16000058,
       "fame": 16594,
       "repairPoints": 0,
+      "finishTime": "20200917T033049.000Z",
       "participants": [
         {
           "tag": "#YR8R8UL0",
           "name": "BIEL_SUB 0",
-          "fame": 0,
-          "repairPoints": 0
+          "fame": 30,
+          "repairPoints": 40
         },
         {
           "tag": "#GVQVY0R",

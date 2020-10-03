@@ -3,8 +3,10 @@ package org.lytsiware.clash.war2.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.war2.domain.RiverRace;
+import org.lytsiware.clash.war2.domain.RiverRaceClan;
 import org.lytsiware.clash.war2.repository.RiverRaceRepository;
 import org.lytsiware.clash.war2.service.integration.War2CRLIntegrationService;
+import org.lytsiware.clash.war2.service.integration.dto.ClanDto;
 import org.lytsiware.clash.war2.service.integration.dto.RiverRaceCurrentDto;
 import org.lytsiware.clash.war2.service.integration.dto.RiverRaceLogDto;
 import org.lytsiware.clash.war2.transformation.RiverRaceInternalMapper;
@@ -12,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -48,18 +53,24 @@ public class RiverRaceInternalService {
         activeRace = (activeRace != null ? activeRace : new RiverRace());
 
         RiverRaceInternalMapper.INSTANCE.update(dto, activeRace);
-        if (!activeRace.isFinished()) {
-            RiverRaceInternalMapper.INSTANCE.updateActiveFame(dto, activeRace);
+
+        List<ClanDto> clansDto = Stream.concat(Stream.of(dto.getClan()), dto.getClans().stream()).collect(Collectors.toList());
+        List<RiverRaceClan> clans = Stream.concat(Stream.of(activeRace.getClan()), activeRace.getClans().stream()).collect(Collectors.toList());
+
+        for (ClanDto clanDto : clansDto) {
+            clans.stream()
+                    .filter(rrc -> rrc.getTag().equals(clanDto.getTag()))
+                    .findFirst()
+                    .ifPresent(rrc -> updateActiveFame(rrc, clanDto));
         }
-        if (activeRace.getClan().getFinishTime() != null) {
-            activeRace.setFinished(true);
-        }
+
         //some times the riverrace entity is not updated (only the clans) but we still want to
         //set the updatedOn
         activeRace.setUpdatedOn(LocalDateTime.now());
 
         return riverRaceClanRepository.saveAndFlush(activeRace);
     }
+
 
     /**
      * Update the active race and sets its active status to false.
@@ -86,8 +97,29 @@ public class RiverRaceInternalService {
 
         RiverRaceLogDto.RiverRaceWeekDto riverRaceWeekDto = riverRaceLogDto.getItems().get(0);
         activeRace.setActive(false);
+
         RiverRaceInternalMapper.INSTANCE.updateFromRiverRaceWeekDto(riverRaceWeekDto, activeRace, clanTag);
+
+        List<ClanDto> clansDto = riverRaceWeekDto.getStandings().stream().map(RiverRaceLogDto.StandingsDto::getClan).collect(Collectors.toList());
+        List<RiverRaceClan> clans = Stream.concat(Stream.of(activeRace.getClan()), activeRace.getClans().stream()).collect(Collectors.toList());
+
+        for (ClanDto clanDto : clansDto) {
+            clans.stream()
+                    .filter(rrc -> rrc.getTag().equals(clanDto.getTag()))
+                    .findFirst()
+                    .ifPresent(rrc -> updateActiveFame(rrc, clanDto));
+        }
+
         riverRaceClanRepository.saveAndFlush(activeRace);
+    }
+
+    private void updateActiveFame(RiverRaceClan clan, ClanDto clanDto) {
+        if (!clan.isFinished()) {
+            RiverRaceInternalMapper.INSTANCE.updateActiveFame(clanDto, clan);
+        }
+        if (clan.getFinishTime() != null) {
+            clan.setFinished(true);
+        }
     }
 }
 

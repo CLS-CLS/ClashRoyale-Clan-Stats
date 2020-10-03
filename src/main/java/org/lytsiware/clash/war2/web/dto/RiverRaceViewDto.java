@@ -62,10 +62,6 @@ public class RiverRaceViewDto {
         private boolean inClan;
         private Integer daysInClan;
 
-        public Integer getOtherClanScore() {
-            return fame + repairPoints;
-        }
-
         public int getScore() {
             return activeFame + repairPoints;
         }
