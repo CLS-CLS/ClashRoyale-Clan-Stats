@@ -2,8 +2,11 @@ package org.lytsiware.clash.war2.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lytsiware.clash.core.domain.player.Player;
+import org.lytsiware.clash.core.domain.player.PlayerRepository;
 import org.lytsiware.clash.war2.domain.RiverRace;
 import org.lytsiware.clash.war2.domain.RiverRaceClan;
+import org.lytsiware.clash.war2.domain.RiverRaceParticipant;
 import org.lytsiware.clash.war2.repository.RiverRaceRepository;
 import org.lytsiware.clash.war2.service.integration.War2CRLIntegrationService;
 import org.lytsiware.clash.war2.service.integration.dto.ClanDto;
@@ -27,6 +30,7 @@ public class RiverRaceInternalService {
 
     private final War2CRLIntegrationService integrationService;
     private final RiverRaceRepository riverRaceClanRepository;
+    private final PlayerRepository playerRepository;
 
 
     /**
@@ -64,11 +68,45 @@ public class RiverRaceInternalService {
                     .ifPresent(rrc -> updateActiveFame(rrc, clanDto));
         }
 
+        insertGhostPlayers(activeRace.getClan(), playerRepository.findInClan());
+
         //some times the riverrace entity is not updated (only the clans) but we still want to
         //set the updatedOn
         activeRace.setUpdatedOn(LocalDateTime.now());
 
         return riverRaceClanRepository.saveAndFlush(activeRace);
+    }
+
+    /**
+     * So it seems integration service does not return all the players in clan. I.e the inactives are not returned in the results
+     * So we manually insert them with 0 stats (as it should have been by the intergation service)
+     *
+     * @param clan
+     * @param playersInClan
+     */
+    private void insertGhostPlayers(RiverRaceClan clan, List<Player> playersInClan) {
+        List<Player> ghostPlayers = playersInClan.stream().filter(p -> isNotPresent(clan, p)).collect(Collectors.toList());
+        if (ghostPlayers.size() > 0) {
+            log.info("Found ghost players  :  {}", ghostPlayers.stream().map(Player::getName).collect(Collectors.toList()));
+        }
+        for (Player player : playersInClan) {
+            if (isNotPresent(clan, player)) {
+                clan.getParticipants().add(RiverRaceParticipant.builder()
+                        .fame(0)
+                        .activeFame(0)
+                        .repairPoints(0)
+                        .tag(player.getTag())
+                        .name(player.getName())
+                        .build()
+                );
+            }
+        }
+    }
+
+    private boolean isNotPresent(RiverRaceClan clan, Player player) {
+        return !clan.getParticipants().stream()
+                .filter(participant -> player.getTag().equals(participant.getTag()))
+                .findFirst().isPresent();
     }
 
 
@@ -109,6 +147,7 @@ public class RiverRaceInternalService {
                     .findFirst()
                     .ifPresent(rrc -> updateActiveFame(rrc, clanDto));
         }
+        insertGhostPlayers(activeRace.getClan(), playerRepository.findInClan());
 
         riverRaceClanRepository.saveAndFlush(activeRace);
     }

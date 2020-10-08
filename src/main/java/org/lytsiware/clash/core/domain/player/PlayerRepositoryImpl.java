@@ -50,4 +50,9 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
     }
 
+    @Override
+    public List<Player> findInClan() {
+        return em.createQuery("select p from Player p where p.isInClan = true", Player.class).getResultList();
+    }
+
 }

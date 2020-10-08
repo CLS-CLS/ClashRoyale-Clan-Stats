@@ -3,6 +3,7 @@ package org.lytsiware.clash.core.domain.player;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 
@@ -16,5 +17,5 @@ public interface PlayerRepository {
 
     Map<String, Player> loadAll();
 
-
+    List<Player> findInClan();
 }
