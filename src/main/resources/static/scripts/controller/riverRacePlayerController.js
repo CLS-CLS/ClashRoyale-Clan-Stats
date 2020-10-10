@@ -1,7 +1,7 @@
 app.factory('riverRacePlayerState',  function(roleComparator) {
 	var state = {
 		filter : {
-			orderBy : "-score",
+			orderBy : "week",
 		}
 	}
 	return state;
@@ -38,10 +38,14 @@ angular.module("App").controller("riverRacePlayerController", function($scope, $
 		$http.get(baseUrl() + "/rest/riverrace/player/" + $routeParams.tag).then(
 			function(response) {
 				$scope.stats = response.data
-//				if ($scope.stats && $scope.stats.length && $scope.stats.length > 0) {
+			    if ($scope.stats && $scope.stats.length && $scope.stats.length > 0) {
 				    $scope.player.name = $scope.stats[0].name;
 				    $scope.player.tag = $scope.stats[0].tag;
-//				}
+				    //insert week so we can order them in ui
+                    for (var i = 0; i < $scope.stats.length; i++) {
+                        $scope.stats[i].week = i;
+                    }
+				}
 			}
 		).finally(function() {
 			$scope.loading = false;
