@@ -24,7 +24,7 @@ public interface RiverRaceRepository extends JpaRepository<RiverRace, Long>, Pag
 
     @Query("select riverRace from RiverRace riverRace order by superCellCreatedDate desc")
     @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, value = "RiverRace.eager")
-    List<RiverRace> getRiverRace(Pageable pageable);
+    List<RiverRace> getRiverRaces(Pageable pageable);
 
 
 }

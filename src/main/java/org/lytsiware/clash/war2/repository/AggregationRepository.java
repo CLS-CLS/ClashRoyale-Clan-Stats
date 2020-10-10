@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class AggratationRepository {
+public class AggregationRepository {
 
     @Autowired
     EntityManager em;

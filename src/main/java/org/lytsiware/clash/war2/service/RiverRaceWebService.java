@@ -6,7 +6,7 @@ import org.lytsiware.clash.core.domain.player.PlayerInOut;
 import org.lytsiware.clash.core.domain.player.PlayerRepository;
 import org.lytsiware.clash.donation.service.PlayerCheckInService;
 import org.lytsiware.clash.war2.domain.RiverRaceParticipant;
-import org.lytsiware.clash.war2.repository.AggratationRepository;
+import org.lytsiware.clash.war2.repository.AggregationRepository;
 import org.lytsiware.clash.war2.repository.RiverRaceParticipantRepository;
 import org.lytsiware.clash.war2.repository.RiverRaceRepository;
 import org.lytsiware.clash.war2.repository.dto.RiverRaceAggregateDto;
@@ -39,7 +39,7 @@ public class RiverRaceWebService {
     private String clanTag;
 
     private final PlayerRepository playerRepository;
-    private final AggratationRepository aggregationRepository;
+    private final AggregationRepository aggregationRepository;
     private final RiverRaceRepository riverRaceRepository;
     private final RiverRaceParticipantRepository riverRaceParticipantRepository;
     private final PlayerCheckInService checkInService;
@@ -47,7 +47,7 @@ public class RiverRaceWebService {
     public RiverRaceViewDto getRiverRace(int index) {
         List<RiverRaceAggregateDto> aggregatedStats = aggregationRepository.getAggregatedStats(index, clanTag);
 
-        RiverRaceViewDto riverRaceDto = RiverRaceWebMapper.INSTANCE.toRiverRaceViewDto(riverRaceRepository.getRiverRace(PageRequest.of(index, 1))
+        RiverRaceViewDto riverRaceDto = RiverRaceWebMapper.INSTANCE.toRiverRaceViewDto(riverRaceRepository.getRiverRaces(PageRequest.of(index, 1))
                 .stream().findFirst().orElse(null));
 
         Collections.sort(riverRaceDto.getClans(), Comparator.comparing(c -> -c.getFame()));

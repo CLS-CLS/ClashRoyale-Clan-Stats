@@ -107,15 +107,15 @@ public class PlayerCheckInService {
     }
 
     private void doCheckoutPlayer(PlayerInOut playerInOut, LocalDateTime checkoutDate) {
-        //WAR IS OVER
-//        checkoutDate = (checkoutDate == null ? LocalDateTime.now() : checkoutDate);
-//        if (playerInOut != null) {
-//            if (playerInOut.getCheckOut() == null) {
-//                playerInOut.setCheckOut(checkoutDate);
+        checkoutDate = (checkoutDate == null ? LocalDateTime.now() : checkoutDate);
+        if (playerInOut != null) {
+            if (playerInOut.getCheckOut() == null) {
+                playerInOut.setCheckOut(checkoutDate);
+                //war is over
 //                playerInOut.setAbandonedWar(hasAbandonedWar(playerInOut.getTag(), playerInOut.getCheckIn(), playerInOut.getCheckOut()));
-//                playerCheckInCheckOutRepository.save(playerInOut);
-//            }
-//        }
+                playerCheckInCheckOutRepository.save(playerInOut);
+            }
+        }
     }
 
     /**
@@ -151,7 +151,7 @@ public class PlayerCheckInService {
     public Player checkinPlayer(Player player, @Nullable LocalDateTime checkInTime) {
         Player playerDb = playerRepository.findByTag(player.getTag());
         if (playerDb == null) {
-            playerDb = new Player(player.getTag(), player.getName(), "member");
+            playerDb = new Player(player.getTag(), player.getName(), "Member");
             playerRepository.persist(playerDb);
         }
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(player.getTag()).orElse(null);

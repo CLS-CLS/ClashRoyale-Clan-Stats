@@ -22,5 +22,9 @@ public class RiverRaceParticipant {
     private int repairPoints;
     private int activeFame;
 
+    public int getScore() {
+        return activeFame + repairPoints;
+    }
+
 
 }

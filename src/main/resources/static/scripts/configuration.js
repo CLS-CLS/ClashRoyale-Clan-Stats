@@ -8,6 +8,9 @@ app.config([ "$locationProvider", "$routeProvider",
 			.when("/view/riverRace/player/:tag", {
                 templateUrl: "resource/views/riverRacePlayer.htm"
             })
+            .when("/view/riverRace/promotion", {
+                templateUrl: "resource/views/promotion.htm"
+            })
 			.when("/view/riverRace/:deltaWeek?", {
 			    templateUrl: "resource/views/riverRace.htm"
 			})
