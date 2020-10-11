@@ -1,7 +1,7 @@
 app.factory('promotionState',  function(roleComparator) {
 	var state = {
 		filter : {
-			orderBy : "-performancePoints",
+			orderBy : "-promotionPoints",
 		},
 		hideNotInClanPlayers:{
 		    enabled: true
@@ -28,7 +28,7 @@ app.controller("promotionController", function($scope, $http, $routeParams, $loc
     }
 
     $scope.min = function(i) {
-        return Math.min(10, i);
+        return Math.min(16, i);
     }
 
     function init() {
