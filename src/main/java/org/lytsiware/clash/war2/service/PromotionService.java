@@ -13,10 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -35,21 +32,19 @@ public class PromotionService {
     @Getter
     enum PromotionDiff {
 
-        UP(1), DOWN(-2), NEUTRAL(0);
-
-        public static int PROMOTION_SCORE = 850;
-        public static int DEMOTION_SCORE = 600;
+        SUPER_UP(2, 1000, 50000), UP(1, 600, 1000), NEUTRAL(0, 400, 600),
+        DOWN(-1, 200, 400), SUPER_DOWN(-2, 0, 200);
 
         int promotionPoint;
+        int leftInclusive;
+        int rightExclusive;
 
         public static PromotionDiff promotionDiffOfScore(int score) {
-            if (score >= PROMOTION_SCORE) {
-                return UP;
-            } else if (score <= DEMOTION_SCORE) {
-                return DOWN;
-            } else {
-                return NEUTRAL;
-            }
+            return Arrays.stream(PromotionDiff.values()).filter(p -> p.contains(score)).findFirst().orElse(null);
+        }
+
+        public boolean contains(int score) {
+            return score >= leftInclusive && score < rightExclusive;
         }
 
     }
