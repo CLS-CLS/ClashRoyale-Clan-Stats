@@ -37,8 +37,8 @@ public class PromotionService {
 
         UP(1), DOWN(-2), NEUTRAL(0);
 
-        public static int PROMOTION_SCORE = 1000;
-        public static int DEMOTION_SCORE = 800;
+        public static int PROMOTION_SCORE = 850;
+        public static int DEMOTION_SCORE = 600;
 
         int promotionPoint;
 
@@ -62,7 +62,7 @@ public class PromotionService {
     public static class PlayerPromotionDto {
         private String tag;
         private String name;
-        private String latestPerformance;
+        private int latestScore;
         private int promotionPoints;
         private String role;
         private Long daysInClanAtEndOfRace;
@@ -101,7 +101,7 @@ public class PromotionService {
                     .tag(tag)
                     .name(inClanPlayers.get(tag).getName())
                     .promotionPoints(points)
-                    .latestPerformance(PromotionDiff.promotionDiffOfScore(participation.get(tag).get(0).getScore()).name())
+                    .latestScore(participation.get(tag).get(0).getScore())
                     .role(inClanPlayers.get(tag).getRole())
                     .daysInClanAtEndOfRace(ChronoUnit.DAYS.between(inOut.get(tag).getCheckIn(), riverRaces.get(0).getSuperCellCreatedDate()))
                     .build();

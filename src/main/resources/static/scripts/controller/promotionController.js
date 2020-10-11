@@ -21,6 +21,8 @@ app.controller("promotionController", function($scope, $http, $routeParams, $loc
 
     $scope.roleOrder = roleComparator
 
+    $scope.colorfy = colorfy.colorfy
+
     $scope.next = function(){
         history.store();
     }
