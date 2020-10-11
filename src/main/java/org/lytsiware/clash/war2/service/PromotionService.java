@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,6 +42,10 @@ public class PromotionService {
 
         public static PromotionDiff promotionDiffOfScore(int score) {
             return Arrays.stream(PromotionDiff.values()).filter(p -> p.contains(score)).findFirst().orElse(null);
+        }
+
+        public int getPromostionPoint() {
+            return promotionPoint;
         }
 
         public boolean contains(int score) {
@@ -75,15 +80,23 @@ public class PromotionService {
                 .flatMap(c -> c.getParticipants().stream())
                 .collect(Collectors.groupingBy(RiverRaceParticipant::getTag));
 
+
         if (participation.isEmpty()) {
-            Collections.emptyList();
+            return Collections.emptyList();
         }
+
         Map<String, PlayerInOut> inOut = checkInService.findInClan().stream().collect(Collectors.toMap(PlayerInOut::getTag, i -> i));
 
         Map<String, Player> inClanPlayers = playerRepository.findInClan().stream().collect(Collectors.toMap(Player::getTag, p -> p));
 
         //filter by players in clan
         participation.keySet().stream().filter(p -> !inClanPlayers.containsKey(p)).collect(Collectors.toList())
+                .forEach(participation::remove);
+
+        //do not calculate the very first week he joined if he joined late and has negative impact
+        Map<RiverRaceParticipant, RiverRace> participationRiveRaceMap;
+        participation.keySet().forEach(tag -> filterOutVeryFirstWeekConditionally(participation.get(tag), inOut.get(tag)));
+        participation.keySet().stream().filter(key -> participation.get(key).isEmpty()).collect(Collectors.toList())
                 .forEach(participation::remove);
 
 
@@ -107,4 +120,19 @@ public class PromotionService {
         return result;
 
     }
+
+    private void filterOutVeryFirstWeekConditionally(List<RiverRaceParticipant> riverRaceParticipants, PlayerInOut playerInOut) {
+        if (riverRaceParticipants.isEmpty()) {
+            return;
+        }
+        RiverRaceParticipant firstParticipation = riverRaceParticipants.get(riverRaceParticipants.size() - 1);
+        //do not count negative score if player joined at or after thursday
+        if (PromotionDiff.promotionDiffOfScore(firstParticipation.getScore()).getPromostionPoint() <= 0 &&
+                Arrays.asList(DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(playerInOut.getCheckIn().getDayOfWeek())) {
+            riverRaceParticipants.remove(riverRaceParticipants.size() - 1);
+        }
+
+    }
+
+
 }
