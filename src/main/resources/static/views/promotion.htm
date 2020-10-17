@@ -14,9 +14,19 @@
                     = Elder</h2>
                 <h2>Get some
                     <img
-                         style="display:inline; width:25px"
-                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/forfeit_mid_fe6gzo.png">
+                            style="display:inline; width:25px"
+                            src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/forfeit_mid_fe6gzo.png">
                     = Demote or Kick</h2>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <label style="margin-top:13px">
+                            <input ng-model="state.includeActiveRace.enabled" type="checkbox">
+                            Include active race (..so far)
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div style="position:relative">
@@ -51,7 +61,7 @@
                             </td>
                             <td>{{s.role}}</td>
                             <td>{{s.daysInClanAtEndOfRace}}</td>
-                            <td>
+                            <td ng-show="!state.includeActiveRace.enabled">
                                 <div ng-if="s.promotionPoints > 0">
                                     <img ng-repeat="x in [].constructor(min(s.promotionPoints)) track by $index"
                                          style="display:inline; width:15px"
@@ -62,9 +72,25 @@
                                          style="display:inline; width:15px"
                                          src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/forfeit_mid_fe6gzo.png">
                                 </div>
-
                             </td>
-                            <td ng-style="colorfy(s.latestScore, 'riverrace')">{{s.latestScore}}</td>
+                            <td ng-show="state.includeActiveRace.enabled">
+                                <div ng-if="s.promotionPoints > 0">
+                                    <img ng-repeat="x in [].constructor(min(s.totalPromotionPoints)) track by $index"
+                                         style="display:inline; width:15px"
+                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">
+                                </div>
+                                <div ng-if="s.promotionPoints < 0">
+                                    <img ng-repeat="x in [].constructor(min(-s.totalPromotionPoints)) track by $index"
+                                         style="display:inline; width:15px"
+                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/forfeit_mid_fe6gzo.png">
+                                </div>
+                            </td>
+                            <td ng-show="!state.includeActiveRace.enabled"
+                                ng-style="colorfy(s.latestScore, 'riverrace')">{{s.latestScore}}
+                            </td>
+                            <td ng-show="state.includeActiveRace.enabled"
+                                ng-style="colorfy(s.latestScore, 'riverrace')">{{s.latestActiveScore}}
+                            </td>
                         </tr>
                         </tbody>
                     </table>

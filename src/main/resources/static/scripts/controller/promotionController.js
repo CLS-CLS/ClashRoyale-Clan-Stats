@@ -1,5 +1,8 @@
 app.factory('promotionState',  function(roleComparator) {
 	var state = {
+	    includeActiveRace: {
+	        enabled: false
+	    },
 		filter : {
 			orderBy : "-promotionPoints",
 		},
@@ -22,6 +25,8 @@ app.controller("promotionController", function($scope, $http, $routeParams, $loc
     $scope.roleOrder = roleComparator
 
     $scope.colorfy = colorfy.colorfy
+
+
 
     $scope.next = function(){
         history.store();

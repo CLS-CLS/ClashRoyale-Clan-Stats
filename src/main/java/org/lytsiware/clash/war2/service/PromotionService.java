@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,7 +45,11 @@ public class PromotionService {
             return Arrays.stream(PromotionDiff.values()).filter(p -> p.contains(score)).findFirst().orElse(null);
         }
 
-        public int getPromostionPoint() {
+        public static int getPromotionPoint(int score) {
+            return promotionDiffOfScore(score).getPromotionPoint();
+        }
+
+        public int getPromotionPoint() {
             return promotionPoint;
         }
 
@@ -62,17 +67,18 @@ public class PromotionService {
     public static class PlayerPromotionDto {
         private String tag;
         private String name;
-        private int latestScore;
-        private int promotionPoints;
+        private Integer latestScore;
+        private Integer promotionPoints;
         private String role;
         private Long daysInClanAtEndOfRace;
+        private int latestActiveScore;
+        //including active race
+        private int totalPromotionPoints;
     }
 
 
     public List<PlayerPromotionDto> calculatePromotions() {
-        //get finished races, promotion will be calculated on finished ones
-        List<RiverRace> riverRaces = riverRaceRepository.getRiverRaces(PageRequest.of(0, 12)).stream()
-                .filter(riverRace -> riverRace.getSuperCellCreatedDate() != null)
+        List<RiverRace> riverRaces = riverRaceRepository.getRiverRaces(PageRequest.of(0, 9)).stream()
                 .collect(Collectors.toList());
 
         Map<String, List<RiverRaceParticipant>> participation = riverRaces.stream()
@@ -102,16 +108,25 @@ public class PromotionService {
 
         List<PlayerPromotionDto> result = new ArrayList<>();
         for (String tag : participation.keySet()) {
-            int points = participation.get(tag).stream().map(RiverRaceParticipant::getScore)
-                    .map(PromotionDiff::promotionDiffOfScore).mapToInt(PromotionDiff::getPromotionPoint).sum();
+            ArrayList<RiverRaceParticipant> excludeActive = new ArrayList<>(participation.get(tag));
+
+            RiverRaceParticipant activeParticipant = excludeActive.remove(0);
+
+            int activePoint = PromotionDiff.getPromotionPoint(activeParticipant.getScore());
+
+            int points = excludeActive.stream().map(RiverRaceParticipant::getScore)
+                    .mapToInt(PromotionDiff::getPromotionPoint).sum();
+            int totalPoints = activePoint + points;
 
             PlayerPromotionDto playerPromotionDto = PlayerPromotionDto.builder()
                     .tag(tag)
                     .name(inClanPlayers.get(tag).getName())
                     .promotionPoints(points)
-                    .latestScore(participation.get(tag).get(0).getScore())
+                    .totalPromotionPoints(totalPoints)
+                    .latestScore(excludeActive.isEmpty() ? null : excludeActive.get(0).getScore())
                     .role(inClanPlayers.get(tag).getRole())
-                    .daysInClanAtEndOfRace(ChronoUnit.DAYS.between(inOut.get(tag).getCheckIn(), riverRaces.get(0).getSuperCellCreatedDate()))
+                    .daysInClanAtEndOfRace(ChronoUnit.DAYS.between(inOut.get(tag).getCheckIn(), LocalDateTime.now()))
+                    .latestActiveScore(activeParticipant.getScore())
                     .build();
 
             result.add(playerPromotionDto);
@@ -122,12 +137,13 @@ public class PromotionService {
     }
 
     private void filterOutVeryFirstWeekConditionally(List<RiverRaceParticipant> riverRaceParticipants, PlayerInOut playerInOut) {
-        if (riverRaceParticipants.isEmpty()) {
+        //empty or active race
+        if (riverRaceParticipants.size() <= 1) {
             return;
         }
         RiverRaceParticipant firstParticipation = riverRaceParticipants.get(riverRaceParticipants.size() - 1);
         //do not count negative score if player joined at or after thursday
-        if (PromotionDiff.promotionDiffOfScore(firstParticipation.getScore()).getPromostionPoint() <= 0 &&
+        if (PromotionDiff.getPromotionPoint(firstParticipation.getScore()) <= 0 &&
                 Arrays.asList(DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(playerInOut.getCheckIn().getDayOfWeek())) {
             riverRaceParticipants.remove(riverRaceParticipants.size() - 1);
         }
