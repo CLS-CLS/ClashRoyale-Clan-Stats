@@ -96,14 +96,12 @@ public class PromotionService {
         Map<String, Player> inClanPlayers = playerRepository.findInClan().stream().collect(Collectors.toMap(Player::getTag, p -> p));
 
         //filter by players in clan
-        participation.keySet().stream().filter(p -> !inClanPlayers.containsKey(p)).collect(Collectors.toList())
+        participation.keySet().stream().filter(p -> !inClanPlayers.containsKey(p))
+                .collect(Collectors.toList())
                 .forEach(participation::remove);
 
         //do not calculate the very first week he joined if he joined late and has negative impact
-        Map<RiverRaceParticipant, RiverRace> participationRiveRaceMap;
-        participation.keySet().forEach(tag -> filterOutVeryFirstWeekConditionally(participation.get(tag), inOut.get(tag)));
-        participation.keySet().stream().filter(key -> participation.get(key).isEmpty()).collect(Collectors.toList())
-                .forEach(participation::remove);
+        filterOutFirstWeekOnLateJoin(riverRaces, participation, inOut);
 
 
         List<PlayerPromotionDto> result = new ArrayList<>();
@@ -136,18 +134,32 @@ public class PromotionService {
 
     }
 
-    private void filterOutVeryFirstWeekConditionally(List<RiverRaceParticipant> riverRaceParticipants, PlayerInOut playerInOut) {
-        //empty or active race
-        if (riverRaceParticipants.size() <= 1) {
-            return;
-        }
-        RiverRaceParticipant firstParticipation = riverRaceParticipants.get(riverRaceParticipants.size() - 1);
-        //do not count negative score if player joined at or after thursday
-        if (PromotionDiff.getPromotionPoint(firstParticipation.getScore()) <= 0 &&
-                Arrays.asList(DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(playerInOut.getCheckIn().getDayOfWeek())) {
-            riverRaceParticipants.remove(riverRaceParticipants.size() - 1);
-        }
+    public void filterOutFirstWeekOnLateJoin(List<RiverRace> riverRaces, Map<String, List<RiverRaceParticipant>> participation, Map<String, PlayerInOut> inOut) {
+        for (String tag : participation.keySet()) {
+            List<RiverRaceParticipant> riverRaceParticipants = participation.get(tag);
+            //empty or active race
+            if (riverRaceParticipants.size() <= 1) {
+                return;
+            }
 
+            //find the dates if the firstparticipatino riverrace
+            RiverRaceParticipant firstParticipation = riverRaceParticipants.get(riverRaceParticipants.size() - 1);
+            RiverRace firstParticipationRiverRace = riverRaces.stream()
+                    .filter(riverRace -> riverRace.getClan().getParticipants().stream()
+                            .anyMatch(p -> p == firstParticipation)).findFirst()
+                    .orElseThrow(() -> new IllegalStateException("could not find riverrace of participant !!"));
+
+            //do not count negative score if player joined at or after thursday
+            if (firstParticipationRiverRace.getSuperCellCreatedDate() != null
+                    && firstParticipationRiverRace.getSuperCellCreatedDate().minusDays(7).isBefore(inOut.get(tag).getCheckIn())
+                    && PromotionDiff.getPromotionPoint(firstParticipation.getScore()) <= 0
+                    && Arrays.asList(DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(inOut.get(tag).getCheckIn().getDayOfWeek())) {
+                riverRaceParticipants.remove(riverRaceParticipants.size() - 1);
+            }
+        }
+        //if thre is not any participation is not present any more after removal, remove the empty key
+        participation.keySet().stream().filter(key -> participation.get(key).isEmpty()).collect(Collectors.toList())
+                .forEach(participation::remove);
     }
 
 
