@@ -191,6 +191,12 @@ app.factory("roleComparator", [ function() {
 	};
 } ]);
 
+app.factory("normalizePromotion", function() {
+    return function(promotionPoints) {
+        return Math.min(16, promotionPoints);
+    }
+})
+
 app.filter('percentage', [ '$filter', function($filter) {
 	return function(input, decimals) {
 		if (input == 0) {

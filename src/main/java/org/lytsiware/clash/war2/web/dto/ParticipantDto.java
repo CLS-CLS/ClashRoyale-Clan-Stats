@@ -10,6 +10,7 @@ public class ParticipantDto {
     int fame;
     int repairPoints;
     int score;
+    int promotionPoints;
 
     public int getScore() {
         return activeFame + repairPoints;

@@ -34,21 +34,24 @@ public class PromotionData {
                     .active(true)
                     .clan(RiverRaceClan.builder().participants(Stream.of(
                             RiverRaceParticipant.builder().tag("tag1").activeFame(10).build(),
-                            RiverRaceParticipant.builder().tag("tag2").activeFame(10).build()
+                            RiverRaceParticipant.builder().tag("tag2").activeFame(10).build(),
+                            RiverRaceParticipant.builder().tag("tag3").activeFame(10).build()
                     ).collect(Collectors.toList())).build()).build(),
             RiverRace.builder()
                     .active(false)
                     .superCellCreatedDate(NOW)
                     .clan(RiverRaceClan.builder().participants(Stream.of(
                             RiverRaceParticipant.builder().tag("tag1").activeFame(10).build(),
-                            RiverRaceParticipant.builder().tag("tag2").activeFame(10).build()
+                            RiverRaceParticipant.builder().tag("tag2").activeFame(10).build(),
+                            RiverRaceParticipant.builder().tag("tag3").activeFame(10).build()
                     ).collect(Collectors.toList())).build()).build(),
             RiverRace.builder()
                     .active(false)
                     .superCellCreatedDate(NOW.minusDays(7))
                     .clan(RiverRaceClan.builder().participants(Stream.of(
                             RiverRaceParticipant.builder().tag("tag1").activeFame(10).build(),
-                            RiverRaceParticipant.builder().tag("tag2").activeFame(10).build()
+                            RiverRaceParticipant.builder().tag("tag2").activeFame(10).build(),
+                            RiverRaceParticipant.builder().tag("tag3").activeFame(10).build()
                     ).collect(Collectors.toList())).build()).build()
     ).collect(Collectors.toList());
 

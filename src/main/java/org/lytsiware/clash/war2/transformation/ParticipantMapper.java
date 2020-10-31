@@ -11,5 +11,5 @@ public interface ParticipantMapper {
     ParticipantMapper INSTANCE = Mappers.getMapper(ParticipantMapper.class);
 
 
-    ParticipantDto toParticipantView(RiverRaceParticipant riverRaceParticipant);
+    ParticipantDto toParticipantView(RiverRaceParticipant riverRaceParticipant, Integer promotionPoints);
 }

@@ -9,7 +9,8 @@ app.factory('riverRacePlayerState',  function(roleComparator) {
 });
 
 
-angular.module("App").controller("riverRacePlayerController", function($scope, $http, $routeParams, $timeout, colorfy, history, riverRacePlayerState) {
+angular.module("App").controller("riverRacePlayerController", function($scope, $http, $routeParams, $timeout, colorfy,
+        history, riverRacePlayerState, normalizePromotion) {
     $scope.stats = [];
 
 	$scope.player ={};
@@ -17,6 +18,8 @@ angular.module("App").controller("riverRacePlayerController", function($scope, $
 	$scope.colorfy = colorfy.colorfy
 
 	$scope.filter = riverRacePlayerState.filter;
+
+	$scope.min = normalizePromotion;
 
 	$scope.dataLoading = true;
 

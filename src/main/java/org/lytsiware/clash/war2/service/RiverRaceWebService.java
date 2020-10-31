@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.lytsiware.clash.war2.web.dto.RiverRaceViewDto.ParticipantViewDto;
 
@@ -43,6 +44,7 @@ public class RiverRaceWebService {
     private final RiverRaceRepository riverRaceRepository;
     private final RiverRaceParticipantRepository riverRaceParticipantRepository;
     private final PlayerCheckInService checkInService;
+    private final PromotionService promotionService;
 
     public RiverRaceViewDto getRiverRace(int index) {
         List<RiverRaceAggregateDto> aggregatedStats = aggregationRepository.getAggregatedStats(index, clanTag);
@@ -88,7 +90,10 @@ public class RiverRaceWebService {
 
     public List<ParticipantDto> getRiverRaceParticipant(String playerTag) {
         List<RiverRaceParticipant> results = riverRaceParticipantRepository.findByTagOrderByRace(playerTag, clanTag);
-        return results.stream().map(ParticipantMapper.INSTANCE::toParticipantView).collect(Collectors.toList());
+        List<Integer> promotionPoints = promotionService.calculatePromotion(playerTag);
+        return IntStream.range(0, results.size())
+                .mapToObj(i -> ParticipantMapper.INSTANCE.toParticipantView(results.get(i), promotionPoints.get(i)))
+                .collect(Collectors.toList());
     }
 
 }

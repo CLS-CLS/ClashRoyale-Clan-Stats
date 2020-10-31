@@ -53,6 +53,7 @@
                                 </order-directive>
                                 </span>
                             </th>
+                            <th>Promotion Points</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -62,6 +63,18 @@
                             <td ng-style="colorfy(s.repairPoints, 'repairs')">{{s.repairPoints}}</td>
                             <td ng-style="colorfy(s.score, 'riverrace')">{{s.score}}</td>
                             <td>{{s.fame}}</td>
+                            <td>
+                                <div ng-if="s.promotionPoints > 0">
+                                    <img ng-repeat="x in [].constructor(min(s.promotionPoints)) track by $index"
+                                         style="display:inline; width:15px"
+                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">
+                                </div>
+                                <div ng-if="s.promotionPoints < 0">
+                                    <img ng-repeat="x in [].constructor(min(-s.promotionPoints)) track by $index"
+                                         style="display:inline; width:15px"
+                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/forfeit_mid_fe6gzo.png">
+                                </div>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

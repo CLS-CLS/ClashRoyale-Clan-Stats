@@ -14,7 +14,8 @@ app.factory('promotionState',  function(roleComparator) {
 
 });
 
-app.controller("promotionController", function($scope, $http, $routeParams, $location, $timeout, history, roleComparator, promotionState, colorfy){
+app.controller("promotionController", function($scope, $http, $routeParams, $location, $timeout, history,
+        roleComparator, promotionState, colorfy, normalizePromotion){
 
     $scope.stats = [];
 
@@ -32,9 +33,7 @@ app.controller("promotionController", function($scope, $http, $routeParams, $loc
         history.store();
     }
 
-    $scope.min = function(i) {
-        return Math.min(16, i);
-    }
+    $scope.min = normalizePromotion
 
     function init() {
         getData($scope.selectedItem);

@@ -39,6 +39,10 @@ public class PlayerCheckInService {
 
     private final PlayerWarStatsRepository playerWarStatsRepository;
 
+    public Optional<PlayerInOut> findByTag(String tag) {
+        return playerCheckInCheckOutRepository.findByTag(tag);
+    }
+
     public List<PlayerInOut> findInClan() {
         return playerCheckInCheckOutRepository.findPlayersInClan();
     }
