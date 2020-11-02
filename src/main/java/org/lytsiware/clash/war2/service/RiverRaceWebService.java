@@ -92,8 +92,12 @@ public class RiverRaceWebService {
         List<RiverRaceParticipant> results = riverRaceParticipantRepository.findByTagOrderByRace(playerTag, clanTag);
         List<Integer> promotionPoints = promotionService.calculatePromotion(playerTag);
         return IntStream.range(0, results.size())
-                .mapToObj(i -> ParticipantMapper.INSTANCE.toParticipantView(results.get(i), promotionPoints.get(i)))
+                .mapToObj(i -> ParticipantMapper.INSTANCE.toParticipantView(results.get(i), getPromotionPointsIndexSafe(promotionPoints, i)))
                 .collect(Collectors.toList());
+    }
+
+    public Integer getPromotionPointsIndexSafe(List<Integer> promotionPoints, int i) {
+        return i < promotionPoints.size() ? promotionPoints.get(i) : null;
     }
 
 }
