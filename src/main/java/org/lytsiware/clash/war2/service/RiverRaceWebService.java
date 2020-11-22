@@ -49,10 +49,9 @@ public class RiverRaceWebService {
     public RiverRaceViewDto getRiverRace(int index) {
         List<RiverRaceAggregateDto> aggregatedStats = aggregationRepository.getAggregatedStats(index, clanTag);
 
+        //initialize basic info from entity
         RiverRaceViewDto riverRaceDto = RiverRaceWebMapper.INSTANCE.toRiverRaceViewDto(riverRaceRepository.getRiverRaces(PageRequest.of(index, 1))
                 .stream().findFirst().orElse(null));
-
-        Collections.sort(riverRaceDto.getClans(), Comparator.comparing(c -> -c.getFame()));
 
         Map<String, Player> players = playerRepository.loadAll().entrySet().stream()
                 .filter(e -> e.getValue().getInClan()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -85,6 +84,8 @@ public class RiverRaceWebService {
                 participant.setRole("Member");
             }
         }
+
+        Collections.sort(riverRaceDto.getClans(), Comparator.comparing(c -> -c.getFame()));
         return riverRaceDto;
     }
 
@@ -92,12 +93,8 @@ public class RiverRaceWebService {
         List<RiverRaceParticipant> results = riverRaceParticipantRepository.findByTagOrderByRace(playerTag, clanTag);
         List<Integer> promotionPoints = promotionService.calculatePromotion(playerTag);
         return IntStream.range(0, results.size())
-                .mapToObj(i -> ParticipantMapper.INSTANCE.toParticipantView(results.get(i), getPromotionPointsIndexSafe(promotionPoints, i)))
+                .mapToObj(i -> ParticipantMapper.INSTANCE.toParticipantView(results.get(i), i < promotionPoints.size() ? promotionPoints.get(i) : null))
                 .collect(Collectors.toList());
-    }
-
-    public Integer getPromotionPointsIndexSafe(List<Integer> promotionPoints, int i) {
-        return i < promotionPoints.size() ? promotionPoints.get(i) : null;
     }
 
 }
