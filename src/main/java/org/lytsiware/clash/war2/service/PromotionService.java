@@ -37,8 +37,8 @@ public class PromotionService {
     @Getter
     enum PromotionDiff {
 
-        SUPER_UP(2, 1000, 50000), UP(1, 600, 1000), NEUTRAL(0, 400, 600),
-        DOWN(-1, 200, 400), SUPER_DOWN(-2, 0, 200);
+        SUPER_UP(2, 1100, 50000), UP(1, 850, 1100), NEUTRAL(0, 700, 850),
+        DOWN(-1, 400, 700), SUPER_DOWN(-2, 0, 400);
 
         int promotionPoint;
         int leftInclusive;
