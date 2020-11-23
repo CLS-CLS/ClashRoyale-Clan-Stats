@@ -24,9 +24,27 @@ public class MissingScheduledJobRunner implements CommandLineRunner {
     @Autowired(required = false)
     private List<RunAtStartupJob> jobs;
 
-    @Override
+    /**
+     * the run method should not throw exception otherwise the app will exit. We still want the retry feature.
+     * So we break the method to two , the latter having the retry, where run method has try-catch. For the aspect
+     * to work we need to call the method as it was in another service
+     */
+    @Autowired
+    MissingScheduledJobRunner missingScheduledJobRunner;
+
     @Transactional
-    @Retryable(maxAttempts = 3, backoff = @Backoff(600000))
+    @Retryable(maxAttempts = 3, backoff = @Backoff(60000))
+    public void runMissingScheduler(RunAtStartupJob job) {
+        logger.info("Checking status for scheduler {}", job.getClass().getName());
+        if (job.shouldRun()) {
+            logger.info("Scheduler {} has not ran: Starting job now", job.getClass().getSimpleName());
+            job.run();
+        } else {
+            logger.info("Status OK");
+        }
+    }
+
+    @Override
     public void run(String... args) {
         if (!checkMissingScheduler) {
             logger.info("Checking for missing schedulers is disabled");
@@ -37,13 +55,12 @@ public class MissingScheduledJobRunner implements CommandLineRunner {
             return;
         }
         logger.info("Checking for missing schedulers");
+
         for (RunAtStartupJob job : jobs) {
-            logger.info("Checking status for scheduler {}", job.getClass().getName());
-            if (job.shouldRun()) {
-                logger.info("Scheduler {} has not ran: Starting job now", job.getClass().getSimpleName());
-                job.run();
-            } else {
-                logger.info("Status OK");
+            try {
+                missingScheduledJobRunner.runMissingScheduler(job);
+            } catch (Exception ex) {
+                logger.error(String.format("Error while executing missing scheduler %s", job.getClass().getSimpleName()), ex);
             }
         }
     }
