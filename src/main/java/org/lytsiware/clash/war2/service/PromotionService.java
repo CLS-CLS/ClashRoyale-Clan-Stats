@@ -1,5 +1,6 @@
 package org.lytsiware.clash.war2.service;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.lytsiware.clash.core.domain.player.Player;
@@ -35,7 +36,8 @@ public class PromotionService {
 
     @AllArgsConstructor
     @Getter
-    enum PromotionDiff {
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    public enum PromotionDiff {
 
         SUPER_UP(2, 1100, 50000), UP(1, 850, 1100), NEUTRAL(0, 700, 850),
         DOWN(-1, 400, 700), SUPER_DOWN(-2, 0, 400);

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,11 @@ public class RiverRaceWebController {
     @GetMapping("/riverrace/player/{tag}")
     public List<ParticipantDto> getRiverRace(@PathVariable(value = "tag") String tag) {
         return riverRaceWebService.getRiverRaceParticipant(tag);
+    }
+
+    @GetMapping("/riverrace/promotions/static")
+    public List<PromotionService.PromotionDiff> getPromotionStaticData() {
+        return Arrays.asList(PromotionService.PromotionDiff.values());
     }
 
     @GetMapping("/riverrace/promotions")

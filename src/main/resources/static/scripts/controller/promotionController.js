@@ -55,5 +55,8 @@ app.controller("promotionController", function($scope, $http, $routeParams, $loc
         }, function(response) {
             $scope.loading = false;
         })
+        $http.get(baseUrl() + "/rest/riverrace/promotions/static").then(function(response) {
+            $scope.static = response.data;
+        })
     }
 })
