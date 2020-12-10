@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Slf4j
-@Service
+//@Service
 public class UpdateActiveRaceRunner implements CommandLineRunner {
 
     @Autowired
