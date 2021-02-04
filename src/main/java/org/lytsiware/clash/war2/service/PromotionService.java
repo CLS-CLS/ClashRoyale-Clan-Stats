@@ -115,16 +115,15 @@ public class PromotionService {
 
     public List<PlayerPromotionDto> calculatePromotions() {
         log.debug("calculatePromotions");
-        List<RiverRace> riverRaces = riverRaceRepository.getRiverRaces(PageRequest.of(0, 9)).stream()
-                .collect(Collectors.toList());
+        List<RiverRace> riverRaces = new ArrayList<>(riverRaceRepository.getRiverRaces(PageRequest.of(0, 9)));
 
-        Map<String, List<RiverRaceParticipant>> participation = riverRaces.stream()
+        Map<String, List<RiverRaceParticipant>> participationByTag = riverRaces.stream()
                 .map(RiverRace::getClan)
                 .flatMap(c -> c.getParticipants().stream())
                 .collect(Collectors.groupingBy(RiverRaceParticipant::getTag));
 
 
-        if (participation.isEmpty()) {
+        if (participationByTag.isEmpty()) {
             log.debug("calculatePromotions list is empty - return");
             return Collections.emptyList();
         }
@@ -134,19 +133,19 @@ public class PromotionService {
         Map<String, Player> inClanPlayers = playerRepository.findInClan().stream().collect(Collectors.toMap(Player::getTag, p -> p));
 
         //filter by players in clan
-        participation.keySet().stream().filter(p -> !inClanPlayers.containsKey(p))
+        participationByTag.keySet().stream().filter(p -> !inClanPlayers.containsKey(p))
                 .collect(Collectors.toList())
-                .forEach(participation::remove);
+                .forEach(participationByTag::remove);
 
         //do not calculate the very first week he joined if he joined late and has negative impact
-        for (String tag : participation.keySet()) {
-            removeNegativeScoreConditionally(inOut.get(tag), participation.get(tag), riverRaces, false);
+        for (String tag : participationByTag.keySet()) {
+            removeNegativeScoreConditionally(inOut.get(tag), participationByTag.get(tag), riverRaces, false);
         }
 
-        return participation.keySet().stream()
-                .filter(tag -> !participation.get(tag).isEmpty())
+        return participationByTag.keySet().stream()
+                .filter(tag -> !participationByTag.get(tag).isEmpty())
                 .map(tag ->
-                        buildPlayerPromortionDto(participation.get(tag), inOut.get(tag), inClanPlayers.get(tag)))
+                        buildPlayerPromortionDto(participationByTag.get(tag), inOut.get(tag), inClanPlayers.get(tag)))
                 .collect(Collectors.toList());
     }
 

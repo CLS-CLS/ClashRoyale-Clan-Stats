@@ -5,7 +5,6 @@ import org.lytsiware.clash.war2.domain.RiverRaceParticipant;
 import org.lytsiware.clash.war2.repository.RiverRaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -27,7 +26,7 @@ public class UpdateActiveRaceRunner implements CommandLineRunner {
 
 
         List<RiverRaceParticipant> participants =
-                em.createNativeQuery("select * from river_race_participant where river_race_clan_fk=5202", RiverRaceParticipant.class)
+                em.createNativeQuery("select * from river_race_participant where river_race_clan_fk=9452", RiverRaceParticipant.class)
                         .getResultList();
 
 
