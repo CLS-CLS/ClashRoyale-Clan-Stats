@@ -58,7 +58,8 @@
                                                  comparator="roleOrder">Role</order-directive></span>
                             </th>
                             <th><span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="daysInClan" filter-by="filter">Days in Clan</order-directive></span>
+                                <order-directive bind-to="daysInClanAtEndOfRace"
+                                                 filter-by="filter">Days in Clan</order-directive></span>
                             </th>
                             <th ng-show="!state.includeActiveRace.enabled"><span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="promotionPoints"
