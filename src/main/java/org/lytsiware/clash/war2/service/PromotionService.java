@@ -42,12 +42,22 @@ public class PromotionService {
         SUPER_UP(2, 1100, 50000), UP(1, 850, 1100), NEUTRAL(0, 700, 850),
         DOWN(-1, 400, 700), SUPER_DOWN(-2, 0, 400);
 
+        private static final float modifier = 0.7f;
+
         int promotionPoint;
         int leftInclusive;
         int rightExclusive;
 
         public static PromotionDiff promotionDiffOfScore(int score) {
             return Arrays.stream(PromotionDiff.values()).filter(p -> p.contains(score)).findFirst().orElse(null);
+        }
+
+        public int getLeftInclusive() {
+            return (int) (leftInclusive * modifier);
+        }
+
+        public int getRightExclusive() {
+            return (int) (rightExclusive * modifier);
         }
 
         public static int getPromotionPoint(int score) {
@@ -59,7 +69,7 @@ public class PromotionService {
         }
 
         public boolean contains(int score) {
-            return score >= leftInclusive && score < rightExclusive;
+            return score >= getLeftInclusive() && score < getRightExclusive();
         }
 
     }

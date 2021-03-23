@@ -26,7 +26,7 @@ public class UpdateActiveRaceRunner implements CommandLineRunner {
 
 
         List<RiverRaceParticipant> participants =
-                em.createNativeQuery("select * from river_race_participant where river_race_clan_fk=9452", RiverRaceParticipant.class)
+                em.createNativeQuery("select * from river_race_participant where river_race_clan_fk=11302", RiverRaceParticipant.class)
                         .getResultList();
 
 
