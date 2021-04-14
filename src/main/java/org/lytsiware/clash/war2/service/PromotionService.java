@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PromotionService {
 
-
     @Value("${clanTag}")
     private String clanTag;
 
@@ -39,10 +38,10 @@ public class PromotionService {
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum PromotionDiff {
 
-        SUPER_UP(2, 1100, 50000), UP(1, 850, 1100), NEUTRAL(0, 700, 850),
-        DOWN(-1, 400, 700), SUPER_DOWN(-2, 0, 400);
+        SUPER_UP(2, 1000, 50000), UP(1, 800, 1000), NEUTRAL(0, 600, 800),
+        DOWN(-1, 500, 600), SUPER_DOWN(-2, 0, 500);
 
-        private static final float modifier = 0.7f;
+        private static final float modifier = 1.0f;
 
         int promotionPoint;
         int leftInclusive;
@@ -92,7 +91,7 @@ public class PromotionService {
     }
 
     public List<Integer> calculatePromotion(String tag) {
-        List<RiverRace> riverRaces = riverRaceRepository.getRiverRaces(PageRequest.of(0, 9)).stream()
+        List<RiverRace> riverRaces = riverRaceRepository.getRiverRaces(PageRequest.of(0, 12)).stream()
                 .filter(riverRace -> riverRace.getClan().getParticipants().stream().anyMatch(p -> p.getTag().equals(tag)))
                 .collect(Collectors.toList());
 
