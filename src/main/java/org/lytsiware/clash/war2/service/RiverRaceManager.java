@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +31,13 @@ public class RiverRaceManager {
     public RiverRace updateRiverRace() {
         log.info("Updating river race");
         RiverRaceCurrentDto current = integrationService.getCurrentRiverRace();
-        Optional<RiverRace> active = riverRaceRepository.activeRace();
+        RiverRace active = riverRaceRepository.activeRace().orElse(null);
 
-        if (active.isPresent() && current.getSectionIndex() != active.get().getSectionIndex()) {
+        if (active != null && current.getSectionIndex() != active.getSectionIndex()) {
             riverRaceService.finalizeRace(clanTag);
-            active = Optional.empty();
+            active = null;
         }
 
-        return riverRaceService.doUpdateActiveRace(current, active.orElse(null));
+        return riverRaceService.doUpdateActiveRace(current, active);
     }
 }

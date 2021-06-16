@@ -21,4 +21,9 @@ public class ParticipantDto {
     int fame;
 
     int repairPoints;
+
+    int decksUsed;
+
+    int decksUsedToday;
+
 }

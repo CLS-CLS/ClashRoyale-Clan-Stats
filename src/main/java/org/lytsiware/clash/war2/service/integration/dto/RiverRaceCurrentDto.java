@@ -22,5 +22,7 @@ public class RiverRaceCurrentDto {
 
     int sectionIndex;
 
+    String periodType;
+
 
 }

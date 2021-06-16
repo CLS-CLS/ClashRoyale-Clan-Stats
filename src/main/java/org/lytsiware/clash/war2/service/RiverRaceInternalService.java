@@ -10,6 +10,7 @@ import org.lytsiware.clash.war2.domain.RiverRaceParticipant;
 import org.lytsiware.clash.war2.repository.RiverRaceRepository;
 import org.lytsiware.clash.war2.service.integration.War2CRLIntegrationService;
 import org.lytsiware.clash.war2.service.integration.dto.ClanDto;
+import org.lytsiware.clash.war2.service.integration.dto.ParticipantDto;
 import org.lytsiware.clash.war2.service.integration.dto.RiverRaceCurrentDto;
 import org.lytsiware.clash.war2.service.integration.dto.RiverRaceLogDto;
 import org.lytsiware.clash.war2.transformation.RiverRaceInternalMapper;
@@ -57,6 +58,7 @@ public class RiverRaceInternalService {
         activeRace = (activeRace != null ? activeRace : new RiverRace());
 
         RiverRaceInternalMapper.INSTANCE.update(dto, activeRace);
+        updateDecksUsed(dto, activeRace);
 
         List<ClanDto> clansDto = Stream.concat(Stream.of(dto.getClan()), dto.getClans().stream()).collect(Collectors.toList());
         List<RiverRaceClan> clans = Stream.concat(Stream.of(activeRace.getClan()), activeRace.getClans().stream()).collect(Collectors.toList());
@@ -70,11 +72,33 @@ public class RiverRaceInternalService {
 
         insertGhostPlayers(activeRace.getClan(), playerRepository.findInClan());
 
+
         //some times the riverrace entity is not updated (only the clans) but we still want to
         //set the updatedOn
         activeRace.setUpdatedOn(LocalDateTime.now());
 
         return riverRaceClanRepository.saveAndFlush(activeRace);
+    }
+
+    private void updateDecksUsed(RiverRaceCurrentDto dto, RiverRace activeRace) {
+        for (ParticipantDto participantDto : dto.getClan().getParticipants()) {
+            RiverRaceParticipant participantRR = activeRace.getClan().getParticipants().stream()
+                    .filter(p -> p.getTag().equals(participantDto.getTag())).findFirst().orElse(null);
+            if (participantRR == null) {
+                continue;
+            }
+            if (dto.getPeriodType().equalsIgnoreCase("training")) {
+                int deltaDecks = participantDto.getDecksUsed() - participantRR.getPracticeDecks();
+                if (deltaDecks > 0) {
+                    participantRR.setPracticeDecks(participantRR.getPracticeDecks() + deltaDecks);
+                }
+            } else {
+                int deltaDecks = participantDto.getDecksUsed() - participantRR.getPracticeDecks() - participantRR.getWarDecks();
+                if (deltaDecks > 0) {
+                    participantRR.setWarDecks(participantRR.getWarDecks() + deltaDecks);
+                }
+            }
+        }
     }
 
     /**

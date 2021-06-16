@@ -3,9 +3,9 @@ package org.lytsiware.clash.war2.scheduler;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lytsiware.clash.core.domain.LockService;
 import org.lytsiware.clash.core.domain.job.Job;
 import org.lytsiware.clash.core.domain.job.JobRepository;
-import org.lytsiware.clash.core.service.job.RunAtStartupJob;
 import org.lytsiware.clash.core.service.job.scheduledname.ScheduledName;
 import org.lytsiware.clash.war2.domain.RiverRace;
 import org.lytsiware.clash.war2.repository.RiverRaceRepository;
@@ -21,13 +21,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RiverRaceUpdateScheduler implements RunAtStartupJob {
+public class RiverRaceUpdateScheduler {
 
     private static final String JOB_ID = "ActualRiverRaceExecution";
 
     private final JobRepository jobRepository;
     private final RiverRaceManager riverRaceManager;
     private final RiverRaceRepository riverRaceRepository;
+    private final LockService lockService;
 
     /**
      * logs the appropriate message depenging on the boolean
@@ -60,8 +61,11 @@ public class RiverRaceUpdateScheduler implements RunAtStartupJob {
     private static final Description description4 = new Description("job runs for first time (should run)", "There is a previous job that had run");
     private static final Description description6 = new Description("Job has not run for at least 23 hours", "Previous job had run in less than 23 hours");
 
-
-    @Override
+    /**
+     * @deprecated no need to check if has run, from now on river race schedulers are triggered at specific time
+     * with different deltas between the executions
+     */
+    @Deprecated
     public boolean shouldRun() {
         boolean shouldRun = false;
         RiverRace riverRace = riverRaceRepository.activeRace().orElse(null);
@@ -85,13 +89,18 @@ public class RiverRaceUpdateScheduler implements RunAtStartupJob {
         return shouldRun;
     }
 
-    @ScheduledName(name = "riverrace")
-    @Scheduled(cron = "${cron.riverrace}")
+    @ScheduledName(name = "riverrace-rare")
+    @Scheduled(cron = "${cron.riverrace.rare}")
     public void run() {
-        log.info("River race scheduler triggered .. check if should run");
-        if (shouldRun()) {
-            doRun();
-        }
+        log.info("River race rare-scheduler triggered");
+        doRun();
+    }
+
+    @ScheduledName(name = "riverrace-often")
+    @Scheduled(cron = "${cron.riverrace.often}")
+    public void finalRun() {
+        log.info("River race often-scheduler triggered");
+        doRun();
     }
 
     /**
@@ -101,8 +110,16 @@ public class RiverRaceUpdateScheduler implements RunAtStartupJob {
     @Transactional
     public void doRun() {
         log.info("running job riverrace (conditions are met or manually triggered");
-        riverRaceManager.updateRiverRace();
-        jobRepository.saveAndFlush(new Job(JOB_ID, LocalDateTime.now()));
+        try {
+            if (lockService.lock()) {
+                riverRaceManager.updateRiverRace();
+                jobRepository.saveAndFlush(new Job(JOB_ID, LocalDateTime.now()));
+            } else {
+                log.info("river race did not run because the table was locked");
+            }
+        } finally {
+            lockService.unlock();
+        }
 
     }
 
