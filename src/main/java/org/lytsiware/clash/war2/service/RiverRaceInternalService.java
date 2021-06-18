@@ -58,7 +58,6 @@ public class RiverRaceInternalService {
         activeRace = (activeRace != null ? activeRace : new RiverRace());
 
         RiverRaceInternalMapper.INSTANCE.update(dto, activeRace);
-        updateDecksUsed(dto, activeRace);
 
         List<ClanDto> clansDto = Stream.concat(Stream.of(dto.getClan()), dto.getClans().stream()).collect(Collectors.toList());
         List<RiverRaceClan> clans = Stream.concat(Stream.of(activeRace.getClan()), activeRace.getClans().stream()).collect(Collectors.toList());
@@ -70,7 +69,9 @@ public class RiverRaceInternalService {
                     .ifPresent(rrc -> updateActiveFame(rrc, clanDto));
         }
 
-        insertGhostPlayers(activeRace.getClan(), playerRepository.findInClan());
+        List<Player> inClanPlayers = playerRepository.findInClan();
+        insertGhostPlayers(activeRace.getClan(), inClanPlayers);
+        updateDecksUsed(dto, activeRace.getClan());
 
 
         //some times the riverrace entity is not updated (only the clans) but we still want to
@@ -80,11 +81,12 @@ public class RiverRaceInternalService {
         return riverRaceClanRepository.saveAndFlush(activeRace);
     }
 
-    private void updateDecksUsed(RiverRaceCurrentDto dto, RiverRace activeRace) {
-        for (ParticipantDto participantDto : dto.getClan().getParticipants()) {
-            RiverRaceParticipant participantRR = activeRace.getClan().getParticipants().stream()
-                    .filter(p -> p.getTag().equals(participantDto.getTag())).findFirst().orElse(null);
-            if (participantRR == null) {
+    private void updateDecksUsed(RiverRaceCurrentDto dto, RiverRaceClan clan) {
+
+        for (RiverRaceParticipant participantRR : clan.getParticipants()) {
+            ParticipantDto participantDto = dto.getClan().getParticipants().stream()
+                    .filter(p -> p.getTag().equals(participantRR.getTag())).findFirst().orElse(null);
+            if (participantDto == null) {
                 continue;
             }
             if (dto.getPeriodType().equalsIgnoreCase("training")) {
@@ -98,6 +100,8 @@ public class RiverRaceInternalService {
                     participantRR.setWarDecks(participantRR.getWarDecks() + deltaDecks);
                 }
             }
+            //TODO usedDecks should be calculated according to checkin/ckeckout
+            participantRR.setRequiredDecks(16);
         }
     }
 
