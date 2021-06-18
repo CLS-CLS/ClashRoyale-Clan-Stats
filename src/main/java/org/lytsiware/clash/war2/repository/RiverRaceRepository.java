@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface RiverRaceRepository extends JpaRepository<RiverRace, Long>, PagingAndSortingRepository<RiverRace, Long> {
+public interface RiverRaceRepository extends JpaRepository<RiverRace, Long>, PagingAndSortingRepository<RiverRace, Long>, CustomRiverRaceRepository {
 
     @Query("select riverRace from RiverRace riverRace join fetch riverRace.clan where riverRace.active = true ")
     @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, value = "RiverRace.eager")
@@ -21,10 +21,6 @@ public interface RiverRaceRepository extends JpaRepository<RiverRace, Long>, Pag
             "order by riverRace.superCellCreatedDate ")
     @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, value = "RiverRace.eager")
     List<RiverRace> logRace(Pageable pageable);
-
-    @Query("select riverRace from RiverRace riverRace order by superCellCreatedDate desc")
-    @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, value = "RiverRace.eager")
-    List<RiverRace> getRiverRaces(Pageable pageable);
 
 
 }
