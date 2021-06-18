@@ -85,10 +85,6 @@
                                 </order-directive></span>
                             </th>
                             <th style="border-right: 2px solid #1c1e22"><span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="fame"
-                                                 filter-by="filter">Gathered Fame</order-directive></span>
-                            </th>
-                            <th style="border-right: 2px solid #1c1e22"><span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="warDecks"
                                                  filter-by="filter">Decks Played</order-directive></span>
                             </th>
@@ -111,11 +107,6 @@
                                          src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/score_mid_wwsrc9.png">
                                 </order-directive></span>
                             </th>
-                            <th><span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="averageFame"
-                                                 filter-by="filter">Gathered Fame</order-directive></span>
-                            </th>
-
                         </tr>
                         </thead>
                         <tbody>
@@ -131,12 +122,10 @@
                             <td>{{s.activeFame}}</td>
 <!--                            <td ng-style="colorfy(s.repairPoints, 'repairs')">{{s.repairPoints}}</td>-->
                             <td ng-style="colorfy(s.score, 'riverrace')">{{s.score}}</td>
-                            <td>{{s.fame}}</td>
                             <td>{{s.warDecks}}</td>
                             <td>{{s.averageActiveFame}}</td>
                             <td ng-style="colorfy(s.averageRepairPoints, 'repairs')">{{s.averageRepairPoints}}</td>
                             <td ng-style="colorfy(s.averageScore, 'riverrace')">{{s.averageScore}}</td>
-                            <td>{{s.averageFame}}</td>
                         </tr>
                         </tbody>
                     </table>
