@@ -61,8 +61,8 @@
                                 <order-directive bind-to="daysInClan" filter-by="filter">Days in Clan</order-directive></span>
                             </th>
 
-                            <th colspan="4" style="border-right: 2px solid #1c1e22">Current</th>
-                            <th colspan="4">Average</th>
+                            <th colspan="3" style="border-right: 2px solid #1c1e22">Current</th>
+                            <th colspan="2">Average</th>
                         </tr>
                         <tr>
                             <th><span ng-click=triggerOrderDirective($event)>
@@ -124,7 +124,7 @@
                             <td ng-style="colorfy(s.score, 'riverrace')">{{s.score}}</td>
                             <td>{{s.warDecks}}</td>
                             <td>{{s.averageActiveFame}}</td>
-                            <td ng-style="colorfy(s.averageRepairPoints, 'repairs')">{{s.averageRepairPoints}}</td>
+                         <!--   <td ng-style="colorfy(s.averageRepairPoints, 'repairs')">{{s.averageRepairPoints}}</td> -->
                             <td ng-style="colorfy(s.averageScore, 'riverrace')">{{s.averageScore}}</td>
                         </tr>
                         </tbody>
@@ -184,7 +184,7 @@
                                 <td>{{$index}}</td>
                                 <td>{{s.name}}</td>
                                 <td>{{s.activeFame}}</td>
-                                <td ng-style="colorfy(s.repairPoints, 'repairs')">{{s.repairPoints}}</td>
+                                <td ng-style="colorfy(s.repairPoints, 'repairs')">{{s.repairPoints}}</td>   
                                 <td ng-style="colorfy(s.score, 'riverrace')">{{s.score}}</td>
                                 <td>{{s.fame}}</td>
                             </tr>
