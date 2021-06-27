@@ -62,6 +62,7 @@ public class RiverRaceViewDto {
         private boolean inClan;
         private Integer daysInClan;
         private int warDecks;
+        private int requiredDecks;
 
         public int getScore() {
             return activeFame + repairPoints;

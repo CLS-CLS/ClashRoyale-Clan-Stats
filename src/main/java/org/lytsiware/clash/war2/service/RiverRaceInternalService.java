@@ -46,98 +46,6 @@ public class RiverRaceInternalService {
         return doUpdateActiveRace(dto, activeRaceOptional.orElse(null));
     }
 
-    public RiverRace doUpdateActiveRace(RiverRaceCurrentDto dto, RiverRace activeRace) {
-        log.info("updating active race");
-        if (activeRace != null && activeRace.getSectionIndex() != dto.getSectionIndex()) {
-            log.error("Error while updating race");
-            throw new SectionIndexMissmatchException(activeRace.getSectionIndex(), dto.getSectionIndex());
-        }
-        if (activeRace == null) {
-            log.info("active race not found, creating new");
-        }
-        activeRace = (activeRace != null ? activeRace : new RiverRace());
-
-        RiverRaceInternalMapper.INSTANCE.update(dto, activeRace);
-
-        List<ClanDto> clansDto = Stream.concat(Stream.of(dto.getClan()), dto.getClans().stream()).collect(Collectors.toList());
-        List<RiverRaceClan> clans = Stream.concat(Stream.of(activeRace.getClan()), activeRace.getClans().stream()).collect(Collectors.toList());
-
-        for (ClanDto clanDto : clansDto) {
-            clans.stream()
-                    .filter(rrc -> rrc.getTag().equals(clanDto.getTag()))
-                    .findFirst()
-                    .ifPresent(rrc -> updateActiveFame(rrc, clanDto));
-        }
-
-        List<Player> inClanPlayers = playerRepository.findInClan();
-        insertGhostPlayers(activeRace.getClan(), inClanPlayers);
-        updateDecksUsed(dto, activeRace.getClan());
-
-
-        //some times the riverrace entity is not updated (only the clans) but we still want to
-        //set the updatedOn
-        activeRace.setUpdatedOn(LocalDateTime.now());
-
-        return riverRaceClanRepository.saveAndFlush(activeRace);
-    }
-
-    private void updateDecksUsed(RiverRaceCurrentDto dto, RiverRaceClan clan) {
-
-        for (RiverRaceParticipant participantRR : clan.getParticipants()) {
-            ParticipantDto participantDto = dto.getClan().getParticipants().stream()
-                    .filter(p -> p.getTag().equals(participantRR.getTag())).findFirst().orElse(null);
-            if (participantDto == null) {
-                continue;
-            }
-            if (dto.getPeriodType().equalsIgnoreCase("training")) {
-                int deltaDecks = participantDto.getDecksUsed() - participantRR.getPracticeDecks();
-                if (deltaDecks > 0) {
-                    participantRR.setPracticeDecks(participantRR.getPracticeDecks() + deltaDecks);
-                }
-            } else {
-                int deltaDecks = participantDto.getDecksUsed() - participantRR.getPracticeDecks() - participantRR.getWarDecks();
-                if (deltaDecks > 0) {
-                    participantRR.setWarDecks(participantRR.getWarDecks() + deltaDecks);
-                }
-            }
-            //TODO usedDecks should be calculated according to checkin/ckeckout
-            participantRR.setRequiredDecks(16);
-        }
-    }
-
-    /**
-     * So it seems integration service does not return all the players in clan. I.e the inactives are not returned in the results
-     * So we manually insert them with 0 stats (as it should have been by the intergation service)
-     *
-     * @param clan
-     * @param playersInClan
-     */
-    private void insertGhostPlayers(RiverRaceClan clan, List<Player> playersInClan) {
-        List<Player> ghostPlayers = playersInClan.stream().filter(p -> isNotPresent(clan, p)).collect(Collectors.toList());
-        if (ghostPlayers.size() > 0) {
-            log.info("Found ghost players  :  {}", ghostPlayers.stream().map(Player::getName).collect(Collectors.toList()));
-        }
-        for (Player player : playersInClan) {
-            if (isNotPresent(clan, player)) {
-                clan.getParticipants().add(RiverRaceParticipant.builder()
-                        .fame(0)
-                        .activeFame(0)
-                        .repairPoints(0)
-                        .tag(player.getTag())
-                        .name(player.getName())
-                        .build()
-                );
-            }
-        }
-    }
-
-    private boolean isNotPresent(RiverRaceClan clan, Player player) {
-        return !clan.getParticipants().stream()
-                .filter(participant -> player.getTag().equals(participant.getTag()))
-                .findFirst().isPresent();
-    }
-
-
     /**
      * Update the active race and sets its active status to false.
      *
@@ -167,6 +75,8 @@ public class RiverRaceInternalService {
         RiverRaceInternalMapper.INSTANCE.updateFromRiverRaceWeekDto(riverRaceWeekDto, activeRace, clanTag);
 
         List<ClanDto> clansDto = riverRaceWeekDto.getStandings().stream().map(RiverRaceLogDto.StandingsDto::getClan).collect(Collectors.toList());
+        ClanDto myClanDto = clansDto.stream().filter(c -> c.getTag().equals(activeRace.getClan().getTag())).findFirst()
+                .orElseThrow(() -> new IllegalStateException("could not find my clan"));
         List<RiverRaceClan> clans = Stream.concat(Stream.of(activeRace.getClan()), activeRace.getClans().stream()).collect(Collectors.toList());
 
         for (ClanDto clanDto : clansDto) {
@@ -175,10 +85,114 @@ public class RiverRaceInternalService {
                     .findFirst()
                     .ifPresent(rrc -> updateActiveFame(rrc, clanDto));
         }
+        //check log if ghost players re not needed anymore
         insertGhostPlayers(activeRace.getClan(), playerRepository.findInClan());
+        List<Player> inClanPlayers = playerRepository.findInClan();
+        // Impl note: the period number that should be the last period of the active war race.
+        // for 4 weeks is 4*7 -1
+        updateDecksUsed("warDay", 27, myClanDto, activeRace.getClan());
 
         riverRaceClanRepository.saveAndFlush(activeRace);
     }
+
+    public RiverRace doUpdateActiveRace(RiverRaceCurrentDto dto, RiverRace activeRace) {
+        log.info("updating active race");
+        if (activeRace != null && activeRace.getSectionIndex() != dto.getSectionIndex()) {
+            log.error("Error while updating race");
+            throw new SectionIndexMissmatchException(activeRace.getSectionIndex(), dto.getSectionIndex());
+        }
+        if (activeRace == null) {
+            log.info("active race not found, creating new");
+        }
+        activeRace = (activeRace != null ? activeRace : new RiverRace());
+
+        RiverRaceInternalMapper.INSTANCE.update(dto, activeRace);
+
+        List<ClanDto> clansDto = Stream.concat(Stream.of(dto.getClan()), dto.getClans().stream()).collect(Collectors.toList());
+        List<RiverRaceClan> clans = Stream.concat(Stream.of(activeRace.getClan()), activeRace.getClans().stream()).collect(Collectors.toList());
+
+        for (ClanDto clanDto : clansDto) {
+            clans.stream()
+                    .filter(rrc -> rrc.getTag().equals(clanDto.getTag()))
+                    .findFirst()
+                    .ifPresent(rrc -> updateActiveFame(rrc, clanDto));
+        }
+
+
+        updateDecksUsed(dto.getPeriodType(), dto.getPeriodIndex(), dto.getClan(), activeRace.getClan());
+
+
+        //some times the riverrace entity is not updated (only the clans) but we still want to
+        //set the updatedOn
+        activeRace.setUpdatedOn(LocalDateTime.now());
+
+        return riverRaceClanRepository.saveAndFlush(activeRace);
+    }
+
+    private void updateDecksUsed(String periodType, int periodIndex, ClanDto clanDto, RiverRaceClan clan) {
+
+        for (RiverRaceParticipant participantRR : clan.getParticipants()) {
+            ParticipantDto participantDto = clanDto.getParticipants().stream()
+                    .filter(p -> p.getTag().equals(participantRR.getTag())).findFirst().orElse(null);
+            if (participantDto == null) {
+                continue;
+            }
+            if (periodType.equalsIgnoreCase("training")) {
+                int deltaDecks = participantDto.getDecksUsed() - participantRR.getPracticeDecks();
+                if (deltaDecks > 0) {
+                    participantRR.setPracticeDecks(participantRR.getPracticeDecks() + deltaDecks);
+                }
+            } else {
+                int deltaDecks = participantDto.getDecksUsed() - participantRR.getPracticeDecks() - participantRR.getWarDecks();
+                if (deltaDecks > 0) {
+                    participantRR.setWarDecks(participantRR.getWarDecks() + deltaDecks);
+                }
+            }
+
+            // Impl note:  we need the null check because of non migrated data:
+            // Specifically we don' t want to override data that were calculated before the calculation period flag was implemented.
+            // (which we would override the value and set it explicitly to 0)
+            // The required decks field is already set to 0  by default (not null column) so we are covered!
+            if (participantRR.getDeckCalcultationPeriod() != null &&
+                    participantRR.getDeckCalcultationPeriod().equals(periodIndex)) {
+                participantRR.setRequiredDecks(participantRR.getRequiredDecks() + 4);
+            }
+            participantRR.setDeckCalcultationPeriod(periodIndex);
+        }
+
+    }
+
+    /**
+     * So it seems integration service does not return all the players in clan. I.e the inactives are not returned in the results
+     * So we manually insert them with 0 stats (as it should have been by the intergation service)
+     *
+     * @param clan
+     * @param playersInClan
+     * @deprecated inactive players are now returned, does not have any impact if used (only performance one!)
+     */
+    @Deprecated
+    private void insertGhostPlayers(RiverRaceClan clan, List<Player> playersInClan) {
+        List<Player> ghostPlayers = playersInClan.stream().filter(p -> isNotPresent(clan, p)).collect(Collectors.toList());
+        if (ghostPlayers.size() > 0) {
+            log.info("Found ghost players  :  {}", ghostPlayers.stream().map(Player::getName).collect(Collectors.toList()));
+        }
+        for (Player player : ghostPlayers) {
+            clan.getParticipants().add(RiverRaceParticipant.builder()
+                    .fame(0)
+                    .activeFame(0)
+                    .repairPoints(0)
+                    .tag(player.getTag())
+                    .name(player.getName())
+                    .build()
+            );
+        }
+    }
+
+    private boolean isNotPresent(RiverRaceClan clan, Player player) {
+        return clan.getParticipants().stream()
+                .noneMatch(participant -> player.getTag().equals(participant.getTag()));
+    }
+
 
     private void updateActiveFame(RiverRaceClan clan, ClanDto clanDto) {
         if (!clan.isFinished()) {

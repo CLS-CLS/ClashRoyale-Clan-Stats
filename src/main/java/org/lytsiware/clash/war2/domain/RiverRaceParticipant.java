@@ -25,6 +25,7 @@ public class RiverRaceParticipant {
     private int practiceDecks;
     private int warDecks;
     private int requiredDecks;
+    private Integer deckCalcultationPeriod;
 
     public int getScore() {
         return activeFame + repairPoints;
