@@ -130,13 +130,20 @@ public class RiverRaceInternalService {
     }
 
     private void updateDecksUsed(String periodType, int periodIndex, ClanDto clanDto, RiverRaceClan clan) {
+        log.debug("Calculating decks used with periodType {}, periodIndex {}", periodType, periodIndex);
 
         for (RiverRaceParticipant participantRR : clan.getParticipants()) {
+            log.debug("Calculation for {}", participantRR.getName());
             ParticipantDto participantDto = clanDto.getParticipants().stream()
                     .filter(p -> p.getTag().equals(participantRR.getTag())).findFirst().orElse(null);
             if (participantDto == null) {
+                log.debug("participant not found");
                 continue;
             }
+
+            log.debug("DTO decksUsed = {} , participantRR practiceDecks = {}, warDecks = {}, deckCalculationPeriod = {}", participantDto.getDecksUsed(),
+                    participantRR.getPracticeDecks(), participantRR.getWarDecks(), participantRR.getDeckCalcultationPeriod());
+
             if (periodType.equalsIgnoreCase("training")) {
                 int deltaDecks = participantDto.getDecksUsed() - participantRR.getPracticeDecks();
                 if (deltaDecks > 0) {
@@ -154,7 +161,7 @@ public class RiverRaceInternalService {
             // (which we would override the value and set it explicitly to 0)
             // The required decks field is already set to 0  by default (not null column) so we are covered!
             if (participantRR.getDeckCalcultationPeriod() != null &&
-                    participantRR.getDeckCalcultationPeriod().equals(periodIndex)) {
+                    !participantRR.getDeckCalcultationPeriod().equals(periodIndex)) {
                 participantRR.setRequiredDecks(participantRR.getRequiredDecks() + 4);
             }
             participantRR.setDeckCalcultationPeriod(periodIndex);
