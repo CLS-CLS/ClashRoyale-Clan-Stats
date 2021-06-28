@@ -88,9 +88,9 @@ public class RiverRaceInternalService {
         //check log if ghost players re not needed anymore
         insertGhostPlayers(activeRace.getClan(), playerRepository.findInClan());
         List<Player> inClanPlayers = playerRepository.findInClan();
-        // Impl note: the period number that should be the last period of the active war race.
-        // for 4 weeks is 4*7 -1
-        updateDecksUsed("warDay", 27, myClanDto, activeRace.getClan());
+        //calculate the period type as it not provided by the river race log api
+        int periodIndex = activeRace.getSectionIndex() * 7 + 6; // zero based
+        updateDecksUsed("warDay", periodIndex, myClanDto, activeRace.getClan());
 
         riverRaceClanRepository.saveAndFlush(activeRace);
     }
