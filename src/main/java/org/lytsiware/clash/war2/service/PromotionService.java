@@ -93,7 +93,7 @@ public class PromotionService {
     private List<Integer> doCalculatePromotion(String tag, List<RiverRace> riverRaces, PlayerInOut inOut) {
 
         List<RiverRaceParticipant> oldWayParticipations = riverRaces.stream()
-                .filter(riverRace -> riverRace.getSeasonId() != 0 && riverRace.getSeasonId() < 71)
+                .filter(riverRace -> riverRace.getSeasonId() != 0 && riverRace.getSeasonId() < 73)
                 .map(RiverRace::getClan)
                 .flatMap(c -> c.getParticipants().stream())
                 .filter(p -> p.getTag().equals(tag))
@@ -101,7 +101,7 @@ public class PromotionService {
 
 
         List<RiverRaceParticipant> newWayParticipations = riverRaces.stream()
-                .filter(riverRace -> riverRace.getSeasonId() == 0 || riverRace.getSeasonId() >= 71)
+                .filter(riverRace -> riverRace.getSeasonId() == 0 || riverRace.getSeasonId() >= 73)
                 .map(RiverRace::getClan)
                 .flatMap(c -> c.getParticipants().stream())
                 .filter(p -> p.getTag().equals(tag))
@@ -117,20 +117,24 @@ public class PromotionService {
             return Collections.emptyList();
         }
 
-        List<Integer> result = new ArrayList<>();
 
-        List<Integer> scores = newWayParticipations.stream().map(rrp -> calculateParticipationScore(rrp, inOut)).collect(Collectors.toList());
-        for (int i = 0; i < newWayParticipations.size(); i++) {
-            List<Integer> subParticipationcSores = new ArrayList<>(scores.subList(i, newWayParticipations.size()));
-            result.add(subParticipationcSores.stream().reduce(0, Integer::sum));
+        List<Integer> points = newWayParticipations.stream().map(rrp -> calculateParticipationScore(rrp, inOut)).collect(Collectors.toList());
+
+        if (!oldWayParticipations.isEmpty()) {
+            removeNegativeScoreConditionally(inOut, oldWayParticipations, riverRaces, true);
+        }
+        points.addAll(
+                oldWayParticipations.stream().map(RiverRaceParticipant::getScore).map(PromotionDiff::getPromotionPoint).collect(Collectors.toList())
+        );
+
+        List<Integer> aggregatedPoints = new ArrayList<>();
+        for (int i = 0; i < points.size(); i++) {
+            List<Integer> subParticipation = new ArrayList<>(points.subList(i, points.size()));
+            aggregatedPoints.add(subParticipation.stream().reduce(0, Integer::sum));
         }
 
-        for (int i = 0; i < oldWayParticipations.size(); i++) {
-            List<RiverRaceParticipant> subParticipation = new ArrayList<>(oldWayParticipations.subList(i, oldWayParticipations.size()));
-            removeNegativeScoreConditionally(inOut, subParticipation, riverRaces, true);
-            result.add(subParticipation.stream().mapToInt(RiverRaceParticipant::getScore).map(PromotionDiff::getPromotionPoint).sum());
-        }
-        return result;
+
+        return aggregatedPoints;
     }
 
     public List<Integer> calculatePromotion(String tag) {
