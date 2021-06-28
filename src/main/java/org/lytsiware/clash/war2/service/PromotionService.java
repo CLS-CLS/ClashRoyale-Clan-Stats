@@ -156,19 +156,19 @@ public class PromotionService {
             } else {
                 return 1;
             }
-        } else if ((float) rrp.getWarDecks() / (float) rrp.getRequiredDecks() >= 7f / 8f) {
+        } else if ((float) rrp.getWarDecks() / (float) rrp.getRequiredDecks() >= 14f / 16f) {
             if (rrp.getScore() > secondChanceAvgScore * rrp.getRequiredDecks()) { //2160
                 return 1;
             } else {
                 return 0;
             }
-        } else {
-            if ((float) rrp.getWarDecks() / (float) rrp.getRequiredDecks() >= 3f / 4f) {
+        } else if ((float) rrp.getWarDecks() / (float) rrp.getRequiredDecks() >= 12f / 16f) {
+            if (rrp.getScore() > 112.5 * rrp.getRequiredDecks()) {//1800 (half wins at 12)
                 return -1;
-            } else {
-                return -2;
             }
         }
+        return -2;
+
     }
 
 
