@@ -90,41 +90,91 @@ public class PromotionService {
         private int totalPromotionPoints;
     }
 
-    public List<Integer> calculatePromotion(String tag) {
-        List<RiverRace> riverRaces = riverRaceRepository.getRiverRaces(PageRequest.of(0, 12)).stream()
-                .filter(riverRace -> riverRace.getClan().getParticipants().stream().anyMatch(p -> p.getTag().equals(tag)))
-                .collect(Collectors.toList());
+    private List<Integer> doCalculatePromotion(String tag, List<RiverRace> riverRaces, PlayerInOut inOut) {
 
-        List<RiverRaceParticipant> participation = riverRaces.stream().map(RiverRace::getClan)
+        List<RiverRaceParticipant> oldWayParticipations = riverRaces.stream()
+                .filter(riverRace -> riverRace.getSeasonId() != 0 && riverRace.getSeasonId() < 71)
+                .map(RiverRace::getClan)
                 .flatMap(c -> c.getParticipants().stream())
                 .filter(p -> p.getTag().equals(tag))
                 .collect(Collectors.toList());
 
-        if (participation.isEmpty()) {
+
+        List<RiverRaceParticipant> newWayParticipations = riverRaces.stream()
+                .filter(riverRace -> riverRace.getSeasonId() == 0 || riverRace.getSeasonId() >= 71)
+                .map(RiverRace::getClan)
+                .flatMap(c -> c.getParticipants().stream())
+                .filter(p -> p.getTag().equals(tag))
+                .collect(Collectors.toList());
+
+        if (oldWayParticipations.isEmpty() && newWayParticipations.isEmpty()) {
             log.debug("no participation found for player {}", tag);
             return Collections.emptyList();
         }
 
-        PlayerInOut inOut = checkInService.findByTag(tag).orElse(null);
         if (inOut == null) {
             log.debug("no checking / out  found for player {}", tag);
             return Collections.emptyList();
         }
 
-
         List<Integer> result = new ArrayList<>();
-        for (int i = 0; i < participation.size(); i++) {
-            List<RiverRaceParticipant> subParticipation = new ArrayList<>(participation.subList(i, participation.size()));
+
+        List<Integer> scores = newWayParticipations.stream().map(rrp -> calculateParticipationScore(rrp, inOut)).collect(Collectors.toList());
+        for (int i = 0; i < newWayParticipations.size(); i++) {
+            List<Integer> subParticipationcSores = new ArrayList<>(scores.subList(i, newWayParticipations.size()));
+            result.add(subParticipationcSores.stream().reduce(0, Integer::sum));
+        }
+
+        for (int i = 0; i < oldWayParticipations.size(); i++) {
+            List<RiverRaceParticipant> subParticipation = new ArrayList<>(oldWayParticipations.subList(i, oldWayParticipations.size()));
             removeNegativeScoreConditionally(inOut, subParticipation, riverRaces, true);
             result.add(subParticipation.stream().mapToInt(RiverRaceParticipant::getScore).map(PromotionDiff::getPromotionPoint).sum());
         }
         return result;
     }
 
+    public List<Integer> calculatePromotion(String tag) {
+
+        List<RiverRace> riverRaces = riverRaceRepository.getRiverRaces(PageRequest.of(0, 12)).stream()
+                .filter(riverRace -> riverRace.getClan().getParticipants().stream().anyMatch(p -> p.getTag().equals(tag)))
+                .collect(Collectors.toList());
+
+        PlayerInOut inOut = checkInService.findByTag(tag).orElse(null);
+
+        return doCalculatePromotion(tag, riverRaces, inOut);
+    }
+
+    /**
+     * new way of calculationg participation score
+     */
+    private int calculateParticipationScore(RiverRaceParticipant rrp, PlayerInOut inOut) {
+        int avgScorePerGame = 131;
+        int secondChanceAvgScore = 162; //expected score per game to get at most 0 if not played the required decks
+        if (rrp.getRequiredDecks() == rrp.getWarDecks()) {
+            if (rrp.getScore() > avgScorePerGame * rrp.getRequiredDecks()) { //2100
+                return 2;
+            } else {
+                return 1;
+            }
+        } else if ((float) rrp.getWarDecks() / (float) rrp.getRequiredDecks() >= 7f / 8f) {
+            if (rrp.getScore() > secondChanceAvgScore * rrp.getRequiredDecks()) { //2160
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            if ((float) rrp.getWarDecks() / (float) rrp.getRequiredDecks() >= 3f / 4f) {
+                return -1;
+            } else {
+                return -2;
+            }
+        }
+    }
+
 
     public List<PlayerPromotionDto> calculatePromotions() {
         log.debug("calculatePromotions");
-        List<RiverRace> riverRaces = new ArrayList<>(riverRaceRepository.getRiverRaces(PageRequest.of(0, 9)));
+        List<RiverRace> riverRaces = new ArrayList<>(riverRaceRepository.getRiverRaces(PageRequest.of(0, 12)));
 
         Map<String, List<RiverRaceParticipant>> participationByTag = riverRaces.stream()
                 .map(RiverRace::getClan)
@@ -146,37 +196,28 @@ public class PromotionService {
                 .collect(Collectors.toList())
                 .forEach(participationByTag::remove);
 
-        //do not calculate the very first week he joined if he joined late and has negative impact
-        for (String tag : participationByTag.keySet()) {
-            removeNegativeScoreConditionally(inOut.get(tag), participationByTag.get(tag), riverRaces, false);
-        }
+
+        Map<String, List<Integer>> promPointsByTag = participationByTag.keySet().stream()
+                .collect(Collectors.toMap(k -> k, tag -> doCalculatePromotion(tag, riverRaces, inOut.get(tag))));
 
         return participationByTag.keySet().stream()
-                .filter(tag -> !participationByTag.get(tag).isEmpty())
-                .map(tag ->
-                        buildPlayerPromortionDto(participationByTag.get(tag), inOut.get(tag), inClanPlayers.get(tag)))
+                .filter(tag -> !promPointsByTag.get(tag).isEmpty())
+                .map(tag -> buildPlayerPromortionDto(participationByTag.get(tag), inOut.get(tag), inClanPlayers.get(tag), promPointsByTag.get(tag)))
                 .collect(Collectors.toList());
     }
 
-    private PlayerPromotionDto buildPlayerPromortionDto(List<RiverRaceParticipant> participation, PlayerInOut inOut, Player player) {
+    private PlayerPromotionDto buildPlayerPromortionDto(List<RiverRaceParticipant> participation, PlayerInOut inOut, Player player, List<Integer> promPoints) {
 
         ArrayList<RiverRaceParticipant> excludeActiveParticipationList = new ArrayList<>(participation);
 
         RiverRaceParticipant activeParticipant = excludeActiveParticipationList.remove(0);
-
-        int activePoint = PromotionDiff.getPromotionPoint(activeParticipant.getScore());
-
-        int points = excludeActiveParticipationList.stream().map(RiverRaceParticipant::getScore)
-                .mapToInt(PromotionDiff::getPromotionPoint).sum();
-        int totalPoints = activePoint + points;
-
         PlayerPromotionDto playerPromotionDto = PlayerPromotionDto.builder()
                 .tag(player.getTag())
                 .name(player.getName())
                 .role(player.getRole())
-                .promotionPoints(points)
+                .promotionPoints(promPoints.size() > 1 ? promPoints.get(1) : 0)
                 .daysInClanAtEndOfRace(ChronoUnit.DAYS.between(inOut.getCheckIn(), LocalDateTime.now()))
-                .totalPromotionPoints(totalPoints)
+                .totalPromotionPoints(promPoints.get(0))
                 .latestScore(excludeActiveParticipationList.isEmpty() ? null : excludeActiveParticipationList.get(0).getScore())
                 .latestActiveScore(activeParticipant.getScore())
                 .build();
