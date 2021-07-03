@@ -161,7 +161,7 @@ public class RiverRaceInternalService {
             // (which we would override the value and set it explicitly to 0)
             // The required decks field is already set to 0  by default (not null column) so we are covered!
             if (participantRR.getDeckCalcultationPeriod() != null &&
-                    !participantRR.getDeckCalcultationPeriod().equals(periodIndex)) {
+                    participantRR.getDeckCalcultationPeriod() != periodIndex) {
                 participantRR.setRequiredDecks(participantRR.getRequiredDecks() + 4);
             }
             participantRR.setDeckCalcultationPeriod(periodIndex);
