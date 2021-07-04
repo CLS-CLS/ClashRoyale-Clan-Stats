@@ -11,6 +11,8 @@ public class ParticipantDto {
     int repairPoints;
     int score;
     int promotionPoints;
+    private int warDecks;
+    private int requiredDecks;
 
     public int getScore() {
         return activeFame + repairPoints;
