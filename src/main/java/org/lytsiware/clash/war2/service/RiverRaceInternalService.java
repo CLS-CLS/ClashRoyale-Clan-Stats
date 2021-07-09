@@ -160,8 +160,13 @@ public class RiverRaceInternalService {
             // Specifically we don' t want to override data that were calculated before the calculation period flag was implemented.
             // (which we would override the value and set it explicitly to 0)
             // The required decks field is already set to 0  by default (not null column) so we are covered!
+
             if (participantRR.getDeckCalcultationPeriod() != null &&
                     participantRR.getDeckCalcultationPeriod() != periodIndex) {
+                log.info("updating required decks for {}-{} from {}, participantCalcPeriod before update {}, periodIndex {}",
+                        participantRR.getTag(), participantRR.getName(), participantRR.getRequiredDecks(),
+                        participantRR.getDeckCalcultationPeriod(), periodIndex
+                );
                 participantRR.setRequiredDecks(participantRR.getRequiredDecks() + 4);
             }
             participantRR.setDeckCalcultationPeriod(periodIndex);
