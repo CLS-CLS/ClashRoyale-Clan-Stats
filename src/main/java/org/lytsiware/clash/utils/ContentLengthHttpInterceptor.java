@@ -15,12 +15,12 @@ public class ContentLengthHttpInterceptor implements ClientHttpRequestIntercepto
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         log.info("---- REQUEST ----");
         log.info("URL: {}", request.getURI());
-        log.info("HEADERS: {} ", request.getHeaders());
-        log.info("BODY : {} ", body);
+        log.debug("HEADERS: {} ", request.getHeaders());
+        log.debug("BODY : {} ", body);
 
         ClientHttpResponse response = execution.execute(request, body);
         log.info("---- RESPONSE ----");
-        log.info("HEADERS: {}", response.getHeaders());
+        log.debug("HEADERS: {}", response.getHeaders());
         log.info("content length: {}", response.getHeaders().getContentLength());
 
         return response;

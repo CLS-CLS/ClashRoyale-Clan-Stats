@@ -31,7 +31,7 @@ public class War2CRLIntegrationService {
         log.info("Getting Current RiverRace date from CRL");
         RiverRaceCurrentDto result = exchangeHelperService.exchangeCurrentRiverRace(URI.create(riverRaceCurrentUrl));
         normalizeCurrentRiverRace(result);
-        log.info("{}", result);
+        log.debug("{}", result);
         return result;
     }
 
@@ -40,7 +40,7 @@ public class War2CRLIntegrationService {
         log.info("Getting River Race LOG data from CRL");
         RiverRaceLogDto result = exchangeHelperService.exchangeRiverRaceLog(URI
                 .create(limit == null ? riverRaceLogUrl : riverRaceLogUrl + "?limit=" + limit));
-        log.info("{}", result);
+        log.debug("{}", result);
         return result;
     }
 

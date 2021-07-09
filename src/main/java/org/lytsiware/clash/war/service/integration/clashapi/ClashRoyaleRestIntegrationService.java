@@ -55,7 +55,7 @@ public class ClashRoyaleRestIntegrationService {
                     .build();
             preRequest(restTemplate);
             CurrentWarDto result = restTemplate.exchange(requestEntity, CurrentWarDto.class).getBody();
-            log.info("{}", result);
+            log.debug("{}", result);
             return result;
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class StatsRoyaleDateParse {
 
     public LocalDateTime parseDescriptiveDate(String descriptiveDate, LocalDateTime localDateTime) throws IllegalStateException {
-        log.info("Parsing to date string {}", descriptiveDate);
+        log.debug("Parsing to date string {}", descriptiveDate);
         String regexExpr = "(\\d+)\\s(\\w+)";
         Pattern pattern = Pattern.compile(regexExpr);
         Matcher matcher = pattern.matcher(descriptiveDate.toLowerCase());

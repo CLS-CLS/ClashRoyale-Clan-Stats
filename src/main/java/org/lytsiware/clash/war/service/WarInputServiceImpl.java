@@ -173,7 +173,7 @@ public class WarInputServiceImpl implements WarInputService {
 
         Map<String, Player> playersDb = playerRepository.loadAll();
         List<Player> transientPlayers = statsList.stream().map(PlayerWarStat::getPlayer).filter(player -> !playersDb.containsKey(player.getTag())).
-                peek(player -> log.info("TRANSIENT PLAYER {}", player)).collect(Collectors.toList());
+                peek(player -> log.debug("TRANSIENT PLAYER {}", player)).collect(Collectors.toList());
 
         for (Player transientPlayer : transientPlayers) {
             Player attachedPlayer = playerCheckInService.checkinPlayer(transientPlayer, warLeague.getStartDate().atTime(warLeague.getTime().minusHours(1)));

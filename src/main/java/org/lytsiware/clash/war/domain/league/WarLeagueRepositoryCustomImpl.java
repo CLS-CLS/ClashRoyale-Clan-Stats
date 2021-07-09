@@ -32,7 +32,7 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
 
     @Override
     public List<WarLeague> findFirstNthWarLeaguesBeforeDate(LocalDate date, int n) {
-        log.info("START findFirstNthWarLeaguesBeforeDate for date {}", date);
+        log.debug("START findFirstNthWarLeaguesBeforeDate for date {}", date);
         return em.createQuery("select l from WarLeague l where l.startDate <= :date order by l.startDate DESC", WarLeague.class)
                 .setMaxResults(n)
                 .setParameter("date", date).getResultList();
@@ -41,7 +41,7 @@ public class WarLeagueRepositoryCustomImpl implements WarLeagueRepositoryCustom 
 
     @Override
     public List<WarLeague> findFirstNthWarLeaguesBeforeDateEager(LocalDate date, int n) {
-        log.info("START findFirstNthWarLeaguesBeforeDate for date {}", date);
+        log.debug("START findFirstNthWarLeaguesBeforeDate for date {}", date);
 
         String sql = "select l from WarLeague l " +
                 " join fetch l.playerWarStats as stats" +

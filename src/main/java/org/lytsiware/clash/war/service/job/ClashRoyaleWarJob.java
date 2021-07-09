@@ -104,7 +104,7 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
                 .filter(playerWarStat -> {
                     boolean exists = recordedPlayers.containsKey(playerWarStat.getPlayer().getTag());
                     if (!exists) {
-                        log.info("Stats for Player {} are omitted as he is not yet recorded ", playerWarStat.getPlayer());
+                        log.debug("Stats for Player {} are omitted as he is not yet recorded ", playerWarStat.getPlayer());
                     }
                     return exists;
                 })
@@ -137,7 +137,7 @@ public class ClashRoyaleWarJob extends AbstractSelfScheduledJob {
                 .filter(playerWarStat -> {
                     boolean exists = recordedPlayers.containsKey(playerWarStat.getPlayer().getTag());
                     if (!exists) {
-                        log.info("Stats for Player {} are omitted as he is not yet recorded ", playerWarStat.getPlayer());
+                        log.debug("Stats for Player {} are omitted as he is not yet recorded ", playerWarStat.getPlayer());
                     }
                     return exists;
                 })

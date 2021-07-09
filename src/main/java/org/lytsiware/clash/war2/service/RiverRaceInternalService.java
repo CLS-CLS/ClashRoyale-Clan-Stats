@@ -181,7 +181,8 @@ public class RiverRaceInternalService {
     private void insertGhostPlayers(RiverRaceClan clan, List<Player> playersInClan) {
         List<Player> ghostPlayers = playersInClan.stream().filter(p -> isNotPresent(clan, p)).collect(Collectors.toList());
         if (ghostPlayers.size() > 0) {
-            log.info("Found ghost players  :  {}", ghostPlayers.stream().map(Player::getName).collect(Collectors.toList()));
+            log.info("Found ghost players");
+            log.debug("players are {}", ghostPlayers.stream().map(Player::getName).collect(Collectors.toList()));
         }
         for (Player player : ghostPlayers) {
             clan.getParticipants().add(RiverRaceParticipant.builder()

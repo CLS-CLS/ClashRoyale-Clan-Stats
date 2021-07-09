@@ -82,18 +82,18 @@ public class PlayerCheckInService {
 
 
     private boolean hasAbandonedWar(String tag, LocalDateTime checkIn, LocalDateTime checkOut) {
-        log.info("Checking if player  {} has abandoned war at checkout date {}", tag, checkOut);
+        log.debug("Checking if player  {} has abandoned war at checkout date {}", tag, checkOut);
 
         Optional<PlayerWarStat> latestWarStat = playerWarStatsRepository.findBetweenDatesForPlayer(tag, checkIn.toLocalDate(),
                 checkOut.toLocalDate()).stream().findFirst();
 
         if (latestWarStat.isPresent()) {
-            log.info("Latest recorder war stat is {}", latestWarStat.get().getId());
+            log.debug("Latest recorder war stat is {}", latestWarStat.get().getId());
             latestWarStat = latestWarStat.filter(playerWarStat -> playerWarStat.getWarLeague().getEndDate().isAfter(checkOut));
             if (latestWarStat.isPresent()) {
-                log.info("Player left before completion of war");
+                log.debug("Player left before completion of war");
                 if (latestWarStat.get().hasAbandonedWar()) {
-                    log.info("and HAS ABANDONED WAR");
+                    log.debug("and HAS ABANDONED WAR");
                     return true;
                 }
             }
@@ -105,7 +105,7 @@ public class PlayerCheckInService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void checkoutPlayer(String tag, @Nullable LocalDateTime checkoutOutDate) {
-        log.info("Checking out player {} at datetime {}", tag, checkoutOutDate);
+        log.debug("Checking out player {} at datetime {}", tag, checkoutOutDate);
         PlayerInOut playerInOut = playerCheckInCheckOutRepository.findByTag(tag).orElse(null);
         doCheckoutPlayer(playerInOut, checkoutOutDate);
     }
@@ -164,13 +164,13 @@ public class PlayerCheckInService {
     }
 
     private void doCheckinPlayer(PlayerInOut playerInOut, String tag, LocalDateTime checkInDate) {
-        log.info("Check in player {}", tag);
+        log.debug("Check in player {}", tag);
         if (checkInDate == null) {
             checkInDate = LocalDateTime.now();
         }
         if (playerInOut != null) {
             if (playerInOut.getCheckOut() == null) {
-                log.info(" -- already in clan");
+                log.debug(" -- already in clan");
                 return;
             }
             PlayerInOutHistory playerInOutHistory = PlayerInOutHistory.from(playerInOut);
@@ -182,11 +182,14 @@ public class PlayerCheckInService {
         } else {
             playerInOut = new PlayerInOut(tag, checkInDate);
         }
+        log.info("checkin player {}", tag);
         playerCheckInCheckOutRepository.save(playerInOut);
     }
 
     @Transactional
     public void markPlayersInClan(List<Player> currentPlayers) {
+        log.info("markPlayersInClan");
+        log.debug("players = {}", currentPlayers);
         Map<String, PlayerInOut> playersInOutByTag = playerCheckInCheckOutRepository.findAll().stream().collect(Collectors.toMap(PlayerInOut::getTag, Function.identity()));
 
         Map<String, Player> checkoutPlayers = playerRepository.loadAll();
