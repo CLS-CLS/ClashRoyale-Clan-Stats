@@ -130,7 +130,7 @@ public class RiverRaceInternalService {
     }
 
     private void updateDecksUsed(String periodType, int periodIndex, ClanDto clanDto, RiverRaceClan clan) {
-        log.debug("Calculating decks used with periodType {}, periodIndex {}", periodType, periodIndex);
+        log.info("Calculating decks used with periodType {}, periodIndex {}", periodType, periodIndex);
 
         for (RiverRaceParticipant participantRR : clan.getParticipants()) {
             log.debug("Calculation for {}", participantRR.getName());
@@ -154,6 +154,14 @@ public class RiverRaceInternalService {
                 if (deltaDecks > 0) {
                     participantRR.setWarDecks(participantRR.getWarDecks() + deltaDecks);
                 }
+                if (participantRR.getDeckCalcultationPeriod() != null &&
+                        participantRR.getDeckCalcultationPeriod() != periodIndex) {
+                    log.info("updating required decks for {}-{} from {}, participantCalcPeriod before update {}, periodIndex {}",
+                            participantRR.getTag(), participantRR.getName(), participantRR.getRequiredDecks(),
+                            participantRR.getDeckCalcultationPeriod(), periodIndex
+                    );
+                    participantRR.setRequiredDecks(participantRR.getRequiredDecks() + 4);
+                }
             }
 
             // Impl note:  we need the null check because of non migrated data:
@@ -161,14 +169,7 @@ public class RiverRaceInternalService {
             // (which we would override the value and set it explicitly to 0)
             // The required decks field is already set to 0  by default (not null column) so we are covered!
 
-            if (participantRR.getDeckCalcultationPeriod() != null &&
-                    participantRR.getDeckCalcultationPeriod() != periodIndex) {
-                log.info("updating required decks for {}-{} from {}, participantCalcPeriod before update {}, periodIndex {}",
-                        participantRR.getTag(), participantRR.getName(), participantRR.getRequiredDecks(),
-                        participantRR.getDeckCalcultationPeriod(), periodIndex
-                );
-                participantRR.setRequiredDecks(participantRR.getRequiredDecks() + 4);
-            }
+
             participantRR.setDeckCalcultationPeriod(periodIndex);
         }
 
