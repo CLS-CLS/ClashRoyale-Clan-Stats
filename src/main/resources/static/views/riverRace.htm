@@ -65,12 +65,12 @@
                             <th colspan="2">Average</th>
                         </tr>
                         <tr>
-                            <th><span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="activeFame" filter-by="filter">
-                                    <img style="display:inline"
-                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">
-                                </order-directive></span>
-                            </th>
+                            <!--                            <th><span ng-click=triggerOrderDirective($event)>-->
+                            <!--                                <order-directive bind-to="activeFame" filter-by="filter">-->
+                            <!--                                    <img style="display:inline"-->
+                            <!--                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">-->
+                            <!--                                </order-directive></span>-->
+                            <!--                            </th>-->
                             <!--                            <th><span ng-click=triggerOrderDirective($event)>-->
                             <!--                                <order-directive bind-to="repairPoints" filter-by="filter">-->
                             <!--                                    <img style="display:inline"-->
@@ -88,23 +88,19 @@
                                 <order-directive bind-to="warDecks"
                                                  filter-by="filter">Decks Played</order-directive></span>
                             </th>
+                            <th style="border-right: 2px solid #1c1e22"><span ng-click=triggerOrderDirective($event)>
+                                <order-directive bind-to="practiceDecks"
+                                                 filter-by="filter">Practice Decks</order-directive></span>
+                            </th>
                             <th><span ng-click=triggerOrderDirective($event)>
                                 <order-directive bind-to="averageActiveFame" filter-by="filter">
                                     <img style="display:inline"
                                          src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/win_mid_qjwssm.png">
                                 </order-directive></span>
                             </th>
-                            <!--                            <th><span ng-click=triggerOrderDirective($event)>-->
-                            <!--                                <order-directive bind-to="averageRepairPoints" filter-by="filter">-->
-                            <!--                                   <img style="display:inline"-->
-                            <!--                                        src=" https://res.cloudinary.com/dmoqikv5o/image/upload/v1600844747/repair_wcwnol.png">-->
-
-                            <!--                                </order-directive></span>-->
-                            <!--                            </th>-->
                             <th><span ng-click=triggerOrderDirective($event)>
-                                <order-directive bind-to="averageScore" filter-by="filter">
-                                    <img style="display:inline"
-                                         src="https://res.cloudinary.com/dmoqikv5o/image/upload/v1592489053/score_mid_wwsrc9.png">
+                                <order-directive bind-to="warDecksRatio" filter-by="filter">
+                                   Participation Ratio
                                 </order-directive></span>
                             </th>
                         </tr>
@@ -119,13 +115,11 @@
                             </td>
                             <td>{{s.role}}</td>
                             <td>{{s.daysInClan}}</td>
-                            <td>{{s.activeFame}}</td>
-<!--                            <td ng-style="colorfy(s.repairPoints, 'repairs')">{{s.repairPoints}}</td>-->
                             <td ng-style="colorfy(s.score, 'riverrace')">{{s.score}}</td>
                             <td>{{s.warDecks}}/{{s.requiredDecks}}</td>
-                            <td>{{s.averageActiveFame}}</td>
-                         <!--   <td ng-style="colorfy(s.averageRepairPoints, 'repairs')">{{s.averageRepairPoints}}</td> -->
+                            <td>{{s.practiceDecks}}</td>
                             <td ng-style="colorfy(s.averageScore, 'riverrace')">{{s.averageScore}}</td>
+                            <td>{{s.warDecksRatio| percentage:2}}</td>
                         </tr>
                         </tbody>
                     </table>

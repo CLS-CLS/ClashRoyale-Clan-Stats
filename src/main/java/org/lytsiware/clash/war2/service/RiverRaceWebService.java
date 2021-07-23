@@ -47,7 +47,7 @@ public class RiverRaceWebService {
     private final PromotionService promotionService;
 
     public RiverRaceViewDto getRiverRace(int index) {
-        List<RiverRaceAggregateDto> aggregatedStats = aggregationRepository.getAggregatedStats(index, clanTag);
+        List<RiverRaceAggregateDto> aggregatedStats = aggregationRepository.getAggregatedStats(index, 12, clanTag);
 
         //initialize basic info from entity
         RiverRaceViewDto riverRaceDto = RiverRaceWebMapper.INSTANCE.toRiverRaceViewDto(riverRaceRepository.getRiverRaces(PageRequest.of(index, 1))
@@ -74,6 +74,9 @@ public class RiverRaceWebService {
                 participant.setAverageActiveFame(s.getActiveFame());
                 participant.setAverageRepairPoints(s.getRepairPoints());
                 participant.setAverageScore(s.getScore());
+                participant.setTotalRequiredDecks(s.getTotalRequiredDecks());
+                participant.setTotalWarDecks(s.getTotalWarDecks());
+                participant.setWarDecksRatio(s.getTotalRequiredDecks() != 0 ? (double) s.getTotalWarDecks() / (double) s.getTotalRequiredDecks() : null);
             }
             if (players.containsKey(participant.getTag())) {
                 Player player = players.get(participant.getTag());

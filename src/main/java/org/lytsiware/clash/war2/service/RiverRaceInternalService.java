@@ -125,6 +125,7 @@ public class RiverRaceInternalService {
         //some times the riverrace entity is not updated (only the clans) but we still want to
         //set the updatedOn
         activeRace.setUpdatedOn(LocalDateTime.now());
+        log.info("Update finish");
 
         return riverRaceClanRepository.saveAndFlush(activeRace);
     }

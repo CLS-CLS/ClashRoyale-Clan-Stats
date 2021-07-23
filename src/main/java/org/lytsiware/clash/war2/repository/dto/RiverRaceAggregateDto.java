@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +22,8 @@ public class RiverRaceAggregateDto {
                 .activeFame(((BigDecimal) o[3]).intValue())
                 .repairPoints(((BigDecimal) o[4]).intValue())
                 .score(((BigDecimal) o[5]).intValue())
+                .totalWarDecks(((BigInteger) o[6]).intValue())
+                .totalRequiredDecks(((BigInteger) o[7]).intValue())
                 .build();
 
     }
@@ -31,5 +34,7 @@ public class RiverRaceAggregateDto {
     int activeFame;
     int repairPoints;
     int score;
+    int totalWarDecks;
+    int totalRequiredDecks;
 
 }

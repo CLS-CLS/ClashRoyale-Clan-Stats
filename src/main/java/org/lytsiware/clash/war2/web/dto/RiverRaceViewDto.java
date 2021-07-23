@@ -61,6 +61,10 @@ public class RiverRaceViewDto {
         private Integer averageScore;
         private boolean inClan;
         private Integer daysInClan;
+        private int practiceDecks;
+        private int totalWarDecks;
+        private int totalRequiredDecks;
+        private Double warDecksRatio;
         private int warDecks;
         private int requiredDecks;
 
