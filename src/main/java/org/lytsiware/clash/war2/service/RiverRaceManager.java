@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,8 @@ public class RiverRaceManager {
     public RiverRace updateRiverRace() {
         log.info("Updating river race");
         RiverRaceCurrentDto current = integrationService.getCurrentRiverRace();
+        //do not persist the rest of clans to save space in db (its free so its small)
+        current.setClans(new ArrayList<>());
         RiverRace active = riverRaceRepository.activeRace().orElse(null);
 
         if (active != null && current.getSectionIndex() != active.getSectionIndex()) {
