@@ -47,11 +47,19 @@ public class RiverRace {
     @PrePersist
     public void onCreate() {
         createdOn = LocalDateTime.now();
+        if (clans != null) {
+            clans.stream().map(RiverRaceClan::getParticipants).forEach(List::clear);
+            clans.clear();
+        }
     }
 
     @PreUpdate
     public void onUpdate() {
         updatedOn = LocalDateTime.now();
+        if (clans != null) {
+            clans.stream().map(RiverRaceClan::getParticipants).forEach(List::clear);
+            clans.clear();
+        }
     }
 
 }
