@@ -17,19 +17,17 @@ public class RiverRaceAggregateDto {
     public static RiverRaceAggregateDto of(Object[] o) {
         return RiverRaceAggregateDto.builder()
                 .tag((String) o[0])
-                .name((String) o[1])
-                .fame(((BigDecimal) o[2]).intValue())
-                .activeFame(((BigDecimal) o[3]).intValue())
-                .repairPoints(((BigDecimal) o[4]).intValue())
-                .score(((BigDecimal) o[5]).intValue())
-                .totalWarDecks(((BigInteger) o[6]).intValue())
-                .totalRequiredDecks(((BigInteger) o[7]).intValue())
+                .fame(((BigDecimal) o[1]).intValue())
+                .activeFame(((BigDecimal) o[2]).intValue())
+                .repairPoints(((BigDecimal) o[3]).intValue())
+                .score(((BigDecimal) o[4]).intValue())
+                .totalWarDecks(((BigInteger) o[5]).intValue())
+                .totalRequiredDecks(((BigInteger) o[6]).intValue())
                 .build();
 
     }
 
     String tag;
-    String name;
     int fame;
     int activeFame;
     int repairPoints;

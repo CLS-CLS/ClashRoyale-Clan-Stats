@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -60,7 +57,7 @@ public class RiverRaceWebService {
 
 
         for (ParticipantViewDto participant : riverRaceDto.getClan().getParticipants()) {
-
+            participant.setName(Optional.ofNullable(players.get(participant.getTag())).map(Player::getName).orElse(null));
             if (inOut.get(participant.getTag()) != null) {
                 participant.setDaysInClan((int) ChronoUnit.DAYS.between(inOut.get(participant.getTag()).getCheckIn(), LocalDateTime.now()));
             }
@@ -88,7 +85,7 @@ public class RiverRaceWebService {
             }
         }
 
-        Collections.sort(riverRaceDto.getClans(), Comparator.comparing(c -> -c.getFame()));
+        riverRaceDto.getClans().sort(Comparator.comparing(c -> -c.getFame()));
         return riverRaceDto;
     }
 

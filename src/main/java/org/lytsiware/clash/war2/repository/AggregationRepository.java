@@ -15,7 +15,7 @@ public class AggregationRepository {
     EntityManager em;
 
     public List<RiverRaceAggregateDto> getAggregatedStats(int delta, int limit, String clanTag) {
-        String queryString = "select tag, name, " +
+        String queryString = "select tag, " +
                 " round(avg(fame)) as fame, " +
                 " round(avg(active_fame)) as active_fame, " +
                 " round(avg(repair_points)) as repair_points," +
@@ -28,7 +28,7 @@ public class AggregationRepository {
                 " (select clan_id from river_race  " +
                 " where super_cell_created_date is not null " +
                 " order by super_cell_created_date desc limit :limit offset :delta ))" +
-                " group by tag, name";
+                " group by tag";
         List<Object[]> result = em.createNativeQuery(queryString).setParameter("delta", delta)
                 .setParameter("limit", limit)
                 .setParameter("clanTag", clanTag).getResultList();
