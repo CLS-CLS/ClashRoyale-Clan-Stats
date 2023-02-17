@@ -5,6 +5,7 @@ import org.lytsiware.clash.core.domain.player.Player;
 import org.lytsiware.clash.core.domain.player.PlayerInOut;
 import org.lytsiware.clash.core.domain.player.PlayerRepository;
 import org.lytsiware.clash.donation.service.PlayerCheckInService;
+import org.lytsiware.clash.war2.domain.RiverRace;
 import org.lytsiware.clash.war2.domain.RiverRaceParticipant;
 import org.lytsiware.clash.war2.repository.AggregationRepository;
 import org.lytsiware.clash.war2.repository.RiverRaceParticipantRepository;
@@ -47,17 +48,17 @@ public class RiverRaceWebService {
         List<RiverRaceAggregateDto> aggregatedStats = aggregationRepository.getAggregatedStats(index, 12, clanTag);
 
         //initialize basic info from entity
-        RiverRaceViewDto riverRaceDto = RiverRaceWebMapper.INSTANCE.toRiverRaceViewDto(riverRaceRepository.getRiverRaces(PageRequest.of(index, 1))
-                .stream().findFirst().orElse(null));
+        RiverRace riverRace = riverRaceRepository.getRiverRaces(PageRequest.of(index, 1))
+                .stream().findFirst().orElse(null);
+        RiverRaceViewDto riverRaceDto = RiverRaceWebMapper.INSTANCE.toRiverRaceViewDto(riverRace);
 
         Map<String, Player> players = playerRepository.loadAll().entrySet().stream()
-                .filter(e -> e.getValue().getInClan()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         Map<String, PlayerInOut> inOut = checkInService.findInClan().stream().collect(Collectors.toMap(PlayerInOut::getTag, i -> i));
 
 
         for (ParticipantViewDto participant : riverRaceDto.getClan().getParticipants()) {
-            participant.setName(Optional.ofNullable(players.get(participant.getTag())).map(Player::getName).orElse(null));
             if (inOut.get(participant.getTag()) != null) {
                 participant.setDaysInClan((int) ChronoUnit.DAYS.between(inOut.get(participant.getTag()).getCheckIn(), LocalDateTime.now()));
             }
