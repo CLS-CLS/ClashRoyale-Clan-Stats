@@ -29,8 +29,6 @@ public class ClashRoyaleRestIntegrationService {
 
     private final ProxyAndBearerHolder proxyAndBearerHolder;
 
-    private final ObjectMapper objectMapper;
-
     private final SiteConfigurationService siteConfigurationService;
 
 

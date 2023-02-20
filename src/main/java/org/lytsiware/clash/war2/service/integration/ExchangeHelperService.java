@@ -12,6 +12,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.Proxy;
 import java.net.URI;
 
 @Service
@@ -28,7 +29,9 @@ public class ExchangeHelperService {
                 .header("Authorization", proxyAndBearerHolder.getBearer())
                 .header("accept", "application/json")
                 .build();
-        preRequest(restTemplate);
+        if (proxyAndBearerHolder.getProxy() != Proxy.NO_PROXY) {
+            preRequest(restTemplate);
+        }
         RiverRaceCurrentDto result = restTemplate.exchange(requestEntity, RiverRaceCurrentDto.class).getBody();
         return result;
     }
@@ -40,7 +43,9 @@ public class ExchangeHelperService {
                 .header("Authorization", proxyAndBearerHolder.getBearer())
                 .header("accept", "application/json")
                 .build();
-        preRequest(restTemplate);
+        if (proxyAndBearerHolder.getProxy() != Proxy.NO_PROXY) {
+            preRequest(restTemplate);
+        }
         RiverRaceLogDto result = restTemplate.exchange(requestEntity, RiverRaceLogDto.class).getBody();
         return result;
     }
