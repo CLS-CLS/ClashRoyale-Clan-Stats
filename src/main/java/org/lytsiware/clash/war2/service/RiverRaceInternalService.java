@@ -87,7 +87,7 @@ public class RiverRaceInternalService {
         }
         //check log if ghost players re not needed anymore
         insertGhostPlayers(activeRace.getClan(), playerRepository.findInClan());
-        List<Player> inClanPlayers = playerRepository.findInClan();
+
         //calculate the period type as it not provided by the river race log api
         int periodIndex = activeRace.getSectionIndex() * 7 + 6; // zero based
         updateDecksUsed("warDay", periodIndex, myClanDto, activeRace.getClan());
@@ -103,8 +103,8 @@ public class RiverRaceInternalService {
         }
         if (activeRace == null) {
             log.info("active race not found, creating new");
+            activeRace = new RiverRace();
         }
-        activeRace = (activeRace != null ? activeRace : new RiverRace());
 
         RiverRaceInternalMapper.INSTANCE.update(dto, activeRace);
 
@@ -122,7 +122,7 @@ public class RiverRaceInternalService {
         updateDecksUsed(dto.getPeriodType(), dto.getPeriodIndex(), dto.getClan(), activeRace.getClan());
 
 
-        //some times the riverrace entity is not updated (only the clans) but we still want to
+        //sometimes the riverrace entity is not updated (only the clans) but we still want to
         //set the updatedOn
         activeRace.setUpdatedOn(LocalDateTime.now());
         log.info("Update finish");
@@ -163,6 +163,10 @@ public class RiverRaceInternalService {
                     );
                     participantRR.setRequiredDecks(participantRR.getRequiredDecks() + 4);
                 }
+                //case when new enters the clan in mid war
+                if (participantRR.getDeckCalcultationPeriod() == null) { //new member
+                    participantRR.setRequiredDecks(4 - participantDto.getDecksUsedToday());
+                }
             }
 
             // Impl note:  we need the null check because of non migrated data:
@@ -178,7 +182,7 @@ public class RiverRaceInternalService {
 
     /**
      * So it seems integration service does not return all the players in clan. I.e the inactives are not returned in the results
-     * So we manually insert them with 0 stats (as it should have been by the intergation service)
+     * So we manually insert them with 0 stats (as it should have been by the integration service)
      *
      * @param clan
      * @param playersInClan
